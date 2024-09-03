@@ -1,0 +1,187 @@
+body {
+    font-family: 'Catamaran', sans-serif;
+  }
+  
+  .logo {
+    position: absolute;
+    top: 26px;
+    left: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 0px;
+  }
+  
+  .main-text {
+    position: absolute;
+    top: 24px;
+    left: 72px;
+    width: 164px;
+    height: 28px;
+    font-family: Catamaran;
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 700;
+    color: #EB1C24FF; /* secondary-500 */
+  }
+  
+  .sub-text {
+    position: absolute;
+    top: 52px;
+    left: 72px;
+    width: 164px;
+    height: 20px;
+    font-family: Catamaran;
+    font-size: 12px;
+    line-height: 20px;
+    font-weight: 400;
+    color: #005500FF; /* primary-500 */
+  }
+  
+  .sidebar {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 258px;
+    height: 315px;
+    background: #FFFFFFFF; /* white */
+    border-radius: 0px;
+    box-shadow: 0px .2px 0px #171a1f;
+  }
+  
+  .sidebar-1 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 258px;
+    height: 475px;
+    border-radius: 0px;
+    box-shadow: 0px .2px 0px #171a1f;
+  }
+  
+  .sidebar-2 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 258px;
+    height: 585px;
+    border-radius: 0px;
+    box-shadow: 0px .2px 0px #171a1f;
+  }
+  
+  .sidebar-3 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 258px;
+    height: 1080px;
+    border-radius: 0px;
+    box-shadow: 0px 0px 1px #171a1f;
+  }
+  
+  .sidebar-menu {
+    position: absolute; 
+    top: 84px; 
+    right: 91px;
+    height: 184px; 
+    display: flex; 
+    flex-direction: column; 
+    font-family: Catamaran; /* Body */
+    font-size: 14px; 
+    line-height: 22px; 
+    font-weight: 400; 
+    opacity: 1; 
+    background: rgba(255, 255, 255, 0); /* Transparent background */
+  }
+  
+  .sidebar-menu-item .sidebar-icon {
+    margin-top: -5px; 
+  }
+  
+  .sidebar-menu-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    color: #565D6DFF; /* neutral-600 */
+    background: rgba(255, 255, 255, 0); /* Transparent background */
+    border-radius: 0px;
+    gap: 12px; /* Space between icon and text */
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  
+  .sidebar-menu-item a {
+    display: flex; /* Ensure anchor tag uses flexbox */
+    align-items: center; /* Center items vertically */
+    text-decoration: none;
+    color: inherit;
+    gap: 8px; /* Space between icon and text */
+  }
+  
+  .sidebar-menu-item.selected {
+    font-weight: 700;
+    color: #005500FF; /* primary-500 */
+    background: #FFFFFF; /* transparent */
+  }
+  
+  .sidebar-menu-item.selected:hover:active {
+    color: #005500FF; /* primary-500 */
+    background: #FFFFFF; /* transparent */
+  }
+  
+  .sidebar-menu-item .indicator {
+    position: absolute;
+    left: 0; /* Position indicator on the leftmost side */
+    width: 4px; 
+    height: 80%;
+    opacity: 0; /* Hide by default */
+  }
+  
+  .sidebar-menu-item.selected .indicator {
+    opacity: 1; /* Show only for selected item */
+  }
+  
+  
+  .dash-info {
+    position: absolute;
+    top: 0px;
+    left: 259px;
+    width: 1164px;
+    height: 84px;
+    background: #FFFFFFFF; /* white */
+    border-radius: 0px;
+    box-shadow: 0px 0px 1px #171a1f, 0px 0px 2px #171a1f; /* shadow-xs */
+  }
+  
+  .dash_text {
+    position: absolute;
+    left: 22px;
+    font-family: Catamaran;
+    font-size: 25px;
+    line-height: 48px;
+    font-weight: 700;
+    color: #171A1FFF; /* neutral-900 */
+  }
+  
+  .user-name {
+    position: absolute;
+    top: 27px;
+    left: 925px;
+    font-family: Catamaran;
+    font-size: 15px;
+    line-height: 30px;
+    font-weight: 400;
+    color: #171A1FFF; /* neutral-900 */
+  }
+  
+  .avatar {
+    position: absolute;
+    top: 15px;
+    left: 1090px;
+    width: 50px;
+    height: 50px;
+    background: #86FF86FF; /* primary-200 */
+    opacity: 1;
+    overflow: hidden;
+    border-radius: 32px;
+  }
