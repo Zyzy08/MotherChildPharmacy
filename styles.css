@@ -1,0 +1,211 @@
+body {
+  overflow: hidden; /* Prevent scrolling */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  height: 100vh; /* Full height of viewport */
+}
+
+@media (max-height: 600px) {
+  .login-container {
+    height: auto; /* Adjust height for smaller screens */
+  }
+}
+
+/* Logo */
+.logo {
+  position: absolute; 
+  top: 38px; 
+  left: 47px; 
+  width: 42px; 
+  height: 42px; 
+  border-radius: 0px; 
+}
+
+/* Mother & Child Text */
+.main-text {
+  position: absolute; 
+  top: 25px; 
+  left: 101px; 
+  font-family: Catamaran; /* Body */
+  font-size: 24px; 
+  line-height: 36px; 
+  font-weight: 700; 
+  color: #EB1C24FF; /* secondary-500 */
+}
+
+/* Pharmacy & Medical Supplies Text */
+.sub-text {
+  position: absolute; 
+  top: 25px; 
+  left: 270px; 
+  font-family: Catamaran; /* Body */
+  font-size: 24px; 
+  line-height: 36px; 
+  font-weight: 700; 
+  color: #005500FF; /* primary-500 */
+}
+
+/* Login Container */
+.login-container {
+  position: absolute; 
+  top: 150px; 
+  left: 401px; 
+  width: 637px; 
+  height: 482px;
+  background: #FFFFFFFF; /* white */
+  border-radius: 24px; 
+  box-shadow: 0px 3px 7px #171a1f, 0px 0px 2px #171a1f; /* shadow-m */
+  overflow: hidden;
+}
+
+/* Login Text */
+.login-text {
+  position: absolute; 
+  top: 40px; 
+  left: 279px; 
+  font-family: Catamaran; /* Body */
+  font-size: 32px; 
+  line-height: 48px; 
+  font-weight: 700; 
+  color: #171A1FFF; /* neutral-900 */
+}
+
+/* Username Field */
+.username-box {
+  position: absolute; 
+  top: 112px; 
+  left: 77px; 
+  opacity: 1;
+}
+.username-box input {
+  width: 100%; 
+  height: 52px; 
+  padding-left: 52px; 
+  padding-right: 85px; 
+  font-family: 'Catamaran', sans-serif; 
+  font-size: 18px; 
+  line-height: 28px; 
+  font-weight: 400; 
+  background: #F3F4F6FF; /* neutral-200 */
+  border-radius: 4px; /* border-xl */
+  border-width: 0px; 
+  outline: none;
+}
+.mail-icon {
+  position: absolute; 
+  top: 42px; 
+  left: 15px;
+  width: 24px; 
+  height: 24px; 
+  fill: #171A1FFF; /* neutral-900 */
+}
+.username-box .label {
+  font-family: Catamaran; 
+  font-size: 18px; 
+  line-height: 28px; 
+  font-weight: 700; 
+}
+
+/* Password Field */
+.password-box {
+  position: absolute; 
+  top: 209px; 
+  left: 77px; 
+  opacity: 1; 
+}
+.password-box input {
+  width: 100%; 
+  height: 52px; 
+  padding-left: 52px; 
+  padding-right: 85px; 
+  font-family: Catamaran; 
+  font-size: 18px; 
+  line-height: 28px; 
+  font-weight: 400; 
+  background: #F3F4F6FF; /* neutral-200 */
+  border-radius: 4px; /* border-xl */
+  border-width: 0px; 
+  outline: none; 
+}
+.lock-icon {
+  position: absolute; 
+  top: 43px; 
+  left: 15px; 
+  width: 24px; 
+  height: 24px; 
+  fill: #171A1FFF; /* neutral-900 */
+}
+.hide-icon {
+  position: absolute; 
+  top: 43px; 
+  left: 430px; 
+  width: 24px; 
+  height: 24px; 
+  fill: #171A1FFF; /* neutral-900 */
+  cursor: pointer; /* Make it clickable */
+    transition: transform 0.2s ease; /* Smooth transition */
+}
+
+.hide-icon:hover {
+    transform: scale(1.1); /* Slightly enlarge on hover */
+}
+.password-box .label {
+  font-family: Catamaran; 
+  font-size: 18px; 
+  line-height: 28px; 
+  font-weight: 700; 
+}
+
+/* Sign In Button */
+.button {
+  position: absolute; 
+  top: 344px; 
+  left: 77px; 
+  width: 483px; 
+  height: 52px; 
+  padding: 0 20px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-family: Catamaran; 
+  font-size: 18px; 
+  line-height: 28px; 
+  font-weight: 400; 
+  color: #FFFFFFFF; /* white */
+  background: #005500FF; /* primary-500 */
+  opacity: 1; 
+  border: none; 
+  border-radius: 4px; /* border-xl */
+}
+/* Hover */
+.button:hover {
+  background: #004200FF; /* primary-650 */
+}
+/* Pressed */
+.button:hover:active {
+  background: #002D00FF; /* primary-800 */
+}
+/* Disabled */
+.button:disabled {
+  opacity: 0.4; 
+  cursor: not-allowed;
+}
+
+/* Decorations */
+.right-dec {
+  position: absolute; 
+  top: 350px; 
+  left: -76px; 
+  width: 400px; 
+  height: 400px; 
+  border-radius: 0px; 
+}
+
+.left-dec {
+  position: absolute; 
+  top: 350px; 
+  left: 1117px; 
+  width: 440px; 
+  height: 408px; 
+  border-radius: 0px; 
+}
