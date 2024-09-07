@@ -14,8 +14,11 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT employeeName, role, accountName, password, picture, DATE(dateCreated) AS dateCreated, status FROM accounts";
-$result = $conn->query($sql);
+$searchQuery = $_POST['searchQuery'] ?? '';
+
+$sql = "SELECT * FROM accounts WHERE employeeName LIKE :query OR role LIKE :query";
+$result = $conn->prepare($sql);
+$result->execute(['query' => '%' . $searchQuery . '%']);
 
 $data = array();
 
