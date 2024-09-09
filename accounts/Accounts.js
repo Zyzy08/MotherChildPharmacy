@@ -186,13 +186,13 @@ function updateTable(data) {
         avatarImg.src = row.picture;
         avatarImg.alt = row.employeeName;
         avatarImg.className = 'avatar2';
-        avatarCell.className = 'avatar2block';
+        avatarCell.className = 'col2pic';
         avatarCell.appendChild(avatarImg);
         tr.appendChild(avatarCell);
         
         const nameCell = document.createElement('td');
         nameCell.textContent = row.employeeName;
-        nameCell.className = 'align-left';
+        nameCell.className = 'align-left col2name';
         tr.appendChild(nameCell);
         
         const roleCell = document.createElement('td');
