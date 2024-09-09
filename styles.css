@@ -58,6 +58,18 @@ body {
   overflow: hidden;
 }
 
+.error-message {
+  color: red;
+  margin-bottom: 10px;
+  position: absolute; 
+  top: 280px; 
+  left: 219px; 
+  font-family: Catamaran; /* Body */
+  font-size: 16px; 
+  line-height: 48px; 
+}
+
+
 /* Login Text */
 .login-text {
   position: absolute; 
