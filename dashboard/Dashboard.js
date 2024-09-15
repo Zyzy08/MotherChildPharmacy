@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function() {
             } else if (target.innerText.includes("Backup/Restore")) {
                 window.location.href = "../backuprestore/backuprestore.html";
             } else {
-                window.location.href = "../index.html";
+                window.location.href = "../index.php";
             }
         });
     });

@@ -59,23 +59,23 @@ document.addEventListener("DOMContentLoaded", function() {
             const target = event.currentTarget;
 
             if (target.innerText.includes("Dashboard")) {
-                window.location.href = "dashboard/dashboard.html";
+                window.location.href = "../dashboard/dashboard.html";
             } else if (target.innerText.includes("Products")) {
-                window.location.href = "producsts/products.html";
+                window.location.href = "../producsts/products.html";
             } else if (target.innerText.includes("Suppliers")) {
-                window.location.href = "suppliers/suppliers.html";
+                window.location.href = "../suppliers/suppliers.html";
             } else if (target.innerText.includes("Transactions")) {
-                window.location.href = "transactions/transactions.html";
+                window.location.href = "../transactions/transactions.html";
             } else if (target.innerText.includes("Inventory")) {
-                window.location.href = "inventory/inventory.html";
+                window.location.href = "../inventory/inventory.html";
             } else if (target.innerText.includes("POS")) {
-                window.location.href = "pos/pos.html";
+                window.location.href = "../pos/pos.html";
             } else if (target.innerText.includes("Return / Exchange")) {
-                window.location.href = "returnexchange/return.html";
+                window.location.href = "../returnexchange/return.html";
             } else if (target.innerText.includes("Accounts")) {
-                window.location.href = "accounts/accounts.html";
+                window.location.href = "../accounts/accounts.html";
             } else {
-                window.location.href = "index.php";
+                window.location.href = "../index.php";
             }
         });
     });

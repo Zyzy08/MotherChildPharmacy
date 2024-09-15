@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function() {
             } else if (target.innerText.includes("Accounts")) {
                 window.location.href = "../accounts/accounts.html";
             } else {
-                window.location.href = "../index.html";
+                window.location.href = "../index.php";
             }
         });
     });
