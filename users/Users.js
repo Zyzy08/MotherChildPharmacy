@@ -1,8 +1,8 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const sidebarMenuItems = document.querySelectorAll(".sidebar-menu-item");
 
     sidebarMenuItems.forEach(item => {
-        item.addEventListener("click", function(event) {
+        item.addEventListener("click", function (event) {
             event.preventDefault();
             const target = event.currentTarget;
 
@@ -33,9 +33,12 @@ document.addEventListener("DOMContentLoaded", function() {
 const addUserBtn = document.getElementById('addUser');
 const overlay = document.getElementById('overlay');
 const overlayEdit = document.getElementById('overlayEdit');
+const overlayAD = document.getElementById('overlayAD');
 const closeBtn = document.getElementById('closeBtn');
 const closeBtnEdit = document.getElementById('closeBtnEdit');
+const closeBtnAD = document.getElementById('closeBtnAD');
 const username = document.getElementById('employeeName');
+const userlname = document.getElementById('employeeLName');
 const accname = document.getElementById('accountName');
 const pass = document.getElementById('password');
 //EditForm fields
@@ -73,10 +76,10 @@ function showEditOverlay() {
 
 function closeEditOverlay() {
     overlayEdit.style.display = 'none';
-  }
+}
 
 function hideOverlay() {
-  overlay.style.display = 'none';
+    overlay.style.display = 'none';
 }
 
 function closeOverlay() {
@@ -97,24 +100,18 @@ addUserBtn.addEventListener('click', showOverlay);
 closeBtn.addEventListener('click', closeOverlay);
 closeBtnEdit.addEventListener('click', closeEditOverlay);
 
-// Optional: Hide overlay if clicking outside the form container
-// overlay.addEventListener('click', (event) => {
-//   if (event.target === overlay) {
-//     hideOverlay();
-//   }
-// });
 
 const fileInput = document.getElementById('profilePicture');
 const previewImg = document.getElementById('preview');
 
 // Function to handle file selection and image preview
-fileInput.addEventListener('change', function(event) {
+fileInput.addEventListener('change', function (event) {
     const file = event.target.files[0]; // Get the selected file
     if (file) {
         const reader = new FileReader(); // Create a FileReader object
 
         // Set up the FileReader to read the file as a data URL
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             previewImg.src = e.target.result; // Set the image source to the data URL
             previewImg.style.display = 'block'; // Show the image preview
         };
@@ -131,7 +128,7 @@ fileInput.addEventListener('change', function(event) {
 const form = document.getElementById('userForm');
 
 // Function to clear the image preview when the form is reset
-form.addEventListener('reset', function() {
+form.addEventListener('reset', function () {
     previewImg.src = ''; // Clear the image source
     previewImg.style.display = 'none'; // Hide the image preview
     fileInput.value = ''; // Clear the file input value
@@ -155,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function updateTable(data) {
     let counter = 0;
     const tableBody = document.querySelector('table').getElementsByTagName('tbody')[0];
-    
+
     // Clear existing rows (excluding the header)
     tableBody.innerHTML = '';
 
@@ -163,74 +160,76 @@ function updateTable(data) {
         const tr = document.createElement('tr');
         // tr.className = 'highlight-row';
 
+        const avatarCell = document.createElement('td');
+        const avatarImg = document.createElement('img');
+        let picsrc = "uploads/" + row.picture;
+        avatarImg.src = picsrc;
+        avatarImg.alt = row.employeeName;
+        avatarImg.className = 'avatar2';
+        avatarCell.className = 'col2pic';
+        avatarCell.appendChild(avatarImg);
+        tr.appendChild(avatarCell);
+
+        const nameCell = document.createElement('td');
+        nameCell.textContent = row.employeeName;
+        nameCell.className = 'align-left col2name';
+        tr.appendChild(nameCell);
+
+        const roleCell = document.createElement('td');
+        roleCell.textContent = row.role;
+        tr.appendChild(roleCell);
+
+        const accNameCell = document.createElement('td');
+        accNameCell.textContent = row.accountName;
+        tr.appendChild(accNameCell);
+
+        const updateDateCell = document.createElement('td');
+        updateDateCell.textContent = row.dateCreated;
+        tr.appendChild(updateDateCell);
+
+        const connectedCell = document.createElement('td');
+        if (row.connected == 0) {
+            connectedCell.textContent = "Offline";
+            connectedCell.classList.add('status-offline');
+        } else {
+            connectedCell.textContent = "Online";
+            connectedCell.classList.add('status-online');
+        }
+        tr.appendChild(connectedCell);
+
         const selectCell = document.createElement('td');
-        selectCell.className = 'align-mid edit-width';
+        selectCell.className = 'edit-width';
         const editButton = document.createElement('img');
         editButton.src = '../resources/img/d-edit.png';
         editButton.alt = 'Edit';
         editButton.style.cursor = 'pointer';
-        editButton.addEventListener('click', function(){
+        editButton.addEventListener('click', function () {
             selectedUser = row.accountName;
             fetchUserDetails(selectedUser);
         });
         selectCell.appendChild(editButton);
         tr.appendChild(selectCell);
 
-        // const emptyCell = document.createElement('td');
-        // emptyCell.className = 'avatar2';
-        // emptyCell.style.visibility = 'hidden';
-        // tr.appendChild(emptyCell);
-        
-        const avatarCell = document.createElement('td');
-        const avatarImg = document.createElement('img');
-
-        // Check if the picture path is the special case
-        if (row.picture.includes('../resources/img/')) {
-            avatarImg.src = row.picture; // Use the full path as it is
-        } else {
-            avatarImg.src = 'uploads/' + row.picture; // Default case
-        }
-
-        avatarImg.alt = row.employeeName; 
-        avatarImg.className = 'avatar2';
-        avatarCell.className = 'col2pic';
-        avatarCell.appendChild(avatarImg);
-        tr.appendChild(avatarCell);
-        
-        const nameCell = document.createElement('td');
-        nameCell.textContent = row.employeeName;
-        nameCell.className = 'align-left col2name';
-        tr.appendChild(nameCell);
-        
-        const roleCell = document.createElement('td');
-        roleCell.textContent = row.role;
-        tr.appendChild(roleCell);
-        
-        const accNameCell = document.createElement('td');
-        accNameCell.textContent = row.accountName;
-        tr.appendChild(accNameCell);
-        
-        const passCell = document.createElement('td');
-
-        const passwordLength = row.password.length;
-        passCell.textContent = '*'.repeat(passwordLength);
-        passCell.classList.add('password-cell');
-        passCell.title = row.password;
-        tr.appendChild(passCell);
-        
-        const updateDateCell = document.createElement('td');
-        updateDateCell.textContent = row.dateCreated; 
-        tr.appendChild(updateDateCell);
-        
-        const statusCell = document.createElement('td');
-        statusCell.textContent = row.status;
-        tr.appendChild(statusCell);
+        const selectCell2 = document.createElement('td');
+        selectCell2.className = 'edit-width';
+        const archiveButton = document.createElement('img');
+        archiveButton.src = '../resources/img/s-remove.png';
+        archiveButton.alt = 'Delete';
+        archiveButton.style.cursor = 'pointer';
+        archiveButton.addEventListener('click', function () {
+            selectedUser = row.accountName;
+            showDeleteOptions();
+        });
+        selectCell2.appendChild(archiveButton);
+        tr.appendChild(selectCell2);
 
         tableBody.appendChild(tr);
+
+
         counter++;
     });
 
-    usersNum.innerHTML = `<strong>${counter}</strong> users`;
+    // usersNum.innerHTML = `<strong>${counter}</strong> users`;
 }
 
 function fetchUserDetails(accountName) {
@@ -260,23 +259,23 @@ function fetchUserDetails(accountName) {
 }
 
 
-deleteUserBtn.addEventListener('click', function() {
+deleteUserBtn.addEventListener('click', function () {
     let confirmationUser = confirm("Are you sure you want to delete this user?");
-    if(confirmationUser === true){
+    if (confirmationUser === true) {
         // if(){
-            
+
         // }
         if (!selectedUser || selectedUser.trim() === '') {
             alert('No user selected.');
             return;
         }
-    
+
         const xhr = new XMLHttpRequest();
         xhr.open('POST', 'deleteUser.php', true);
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-    
+
         // Handle the response
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 300) {
                 const response = JSON.parse(xhr.responseText);
                 document.getElementById('modalMessage').textContent = response.message;
@@ -284,8 +283,8 @@ deleteUserBtn.addEventListener('click', function() {
                 alert('Error: ' + xhr.status);
             }
         };
-    
-    
+
+
         xhr.send(JSON.stringify({ accountName: selectedUser }));
         alert("User deleted successfully!");
         // document.getElementById('modalMessage').textContent = response.message;
@@ -293,83 +292,83 @@ deleteUserBtn.addEventListener('click', function() {
         setTimeout(() => {
             window.location.href = 'users.html'; // Redirect on success
         }, 1000);
-    }else{
-        
+    } else {
+
     }
 });
 
-document.getElementById('userForm').addEventListener('submit', function(event) {
+document.getElementById('userForm').addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent default form submission
-    
+
     const formData = new FormData(this);
 
     fetch('addUser.php', {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        // Set the message in the modal
-        //document.getElementById('modalMessage').textContent = data.message;
-        
-        // Display the modal
-        //modal.style.display = "block";
-        
-        // Redirect if successful
-        if (data.success) {
-            setTimeout(() => {
-                window.location.href = 'users.html'; // Redirect on success
-            }, 1000);
-        }
-    })
-    .catch(error => {
-        // document.getElementById('modalMessage').textContent = 'An error occurred: ' + error.message;
-        // modal.style.display = "block";
-        alert('An error occurred: ' + error.message);
-    });
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            // Set the message in the modal
+            //document.getElementById('modalMessage').textContent = data.message;
+
+            // Display the modal
+            //modal.style.display = "block";
+
+            // Redirect if successful
+            if (data.success) {
+                setTimeout(() => {
+                    window.location.href = 'users.html'; // Redirect on success
+                }, 1000);
+            }
+        })
+        .catch(error => {
+            // document.getElementById('modalMessage').textContent = 'An error occurred: ' + error.message;
+            // modal.style.display = "block";
+            alert('An error occurred: ' + error.message);
+        });
 });
 
-document.getElementById('userFormEdit').addEventListener('submit', function(event) {
+document.getElementById('userFormEdit').addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent default form submission
-    
+
     const formData2 = new FormData(this);
 
     fetch('updateUser.php', {
         method: 'POST',
         body: formData2
     })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        // Set the message in the modal
-        //document.getElementById('modalMessage').textContent = data.message;
-        
-        // Display the modal
-        //modal.style.display = "block";
-        
-        // Redirect if successful
-        if (data.success) {
-            setTimeout(() => {
-                window.location.href = 'users.html'; // Redirect on success
-            }, 100);
-        }
-    })
-    .catch(error => {
-        // document.getElementById('modalMessage').textContent = 'An error occurred: ' + error.message;
-        // modal.style.display = "block";
-        alert('An error occurred: ' + error.message);
-    });
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            // Set the message in the modal
+            //document.getElementById('modalMessage').textContent = data.message;
+
+            // Display the modal
+            //modal.style.display = "block";
+
+            // Redirect if successful
+            if (data.success) {
+                setTimeout(() => {
+                    window.location.href = 'users.html'; // Redirect on success
+                }, 100);
+            }
+        })
+        .catch(error => {
+            // document.getElementById('modalMessage').textContent = 'An error occurred: ' + error.message;
+            // modal.style.display = "block";
+            alert('An error occurred: ' + error.message);
+        });
 });
 
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-};
+// span.onclick = function() {
+//     modal.style.display = "none";
+// };
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
+window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
     }
@@ -385,36 +384,89 @@ function fetchData(query) {
             searchQuery: query
         })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            updateTable(data.results);
-        } else {
-            alert(data.message);
-        }
-    })
-    .catch(error => {
-        alert('Error:', error);
-        alert("There was an error with your request.");
-    });
-}
-    
-searchInput.addEventListener('input', function(event) {
-    const query = event.target.value;
-    if (query.trim() === '') {
-        fetch('getUsers.php')
         .then(response => response.json())
-        .then(data => updateTable(data))
-        .catch(error => alert('Error fetching users data:', error));
-        return;
+        .then(data => {
+            if (data.success) {
+                updateTable(data.results);
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            alert('Error:', error);
+            alert("There was an error with your request.");
+        });
+}
+
+// searchInput.addEventListener('input', function(event) {
+//     const query = event.target.value;
+//     if (query.trim() === '') {
+//         fetch('getUsers.php')
+//         .then(response => response.json())
+//         .then(data => updateTable(data))
+//         .catch(error => alert('Error fetching users data:', error));
+//         return;
+//     }else{
+//         const query = event.target.value.trim();
+//         if (query.length === 0) {
+//             // Clear the table and user count if query is empty
+//             updateTable([]);
+//         } else {
+//             // Fetch data from the server with the search query
+//             fetchData(query);
+//         }
+//     }    
+// });
+
+function showDeleteOptions() {
+    overlayAD.style.display = 'flex';
+};
+function closeADOverlay() {
+    overlayAD.style.display = 'none';
+}
+closeBtnAD.addEventListener('click', closeADOverlay);
+
+resetEdit.addEventListener('click', function(event){
+    fetchUserDetails(selectedUser);
+});
+
+let newID = 0;
+addUserBtn.addEventListener('click', function(event){
+    showOverlay();
+    fetch('getNewAccountID.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.lastAccountID) {
+                    const lastAccountID = parseInt(data.lastAccountID);
+                    newID = lastAccountID + 1;
+                } else {
+                    console.error('No lastAccountID found in the response.');
+                }
+            })
+            .catch(error => console.error('Error fetching data:', error));
+});
+
+username.addEventListener('input', function(event){
+    let firstName = username.value;
+    let firstLetter = firstName.charAt(0).toLowerCase();
+    let lastName = userlname.value.toLowerCase();
+
+    accountName.value = firstLetter + lastName;
+});
+
+userlname.addEventListener('input', function(event){
+    let firstName = username.value;
+    let firstLetter = firstName.charAt(0).toLowerCase();
+    let lastName = userlname.value.toLowerCase();
+    let code = '';
+    if(newID < 10){
+        code = '-e00' + newID;
+    }else if(newID < 100){
+        code = '-e0' + newID;
     }else{
-        const query = event.target.value.trim();
-        if (query.length === 0) {
-            // Clear the table and user count if query is empty
-            updateTable([]);
-        } else {
-            // Fetch data from the server with the search query
-            fetchData(query);
-        }
-    }    
+        code = '-e' + newID;
+    }
+
+    accountName.value = firstLetter + lastName;
+    pass.value = lastName + code;
 });

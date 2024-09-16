@@ -135,7 +135,7 @@
       </li><!-- End Return & Exchange Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="../users/users.html">
+        <a class="nav-link collapsed" href="../users/users.php">
           <i class="bi bi-person"></i>
           <span>Users</span>
         </a>

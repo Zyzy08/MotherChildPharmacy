@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Users / Profile - Mother & Child Pharmacy and Medical Supplies</title>
+  <title>Profile - Mother & Child Pharmacy and Medical Supplies</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -135,7 +135,7 @@
       </li><!-- End Return & Exchange Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link" href="../users.html">
+        <a class="nav-link" href="../users.php">
           <i class="bi bi-person"></i>
           <span>Users</span>
         </a>
