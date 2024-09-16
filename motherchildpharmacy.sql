@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 09, 2024 at 05:29 PM
+-- Generation Time: Sep 15, 2024 at 08:24 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,32 +24,33 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `accounts`
+-- Table structure for table `users`
 --
 
-CREATE TABLE `accounts` (
+CREATE TABLE `users` (
   `AccountID` int(10) UNSIGNED NOT NULL,
   `employeeName` varchar(255) NOT NULL,
   `role` varchar(255) NOT NULL,
   `accountName` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `picture` text NOT NULL DEFAULT '../resources/profile_icon.png',
+  `picture` text NOT NULL DEFAULT '../resources/img/profile_icon.png',
   `dateCreated` datetime NOT NULL DEFAULT current_timestamp(),
   `status` varchar(255) NOT NULL DEFAULT 'Active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `accounts`
+-- Dumping data for table `users`
 --
 
-INSERT INTO `accounts` (`AccountID`, `employeeName`, `role`, `accountName`, `password`, `picture`, `dateCreated`, `status`) VALUES
-(3, 'Lance Tiangco', 'Admin', 'ltiangco', '123', 'uploads/dubu2.jpg', '2024-09-01 23:42:57', 'Active'),
-(19, 'Aileen Castro', 'Pharmacy Assistant', 'adminAC', 'yehey', 'uploads/pitied.png', '2024-09-06 21:39:08', 'Active'),
+INSERT INTO `users` (`AccountID`, `employeeName`, `role`, `accountName`, `password`, `picture`, `dateCreated`, `status`) VALUES
+(3, 'Lance Tiangco', 'Admin', 'ltiangco', '123', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active'),
+(4, 'Sayra Jackson', 'Admin', 'sjackson', 'chio', 'Sayra.jpg', '2024-09-15 23:42:57', 'Active'),
+(19, 'Aileen Castro', 'Pharmacy Assistant', 'adminAC', 'yehey', 'pitied.png', '2024-09-06 21:39:08', 'Active'),
 (20, 'Two Pangalawa', 'Purchaser / Pharmacy Assistant', '2P', 'eztwo', '../resources/profile_icon.png', '2024-09-06 21:39:37', 'Inactive'),
-(21, 'Chou Tzuyu', 'PA', 'Tzuyu', 'runaway', 'uploads/tzu.jpg', '2024-09-06 21:40:07', 'Active'),
-(22, 'Wise Wolf Holo', 'PurchaserPA', 'Hololive', 'hehelolo', 'uploads/Holo.jpg', '2024-09-06 21:40:30', 'Active'),
-(24, 'Kim Dahyun', 'Pharmacy Assistant', 'kimdahyun', 'bibimbap', 'uploads/dubu.jpg', '2024-09-06 21:42:20', 'Active'),
-(28, 'Apple', 'Admin', 'apldap', 'apoldeez', 'uploads/half apple.png', '2024-09-06 22:18:41', 'Active');
+(21, 'Chou Tzuyu', 'PA', 'Tzuyu', 'runaway', 'tzu.jpg', '2024-09-06 21:40:07', 'Active'),
+(22, 'Wise Wolf Holo', 'PurchaserPA', 'Hololive', 'hehelolo', 'Holo.jpg', '2024-09-06 21:40:30', 'Active'),
+(24, 'Kim Dahyun', 'Pharmacy Assistant', 'kimdahyun', 'bibimbap', 'dubu.jpg', '2024-09-06 21:42:20', 'Active'),
+(28, 'Apple', 'Admin', 'apldap', 'apoldeez', 'half apple.png', '2024-09-06 22:18:41', 'Active');
 
 -- --------------------------------------------------------
 
@@ -176,9 +177,9 @@ CREATE TABLE `suppliers` (
 --
 
 --
--- Indexes for table `accounts`
+-- Indexes for table `users`
 --
-ALTER TABLE `accounts`
+ALTER TABLE `users`
   ADD PRIMARY KEY (`AccountID`),
   ADD UNIQUE KEY `accountName` (`accountName`);
 
@@ -235,9 +236,9 @@ ALTER TABLE `suppliers`
 --
 
 --
--- AUTO_INCREMENT for table `accounts`
+-- AUTO_INCREMENT for table `users`
 --
-ALTER TABLE `accounts`
+ALTER TABLE `users`
   MODIFY `AccountID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
@@ -302,14 +303,14 @@ ALTER TABLE `productlot`
 -- Constraints for table `purchaseorders`
 --
 ALTER TABLE `purchaseorders`
-  ADD CONSTRAINT `PO_ForeignKey_AccountID` FOREIGN KEY (`AccountID`) REFERENCES `accounts` (`AccountID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `PO_ForeignKey_AccountID` FOREIGN KEY (`AccountID`) REFERENCES `users` (`AccountID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `PO_ForeignKey_SupplierID` FOREIGN KEY (`SupplierID`) REFERENCES `suppliers` (`SupplierID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `sales`
 --
 ALTER TABLE `sales`
-  ADD CONSTRAINT `ForeignKey_AccountID` FOREIGN KEY (`AccountID`) REFERENCES `accounts` (`AccountID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `ForeignKey_AccountID` FOREIGN KEY (`AccountID`) REFERENCES `users` (`AccountID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
