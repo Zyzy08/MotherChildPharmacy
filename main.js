@@ -1,3 +1,49 @@
+/**
+ * Upload Dialog
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  const uploadButton = document.getElementById('upload-button');
+  const uploadInput = document.getElementById('upload-input');
+
+  if (uploadButton && uploadInput) {
+    uploadButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      uploadInput.click();
+    });
+  }
+});
+
+/**
+ * Edit Role
+ */
+function setRole(role) {
+  document.getElementById('role-text').textContent = role;
+  document.getElementById('role').value = role;
+  
+  // Collapse the dropdown after selecting a role
+  const dropdown = document.getElementById('role-dropdown');
+  const bootstrapCollapse = new bootstrap.Collapse(dropdown, {
+    toggle: true
+  });
+}
+
+
+/**
+ * Password Show/Hide Toggle
+ */
+document.getElementById('toggle-password').addEventListener('click', function () {
+  const passwordInput = document.getElementById('password');
+  const togglePassword = document.getElementById('toggle-password');
+  
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    togglePassword.src = 'resources/img/hide.png'; // Change icon to hide.png
+  } else {
+    passwordInput.type = 'password';
+    togglePassword.src = 'resources/img/show.png'; // Change icon back to show.png
+  }
+});
+
 (function() {
   "use strict";
 
@@ -45,7 +91,7 @@
   if (signOutLink) {
     on('click', '.sign-out-link', function(e) {
       e.preventDefault();
-      window.location.href = '../index.php';
+      window.location.href = 'index.php';
     });
   }
 

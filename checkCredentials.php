@@ -22,7 +22,8 @@ $error = "";
 $inputUsername = $_POST['username'];
 $inputPassword = $_POST['password'];
 
-$sql = $conn->prepare("SELECT * FROM accounts WHERE accountName = ? AND password = ?");
+// Prepare the SQL statement to fetch AccountID and other necessary columns
+$sql = $conn->prepare("SELECT AccountID FROM users WHERE accountName = ? AND password = ?");
 $sql->bind_param("ss", $inputUsername, $inputPassword);
 $sql->execute();
 $result = $sql->get_result();
@@ -31,7 +32,8 @@ if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
     if ($user) {
         // Password matches, proceed to login
-        header("Location: dashboard/dashboard.html");
+        $_SESSION['AccountID'] = $user['AccountID']; // Store AccountID in session
+        header("Location: dashboard/dashboard.php");
         exit();
     } else {
         $error = "Invalid password.";

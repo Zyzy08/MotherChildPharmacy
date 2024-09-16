@@ -477,7 +477,9 @@ h6 {
 }
 
 .header-nav .nav-profile img {
-  max-height: 36px;
+  height: 36px;
+  width: 36px;
+  object-fit: cover;
 }
 
 .header-nav .nav-profile span {
@@ -1001,7 +1003,9 @@ h6 {
 # Profie Page
 --------------------------------------------------------------*/
 .profile .profile-card img {
-  max-width: 120px;
+  height: 120px;
+  width: 120px;
+  object-fit: cover;
 }
 
 .profile .profile-card h2 {
@@ -1233,4 +1237,31 @@ h6 {
   position: absolute;
   right: 15px;
   top: 40px;
+}
+
+.col-md-8 .nav-content a {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #012970;
+  transition: 0.3;
+  padding: 10px 0 10px 40px;
+  transition: 0.3s;
+}
+
+.col-md-8 .nav-content a i {
+  font-size: 6px;
+  margin-right: 8px;
+  line-height: 0;
+  border-radius: 50%;
+}
+
+.col-md-8 .form-control .bi-chevron-down {
+  margin-right: 0;
+  transition: transform 0.2s ease-in-out;
+}
+
+.col-md-8 .form-control:not(.collapsed) .bi-chevron-down {
+  transform: rotate(180deg);
 }
