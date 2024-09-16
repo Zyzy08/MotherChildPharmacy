@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    <link rel="stylesheet" href="acc_styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="page">
+    <!-- Modal structure -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalMessage"></p>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-1"></div>
+        <div class="sidebar-2"></div>
+        <div class="sidebar-3"></div>
+        <img src="../resources/img/mnc_logo.png" alt="Mother & Child Logo" class="logo">
+        <span class="main-text">Mother & Child</span>
+        <small class="sub-text">Pharmacy & Medical Supplies</small>
+        <ul class="sidebar-menu">
+            <li class="sidebar-menu-item">
+                <a href="#">
+                    <img src="../resources/img/dashboard_icon.png" alt="Dashboard Icon" class="sidebar-icon">
+                    Dashboard
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#">
+                    <img src="../resources/img/products.png" alt="Products Icon" class="sidebar-icon">
+                    Products
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#">
+                    <img src="../resources/img/suppliers.png" alt="Suppliers Icon" class="sidebar-icon">
+                    Suppliers
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#">
+                    <img src="../resources/img/transactions.png" alt="Transactions Icon" class="sidebar-icon">
+                    Transactions
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#">
+                    <img src="../resources/img/inventory.png" alt="Inventory Icon" class="sidebar-icon">
+                    Inventory
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#">
+                    <img src="../resources/img/pos.png" alt="POS Icon" class="sidebar-icon">
+                    POS
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#">
+                    <img src="../resources/img/return.png" alt="Return / Exchange Icon" class="sidebar-icon">
+                    Return / Exchange
+                </a>
+            </li>
+            <li class="sidebar-menu-item selected">
+                <a href="#">
+                    <img src="../resources/img/users.png" alt="Users Icon" class="sidebar-icon">
+                    Users
+                    <img src="../resources/img/rectangle.png" alt="Indicator" class="indicator">
+                </a>
+            </li>
+            <li class="sidebar-menu-item">
+                <a href="#">
+                    <img src="../resources/img/logout.png" alt="Logout Icon" class="sidebar-icon">
+                    Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="dash-info">
+        <h1 class="dash_text">Users</h1>
+        <span class="user-name">Aileen Castro (Admin)</span>
+        <img src="../resources/img/profile_icon.png" alt="userIcon" class="avatar">
+    </div>
+    <div class="main-content">
+        <div class="button" id="addUser">
+            <img src="../resources/img/add.png">Add User
+        </div>
+        <!-- <div class="buttonOpt" id="optionsUser">
+            <img src="../resources/d-edit.png">User Options
+        </div> -->
+        <br>
+        <div id="usersNum" class="usercount">
+            0 users
+        </div>
+        <div class="searchbox">
+            <svg class="left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+                <title>magnifier</title>
+                <g stroke-width="1.5" fill="none" stroke="#212121" class="nc-icon-wrapper">
+                    <line x1="15.25" y1="15.25" x2="11.285" y2="11.285" stroke-linecap="round" stroke-linejoin="round"
+                        stroke="#212121">
+                    </line>
+                    <circle cx="7.75" cy="7.75" r="5" stroke-linecap="round" stroke-linejoin="round"></circle>
+                </g>
+            </svg>
+            <input type="text" placeholder="Search Employee Name" id="searchInput">
+        </div>
+        <br>
+        <div class="table">
+            <table>
+                <thead>
+                    <tr class="highlight-row">
+                        <th class="col1">
+                            <!-- <input id="selectall" type="checkbox"> -->
+                        </th>
+                        <th colspan="2" class="col2">Employee Name</th>
+                        <th class="col3">Role</th>
+                        <th class="col4">Account Name</th>
+                        <th class="col5">Password</th>
+                        <th class="col6">Date Created</th>
+                        <th class="col7">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data rows will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="overlay" class="overlay">
+        <div class="overlay-content">
+            <span id="closeBtn" class="close-btn">&times;</span>
+            <h2>Add New User</h2>
+            <hr>
+            <h3>Basic Information</h3>
+            <form id="userForm" action="addUser.php" method="post" enctype="multipart/form-data" onsubmit="handleFormSubmit()">
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="employeeName">Employee name</label><br>
+                        </div>
+                        <input type="text" id="employeeName" name="employeeName" required>
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="role">Role</label><br>
+                        </div>
+                        <select name="role" id="role">
+                            <option value="Pharmacy Assistant">Pharmacy Assistant</option>
+                            <option value="Purchaser / Pharmacy Assistant">Purchaser / Pharmacy Assistant</option>
+                            <option value="Admin">Admin</option>                        
+                          </select>
+                    </div>
+                </div>                
+
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="accountName">Account name</label><br>
+                        </div>
+                        <input type="text" id="accountName" name="accountName" required>
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="password">Password</label><br>
+                        </div>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                </div> 
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="status">Status</label><br>
+                        </div>
+                        <select name="status" id="status">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>                      
+                          </select>
+                    </div>
+                </div> 
+                <br>
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="profilePicture">Profile Picture</label><br>
+                        </div>
+                        <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="preview">Image Preview</label><br>
+                        </div>
+                        <img id="preview" src="" alt="Image Preview" style="display: none;">
+                    </div>
+                </div>
+                <br>
+                <div class="line"></div>
+                <div class="button-container">
+                    <button type="reset">Reset</button>
+                    <button type="submit">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- End of Overlay for Add -->
+
+    <div id="overlayEdit" class="overlay">
+        <div class="overlay-content">
+            <span id="closeBtnEdit" class="close-btn">&times;</span>
+            <h2>Edit User</h2>
+            <hr>
+            <h3>Basic Information</h3>
+            <form id="userFormEdit" action="updateUser.php" method="post" enctype="multipart/form-data" onsubmit="handleFormSubmit()">
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="employeeNameEdit">Employee name</label><br>
+                        </div>
+                        <input type="text" id="employeeNameEdit" name="employeeNameEdit" required>
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="roleEdit">Role</label><br>
+                        </div>
+                        <select name="roleEdit" id="roleEdit">
+                            <option value="Pharmacy Assistant">Pharmacy Assistant</option>
+                            <option value="Purchaser / Pharmacy Assistant">Purchaser / Pharmacy Assistant</option>
+                            <option value="Admin">Admin</option>                        
+                          </select>
+                    </div>
+                </div>                
+
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="accountNameEdit">Account name</label><br>
+                        </div>
+                        <input type="text" id="accountNameEdit" name="accountNameEdit" required>
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="passwordEdit">Password</label><br>
+                        </div>
+                        <input type="password" id="passwordEdit" name="passwordEdit" required>
+                    </div>
+                </div> 
+
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="statusEdit">Status</label><br>
+                        </div>
+                        <select name="statusEdit" id="statusEdit">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>                      
+                          </select>
+                    </div>
+                    <div class="textboxHidden">
+                        <div class="label">
+                            <label for="AccountID">AccountID</label><br>
+                        </div>
+                        <input type="text" id="AccountID" name="AccountID" required>
+                    </div>
+                </div> 
+                <br>
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="profilePicture">Profile Picture</label><br>
+                        </div>
+                        <input type="file" id="profilePictureEdit" name="profilePictureEdit" accept="image/*">
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="previewEdit">Image Preview</label><br>
+                        </div>
+                        <img id="previewEdit" src="" alt="Image Preview" style="display: none;">
+                    </div>
+                </div>
+                <br>
+                <div class="line"></div>
+                <div class="button-container">
+                    <button id="deleteUserBtn" type="button">Delete</button>
+                    <button type="submit">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- End of Overlay for Edit -->
+
+    <!-- <div id="overlayText" class="overlayText">
+        <div class="overlay-content">
+            <span id="closeBtnText" class="close-btn">&times;</span>
+            <h2 id="headingPopupText">Text</h2>
+            <hr>
+            <h4 id="popupText">Test</h4>
+        </div>
+    </div> -->
+    <!-- End of Overlay for PopupText -->
+
+
+    <script src="Users.js"></script>
+</body>
+
+</html>

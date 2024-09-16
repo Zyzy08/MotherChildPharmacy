@@ -107,8 +107,6 @@
       </div>
   </main><!-- End #main -->
 
-
-  
   <!-- ======= Footer ======= -->
   <footer id="footer1" class="footer1">
 
@@ -129,8 +127,6 @@
 
   </footer><!-- End Footer -->
 
-  
-
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
@@ -145,23 +141,6 @@
 
   <!-- Template Main JS File -->
   <script src="main.js"></script>
-
-  <!-- Password Visibility Toggle -->
-  <script>
-    document.getElementById('toggle-password').addEventListener('click', function () {
-      const passwordInput = document.getElementById('password');
-      const togglePassword = document.getElementById('toggle-password');
-      
-      // Toggle between 'password' and 'text' types for showing/hiding the password
-      if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        togglePassword.src = 'resources/img/hide.png'; // Change icon to hide.png
-      } else {
-        passwordInput.type = 'password';
-        togglePassword.src = 'resources/img/show.png'; // Change icon back to show.png
-      }
-    });
-  </script>
 
 </body>
 
