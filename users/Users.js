@@ -502,7 +502,14 @@ userlname.addEventListener('input', function(event){
 function setDataTables() {
     $(document).ready(function () {
         $('#example').DataTable({
-            "order": [] // This disables any initial sorting
+            "order": [], // Disable initial sorting
+            "columnDefs": [
+                {
+                    "targets": 5, // Index of the column to disable sorting
+                    "orderable": false // Disable sorting for column 5 - Actions
+                }
+            ]
         });
     });
 }
+
