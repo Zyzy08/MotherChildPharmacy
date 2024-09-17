@@ -374,7 +374,7 @@ input {
 }
 
 button[type="submit"] {
-  width: 70px;
+  width: 80px;
   background-color: #4CAF50;
   /* Green background */
   color: white;
@@ -391,8 +391,8 @@ button[type="submit"]:hover {
   /* Darker green on hover */
 }
 
-button[type="reset"] {
-  width: 70px;
+#resetEdit, button[type="reset"] {
+  width: 80px;
   background-color: #af4c4c;
   color: white;
   /* White text */
@@ -403,7 +403,7 @@ button[type="reset"] {
   /* Optional: Rounded corners */
 }
 
-button[type="reset"]:hover {
+#resetEdit:hover, button[type="reset"]:hover {
   background-color: #a04545;
 }
 
@@ -418,7 +418,7 @@ button[type="reset"]:hover {
 .textbox input {
   flex: 1;
   width: 230px;
-  height: 24px;
+  height: 40px;
   padding-left: 12px;
   padding-right: 12px;
   font-size: 14px;
@@ -496,19 +496,21 @@ button[type="reset"]:hover {
 }
 
 #preview {
-  max-width: 30%;
-  height: auto;
-  margin-top: 10px;
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
   border: 1px solid #ddd;
   display: block;
+  border-radius: 32px;
 }
 
 #previewEdit {
-  max-width: 30%;
-  height: auto;
-  margin-top: 10px;
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
   border: 1px solid #ddd;
   display: block;
+  border-radius: 32px;
 }
 
 input[type="file"] {
@@ -596,4 +598,18 @@ input[type="file"] {
   z-index: 10;
   white-space: nowrap;
   display: block;
+}
+
+/* Style for Offline status */
+.status-offline {
+  color: rgb(255, 136, 136);
+}
+
+/* Style for Online status */
+.status-online {
+  color: rgb(98, 202, 107);
+}
+
+#accountName, #password {
+  color:rgb(182, 182, 182);
 }

@@ -243,7 +243,7 @@ function fetchUserDetails(accountName) {
                 accountNameEdit.value = data.accountName;
                 passwordEdit.value = data.password;
                 previewEdit.style.display = 'block';
-                previewEdit.src = data.picture;
+                previewEdit.src = "uploads/" + data.picture;
                 statusEdit.value = data.status;
                 AccountID.value = data.AccountID;
 
