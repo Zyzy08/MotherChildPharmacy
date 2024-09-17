@@ -505,6 +505,30 @@ function setDataTables() {
             "order": [], // Disable initial sorting
             "columnDefs": [
                 {
+                    "targets": 0, // Employee Name
+                    "width": "23.6%"
+                },
+                {
+                    "targets": 1, // Role
+                    "width": "20.6%"
+                },
+                {
+                    "targets": 2, // Account Name
+                    "width": "16.6%"
+                },
+                {
+                    "targets": 3, // Date
+                    "width": "16.6%"
+                },
+                {
+                    "targets": 4, // Status
+                    "width": "12.6%"
+                },
+                {
+                    "targets": 5, // Actions
+                    "width": "10.6%"
+                },
+                {
                     "targets": 5, // Index of the column to disable sorting
                     "orderable": false // Disable sorting for column 5 - Actions
                 }
