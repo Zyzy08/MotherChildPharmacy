@@ -1,0 +1,549 @@
+/*KEEPP*/
+.Create_PO {
+  position: absolute; 
+  top: 100px; 
+  left: 25px; 
+  height: 36px; 
+  padding: 0 12px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-family: Catamaran; 
+  font-size: 14px; 
+  line-height: 22px; 
+  font-weight: 400; 
+  color: #FFFFFFFF; /* white */
+  background: #005500FF; /* primary-500 */
+  opacity: 1; 
+  border: none; 
+  border-radius: 2px; /* border-m */
+}
+/* Hover */
+.Create_PO:hover {
+  color: #FFFFFFFF; /* white */
+  background: #004200FF; /* primary-650 */
+}
+
+/* Pressed */
+.Create_PO:hover:active {
+  color: #FFFFFFFF; /* white */
+  background: #002D00FF; /* primary-800 */
+}
+
+/* Disabled */
+.Create_PO:disabled {
+  opacity: 0.4; 
+}
+
+
+.deleteProduct{
+  top: 100px; 
+  position: absolute;
+  left: 190px;
+  height: 36px; 
+  background-color: #f44336;
+  padding: 0 12px;
+  color: white;
+  border: none;
+  padding: 10px 17px;
+  font-family: Catamaran; 
+  font-size: 14px; 
+  line-height: 22px; 
+  font-weight: 400; 
+  cursor: pointer;
+  opacity: 1; 
+  border: none; 
+  border-radius: 2px; /* border-m */
+}
+.deleteProduct:hover
+{
+  color: #FFFFFFFF; /* white */
+  background: #b8342b; /* primary-650 */
+  
+}
+
+#updateProduct
+{
+  top: 100px; 
+  position: absolute;
+  left: 270px;
+  height: 36px; 
+  background-color: #4764c2;
+  padding: 0 12px;
+  color: white;
+  border: none;
+  padding: 10px 17px;
+  font-family: Catamaran; 
+  font-size: 14px; 
+  line-height: 22px; 
+  font-weight: 400; 
+  cursor: pointer;
+  opacity: 1; 
+  border: none; 
+  border-radius: 2px; /* border-m */
+}
+#updateProduct:hover{
+  color: #FFFFFFFF; /* white */
+  background: #243d8f; /* primary-800 */
+}
+
+/* Disabled */
+#updateProduct:disabled {
+  opacity: 0.4; 
+}
+
+
+#PurchaseForm {
+  
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  border: 1px solid #ddd;
+  padding: 20px;
+  z-index: 100;
+}
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.modal-content {
+  position: relative;
+  background: #fff;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 80%; /* Responsive width */
+  max-width: 500px; /* Max width for large screens */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Adjust for vertical centering */
+}
+
+/* Close Button */
+#close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+#close:hover,
+#close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.h3 {
+  font-family: Catamaran; /* Body */
+  font-size: 20px; 
+  line-height: 30px; 
+  font-weight: 600; 
+  color: #005500FF; /* primary-500 */
+}
+
+
+/* Form Buttons */
+.form-button button {
+  width: 500px; 
+  height: 36px; 
+  padding: 0 12px; 
+  display: flex;
+  padding: 0px 12px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-family: Catamaran; 
+  font-size: 14px; 
+  line-height: 22px; 
+  font-weight: 400; 
+  color: #FFFFFFFF; /* white */
+  background: #005500FF; /* primary-500 */
+  opacity: 1; 
+  border: none; 
+  border-radius: 4px; 
+  align-items: center; 
+  justify-content: center;
+}
+
+.form-button #Clear {
+  background-color: #f44336;
+}
+
+.form-button #saveBtn {
+  background-color: #4CAF50;
+}
+.form-button {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.textbox input:hover {
+  color: #171A1FFF; /* neutral-900 */
+  background: #F3F4F6FF; /* neutral-200 */
+}
+/* focused */
+.textbox input:focused {
+  color: #171A1FFF; /* neutral-900 */
+  background: #FFFFFFFF; /* white */
+}
+/* disabled */
+.textbox input:disabled {
+  color: #171A1FFF; /* neutral-900 */
+  background: #F3F4F6FF; /* neutral-200 */
+}
+.textbox input {
+  width: 200px; 
+  height: 36px; 
+  padding-left: 12px; 
+  padding-right: 12px; 
+  font-family: Catamaran; 
+  font-size: 14px; 
+  line-height: 22px; 
+  font-weight: 400; 
+  background: #F3F4F6FF; /* neutral-200 */
+  border-radius: 4px; /* border-xl */
+  border-width: 0px; 
+  outline: none; 
+}
+.textbox .label {
+  font-family: Catamaran; 
+  font-size: 14px; 
+  line-height: 22px; 
+  font-weight: 700; 
+}
+/* hover */
+.textbox input:hover {
+  color: #171A1FFF; /* neutral-900 */
+  background: #F3F4F6FF; /* neutral-200 */
+}
+/* focused */
+.textbox input:focused {
+  color: #171A1FFF; /* neutral-900 */
+  background: #FFFFFFFF; /* white */
+}
+/* disabled */
+.textbox input:disabled {
+  color: #171A1FFF; /* neutral-900 */
+  background: #F3F4F6FF; /* neutral-200 */
+}
+.textbox :disabled + .icon, .textbox :disabled + .icon + .icon {
+  fill: #171A1FFF; /* neutral-900 */
+}
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #aaa;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: black;
+  text-decoration: none;
+}
+
+/***************************************PRODUCT TABLE*****************************/
+
+table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        
+.table_product {
+  display: absolute;
+  flex-direction: column;
+  margin-top: 55px;
+  position: absolute;
+  width: 80%;
+  top: 80px;
+  left: 281px;
+  height: 10%;
+  opacity: 1;
+  border-radius: 3px;
+  border-collapse: collapse;
+}
+th.col1, td.col1 {
+  width: 7%;
+}
+
+th.col2, td.col2 {
+  width: 23%;
+}
+
+th.col2pic, td.col2pic {
+  width: 2%;
+}
+
+th.col2name, td.col2name {
+  width: 20.27%;
+}
+
+th.col3, td.col3 {
+  width: 16%;
+}
+
+th.col4, td.col4 {
+  width: 14%;
+}
+
+th.col5, td.col5 {
+  width: 15%;
+}
+
+th.col6, td.col6 {
+  width: 10%;
+}
+
+th.col7, td.col7 {
+  width: 10%;
+  text-align: center;
+}
+
+th {
+  height: 50px;
+  text-align: left;
+  font-family: Catamaran;
+  font-size: 14px;
+  font-weight: 600;
+  color: #565D6DFF;
+}
+
+td {
+  height: 50px;
+  font-family: Catamaran;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #171A1FFF;
+}
+
+.highlight-row {
+  background-color: #f4f4f4;
+}
+
+.selected {
+  background-color: #cfe2ff;
+}
+/*SEARCH**********************/
+.searchbox {
+  position: absolute;
+  top: 105px;
+  right: 0.5%;
+  opacity: 1;
+}
+
+.searchbox input {
+  width: 347px;
+  height: 30px;
+  padding-left: 34px;
+  padding-right: 12px;
+  font-family: Catamaran;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  background: #F3F4F6FF;
+  /* neutral-200 */
+  border-radius: 3px;
+  /* border-l */
+  border-width: 0px;
+  outline: none;
+}
+.searchbox svg {
+  position: absolute;
+  top: 7px;
+  right: 12px;
+  width: 16px;
+  height: 16px;
+  fill: #171A1FFF;
+  /* neutral-900 */
+}
+
+.searchbox svg.left {
+  left: 12px;
+}
+
+/* focused */
+.searchbox input:focused {
+  color: #BDC1CAFF;
+  /* neutral-400 */
+  background: #FFFFFFFF;
+  /* white */
+}
+
+/* disabled */
+.searchbox input:disabled {
+  color: #BDC1CAFF;
+  /* neutral-400 */
+  background: #F3F4F6FF;
+  /* neutral-200 */
+}
+
+.searchbox :disabled+.icon,
+.textbox :disabled+.icon+.icon {
+  fill: #171A1FFF;
+  /* neutral-900 */
+}
+
+
+/* Notification container */
+.notification {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1001; /* Sit on top */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); /* Center the notification */
+  background-color: #fefefe;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 300px; /* Set the width of the notification */
+ 
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Notification message */
+#notificationMessage {
+  margin: 0;
+  font-size: 14px;
+  padding: 5px;
+}
+
+/* Close button for notification */
+#closeNotification {
+  background-color: rgb(0, 75, 0); /* Gray */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+#closeNotification:hover {
+  background-color: rgb(0, 59, 0);
+}
+
+
+.Delnotification {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Delnotification-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.Delnotification button {
+  margin: 5px;
+}
+
+* Overlay Styling */
+.overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    z-index: 999; /* Just below the modal */
+}
+
+/* Delete Modal Styling */
+.deleteModal {
+  display: none;
+  position: fixed; /* Use fixed to keep it centered in the viewport */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Adjust for exact center */
+  width: 327px; 
+  height: 139px; 
+  background: #FFFFFF; /* white */
+  
+  z-index: 1000; /* Ensure it's on top of other content */
+}
+
+/* Modal Content Styling */
+
+/* Close Button Styling */
+.closeBtn {
+    position: absolute; 
+    top: 10px; 
+    right: 10px; 
+    font-size: 20px; 
+    cursor: pointer;
+}
+
+/* Button Styling */
+.modal-content button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#confirmDeleteBtn {
+    background: #005500FF; /* Bootstrap danger color */
+    color: #fff;
+}
+
+#cancelDeleteBtn {
+    background: #f44336; /* Bootstrap info color */
+    color: #fff;
+}
+
+
+.currency {
+  font-family: 'Catamaran', sans-serif;
+}
+
+
+
