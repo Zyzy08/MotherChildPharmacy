@@ -30,7 +30,7 @@
 
   <!-- Template Main CSS File -->
   <link href="../style.css" rel="stylesheet">
-  <link href="../inventory/invent_style.css" rel="stylesheet">
+  <link href="../inventory/invent_styles.css" rel="stylesheet">
 
 </head>
 
