@@ -1,15 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory</title>
-    <link rel="stylesheet" href="invent_styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100..900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Dashboard - Mother & Child Pharmacy and Medical Supplies</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../resources/img/favicon.png" rel="icon">
+  <link href="../resources/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../resources/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../resources/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="../resources/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="../resources/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="../resources/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="../resources/vendor/simple-datatables/style.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="../style.css" rel="stylesheet">
+  <link href="../inventory/invent_style.css" rel="stylesheet">
+
 </head>
 <body class="page">
     <div class="sidebar">
