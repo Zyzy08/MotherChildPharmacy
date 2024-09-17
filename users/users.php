@@ -188,23 +188,21 @@
                 </div> -->
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+                        <div class="card-body profile-card usersTableSize flex-column align-items-center">
                             <table id="example" class="display">
-
-                            <thead>
+                                <thead>
                                     <tr class="highlight-row">
-                                        <th colspan="2">Employee Name</th>
+                                        <th>Employee Name</th>
                                         <th>Role</th>
                                         <th>Account Name</th>
                                         <th>Date Created</th>
                                         <th>Status</th>
-                                        <th colspan="2">Actions</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
                                     <!-- Data rows will be inserted here by JavaScript -->
                                 </tbody>
-                                
                             </table>
                         </div>
                     </div>
@@ -214,13 +212,29 @@
 
     </main><!-- End #main -->
 
+    <!-- ======= Footer ======= -->
+    <footer id="footer" class="footer">
+        <div class="copyright">
+            &copy; Copyright <strong><span>Mother & Child Pharmacy and Medical Supplies</span></strong>. All Rights
+            Reserved
+        </div>
+        <div class="credits">
+            Designed by <a href="https://www.sti.edu/campuses-details.asp?campus_id=QU5H">STI College Angeles - BSIT4-A
+                S.Y. 2024-2025 </a>
+        </div>
+    </footer><!-- End Footer -->
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+            class="bi bi-arrow-up-short"></i></a>
+
     <div id="overlay" class="overlay">
         <div class="overlay-content">
             <span id="closeBtn" class="close-btn">&times;</span>
             <h2>Add New User</h2>
             <hr>
             <h3>Basic Information</h3>
-            <form id="userForm" action="addAccount.php" method="post" enctype="multipart/form-data" onsubmit="handleFormSubmit()">
+            <form id="userForm" action="addAccount.php" method="post" enctype="multipart/form-data"
+                onsubmit="handleFormSubmit()">
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
@@ -235,10 +249,10 @@
                         <select name="role" id="role">
                             <option value="Pharmacy Assistant">Pharmacy Assistant</option>
                             <option value="Purchaser">Purchaser</option>
-                            <option value="Admin">Admin</option>                        
-                          </select>
+                            <option value="Admin">Admin</option>
+                        </select>
                     </div>
-                </div>                
+                </div>
 
                 <div class="container">
                     <div class="textbox">
@@ -261,10 +275,10 @@
                         </div>
                         <select name="status" id="status">
                             <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>                      
-                          </select>
+                            <option value="Inactive">Inactive</option>
+                        </select>
                     </div>
-                </div> 
+                </div>
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
@@ -272,7 +286,7 @@
                         </div>
                         <input id="password" name="password" required disabled>
                     </div>
-                </div> 
+                </div>
                 <br>
                 <div class="container">
                     <div class="textbox">
@@ -305,7 +319,8 @@
             <h2>Edit User</h2>
             <hr>
             <h3>Basic Information</h3>
-            <form id="userFormEdit" action="updateAccount.php" method="post" enctype="multipart/form-data" onsubmit="handleFormSubmit()">
+            <form id="userFormEdit" action="updateAccount.php" method="post" enctype="multipart/form-data"
+                onsubmit="handleFormSubmit()">
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
@@ -320,10 +335,10 @@
                         <select name="roleEdit" id="roleEdit">
                             <option value="Pharmacy Assistant">Pharmacy Assistant</option>
                             <option value="Purchaser">Purchaser</option>
-                            <option value="Admin">Admin</option>                        
-                          </select>
+                            <option value="Admin">Admin</option>
+                        </select>
                     </div>
-                </div>                
+                </div>
 
                 <div class="container">
                     <div class="textbox">
@@ -338,7 +353,7 @@
                         </div>
                         <input type="password" id="passwordEdit" name="passwordEdit" required>
                     </div>
-                </div> 
+                </div>
 
                 <div class="container">
                     <div class="textbox">
@@ -347,8 +362,8 @@
                         </div>
                         <select name="statusEdit" id="statusEdit">
                             <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>                      
-                          </select>
+                            <option value="Inactive">Inactive</option>
+                        </select>
                     </div>
                     <div class="textboxHidden">
                         <div class="label">
@@ -356,7 +371,7 @@
                         </div>
                         <input type="text" id="AccountID" name="AccountID" required>
                     </div>
-                </div> 
+                </div>
                 <br>
                 <div class="container">
                     <div class="textbox">
@@ -388,40 +403,22 @@
             <span id="closeBtnAD" class="close-btn">&times;</span>
             <h2>Other Options</h2>
             <hr>
-            <form id="userFormAD" action="archiveAccount.php" method="post" enctype="multipart/form-data" onsubmit="handleFormSubmit()">
-                <button id="archiveUserBtn" type="button"><img src="../resources/img/archive.png"> Archive User Account</button>
-                <button id="deleteUserBtn" type="button"><img src="../resources/img/delete.png"> Delete User Permanently</button>
-                <button id="resetPasswordBtn" type="button"><img src="../resources/img/resetPass.png"> Reset Password</button>
+            <form id="userFormAD" action="archiveAccount.php" method="post" enctype="multipart/form-data"
+                onsubmit="handleFormSubmit()">
+                <button id="archiveUserBtn" type="button"><img src="../resources/img/archive.png"> Archive User
+                    Account</button>
+                <button id="deleteUserBtn" type="button"><img src="../resources/img/delete.png"> Delete User
+                    Permanently</button>
+                <button id="resetPasswordBtn" type="button"><img src="../resources/img/resetPass.png"> Reset
+                    Password</button>
             </form>
         </div>
     </div>
     <!-- End of Overlay for Archive/Delete -->
 
-    <!-- ======= Footer ======= -->
-    <footer id="footer" class="footer">
-        <div class="copyright">
-            &copy; Copyright <strong><span>Mother & Child Pharmacy and Medical Supplies</span></strong>. All Rights
-            Reserved
-        </div>
-        <div class="credits">
-            Designed by <a href="https://www.sti.edu/campuses-details.asp?campus_id=QU5H">STI College Angeles - BSIT4-A
-                S.Y. 2024-2025 </a>
-        </div>
-    </footer><!-- End Footer -->
-
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-            class="bi bi-arrow-up-short"></i></a>
-
-    <!-- Vendor JS Files -->
-
 
     <!-- Template Main JS File -->
     <script src="Users.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#example').DataTable();
-        });
-    </script>
 
 </body>
 

@@ -147,90 +147,118 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => updateTable(data))
         .catch(error => alert('Error fetching users data:', error));
+    setDataTables();
 });
+
+// function updateTable(data) {
+//     let counter = 0;
+//     const tableBody = document.querySelector('table').getElementsByTagName('tbody')[0];
+
+//     // Clear existing rows (excluding the header)
+//     tableBody.innerHTML = '';
+
+//     data.forEach(row => {
+//         const tr = document.createElement('tr');
+//         // tr.className = 'highlight-row';
+
+//         const avatarCell = document.createElement('td');
+//         const avatarImg = document.createElement('img');
+//         let picsrc = "uploads/" + row.picture;
+//         avatarImg.src = picsrc;
+//         avatarImg.alt = row.employeeName;
+//         avatarImg.className = 'avatar2';
+//         avatarCell.appendChild(avatarImg);
+//         const employeeNameText = document.createTextNode("   " + row.employeeName);
+//         avatarCell.appendChild(employeeNameText);
+//         avatarCell.className = 'col2pic align-left col2name';
+//         tr.appendChild(avatarCell);
+
+//         const roleCell = document.createElement('td');
+//         roleCell.textContent = row.role;
+//         tr.appendChild(roleCell);
+
+//         const accNameCell = document.createElement('td');
+//         accNameCell.textContent = row.accountName;
+//         tr.appendChild(accNameCell);
+
+//         const updateDateCell = document.createElement('td');
+//         updateDateCell.textContent = row.dateCreated;
+//         tr.appendChild(updateDateCell);
+
+//         const connectedCell = document.createElement('td');
+//         if (row.connected == 0) {
+//             connectedCell.textContent = "Offline";
+//             connectedCell.classList.add('status-offline');
+//         } else {
+//             connectedCell.textContent = "Online";
+//             connectedCell.classList.add('status-online');
+//         }
+//         tr.appendChild(connectedCell);
+
+//         //Actions
+//         const selectCell = document.createElement('td');
+//         selectCell.className = 'edit-width';
+//         const editButton = document.createElement('img');
+//         editButton.src = '../resources/img/d-edit.png';
+//         editButton.alt = 'Edit';
+//         editButton.style.cursor = 'pointer';
+//         editButton.style.marginLeft = '10px';
+//         editButton.addEventListener('click', function () {
+//             selectedUser = row.accountName;
+//             fetchUserDetails(selectedUser);
+//         });
+//         selectCell.appendChild(editButton);
+
+//         const archiveButton = document.createElement('img');
+//         archiveButton.src = '../resources/img/s-remove.png';
+//         archiveButton.alt = 'Delete';
+//         archiveButton.style.cursor = 'pointer';
+//         archiveButton.style.marginLeft = '10px';
+//         archiveButton.addEventListener('click', function () {
+//             selectedUser = row.accountName;
+//             showDeleteOptions();
+//         });
+//         selectCell.appendChild(archiveButton);
+
+//         tr.appendChild(selectCell);
+
+//         tableBody.appendChild(tr);
+
+
+//         counter++;
+//     });
+
+//     // usersNum.innerHTML = `<strong>${counter}</strong> users`;
+// }
 
 function updateTable(data) {
     let counter = 0;
-    const tableBody = document.querySelector('table').getElementsByTagName('tbody')[0];
+    const table = $('#example').DataTable();
 
-    // Clear existing rows (excluding the header)
-    tableBody.innerHTML = '';
+    // Clear existing data
+    table.clear();
 
     data.forEach(row => {
-        const tr = document.createElement('tr');
-        // tr.className = 'highlight-row';
-
-        const avatarCell = document.createElement('td');
-        const avatarImg = document.createElement('img');
-        let picsrc = "uploads/" + row.picture;
-        avatarImg.src = picsrc;
-        avatarImg.alt = row.employeeName;
-        avatarImg.className = 'avatar2';
-        avatarCell.className = 'col2pic';
-        avatarCell.appendChild(avatarImg);
-        tr.appendChild(avatarCell);
-
-        const nameCell = document.createElement('td');
-        nameCell.textContent = row.employeeName;
-        nameCell.className = 'align-left col2name';
-        tr.appendChild(nameCell);
-
-        const roleCell = document.createElement('td');
-        roleCell.textContent = row.role;
-        tr.appendChild(roleCell);
-
-        const accNameCell = document.createElement('td');
-        accNameCell.textContent = row.accountName;
-        tr.appendChild(accNameCell);
-
-        const updateDateCell = document.createElement('td');
-        updateDateCell.textContent = row.dateCreated;
-        tr.appendChild(updateDateCell);
-
-        const connectedCell = document.createElement('td');
-        if (row.connected == 0) {
-            connectedCell.textContent = "Offline";
-            connectedCell.classList.add('status-offline');
-        } else {
-            connectedCell.textContent = "Online";
-            connectedCell.classList.add('status-online');
-        }
-        tr.appendChild(connectedCell);
-
-        const selectCell = document.createElement('td');
-        selectCell.className = 'edit-width';
-        const editButton = document.createElement('img');
-        editButton.src = '../resources/img/d-edit.png';
-        editButton.alt = 'Edit';
-        editButton.style.cursor = 'pointer';
-        editButton.addEventListener('click', function () {
-            selectedUser = row.accountName;
-            fetchUserDetails(selectedUser);
-        });
-        selectCell.appendChild(editButton);
-        tr.appendChild(selectCell);
-
-        const selectCell2 = document.createElement('td');
-        selectCell2.className = 'edit-width';
-        const archiveButton = document.createElement('img');
-        archiveButton.src = '../resources/img/s-remove.png';
-        archiveButton.alt = 'Delete';
-        archiveButton.style.cursor = 'pointer';
-        archiveButton.addEventListener('click', function () {
-            selectedUser = row.accountName;
-            showDeleteOptions();
-        });
-        selectCell2.appendChild(archiveButton);
-        tr.appendChild(selectCell2);
-
-        tableBody.appendChild(tr);
-
+        table.row.add([
+            `<img src="uploads/${row.picture}" alt="${row.employeeName}" class="avatar2"/> ${row.employeeName}`,
+            row.role,
+            row.accountName,
+            row.dateCreated,
+            row.connected == 0 ? '<span class="status-offline">Offline</span>' : '<span class="status-online">Online</span>',
+            `<img src="../resources/img/d-edit.png" alt="Edit" style="cursor:pointer;margin-left:10px;" onclick="fetchUserDetails('${row.accountName}')"/>
+             <img src="../resources/img/s-remove.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="showDeleteOptions('${row.accountName}')"/>`
+        ]);
 
         counter++;
     });
 
+    // Draw the updated table
+    table.draw();
+
+    // Optional: Update a user count display
     // usersNum.innerHTML = `<strong>${counter}</strong> users`;
 }
+
 
 function fetchUserDetails(accountName) {
     fetch(`getUserData.php?accountName=${encodeURIComponent(accountName)}`)
@@ -470,3 +498,11 @@ userlname.addEventListener('input', function(event){
     accountName.value = firstLetter + lastName;
     pass.value = lastName + code;
 });
+
+function setDataTables() {
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "order": [] // This disables any initial sorting
+        });
+    });
+}
