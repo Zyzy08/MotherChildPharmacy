@@ -1,93 +1,177 @@
+<?php include '../fetchUser.php'; ?>
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory</title>
-    <link rel="stylesheet" href="invent_styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100..900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-</head>
-<body class="page">
-    <div class="sidebar">
-        <div class="sidebar-1"></div>
-        <div class="sidebar-2"></div>
-        <div class="sidebar-3"></div>
-        <img src="../resources/mnc_logo.png" alt="Mother & Child Logo" class="logo">
-        <span class="main-text">Mother & Child</span>
-        <small class="sub-text">Pharmacy & Medical Supplies</small>
-        <ul class="sidebar-menu">
-            <li class="sidebar-menu-item">
-                <a href="#">
-                    <img src="../resources/dashboard_icon.png" alt="Dashboard Icon" class="sidebar-icon">
-                    Dashboard
-                    <img src="../resources/rectangle.png" alt="Indicator" class="indicator">
-                </a>
-            </li>
-            <li class="sidebar-menu-item">
-                <a href="#">
-                    <img src="../resources/products.png" alt="Products Icon" class="sidebar-icon">
-                    Products
-                </a>
-            </li>
-            <li class="sidebar-menu-item">
-                <a href="#">
-                    <img src="../resources/suppliers.png" alt="Suppliers Icon" class="sidebar-icon">
-                    Suppliers
-                </a>
-            </li>
-            <li class="sidebar-menu-item">
-                <a href="#">
-                    <img src="../resources/transactions.png" alt="Transactions Icon" class="sidebar-icon">
-                    Transactions
-                </a>
-            </li>
-            <li class="sidebar-menu-item selected">
-                <a href="#">
-                    <img src="../resources/inventory_active.png" alt="Inventory Icon" class="sidebar-icon">
-                    Inventory
-                </a>
-            </li>
-            <li class="sidebar-menu-item">
-                <a href="#">
-                    <img src="../resources/pos.png" alt="POS Icon" class="sidebar-icon">
-                    POS
-                </a>
-            </li>
-            <li class="sidebar-menu-item">
-                <a href="#">
-                    <img src="../resources/return.png" alt="Return / Exchange Icon" class="sidebar-icon">
-                    Return / Exchange
-                </a>
-            </li>
-            <li class="sidebar-menu-item">
-                <a href="#">
-                    <img src="../resources/accounts.png" alt="Accounts Icon" class="sidebar-icon">
-                    Accounts
-                </a>
-            </li>
-            <li class="sidebar-menu-item">
-                <a href="#">
-                    <img src="../resources/logout.png" alt="Logout Icon" class="sidebar-icon">
-                    Logout
-                </a>
-            </li>
-        </ul>
-    </div>
-    <div class="dash-info">
-        <h1 class="dash_text">Inventory</h1>
 
-        <button class="Create_PO">Create Purchase Order</button>
-        <button id="deleteProduct" class="deleteProduct">Delete</button>
-        <button id="updateProduct">Update</button>
-        <span class="user-name">Aileen Castro (Admin)</span>
-        <img src="../resources/profile_icon.png" alt="Aileen Castro" class="avatar">
-    </div>
-    
-    <form id="PurchaseForm" class="modal" enctype="multipart/form-data" action="getInventory.php" method="POST">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Dashboard - Mother & Child Pharmacy and Medical Supplies</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="../resources/img/favicon.png" rel="icon">
+  <link href="../resources/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="../resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../resources/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="../resources/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="../resources/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="../resources/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="../resources/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="../resources/vendor/simple-datatables/style.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="../style.css" rel="stylesheet">
+  <link href="../inventory/invent_style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+
+    <div class="d-flex align-items-center justify-content-between">
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+      <a href="dashboard.php" class="logo d-flex align-items-center">
+        <img src="../resources/img/logo.png" alt="">
+        <span class="d-none d-lg-block span1">Mother & Child</span>
+        <span class="d-none d-lg-block span2">Pharmacy and Medical Supplies</span>
+      </a>
+    </div><!-- End Logo -->
+
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+
+        <li class="nav-item dropdown pe-3">
+
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            <img src="../users/uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2"><?php echo htmlspecialchars($formattedName); ?></span>
+          </a><!-- End Profile Image Icon -->
+
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6><?php echo htmlspecialchars($employeeName); ?></h6>
+              <span><?php echo htmlspecialchars($role); ?></span>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="../users/users-profile/users-profile.php">
+                <i class="bi bi-person"></i>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <li>
+              <a class="dropdown-item d-flex align-items-center sign-out-link" href="../#">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>            
+
+          </ul><!-- End Profile Dropdown Items -->
+
+        </li><!-- End Profile Nav -->
+
+      </ul>
+    </nav><!-- End Icons Navigation -->
+
+  </header><!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+      <li class="nav-item">
+        <a class="nav-link" href="dashboard.php">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+
+      <li class="nav-heading"></li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="../suppliers/suppliers.html">
+          <i class="bi bi-truck"></i>
+          <span>Suppliers</span>
+        </a>
+      </li><!-- End Suppliers Page Nav -->
+
+      <li class="nav-item"></li>
+        <a class="nav-link collapsed" href="../transactions/transactions.html">
+          <i class="bi bi-cash-coin"></i>
+          <span>Transactions</span>
+        </a>
+      </li><!-- End Transactions Page Nav -->
+
+      <li class="nav-item"></li>
+        <a class="nav-link collapsed" href="../inventory/inventory.php">
+          <i class="bi bi-box-seam"></i>
+          <span>Inventory</span>
+        </a>
+      </li><!-- End Inventory Page Nav -->
+
+      <li class="nav-item"></li>
+        <a class="nav-link collapsed" href="../returnexchange/return.html">
+          <i class="bi bi-cart-dash"></i>
+          <span>Return & Exchange</span>
+        </a>
+      </li><!-- End Return & Exchange Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="../users/users.html">
+          <i class="bi bi-person"></i>
+          <span>Users</span>
+        </a>
+      </li><!-- End Users Page Nav -->
+
+      <li class="nav-heading"></li>
+
+      <li class="nav-item"></li>
+        <a class="nav-link collapsed" href="../pos/pos.html">
+          <i class="bi bi-printer"></i>
+          <span>POS</span>
+        </a>
+      </li><!-- End POS Page Nav -->
+
+    </ul>
+
+  </aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Inventory</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
+          <li class="breadcrumb-item active">Inventory</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <button class="Create_PO">Create PO</button>
+    <button class="deleteProduct">Delete Product</button>
+    <button id="updateProduct">Update Product</button>
+      
+    <form id="PurchaseForm" class="modal" enctype="multipart/form-data" action="../inventory/getInventory.php" method="POST">
         <div class="modal-content">
             <h2>Create New Purchase Order</h2>
             <button class="close" id="closeBtn">&times;</button>
@@ -175,10 +259,8 @@
             </svg>
             <input type="text" placeholder="Search Product....." id="searchInput">
     </div>
-    
-   
 
-  
+
     <div class="table_product">
     <div id="errorContainer"></div> <!-- Error message container -->
         <table>
@@ -199,8 +281,7 @@
         </table>
 
 
-
-    <!-- Notification Container -->
+         <!-- Notification Container -->
     <div id="notification" class="notification">
     <p id="notificationMessage">Double-click the row that you want to edit.</p>
     <button id="closeNotification" class="btn btn-secondary">Close</button>
@@ -224,6 +305,50 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+    <div class="copyright">
+      &copy; Copyright <strong><span>Mother & Child Pharmacy and Medical Supplies</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+      Designed by <a href="https://www.sti.edu/campuses-details.asp?campus_id=QU5H">STI College Angeles - BSIT4-A s.y 2024-2025 </a>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="../resources/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="../resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../resources/vendor/chart.js/chart.umd.js"></script>
+  <script src="../resources/vendor/echarts/echarts.min.js"></script>
+  <script src="../resources/vendor/quill/quill.js"></script>
+  <script src="../resources/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="../resources/vendor/tinymce/tinymce.min.js"></script>
+  <script src="../resources/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../main.js"></script>
+  <script src="../inventory/invent_Js.js"></script>
+
 </body>
-<script src="invent_Js.js"></script>
+
 </html>
