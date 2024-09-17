@@ -43,11 +43,11 @@ const accname = document.getElementById('accountName');
 const pass = document.getElementById('password');
 //EditForm fields
 const employeeNameEdit = document.getElementById('employeeNameEdit');
+const employeeLNameEdit = document.getElementById('employeeLNameEdit');
 const roleEdit = document.getElementById('roleEdit');
 const accountNameEdit = document.getElementById('accountNameEdit');
 const passwordEdit = document.getElementById('passwordEdit');
 const previewEdit = document.getElementById('previewEdit');
-const statusEdit = document.getElementById('statusEdit');
 const AccountID = document.getElementById('AccountID');
 const deleteUserBtn = document.getElementById('deleteUserBtn');
 //etc
@@ -67,6 +67,8 @@ let selectedUser = null;
 function showOverlay() {
     document.getElementById('userForm').reset();
     document.getElementById('preview').style.display = 'none';
+    resetPermissions();
+    setPAPermissions();
     overlay.style.display = 'flex';
 }
 function showEditOverlay() {
@@ -240,7 +242,7 @@ function updateTable(data) {
 
     data.forEach(row => {
         table.row.add([
-            `<img src="uploads/${row.picture}" alt="${row.employeeName}" class="avatar2"/> ${row.employeeName}`,
+            `<img src="uploads/${row.picture}" alt="${row.employeeName}" class="avatar2"/> ${row.employeeName + " " + row.employeeLName}`,
             row.role,
             row.accountName,
             row.dateCreated,
@@ -267,13 +269,25 @@ function fetchUserDetails(accountName) {
             if (data) {
                 // Populate the overlay form with user details
                 employeeNameEdit.value = data.employeeName;
+                employeeLNameEdit.value = data.employeeLName;
                 roleEdit.value = data.role;
                 accountNameEdit.value = data.accountName;
                 passwordEdit.value = data.password;
                 previewEdit.style.display = 'block';
                 previewEdit.src = "uploads/" + data.picture;
-                statusEdit.value = data.status;
                 AccountID.value = data.AccountID;
+
+                resetPermissionsEdit();
+
+                // Update checkboxes based on the permissions data
+                SuppliersPermsEdit.checked = data.SuppliersPerms === 'on'; 
+                TransactionsPermsEdit.checked = data.TransactionsPerms === 'on';
+                InventoryPermsEdit.checked = data.InventoryPerms === 'on';
+                POSPermsEdit.checked = data.POSPerms === 'on';
+                REPermsEdit.checked = data.REPerms === 'on';
+                POPermsEdit.checked = data.POPerms === 'on';
+                UsersPermsEdit.checked = data.UsersPerms === 'on';
+
 
                 // Show the overlay
                 overlayEdit.style.display = 'flex';
@@ -315,20 +329,29 @@ deleteUserBtn.addEventListener('click', function () {
 
         xhr.send(JSON.stringify({ accountName: selectedUser }));
         alert("User deleted successfully!");
-        // document.getElementById('modalMessage').textContent = response.message;
-        // modal.style.display = "block";
         setTimeout(() => {
-            window.location.href = 'users.html'; // Redirect on success
-        }, 1000);
+            window.location.href = 'users.php'; // Redirect on success
+        }, 100);
     } else {
 
     }
 });
 
 document.getElementById('userForm').addEventListener('submit', function (event) {
+    document.getElementById('accountName').disabled = false;
+    document.getElementById('password').disabled = false;
     event.preventDefault(); // Prevent default form submission
 
     const formData = new FormData(this);
+
+    const checkboxes = document.querySelectorAll('.permissionsSelect input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            formData.append(checkbox.id, checkbox.value || 'on'); // Append only checked checkboxes
+        } else {
+            formData.append(checkbox.id, 'off'); // Indicate unchecked state if needed
+        }
+    });
 
     fetch('addUser.php', {
         method: 'POST',
@@ -337,30 +360,33 @@ document.getElementById('userForm').addEventListener('submit', function (event) 
         .then(response => response.json())
         .then(data => {
             alert(data.message);
-            // Set the message in the modal
-            //document.getElementById('modalMessage').textContent = data.message;
 
-            // Display the modal
-            //modal.style.display = "block";
-
-            // Redirect if successful
             if (data.success) {
                 setTimeout(() => {
-                    window.location.href = 'users.html'; // Redirect on success
+                    window.location.href = 'users.php'; // Redirect on success
                 }, 1000);
             }
         })
         .catch(error => {
-            // document.getElementById('modalMessage').textContent = 'An error occurred: ' + error.message;
-            // modal.style.display = "block";
             alert('An error occurred: ' + error.message);
         });
 });
 
 document.getElementById('userFormEdit').addEventListener('submit', function (event) {
+    document.getElementById('accountNameEdit').disabled = false;
+    document.getElementById('passwordEdit').disabled = false;
     event.preventDefault(); // Prevent default form submission
 
     const formData2 = new FormData(this);
+
+    const checkboxesEdit = document.querySelectorAll('.permissionsSelectEdit input[type="checkbox"]');
+    checkboxesEdit.forEach(checkbox => {
+        if (checkbox.checked) {
+            formData2.append(checkbox.id, checkbox.value || 'on'); // Append only checked checkboxes
+        } else {
+            formData2.append(checkbox.id, 'off'); // Indicate unchecked state if needed
+        }
+    });
 
     fetch('updateUser.php', {
         method: 'POST',
@@ -369,38 +395,19 @@ document.getElementById('userFormEdit').addEventListener('submit', function (eve
         .then(response => response.json())
         .then(data => {
             alert(data.message);
-            // Set the message in the modal
-            //document.getElementById('modalMessage').textContent = data.message;
 
-            // Display the modal
-            //modal.style.display = "block";
-
-            // Redirect if successful
             if (data.success) {
                 setTimeout(() => {
-                    window.location.href = 'users.html'; // Redirect on success
+                    window.location.href = 'users.php'; // Redirect on success
                 }, 100);
             }
         })
         .catch(error => {
-            // document.getElementById('modalMessage').textContent = 'An error occurred: ' + error.message;
-            // modal.style.display = "block";
+
             alert('An error occurred: ' + error.message);
         });
 });
 
-
-// When the user clicks on <span> (x), close the modal
-// span.onclick = function() {
-//     modal.style.display = "none";
-// };
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-};
 
 function fetchData(query) {
     fetch('searchUser.php', {
@@ -426,27 +433,8 @@ function fetchData(query) {
         });
 }
 
-// searchInput.addEventListener('input', function(event) {
-//     const query = event.target.value;
-//     if (query.trim() === '') {
-//         fetch('getUsers.php')
-//         .then(response => response.json())
-//         .then(data => updateTable(data))
-//         .catch(error => alert('Error fetching users data:', error));
-//         return;
-//     }else{
-//         const query = event.target.value.trim();
-//         if (query.length === 0) {
-//             // Clear the table and user count if query is empty
-//             updateTable([]);
-//         } else {
-//             // Fetch data from the server with the search query
-//             fetchData(query);
-//         }
-//     }    
-// });
-
-function showDeleteOptions() {
+function showDeleteOptions(accountName) {
+    selectedUser = accountName;
     overlayAD.style.display = 'flex';
 };
 function closeADOverlay() {
@@ -454,24 +442,23 @@ function closeADOverlay() {
 }
 closeBtnAD.addEventListener('click', closeADOverlay);
 
-resetEdit.addEventListener('click', function(event){
-    fetchUserDetails(selectedUser);
-});
+// resetEdit.addEventListener('click', function(event){
+//     fetchUserDetails(selectedUser);
+// });
 
 let newID = 0;
-addUserBtn.addEventListener('click', function(event){
+addUserBtn.addEventListener('click', function(event) {
     showOverlay();
     fetch('getNewAccountID.php')
-            .then(response => response.json())
-            .then(data => {
-                if (data.lastAccountID) {
-                    const lastAccountID = parseInt(data.lastAccountID);
-                    newID = lastAccountID + 1;
-                } else {
-                    console.error('No lastAccountID found in the response.');
-                }
-            })
-            .catch(error => console.error('Error fetching data:', error));
+        .then(response => response.json())
+        .then(data => {
+            if (data.nextAutoIncrement) {
+                newID = parseInt(data.nextAutoIncrement);
+            } else {
+                console.error('No nextAutoIncrement found in the response.');
+            }
+        })
+        .catch(error => console.error('Error fetching data:', error));
 });
 
 username.addEventListener('input', function(event){
@@ -537,3 +524,214 @@ function setDataTables() {
     });
 }
 
+//PermissionsToggle JS
+const permsToggle = document.getElementById("permsToggle");
+const checkboxes = document.querySelectorAll(".permissionsSelect input[type='checkbox']");
+const permissionsSelectContainer = document.querySelector(".permissionsSelect");
+let permsToggleStatus = 0;
+
+const SuppliersPerms = document.getElementById('SuppliersPerms');
+const TransactionsPerms = document.getElementById('TransactionsPerms');
+const InventoryPerms = document.getElementById('InventoryPerms');
+const UsersPerms = document.getElementById('UsersPerms');
+const POSPerms = document.getElementById('POSPerms');
+const REPerms = document.getElementById('REPerms');
+const POPerms = document.getElementById('POPerms');
+
+permsToggle.addEventListener('click', function(){
+    if(permsToggleStatus === 1){
+        permsToggle.src = '../resources/img/toggle-off.png';
+        permsToggleStatus = 0;
+        setCheckboxesDisabled(true); // Disable checkboxes
+        permissionsSelectContainer.classList.remove('enabled'); // Remove enabled class
+    }else{
+        permsToggleStatus = 1;
+        permsToggle.src = '../resources/img/toggle-on.png';
+        setCheckboxesDisabled(false); // Enable checkboxes
+        permissionsSelectContainer.classList.add('enabled'); // Add enabled class
+    }
+});
+
+// Function to enable or disable checkboxes
+function setCheckboxesDisabled(disabled) {
+    checkboxes.forEach(checkbox => {
+        checkbox.disabled = disabled;
+    });
+}
+
+function setPAPermissions(){
+    TransactionsPerms.checked = true;
+    POSPerms.checked = true;
+    REPerms.checked = true;
+}
+
+function setAdminPermissions(){
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = true;
+    });
+}
+
+function resetPermissions(){
+    if (permsToggleStatus == 1){
+        permissionsSelectContainer.classList.remove('enabled');
+        permsToggle.src = '../resources/img/toggle-off.png';
+        setCheckboxesDisabled(true);
+        permsToggleStatus = 0;
+    }
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+}
+
+// Function to handle the change event
+function handleSelectChange(event) {
+    resetPermissions();
+    const selectedValue = event.target.value; // Get the selected value
+    if (selectedValue === "Pharmacy Assistant") {
+        setPAPermissions();
+    }else if (selectedValue === "Admin") {
+        setAdminPermissions();
+    }else if (selectedValue === "Purchaser"){
+        setAdminPermissions();
+        UsersPerms.checked = false;
+    }
+}
+
+// Add event listener to the select element
+const roleSelect = document.getElementById('role');
+roleSelect.addEventListener('change', handleSelectChange);
+
+//PermissionsToggle on EditUser JS
+const permsToggleEdit = document.getElementById("permsToggleEdit");
+const checkboxesEdit = document.querySelectorAll(".permissionsSelectEdit input[type='checkbox']");
+const permissionsSelectContainerEdit = document.querySelector(".permissionsSelectEdit");
+let permsToggleStatusEdit = 0;
+
+const SuppliersPermsEdit = document.getElementById('SuppliersPermsEdit');
+const TransactionsPermsEdit = document.getElementById('TransactionsPermsEdit');
+const InventoryPermsEdit = document.getElementById('InventoryPermsEdit');
+const UsersPermsEdit = document.getElementById('UsersPermsEdit');
+const POSPermsEdit = document.getElementById('POSPermsEdit');
+const REPermsEdit = document.getElementById('REPermsEdit');
+const POPermsEdit = document.getElementById('POPermsEdit');
+
+permsToggleEdit.addEventListener('click', function(){
+    if(permsToggleStatusEdit === 1){
+        permsToggleEdit.src = '../resources/img/toggle-off.png';
+        permsToggleStatusEdit = 0;
+        setCheckboxesEditDisabled(true); // Disable checkboxes
+        permissionsSelectContainerEdit.classList.remove('enabled'); // Remove enabled class
+    }else{
+        permsToggleStatusEdit = 1;
+        permsToggleEdit.src = '../resources/img/toggle-on.png';
+        setCheckboxesEditDisabled(false); // Enable checkboxes
+        permissionsSelectContainerEdit.classList.add('enabled'); // Add enabled class
+    }
+});
+
+function setCheckboxesEditDisabled(disabled) {
+    checkboxesEdit.forEach(checkbox => {
+        checkbox.disabled = disabled;
+    });
+}
+
+function setPAPermissionsEdit(){
+    TransactionsPermsEdit.checked = true;
+    POSPermsEdit.checked = true;
+    REPermsEdit.checked = true;
+}
+
+function setAdminPermissionsEdit(){
+    checkboxesEdit.forEach(checkbox => {
+        checkbox.checked = true;
+    });
+}
+
+function resetPermissionsEdit(){
+    if (permsToggleStatusEdit == 1){
+        permissionsSelectContainerEdit.classList.remove('enabled');
+        permsToggleEdit.src = '../resources/img/toggle-off.png';
+        setCheckboxesEditDisabled(true);
+        permsToggleStatusEdit = 0;
+    }
+    checkboxesEdit.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+}
+
+// Function to handle the change event
+function handleSelectChangeEdit(event) {
+    resetPermissionsEdit();
+    const selectedValueEdit = event.target.value; // Get the selected value
+    if (selectedValueEdit === "Pharmacy Assistant") {
+        setPAPermissionsEdit();
+    }else if (selectedValueEdit === "Admin") {
+        setAdminPermissionsEdit();
+    }else if (selectedValueEdit === "Purchaser"){
+        setAdminPermissionsEdit();
+        UsersPermsEdit.checked = false;
+    }
+}
+
+roleEdit.addEventListener('change', handleSelectChangeEdit);
+
+// Archiving Accounts
+const archiveUserBtn = document.getElementById('archiveUserBtn');
+archiveUserBtn.addEventListener('click', function() {
+    let confirmationUser = confirm("Are you sure you want to archive this user?");
+    if (confirmationUser === true) {
+        if (!selectedUser || selectedUser.trim() === '') {
+            alert('No user selected.');
+            return;
+        }
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'archiveUser.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+        // Handle the response
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                const response = JSON.parse(xhr.responseText);
+                document.getElementById('modalMessage').textContent = response.message;
+            } else {
+                alert('Error: ' + xhr.status);
+            }
+        };
+
+        xhr.send(JSON.stringify({ accountName: selectedUser }));
+        alert("User archived successfully!");
+        setTimeout(() => {
+            window.location.href = 'users.php';
+        }, 100);
+    }
+});
+
+// Resetting to Default Password
+const resetPasswordBtn = document.getElementById('resetPasswordBtn');
+resetPasswordBtn.addEventListener('click', function() {
+    let confirmationUser = confirm("Are you sure you want to reset the password of this user?");
+    if (confirmationUser === true) {
+        if (!selectedUser || selectedUser.trim() === '') {
+            alert('No user selected.');
+            return;
+        }
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'resetPassword.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+        // Handle the response
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                const response = JSON.parse(xhr.responseText);
+            } else {
+                alert('Error: ' + xhr.status);
+            }
+        };
+
+        xhr.send(JSON.stringify({ accountName: selectedUser }));
+        alert("Password reset successfully!");
+        setTimeout(() => {
+            window.location.href = 'users.php';
+        }, 100);
+    }
+});

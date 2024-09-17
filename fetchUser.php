@@ -4,7 +4,7 @@ session_start(); // Start the session
 // Check if the user is logged in by checking for AccountID in the session
 if (!isset($_SESSION['AccountID'])) {
     // Redirect to login page if not logged in
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit();
 }
 
@@ -35,15 +35,17 @@ $result = $sql->get_result();
 if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
     $employeeName = $user['employeeName'];
+    $employeeLName = $user['employeeLName'];
     $role = $user['role'];
     $accountName = $user['accountName'];
     $password = $user['password'];
     $picture = $user['picture'];
     $dateCreated = $user['dateCreated'];
     $status = $user['status'];
+    $employeeFullName = $employeeName . " " . $employeeLName;
 
     // Split the employeeName into words
-    $nameParts = explode(' ', $employeeName);
+    $nameParts = explode(' ', $employeeFullName);
 
     // Get the first letter of the first name
     $initials = strtoupper($nameParts[0][0]);

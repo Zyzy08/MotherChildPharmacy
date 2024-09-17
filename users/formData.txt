@@ -1,0 +1,14 @@
+{
+    "employeeName": "Lance",
+    "employeeLName": "Tiangco",
+    "accountName": "ltiangco",
+    "password": "tiangco-e004",
+    "role": "Admin",
+    "SuppliersPerms": "on",
+    "TransactionsPerms": "on",
+    "InventoryPerms": "on",
+    "POSPerms": "on",
+    "REPerms": "on",
+    "POPerms": "on",
+    "UsersPerms": "on"
+}

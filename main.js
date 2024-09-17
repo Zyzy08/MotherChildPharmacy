@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function setRole(role) {
   document.getElementById('role-text').textContent = role;
   document.getElementById('role').value = role;
-  
+
   // Collapse the dropdown after selecting a role
   const dropdown = document.getElementById('role-dropdown');
   const bootstrapCollapse = new bootstrap.Collapse(dropdown, {
@@ -31,20 +31,25 @@ function setRole(role) {
 /**
  * Password Show/Hide Toggle
  */
-document.getElementById('toggle-password').addEventListener('click', function () {
-  const passwordInput = document.getElementById('password');
-  const togglePassword = document.getElementById('toggle-password');
-  
-  if (passwordInput.type === 'password') {
-    passwordInput.type = 'text';
-    togglePassword.src = 'resources/img/hide.png'; // Change icon to hide.png
-  } else {
-    passwordInput.type = 'password';
-    togglePassword.src = 'resources/img/show.png'; // Change icon back to show.png
-  }
-});
+// Get the elements
+const passwordInput = document.getElementById('password');
+const togglePassword = document.getElementById('toggle-password');
 
-(function() {
+// Check if both elements exist before adding the event listener
+if (passwordInput && togglePassword) {
+  togglePassword.addEventListener('click', function () {
+    // Toggle password visibility
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      togglePassword.src = 'resources/img/hide.png'; // Change icon to hide.png
+    } else {
+      passwordInput.type = 'password';
+      togglePassword.src = 'resources/img/show.png'; // Change icon back to show.png
+    }
+  });
+}
+
+(function () {
   "use strict";
 
   /**
@@ -52,9 +57,9 @@ document.getElementById('toggle-password').addEventListener('click', function ()
    */
   function hideErrorMessage() {
     document.querySelectorAll('[id^="error-"]').forEach((element) => {
-        setTimeout(() => {
-            element.style.display = 'none';
-        }, 2000);
+      setTimeout(() => {
+        element.style.display = 'none';
+      }, 2000);
     });
   }
 
@@ -87,11 +92,34 @@ document.getElementById('toggle-password').addEventListener('click', function ()
   /**
    * Sign Out Event
    */
-  const signOutLink = select('.sign-out-link');
+  const signOutLink = document.querySelector('.sign-out-link');
   if (signOutLink) {
-    on('click', '.sign-out-link', function(e) {
+    signOutLink.addEventListener('click', function (e) {
       e.preventDefault();
-      window.location.href = 'index.php';
+
+      // Create an AJAX request to update the connected status
+      fetch('../signOut.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'update_connected_status' })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // If update is successful, redirect to the desired page
+            window.location.href = '../index.php';
+          } else {
+            // Handle errors if the update failed
+            console.error('Failed to update connected status:', data.message);
+            alert('An error occurred. Please try again.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred. Please try again.');
+        });
     });
   }
 
@@ -106,7 +134,7 @@ document.getElementById('toggle-password').addEventListener('click', function ()
    * Sidebar toggle
    */
   if (select('.toggle-sidebar-btn')) {
-    on('click', '.toggle-sidebar-btn', function(e) {
+    on('click', '.toggle-sidebar-btn', function (e) {
       select('body').classList.toggle('toggle-sidebar')
     })
   }
@@ -115,7 +143,7 @@ document.getElementById('toggle-password').addEventListener('click', function ()
    * Search bar toggle
    */
   if (select('.search-bar-toggle')) {
-    on('click', '.search-bar-toggle', function(e) {
+    on('click', '.search-bar-toggle', function (e) {
       select('.search-bar').classList.toggle('search-bar-show')
     })
   }
@@ -176,7 +204,7 @@ document.getElementById('toggle-password').addEventListener('click', function ()
    * Initiate tooltips
    */
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-  var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl)
   })
 
@@ -206,31 +234,31 @@ document.getElementById('toggle-password').addEventListener('click', function ()
           }],
           ["bold", "italic", "underline", "strike"],
           [{
-              color: []
-            },
-            {
-              background: []
-            }
+            color: []
+          },
+          {
+            background: []
+          }
           ],
           [{
-              script: "super"
-            },
-            {
-              script: "sub"
-            }
+            script: "super"
+          },
+          {
+            script: "sub"
+          }
           ],
           [{
-              list: "ordered"
-            },
-            {
-              list: "bullet"
-            },
-            {
-              indent: "-1"
-            },
-            {
-              indent: "+1"
-            }
+            list: "ordered"
+          },
+          {
+            list: "bullet"
+          },
+          {
+            indent: "-1"
+          },
+          {
+            indent: "+1"
+          }
           ],
           ["direction", {
             align: []
@@ -263,31 +291,31 @@ document.getElementById('toggle-password').addEventListener('click', function ()
     autosave_retention: '2m',
     image_advtab: true,
     link_list: [{
-        title: 'My page 1',
-        value: 'https://www.tiny.cloud'
-      },
-      {
-        title: 'My page 2',
-        value: 'http://www.moxiecode.com'
-      }
+      title: 'My page 1',
+      value: 'https://www.tiny.cloud'
+    },
+    {
+      title: 'My page 2',
+      value: 'http://www.moxiecode.com'
+    }
     ],
     image_list: [{
-        title: 'My page 1',
-        value: 'https://www.tiny.cloud'
-      },
-      {
-        title: 'My page 2',
-        value: 'http://www.moxiecode.com'
-      }
+      title: 'My page 1',
+      value: 'https://www.tiny.cloud'
+    },
+    {
+      title: 'My page 2',
+      value: 'http://www.moxiecode.com'
+    }
     ],
     image_class_list: [{
-        title: 'None',
-        value: ''
-      },
-      {
-        title: 'Some class',
-        value: 'class-name'
-      }
+      title: 'None',
+      value: ''
+    },
+    {
+      title: 'Some class',
+      value: 'class-name'
+    }
     ],
     importcss_append: true,
     file_picker_callback: (callback, value, meta) => {
@@ -330,8 +358,8 @@ document.getElementById('toggle-password').addEventListener('click', function ()
   var needsValidation = document.querySelectorAll('.needs-validation')
 
   Array.prototype.slice.call(needsValidation)
-    .forEach(function(form) {
-      form.addEventListener('submit', function(event) {
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
         if (!form.checkValidity()) {
           event.preventDefault()
           event.stopPropagation()
@@ -349,18 +377,18 @@ document.getElementById('toggle-password').addEventListener('click', function ()
     new simpleDatatables.DataTable(datatable, {
       perPageSelect: [5, 10, 15, ["All", -1]],
       columns: [{
-          select: 2,
-          sortSequence: ["desc", "asc"]
-        },
-        {
-          select: 3,
-          sortSequence: ["desc"]
-        },
-        {
-          select: 4,
-          cellClass: "green",
-          headerClass: "red"
-        }
+        select: 2,
+        sortSequence: ["desc", "asc"]
+      },
+      {
+        select: 3,
+        sortSequence: ["desc"]
+      },
+      {
+        select: 4,
+        cellClass: "green",
+        headerClass: "red"
+      }
       ]
     });
   })
@@ -371,7 +399,7 @@ document.getElementById('toggle-password').addEventListener('click', function ()
   const mainContainer = select('#main');
   if (mainContainer) {
     setTimeout(() => {
-      new ResizeObserver(function() {
+      new ResizeObserver(function () {
         select('.echart', true).forEach(getEchart => {
           echarts.getInstanceByDom(getEchart).resize();
         })

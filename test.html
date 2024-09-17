@@ -8,6 +8,7 @@
     <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" />
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+    <link rel="stylesheet" href="users/acc_styles.css" />
     <script>
         $(document).ready(function () {
             $('#example').DataTable();
@@ -41,6 +42,24 @@
             </tr>
         </tbody>
     </table>
+    
+    <div class="permissionsBox">
+        <div class="label">
+            <label for="permsSelect">Permissions</label><br>
+        </div>
+        <div class="permissionsSelect">
+            <input type="checkbox" id="SuppliersPerms"> Suppliers
+            <input type="checkbox" id="TransactionsPerms"> Transactions
+            <input type="checkbox" id="InventoryPerms"> Inventory
+            <input type="checkbox" id="LotsPerms"> Product Lots
+            <input type="checkbox" id="UsersPerms"> Users
+            <input type="checkbox" id="POSPerms"> POS
+            <input type="checkbox" id="REPerms"> Return & Exchange
+            <input type="checkbox" id="POPerms"> Purchase Orders
+        </div>
+    </div>
+    
+
 </body>
 
 </html>

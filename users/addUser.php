@@ -3,26 +3,51 @@ header('Content-Type: application/json');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $employeeName = $_POST["employeeName"];
+    $employeeLName = $_POST["employeeLName"];
     $role = $_POST["role"];
     $accountName = $_POST["accountName"];
     $password = $_POST["password"];
+
+    $SuppliersPerms = $_POST["SuppliersPerms"];
+    $TransactionsPerms = $_POST["TransactionsPerms"];
+    $InventoryPerms = $_POST["InventoryPerms"];
+    $POSPerms = $_POST["POSPerms"];
+    $REPerms = $_POST["REPerms"];
+    $POPerms = $_POST["POPerms"];
+    $UsersPerms = $_POST["UsersPerms"];
+
     $profilePicture = $_FILES["profilePicture"];
-    $status = $_POST["status"];
+
+    // Create an array to store form data
+    $formData = [];
+
+    // Collect all the form data
+    foreach ($_POST as $key => $value) {
+        $formData[$key] = $value;
+    }
+
+    // Convert form data to JSON
+    $jsonData = json_encode($formData, JSON_PRETTY_PRINT);
+
+    // Save the JSON data to a text file
+    $filePath = 'formData.txt'; // Path to the text file
+    file_put_contents($filePath, $jsonData);
+
 
     // Process the file upload
     if ($profilePicture['error'] == 0) {
         $targetDir = "uploads/";
         $targetFile = $targetDir . basename($profilePicture["name"]);
-    
+
         if (move_uploaded_file($profilePicture["tmp_name"], $targetFile)) {
             try {
                 require_once "databaseHandler.php";
-                $sql = "INSERT INTO users (employeeName, role, accountName, password, picture, status) VALUES (?, ?, ?, ?, ?, ?)";
+                $sql = "INSERT INTO users (employeeName, employeeLName, role, accountName, password, picture, SuppliersPerms, TransactionsPerms, InventoryPerms, POSPerms, REPerms, POPerms, UsersPerms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $stmt = $pdo->prepare($sql);
-                $stmt->execute([$employeeName, $role, $accountName, $password, $targetFile, $status]);
+                $stmt->execute([$employeeName, $employeeLName, $role, $accountName, $password, $targetFile, $SuppliersPerms, $TransactionsPerms, $InventoryPerms, $POSPerms, $REPerms, $POPerms, $UsersPerms]);
                 $pdo = null;
                 $stmt = null;
-                
+
                 echo json_encode(['success' => true, 'message' => 'User added successfully.']);
                 exit();
             } catch (PDOException $e) {
@@ -36,12 +61,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         try {
             require_once "databaseHandler.php";
-            $sql = "INSERT INTO users (employeeName, role, accountName, password, status) VALUES (?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO users (employeeName, employeeLName, role, accountName, password, SuppliersPerms, TransactionsPerms, InventoryPerms, POSPerms, REPerms, POPerms, UsersPerms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$employeeName, $role, $accountName, $password, $status]);
+            $stmt->execute([$employeeName, $employeeLName, $role, $accountName, $password, $SuppliersPerms, $TransactionsPerms, $InventoryPerms, $POSPerms, $REPerms, $POPerms, $UsersPerms]);
             $pdo = null;
             $stmt = null;
-            
+
             echo json_encode(['success' => true, 'message' => 'User added successfully.']);
             exit();
         } catch (PDOException $e) {

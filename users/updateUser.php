@@ -8,11 +8,19 @@ header('Content-Type: application/json');
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve POST data
     $employeeName = $_POST["employeeNameEdit"];
+    $employeeLName = $_POST["employeeLNameEdit"];
     $role = $_POST["roleEdit"];
     $accountName = $_POST["accountNameEdit"];
     $password = $_POST["passwordEdit"];
-    $status = $_POST["statusEdit"];
     $AccountID = $_POST["AccountID"];
+
+    $SuppliersPerms = $_POST["SuppliersPermsEdit"];
+    $TransactionsPerms = $_POST["TransactionsPermsEdit"];
+    $InventoryPerms = $_POST["InventoryPermsEdit"];
+    $POSPerms = $_POST["POSPermsEdit"];
+    $REPerms = $_POST["REPermsEdit"];
+    $POPerms = $_POST["POPermsEdit"];
+    $UsersPerms = $_POST["UsersPermsEdit"];
     
     // Check if a new profile picture was uploaded
     $profilePicture = $_FILES["profilePictureEdit"] ?? null;
@@ -36,13 +44,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         // Prepare the SQL query
         if ($picturePath) {
-            $sql = "UPDATE users SET employeeName = ?, role = ?, accountName = ?, password = ?, picture = ?, status = ? WHERE AccountID = ?";
+            $sql = "UPDATE users SET employeeName = ?, employeeLName = ?, role = ?, accountName = ?, password = ?, picture = ?, SuppliersPerms = ?, TransactionsPerms = ?, InventoryPerms = ?, POSPerms = ?, REPerms = ?, POPerms = ?, UsersPerms = ? WHERE AccountID = ?";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$employeeName, $role, $accountName, $password, $picturePath, $status, $AccountID]);
+            $stmt->execute([$employeeName, $employeeLName, $role, $accountName, $password, $picturePath, $SuppliersPerms, $TransactionsPerms, $InventoryPerms, $POSPerms, $REPerms, $POPerms, $UsersPerms, $AccountID]);
         } else {
-            $sql = "UPDATE users SET employeeName = ?, role = ?, accountName = ?, password = ?, status = ? WHERE AccountID = ?";
+            $sql = "UPDATE users SET employeeName = ?, employeeLName = ?, role = ?, accountName = ?, password = ?, SuppliersPerms = ?, TransactionsPerms = ?, InventoryPerms = ?, POSPerms = ?, REPerms = ?, POPerms = ?, UsersPerms = ? WHERE AccountID = ?";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$employeeName, $role, $accountName, $password, $status, $AccountID]);
+            $stmt->execute([$employeeName, $employeeLName, $role, $accountName, $password, $SuppliersPerms, $TransactionsPerms, $InventoryPerms, $POSPerms, $REPerms, $POPerms, $UsersPerms, $AccountID]);
         }
         
         $pdo = null;

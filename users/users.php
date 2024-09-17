@@ -238,26 +238,13 @@
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
-                            <label for="employeeName">Employee first name</label><br>
+                            <label for="employeeName">Employee First Name</label><br>
                         </div>
                         <input type="text" id="employeeName" name="employeeName" required>
                     </div>
                     <div class="textbox">
                         <div class="label">
-                            <label for="role">Role/s</label><br>
-                        </div>
-                        <select name="role" id="role">
-                            <option value="Pharmacy Assistant">Pharmacy Assistant</option>
-                            <option value="Purchaser">Purchaser</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="container">
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="employeeLName">Employee last name</label><br>
+                            <label for="employeeLName">Employee Last Name</label><br>
                         </div>
                         <input type="text" id="employeeLName" name="employeeLName" required>
                     </div>
@@ -265,21 +252,10 @@
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
-                            <label for="accountName">Account name</label><br>
+                            <label for="accountName">Account Name</label><br>
                         </div>
                         <input type="text" id="accountName" name="accountName" required disabled>
                     </div>
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="status">Status</label><br>
-                        </div>
-                        <select name="status" id="status">
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="container">
                     <div class="textbox">
                         <div class="label">
                             <label for="password">Password</label><br>
@@ -287,7 +263,6 @@
                         <input id="password" name="password" required disabled>
                     </div>
                 </div>
-                <br>
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
@@ -302,10 +277,39 @@
                         <img id="preview" src="" alt="Image Preview" style="display: none;">
                     </div>
                 </div>
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="role">Role</label><br>
+                        </div>
+                        <select name="role" id="role">
+                            <option value="Pharmacy Assistant">Pharmacy Assistant</option>
+                            <option value="Purchaser">Purchaser</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                    <!-- Modify Permissions -->
+                    <div class="permissionsBox">
+                        <div class="label">
+                            <label for="permsSelect">Permissions</label>
+                            <img src="../resources/img/toggle-off.png" id="permsToggle">
+                            <br>
+                        </div>
+                        <div class="permissionsSelect">
+                            <input type="checkbox" id="SuppliersPerms" disabled> Suppliers
+                            <input type="checkbox" id="TransactionsPerms" disabled> Sales
+                            <input type="checkbox" id="InventoryPerms" disabled> Inventory
+                            <input type="checkbox" id="POSPerms" disabled> POS
+                            <input type="checkbox" id="REPerms" disabled> Return & Exchange
+                            <input type="checkbox" id="POPerms" disabled> Purchase Orders
+                            <input type="checkbox" id="UsersPerms" disabled> Users
+                        </div>
+                    </div>
+                </div>
                 <br>
                 <div class="line"></div>
                 <div class="button-container">
-                    <button type="reset">Reset</button>
+                    <button id="cancelBtn" type="button" onclick="closeOverlay()">Cancel</button>
                     <button type="submit">Add</button>
                 </div>
             </form>
@@ -324,59 +328,35 @@
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
-                            <label for="employeeNameEdit">Employee name</label><br>
+                            <label for="employeeNameEdit">Employee First Name</label><br>
                         </div>
                         <input type="text" id="employeeNameEdit" name="employeeNameEdit" required>
                     </div>
                     <div class="textbox">
                         <div class="label">
-                            <label for="roleEdit">Role</label><br>
+                            <label for="employeeLName">Employee Last Name</label><br>
                         </div>
-                        <select name="roleEdit" id="roleEdit">
-                            <option value="Pharmacy Assistant">Pharmacy Assistant</option>
-                            <option value="Purchaser">Purchaser</option>
-                            <option value="Admin">Admin</option>
-                        </select>
+                        <input type="text" id="employeeLNameEdit" name="employeeLNameEdit" required>
                     </div>
                 </div>
-
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
-                            <label for="accountNameEdit">Account name</label><br>
+                            <label for="accountNameEdit">Account Name</label><br>
                         </div>
-                        <input type="text" id="accountNameEdit" name="accountNameEdit" required>
+                        <input type="text" id="accountNameEdit" name="accountNameEdit" required disabled>
                     </div>
                     <div class="textbox">
                         <div class="label">
                             <label for="passwordEdit">Password</label><br>
                         </div>
-                        <input type="password" id="passwordEdit" name="passwordEdit" required>
+                        <input id="passwordEdit" name="passwordEdit" required disabled>
                     </div>
                 </div>
-
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
-                            <label for="statusEdit">Status</label><br>
-                        </div>
-                        <select name="statusEdit" id="statusEdit">
-                            <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
-                        </select>
-                    </div>
-                    <div class="textboxHidden">
-                        <div class="label">
-                            <label for="AccountID">AccountID</label><br>
-                        </div>
-                        <input type="text" id="AccountID" name="AccountID" required>
-                    </div>
-                </div>
-                <br>
-                <div class="container">
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="profilePicture">Profile Picture</label><br>
+                            <label for="profilePictureEdit">Profile Picture</label><br>
                         </div>
                         <input type="file" id="profilePictureEdit" name="profilePictureEdit" accept="image/*">
                     </div>
@@ -387,10 +367,45 @@
                         <img id="previewEdit" src="" alt="Image Preview" style="display: none;">
                     </div>
                 </div>
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="roleEdit">Role</label><br>
+                        </div>
+                        <select name="roleEdit" id="roleEdit">
+                            <option value="Pharmacy Assistant">Pharmacy Assistant</option>
+                            <option value="Purchaser">Purchaser</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+                    <!-- Modify Permissions -->
+                    <div class="permissionsBox">
+                        <div class="label">
+                            <label for="permsSelectEdit">Permissions</label>
+                            <img src="../resources/img/toggle-off.png" id="permsToggleEdit">
+                            <br>
+                        </div>
+                        <div class="permissionsSelectEdit">
+                            <input type="checkbox" id="SuppliersPermsEdit" disabled> Suppliers
+                            <input type="checkbox" id="TransactionsPermsEdit" disabled> Sales
+                            <input type="checkbox" id="InventoryPermsEdit" disabled> Inventory
+                            <input type="checkbox" id="POSPermsEdit" disabled> POS
+                            <input type="checkbox" id="REPermsEdit" disabled> Return & Exchange
+                            <input type="checkbox" id="POPermsEdit" disabled> Purchase Orders
+                            <input type="checkbox" id="UsersPermsEdit" disabled> Users
+                        </div>
+                    </div>
+                </div>
+                <div class="textboxHidden">
+                    <div class="label">
+                        <label for="AccountID">AccountID</label><br>
+                    </div>
+                    <input type="text" id="AccountID" name="AccountID" required>
+                </div>
                 <br>
                 <div class="line"></div>
                 <div class="button-container">
-                    <button type="button" id="resetEdit">Reset</button>
+                    <button id="cancelBtn" type="button" onclick="closeEditOverlay()">Cancel</button>
                     <button type="submit">Update</button>
                 </div>
             </form>
@@ -419,6 +434,16 @@
 
     <!-- Template Main JS File -->
     <script src="Users.js"></script>
+
+    <!-- Vendor JS Files -->
+    <script src="../resources/vendor/apexcharts/apexcharts.min.js"></script>
+    <script src="../resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../resources/vendor/chart.js/chart.umd.js"></script>
+    <script src="../resources/vendor/echarts/echarts.min.js"></script>
+    <script src="../resources/vendor/quill/quill.js"></script>
+    <script src="../resources/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="../resources/vendor/tinymce/tinymce.min.js"></script>
+    <script src="../resources/vendor/php-email-form/validate.js"></script>
 
 </body>
 

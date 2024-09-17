@@ -33,6 +33,12 @@ if ($result->num_rows > 0) {
     if ($user) {
         // Password matches, proceed to login
         $_SESSION['AccountID'] = $user['AccountID']; // Store AccountID in session
+        // Set Status to Online
+        $updateSql = "UPDATE users SET connected = 1 WHERE AccountID = ?";
+        $updateStmt = $conn->prepare($updateSql);
+        $updateStmt->bind_param("i", $_SESSION['AccountID']);
+        $updateStmt->execute();
+        
         header("Location: dashboard/dashboard.php");
         exit();
     } else {

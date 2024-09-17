@@ -161,7 +161,7 @@
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="../../dashboard/dashboard.php">Home</a></li>
-          <li class="breadcrumb-item"><a href="../users.html">Users</a></li>
+          <li class="breadcrumb-item"><a href="../users.php">Users</a></li>
           <li class="breadcrumb-item active">Profile</li>
         </ol>
       </nav>

@@ -14,26 +14,35 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT AccountID FROM users ORDER BY AccountID ASC;"; 
+// Query to get the next auto-increment value
+$table = 'users'; // Replace with your table name
+$sql = "SHOW TABLE STATUS LIKE '$table'";
 $result = $conn->query($sql);
 
 $data = array();
+$nextAutoIncrement = null;
 
-if ($result->num_rows > 0) {
+if ($result && $row = $result->fetch_assoc()) {
+    // The Auto_increment value is in the 'Auto_increment' field
+    $nextAutoIncrement = $row['Auto_increment'];
+}
+
+// Get all AccountIDs (optional, if needed)
+$sql = "SELECT AccountID FROM $table ORDER BY AccountID ASC"; 
+$result = $conn->query($sql);
+
+if ($result && $result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $data[] = $row;
     }
 }
 
-// Get the last AccountID
-$lastAccountID = end($data)['AccountID'];
-
 $conn->close();
 
-// Add the last AccountID to the response
+// Add the auto-increment value to the response
 $response = array(
     'accounts' => $data,
-    'lastAccountID' => $lastAccountID
+    'nextAutoIncrement' => $nextAutoIncrement
 );
 
 echo json_encode($response);

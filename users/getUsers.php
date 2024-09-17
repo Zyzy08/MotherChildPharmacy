@@ -14,7 +14,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT employeeName, role, accountName, password, picture, DATE(dateCreated) AS dateCreated, connected FROM users";
+$sql = "SELECT employeeName, employeeLName, role, accountName, password, picture, DATE(dateCreated) AS dateCreated, connected FROM users WHERE status = 'Active'";
 $result = $conn->query($sql);
 
 $data = array();
