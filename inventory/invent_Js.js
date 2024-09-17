@@ -99,15 +99,15 @@ document.addEventListener('DOMContentLoaded', loadInventory);
 // Function to load inventory data
 function loadInventory() {
     fetch('getProduct_data.php')
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            updateTable(data.data);
-        } else {
-            showError(data.message);
-        }
-    })
-    .catch(error => showError('Failed to load data. Please try again later.'));
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateTable(data.data);
+            } else {
+                showError(data.message);
+            }
+        })
+        .catch(error => showError('Failed to load data. Please try again later.'));
 }
 
 // Function to update the table
@@ -243,6 +243,7 @@ window.onclick = function(event) {
 }
 
 // DELETE PRODUCT FUNCTIONALITY
+
 document.addEventListener('DOMContentLoaded', () => {
     let deleteMode = false;
     let selectedRow = null;
