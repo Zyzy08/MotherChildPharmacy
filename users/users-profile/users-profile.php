@@ -107,28 +107,28 @@
       <li class="nav-heading"></li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="../suppliers/suppliers.html">
+        <a class="nav-link collapsed" href="../../suppliers/suppliers.html">
           <i class="bi bi-truck"></i>
           <span>Suppliers</span>
         </a>
       </li><!-- End Suppliers Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../transactions/transactions.html">
+        <a class="nav-link collapsed" href="../../transactions/transactions.html">
           <i class="bi bi-cash-coin"></i>
           <span>Transactions</span>
         </a>
       </li><!-- End Transactions Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../inventory/inventory.html">
+        <a class="nav-link collapsed" href="../../inventory/inventory.php">
           <i class="bi bi-box-seam"></i>
           <span>Inventory</span>
         </a>
       </li><!-- End Inventory Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../returnexchange/return.html">
+        <a class="nav-link collapsed" href="../../returnexchange/return.html">
           <i class="bi bi-cart-dash"></i>
           <span>Return & Exchange</span>
         </a>
@@ -144,7 +144,7 @@
       <li class="nav-heading"></li>
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../pos/pos.html">
+        <a class="nav-link collapsed" href="../../pos/pos.html">
           <i class="bi bi-printer"></i>
           <span>POS</span>
         </a>

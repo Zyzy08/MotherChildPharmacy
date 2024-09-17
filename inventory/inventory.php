@@ -16,12 +16,12 @@
         <div class="sidebar-1"></div>
         <div class="sidebar-2"></div>
         <div class="sidebar-3"></div>
-        <img src="../resources/mnc_logo.png" alt="Mother & Child Logo" class="logo">
+        <img src="../resources/img/mnc_logo.png" alt="Mother & Child Logo" class="logo">
         <span class="main-text">Mother & Child</span>
         <small class="sub-text">Pharmacy & Medical Supplies</small>
         <ul class="sidebar-menu">
             <li class="sidebar-menu-item">
-                <a href="#">
+                <a href="../dashboard/dashboard.php">
                     <img src="../resources/dashboard_icon.png" alt="Dashboard Icon" class="sidebar-icon">
                     Dashboard
                     <img src="../resources/rectangle.png" alt="Indicator" class="indicator">
@@ -64,7 +64,7 @@
                 </a>
             </li>
             <li class="sidebar-menu-item">
-                <a href="#">
+                <a href="../users/users.php">
                     <img src="../resources/accounts.png" alt="Accounts Icon" class="sidebar-icon">
                     Accounts
                 </a>

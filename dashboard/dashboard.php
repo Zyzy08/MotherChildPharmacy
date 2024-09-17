@@ -121,7 +121,7 @@
       </li><!-- End Transactions Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../inventory/inventory.html">
+        <a class="nav-link collapsed" href="../inventory/inventory.php">
           <i class="bi bi-box-seam"></i>
           <span>Inventory</span>
         </a>

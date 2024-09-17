@@ -57,7 +57,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: Catamaran;
   font-size: 14px;
   line-height: 22px;
   font-weight: 400;
@@ -79,7 +78,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: Catamaran;
   font-size: 14px;
   line-height: 22px;
   font-weight: 400;
@@ -124,7 +122,6 @@
   height: 30px;
   padding-left: 34px;
   padding-right: 12px;
-  font-family: Catamaran;
   font-size: 14px;
   line-height: 22px;
   font-weight: 400;
@@ -424,7 +421,6 @@ button[type="reset"]:hover {
   height: 24px;
   padding-left: 12px;
   padding-right: 12px;
-  font-family: Catamaran;
   font-size: 14px;
   line-height: 22px;
   font-weight: 400;
@@ -445,7 +441,6 @@ button[type="reset"]:hover {
   width: 230px;
   height: 24px;
   padding: 7.6px 12px 7.6px 12px;
-  font-family: Catamaran;
   font-size: 14px;
   line-height: 22px;
   font-weight: 400;
@@ -458,7 +453,6 @@ button[type="reset"]:hover {
 }
 
 .textbox .label {
-  font-family: Catamaran;
   font-size: 14px;
   line-height: 22px;
   font-weight: 700;
