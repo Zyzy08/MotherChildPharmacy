@@ -155,7 +155,7 @@
             <li class="nav-heading"></li>
 
             <li class="nav-item"></li>
-            <a class="nav-link collapsed" href="../../pos/pos.html">
+            <a class="nav-link collapsed" href="../../pos/pos.php">
                 <i class="bi bi-printer"></i>
                 <span>POS</span>
             </a>
