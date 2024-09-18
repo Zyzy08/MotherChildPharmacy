@@ -177,7 +177,7 @@
       </nav>
     </div><!-- End Page Title -->
 
-    <button class="Create_PO">New Product</button>
+    <button class="Create_PO"><img src="../resources/img/add.png" alt="Add"> New Product</button>
 
     <!--<button class="deleteProduct">Delete Product</button>
     <button id="updateProduct">Update Product</button>-->
@@ -251,7 +251,7 @@
           <label for="iconFile">Icon</label>
           <div class="icon-upload">
             <label for="iconFile">
-              <img id="iconPreview" src="../resources/default_icon.png" alt="Icon Preview" class="icon-preview"
+              <img id="iconPreview" src="../resources/img/add_icon.png" alt="+" class="icon-preview"
                 style="cursor: pointer;">
             </label>
             <input type="file" id="iconFile" name="ProductIcon" accept="image/*" style="display: none;">
@@ -265,21 +265,24 @@
 
           <div class="textbox">
             <label style="margin-right: 130px;" for="pricePerUnit">Price Per Unit</label>
-            <label for="InStock">In Stock</label>
+            <label for="notes">Notes</label>
+            <!--<label for="InStock">In Stock</label>-->
           </div>
           <div class="textbox">
             <input style="margin-right: 30px;" type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱">
-            <input type="text" id="InStock" name="InStock">
+            <!--<input type="text" id="InStock" name="InStock">-->
+            <input style="padding: 8px 5px" id="Notes" name="Notes"></input>
           </div>
-          <div class="textbox">
-            <label style="margin-right: 185px;" for="status">Status</label>
+           <!--<div class="textbox">
+
+           <label style="margin-right: 185px;" for="status">Status</label>
             <label for="notes">Notes</label>
-          </div>
-          <div class="textbox">
+          </div>-->
+
+          <!--<div class="textbox">
             <input style="margin-right: 30px;" type="text" id="status" name="status">
             <input style="padding: 8px 5px" id="Notes" name="Notes"></input>
-
-          </div>
+          </div>-->
         </div>
         <div style="margin-top: 30px;" class="form-button">
           <button type="button" id="Clear">Clear</button>
@@ -308,7 +311,7 @@
                     <th style="text-align: center;">Item Type</th>
                     <th style="text-align: center;">Mass & Unit of Measurement</th>
                     <th style="text-align: center;">Price Per Unit</th>
-                    <th style="text-align: center;">Status</th>
+                    <!--<th style="text-align: center;">Status</th>-->
                     <th style="text-align: center;">In Stock</th>
                     <th style="text-align: center;">Actions</th>
                   </tr>

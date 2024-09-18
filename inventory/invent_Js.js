@@ -22,8 +22,22 @@ btn.onclick = function() {
     modal.style.display = "block";
     isEditMode = false; // Indicate that this is a new product
     document.getElementById('PurchaseForm').reset(); // Clear form fields
-    document.getElementById('iconPreview').src = '../resources/default_icon.png'; // Reset icon preview
-}
+    document.getElementById('iconPreview').src = '../resources/img/add_icon.png'; // Reset icon preview
+
+    // Fetch the next auto-increment value for ItemID
+    fetch('getNextItemId.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('itemID').value = data.nextItemID; // Set the ItemID textbox with the next auto-increment value
+            } else {
+                console.error('Error fetching next ItemID:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching next ItemID:', error);
+        });
+};
 
 // When the user clicks on the close button, close the modal
 closeBtn.onclick = function() {
@@ -91,7 +105,10 @@ document.getElementById('PurchaseForm').addEventListener('submit', function(even
     }
 
     const url = isEditMode ? 'updateInventory.php' : 'insertInventory.php'; // Use update script if in edit mode
-
+    //if(url == "updateInventory.php" )
+    //    {
+    //        alert(url);
+     //   }
     fetch(url, { method: 'POST', body: formData })
         .then(response => response.json())
         .then(data => {
@@ -172,12 +189,12 @@ function loadFormForEdit(item) {
     document.getElementById('mass').value = item.Mass;
     document.getElementById('unitOfMeasure').value = item.UnitOfMeasure;
     document.getElementById('pricePerUnit').value = item.PricePerUnit;
-    document.getElementById('status').value = item.Status;
-    document.getElementById('InStock').value = item.InStock;
+    //document.getElementById('status').value = item.Status;
+    //document.getElementById('InStock').value = item.InStock;
     document.getElementById('Notes').value = item.Notes || ''; // Handle missing Notes
 
     // Set the icon preview
-    document.getElementById('iconPreview').src = item.ProductIcon || '../resources/default_icon.png'; // Use default if no icon
+    document.getElementById('iconPreview').src = item.ProductIcon || '../resources/img/add_icon.png'; // Use default if no icon
 
     modal.style.display = "block";
 }
@@ -199,9 +216,9 @@ function setDataTables() {
             { "targets": 5, "width": "10%" }, // Item Type
             { "targets": 6, "width": "10%" }, // Mass & Unit of Measure
             { "targets": 7, "width": "10%" }, // Price Per Unit
-            { "targets": 8, "width": "10%" }, // Status
-            { "targets": 9, "width": "10%" }, // In Stock
-            { "targets": 10, "width": "12%", "orderable": false } // Actions
+            //{ "targets": 8, "width": "10%" }, // Status
+            { "targets": 8, "width": "10%" }, // In Stock
+            { "targets": 9, "width": "12%", "orderable": false } // Actions
         ]
     });
 }
@@ -224,17 +241,20 @@ function updateTable(items) {
             <td style="text-align: center;">${item.ItemType}</td>
             <td style="text-align: center;">${item.Mass} ${item.UnitOfMeasure}</td> <!-- Concatenated Mass and UnitOfMeasure -->
             <td style="text-align: center;">${item.PricePerUnit}</td>
-            <td style="text-align: center;">${item.Status}</td>
             <td style="text-align: center;">${item.InStock}</td>
             <td style="text-align: center;">
-                <button class="update-btn" onclick="handleUpdate(${item.ItemID})">Update</button>
-                <button class="delete-btn" onclick="handleDelete(${item.ItemID})">Delete</button>
+                
+
+            <img src="../resources/img/d-edit.png" alt="Edit" style="cursor:pointer;margin-left:10px;" onclick="handleUpdate('${item.ItemID}')"/>
+             <img src="../resources/img/s-remove2.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="handleDelete('${item.ItemID}')"/>
             </td>
         `;
 
         tableBody.appendChild(row);
     });
-
+        //<td style="text-align: center;">${item.Status}</td>
+        //img class="update-btn" onclick="handleUpdate(${item.ItemID})">Update</button>
+        //<img class="delete-btn" onclick="handleDelete(${item.ItemID})">Delete</button>
     setDataTables(); // Reinitialize DataTables
 }
 

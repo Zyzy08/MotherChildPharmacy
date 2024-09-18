@@ -66,6 +66,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit;
         }
     }
+    if($iconPath === "" )
+    {
+        $iconPath = "../resources/img/default_Icon.png";
+    }
+
+
 
     // Prepare SQL statement to insert data
     $stmt = $conn->prepare("INSERT INTO inventory (ProductCode, ItemType, BrandName, GenericName, UnitOfMeasure, Mass, PricePerUnit, InStock, Notes, Status, ProductIcon) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");

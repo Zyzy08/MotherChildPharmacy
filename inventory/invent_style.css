@@ -1,251 +1,324 @@
 .Create_PO {
-    margin-bottom: 20px;
-    height: 36px; 
-    padding: 0 12px; 
-    font-size: 14px; 
-    line-height: 22px; 
-    font-weight: 400; 
-    color: #FFFFFFFF; /* white */
-    background: #005500FF; /* primary-500 */
-    opacity: 1; 
-    border: none; 
-    border-radius: 2px; /* border-m */
-  }
+  cursor: pointer;
+  height: 36px;
+  width: 140px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #FFFFFFFF;
+  /* white */
+  background: #005500FF;
+  /* primary-500 */
+  opacity: 1;
+  border: none;
+  border-radius: 12px;
+  /* border-l */
+  gap: 6px;
+  margin-bottom: 10px;
+  margin-left: 12px;
+}
 
-  .deleteProduct{
-   
-    height: 36px; 
-    padding: 0 12px; 
-    font-size: 14px; 
-    line-height: 22px; 
-    font-weight: 400; 
-    color: #FFFFFFFF; /* white */
-    background: #b8342b; /* primary-500 */
-    opacity: 1; 
-    border: none; 
-    border-radius: 2px; /* border-m */
-  }
-  #updateProduct
-  {
-   
-    height: 36px; 
-    padding: 0 12px; 
-    font-size: 14px; 
-    line-height: 22px; 
-    font-weight: 400; 
-    color: #FFFFFFFF; /* white */
-    background: #243d8f; /* primary-500 */
-    opacity: 1; 
-    border: none; 
-    border-radius: 2px; /* border-m *//
-  }
-  
-  /* Hover */
-  .Create_PO:hover {
-    color: #FFFFFFFF; /* white */
-    background: #004200FF; /* primary-650 */
-  }
-  
-  /* Pressed */
-  .Create_PO:hover:active {
-    color: #FFFFFFFF; /* white */
-    background: #002D00FF; /* primary-800 */
-  }
-  
-  /* Disabled */
-  .Create_PO:disabled {
-    opacity: 0.4; 
-  }
-  
-  
- 
-  .deleteProduct:hover
-  {
-    color: #FFFFFFFF; /* white */
-    background: #aa3128; /* primary-650 */
-    
-  }
-  
-  #updateProduct:hover{
-    color: #FFFFFFFF; /* white */
-    background: #203780; /* primary-800 */
-  }
-  
-  /* Disabled */
-  #updateProduct:disabled {
-    opacity: 0.4; 
-  }
+.deleteProduct {
+
+  height: 36px;
+  padding: 0 12px;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #FFFFFFFF;
+  /* white */
+  background: #b8342b;
+  /* primary-500 */
+  opacity: 1;
+  border: none;
+  border-radius: 2px;
+  /* border-m */
+}
+
+#updateProduct {
+
+  height: 36px;
+  padding: 0 12px;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #FFFFFFFF;
+  /* white */
+  background: #243d8f;
+  /* primary-500 */
+  opacity: 1;
+  border: none;
+  border-radius: 2px;
+  /* border-m */
+  /
+}
+
+/* Hover */
+.Create_PO:hover {
+  color: #FFFFFFFF;
+  /* white */
+  background: #004200FF;
+  /* primary-650 */
+}
+
+/* Pressed */
+.Create_PO:hover:active {
+  color: #FFFFFFFF;
+  /* white */
+  background: #002D00FF;
+  /* primary-800 */
+}
+
+/* Disabled */
+.Create_PO:disabled {
+  opacity: 0.4;
+}
+
+
+
+.deleteProduct:hover {
+  color: #FFFFFFFF;
+  /* white */
+  background: #aa3128;
+  /* primary-650 */
+
+}
+
+#updateProduct:hover {
+  color: #FFFFFFFF;
+  /* white */
+  background: #203780;
+  /* primary-800 */
+}
+
+/* Disabled */
+#updateProduct:disabled {
+  opacity: 0.4;
+}
+
 /*End of Buttons*/
 
 /*FORM MODAL*/
 
-.h2
-{
+.h2 {
   color: #4154f1;
 }
 
 #PurchaseForm {
-    position: fixed;
-    top: 54%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    border: 1px solid #ddd;
-    padding: 20px;
-    z-index: 100;
-  }
-  .modal {
-    display: none; /* Hidden by default */
-    position: fixed;
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  }
-  .modal-content {
-    position: relative;
-    background: #fff;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 80%; /* Responsive width */
-    max-width: 500px; /* Max width for large screens */
-    top: 50%; /* Center vertically */
-    transform: translateY(-50%); /* Adjust for vertical centering */
-  }
+  position: fixed;
+  top: 54%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  border: 1px solid #ddd;
+  padding: 20px;
+  z-index: 100;
+}
 
-  /* Close Button */
+.modal {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  z-index: 1;
+  /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Black w/ opacity */
+}
+
+.modal-content {
+  position: relative;
+  background: #fff;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  /* Responsive width */
+  max-width: 500px;
+  /* Max width for large screens */
+  top: 50%;
+  /* Center vertically */
+  transform: translateY(-50%);
+  /* Adjust for vertical centering */
+}
+
+/* Close Button */
 #close {
-    color: #aaa;
-    float: right;
-    font-size: 40px;
-    font-weight: bold;
+  color: #aaa;
+  float: right;
+  font-size: 40px;
+  font-weight: bold;
 }
-  
-#close:hover, #close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+
+#close:hover,
+#close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }
+
 /* End close*/
 
-  .h3 {
-    font-size: 20px; 
-    line-height: 30px; 
-    font-weight: 600; 
-    color: #4154f1; /* primary-500 */
-  }
-  
-  /* Form Buttons */
+.h3 {
+  font-size: 20px;
+  line-height: 30px;
+  font-weight: 600;
+  color: #4154f1;
+  /* primary-500 */
+}
+
+/* Form Buttons */
 .form-button button {
-    width: 250px; 
-    height: 30px; 
-    padding: 0 12px; 
-    display: flex;
-    padding: 0px 12px;
-    border: none;
-    cursor: pointer;
-    color: #fff;
-    font-size: 14px; 
-    line-height: 22px; 
-    font-weight: 400; 
-    color: #FFFFFFFF; /* white */
-    background: #005500FF; /* primary-500 */
-    opacity: 1; 
-    border: none; 
-    border-radius: 4px; 
-    align-items: center; 
-    justify-content: center;
-  }
-  
-  .form-button #Clear {
-    background-color: #f44336;
-  }
-  
-  .form-button #saveBtn {
-    background-color: #4CAF50;
-  }
-  .form-button {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
-  
-  .textbox input:hover {
-    color: #171A1FFF; /* neutral-900 */
-    background: #F3F4F6FF; /* neutral-200 */
-  }
-  /* focused */
-  .textbox input:focused {
-    color: #171A1FFF; /* neutral-900 */
-    background: #FFFFFFFF; /* white */
-  }
-  /* disabled */
-  .textbox input:disabled {
-    color: #171A1FFF; /* neutral-900 */
-    background: #F3F4F6FF; /* neutral-200 */
-  }
+  width: 250px;
+  height: 30px;
+  padding: 0 12px;
+  display: flex;
+  padding: 0px 12px;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #FFFFFFFF;
+  /* white */
+  background: #005500FF;
+  /* primary-500 */
+  opacity: 1;
+  border: none;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+}
 
-  .textbox {
-    opacity: 1; 
-  }
+.form-button #Clear {
+  background-color: #f44336;
+}
 
-  .textbox input {
-    width: 200px; 
-    height: 30px;
-  }
-  
+.form-button #saveBtn {
+  background-color: #4CAF50;
+}
 
-  .textbox .label {
-    font-size: 14px; 
-    line-height: 22px; 
-    font-weight: 700; 
-  }
-  /* hover */
-  .textbox input:hover {
-    color: #171A1FFF; /* neutral-900 */
-    background: #F3F4F6FF; /* neutral-200 */
-  }
-  /* focused */
-  .textbox input:focused {
-    color: #171A1FFF; /* neutral-900 */
-    background: #FFFFFFFF; /* white */
-  }
-  /* disabled */
-  .textbox input:disabled {
-    color: #171A1FFF; /* neutral-900 */
-    background: #F3F4F6FF; /* neutral-200 */
-  }
-  .textbox :disabled + .icon, .textbox :disabled + .icon + .icon {
-    fill: #171A1FFF; /* neutral-900 */
-  }
+.form-button {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
 
-  .textbox select
-  {
-    width: 200px; 
-    height: 30px; 
-  }
+.textbox input:hover {
+  color: #171A1FFF;
+  /* neutral-900 */
+  background: #F3F4F6FF;
+  /* neutral-200 */
+}
+
+/* focused */
+.textbox input:focused {
+  color: #171A1FFF;
+  /* neutral-900 */
+  background: #FFFFFFFF;
+  /* white */
+}
+
+/* disabled */
+.textbox input:disabled {
+  color: #171A1FFF;
+  /* neutral-900 */
+  background: #F3F4F6FF;
+  /* neutral-200 */
+}
+
+.textbox {
+  opacity: 1;
+}
+
+.textbox input {
+  width: 200px;
+  height: 30px;
+}
+
+
+.textbox .label {
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 700;
+}
+
+/* hover */
+.textbox input:hover {
+  color: #171A1FFF;
+  /* neutral-900 */
+  background: #F3F4F6FF;
+  /* neutral-200 */
+}
+
+/* focused */
+.textbox input:focused {
+  color: #171A1FFF;
+  /* neutral-900 */
+  background: #FFFFFFFF;
+  /* white */
+}
+
+/* disabled */
+.textbox input:disabled {
+  color: #171A1FFF;
+  /* neutral-900 */
+  background: #F3F4F6FF;
+  /* neutral-200 */
+}
+
+.textbox :disabled+.icon,
+.textbox :disabled+.icon+.icon {
+  fill: #171A1FFF;
+  /* neutral-900 */
+}
+
+.textbox select {
+  width: 200px;
+  height: 30px;
+}
+
 /* hover */
 .select input:hover {
-  color: #171A1FFF; /* neutral-900 */
-  background: #F3F4F6FF; /* neutral-200 */
+  color: #171A1FFF;
+  /* neutral-900 */
+  background: #F3F4F6FF;
+  /* neutral-200 */
 }
+
 /* focused */
 .select input:focused {
-  color: #171A1FFF; /* neutral-900 */
-  background: #FFFFFFFF; /* white */
+  color: #171A1FFF;
+  /* neutral-900 */
+  background: #FFFFFFFF;
+  /* white */
 }
+
 /* disabled */
 .select input:disabled {
-  color: #171A1FFF; /* neutral-900 */
-  background: #F3F4F6FF; /* neutral-200 */
+  color: #171A1FFF;
+  /* neutral-900 */
+  background: #F3F4F6FF;
+  /* neutral-200 */
 }
-.select :disabled + .icon, .textbox :disabled + .icon + .icon {
-  fill: #171A1FFF; /* neutral-900 */
+
+.select :disabled+.icon,
+.textbox :disabled+.icon+.icon {
+  fill: #171A1FFF;
+  /* neutral-900 */
 }
 
 
@@ -259,22 +332,22 @@
 
 
 
-  .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #aaa;
-    border: none;
-    background: none;
-    cursor: pointer;
-  }
-  
-  .close:hover {
-    color: black;
-    text-decoration: none;
-  }
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #aaa;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: black;
+  text-decoration: none;
+}
 
 
 
@@ -283,127 +356,143 @@
 
 /* Notification container */
 .notification {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1001; /* Sit on top */
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%); /* Center the notification */
-    background-color: #fefefe;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 300px; /* Set the width of the notification */
-   
-    border-radius: 8px;
-    text-align: center;
-  }
-  
-  /* Notification message */
-  #notificationMessage {
-    margin: 0;
-    font-size: 14px;
-    padding: 5px;
-  }
-  
-  /* Close button for notification */
-  #closeNotification {
-    background-color: rgb(0, 75, 0); /* Gray */
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-top: 10px;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  
-  #closeNotification:hover {
-    background-color: rgb(0, 59, 0);
-  }
-  
-  
-  .Delnotification {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .Delnotification-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    text-align: center;
-  }
-  
-  .Delnotification button {
-    margin: 5px;
-  }
-  
-  * Overlay Styling */
-  .overlay {
-      display: none; /* Hidden by default */
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-      z-index: 999; /* Just below the modal */
-  }
-  
-  /* Delete Modal Styling */
-  .deleteModal {
-    display: none;
-    position: fixed; /* Use fixed to keep it centered in the viewport */
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
-    transform: translate(-50%, -50%); /* Adjust for exact center */
-    width: 327px; 
-    height: 139px; 
-    background: #FFFFFF; /* white */
-    
-    z-index: 1000; /* Ensure it's on top of other content */
-  }
-  
-  /* Modal Content Styling */
-  
-  /* Close Button Styling */
-  .closeBtn {
-      position: absolute; 
-      top: 10px; 
-      right: 10px; 
-      font-size: 20px; 
-      cursor: pointer;
-  }
-  
-  /* Button Styling */
-  .modal-content button {
-      margin: 10px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 16px;
-  }
-  
-  #confirmDeleteBtn {
-      background: #005500FF; /* Bootstrap danger color */
-      color: #fff;
-  }
-  
-  #cancelDeleteBtn {
-      background: #f44336; /* Bootstrap info color */
-      color: #fff;
-  }
-  
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1001;
+  /* Sit on top */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  /* Center the notification */
+  background-color: #fefefe;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 300px;
+  /* Set the width of the notification */
+
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Notification message */
+#notificationMessage {
+  margin: 0;
+  font-size: 14px;
+  padding: 5px;
+}
+
+/* Close button for notification */
+#closeNotification {
+  background-color: rgb(0, 75, 0);
+  /* Gray */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+#closeNotification:hover {
+  background-color: rgb(0, 59, 0);
+}
+
+
+.Delnotification {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Delnotification-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.Delnotification button {
+  margin: 5px;
+}
+
+* Overlay Styling */ .overlay {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent black background */
+  z-index: 999;
+  /* Just below the modal */
+}
+
+/* Delete Modal Styling */
+.deleteModal {
+  display: none;
+  position: fixed;
+  /* Use fixed to keep it centered in the viewport */
+  top: 50%;
+  /* Center vertically */
+  left: 50%;
+  /* Center horizontally */
+  transform: translate(-50%, -50%);
+  /* Adjust for exact center */
+  width: 327px;
+  height: 139px;
+  background: #FFFFFF;
+  /* white */
+
+  z-index: 1000;
+  /* Ensure it's on top of other content */
+}
+
+/* Modal Content Styling */
+
+/* Close Button Styling */
+.closeBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Button Styling */
+.modal-content button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#confirmDeleteBtn {
+  background: #005500FF;
+  /* Bootstrap danger color */
+  color: #fff;
+}
+
+#cancelDeleteBtn {
+  background: #f44336;
+  /* Bootstrap info color */
+  color: #fff;
+}
+
 
 /* #example
 {
@@ -425,116 +514,135 @@
 
 
 .icon-upload img {
-  width: 100%; /* Make the image fit the container */
-  height: auto; /* Maintain aspect ratio */
-  max-height: 100px; /* Ensure the image doesn't exceed container height */
+  width: 100%;
+  /* Make the image fit the container */
+  height: auto;
+  /* Maintain aspect ratio */
+  max-height: 100px;
+  /* Ensure the image doesn't exceed container height */
 }
 
 .icon-upload input[type="file"] {
-    display: none;
+  display: none;
 }
 
- /*End of overlay*/
+/*End of overlay*/
 
 /***************************************PRODUCT TABLE*****************************/
 .table_product {
-margin-left: 30px;
-display: absolute;
-flex-direction: column;
-position: absolute;
-width: 80%;
-left: 281px;
-height: 10%;
-opacity: 1;
-border-radius: 3px;
-border-collapse: collapse;
-}
-th.col1, td.col1 {
-width: 7%;
+  margin-left: 30px;
+  display: absolute;
+  flex-direction: column;
+  position: absolute;
+  width: 80%;
+  left: 281px;
+  height: 10%;
+  opacity: 1;
+  border-radius: 3px;
+  border-collapse: collapse;
 }
 
-th.col2, td.col2 {
-width: 23%;
+th.col1,
+td.col1 {
+  width: 7%;
 }
 
-th.col2pic, td.col2pic {
-width: 2%;
+th.col2,
+td.col2 {
+  width: 23%;
 }
 
-th.col2name, td.col2name {
-width: 20.27%;
+th.col2pic,
+td.col2pic {
+  width: 2%;
 }
 
-th.col3, td.col3 {
-width: 16%;
+th.col2name,
+td.col2name {
+  width: 20.27%;
 }
 
-th.col4, td.col4 {
-width: 14%;
+th.col3,
+td.col3 {
+  width: 16%;
 }
 
-th.col5, td.col5 {
-width: 15%;
+th.col4,
+td.col4 {
+  width: 14%;
 }
 
-th.col6, td.col6 {
-width: 10%;
+th.col5,
+td.col5 {
+  width: 15%;
 }
 
-th.col7, td.col7 {
-width: 10%;
-text-align: center;
+th.col6,
+td.col6 {
+  width: 10%;
+}
+
+th.col7,
+td.col7 {
+  width: 10%;
+  text-align: center;
 }
 
 th {
-height: 50px;
-text-align: left;
+  height: 50px;
+  text-align: left;
 
-font-size: 14px;
-font-weight: 600;
-color: #565D6DFF;
+  font-size: 14px;
+  font-weight: 600;
+  color: #565D6DFF;
 }
 
 td {
-height: 50px;
+  height: 50px;
 
-font-size: 14px;
-line-height: 22px;
-font-weight: 400;
-color: #171A1FFF;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #171A1FFF;
 }
 
 .highlight-row {
-background-color: #f4f4f4;
+  background-color: #f4f4f4;
 }
 
 .selected {
-background-color: #cfe2ff;
+  background-color: #cfe2ff;
 }
 
 
 
 /* Style for Edit and Delete buttons */
-.edit-btn, .delete-btn {
-background-color: #005500; /* Button color */
-color: white;
-border: none;
-padding: 5px 10px;
-cursor: pointer;
-border-radius: 4px;
-margin: 2px;
+.edit-btn,
+.delete-btn {
+  background-color: #005500;
+  /* Button color */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 2px;
 }
 
 .delete-btn {
-background-color: #cc0000; /* Delete button color */
+  background-color: #cc0000;
+  /* Delete button color */
 }
 
-.edit-btn:hover, .delete-btn:hover {
-opacity: 0.8; /* Button hover effect */
+.edit-btn:hover,
+.delete-btn:hover {
+  opacity: 0.8;
+  /* Button hover effect */
 }
+
 /***************************************PRODUCT TABLE*****************************/
 
-.usersTableSize{
+.usersTableSize {
   width: 95%;
   margin-left: 17px;
 }

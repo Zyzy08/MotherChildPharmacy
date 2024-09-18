@@ -32,9 +32,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $unitOfMeasure = $_POST['unitOfMeasure'] ?? '';
     $mass = $_POST['mass'] ?? '';
     $pricePerUnit = $_POST['pricePerUnit'] ?? '';
-    $InStock = $_POST['InStock'] ?? '';
+    //$InStock = $_POST['InStock'] ?? '';
     $notes = $_POST['notes'] ?? '';
-    $status = $_POST['status'] ?? '';
+    //$status = $_POST['status'] ?? '';
 
     // Retrieve the existing icon from the database
     $existingIconSql = "SELECT ProductIcon FROM inventory WHERE ItemID = ?";
@@ -70,13 +70,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    $stmt = $conn->prepare("UPDATE inventory SET ProductCode = ?, ItemType = ?, BrandName = ?, GenericName = ?, UnitOfMeasure = ?, Mass = ?, PricePerUnit = ?, InStock = ?, Notes = ?, Status = ?, ProductIcon = ? WHERE ItemID = ?");
+    $stmt = $conn->prepare("UPDATE inventory SET ProductCode = ?, ItemType = ?, BrandName = ?, GenericName = ?, UnitOfMeasure = ?, Mass = ?, PricePerUnit = ?, Notes = ?, ProductIcon = ? WHERE ItemID = ?");
     if ($stmt === false) {
         echo json_encode(['success' => false, 'message' => 'Prepare failed: ' . $conn->error]);
         exit;
     }
 
-    $stmt->bind_param("ssssssissssi", $productCode, $itemType, $brandName, $genericName, $unitOfMeasure, $mass, $pricePerUnit, $InStock, $notes, $status, $iconPath, $itemID);
+    $stmt->bind_param("ssssssissi", $productCode, $itemType, $brandName, $genericName, $unitOfMeasure, $mass, $pricePerUnit, $notes, $iconPath, $itemID);
 
     if ($stmt->execute()) {
         echo json_encode(['success' => true, 'message' => 'Product updated successfully']);
