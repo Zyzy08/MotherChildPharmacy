@@ -36,10 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Process the file upload
     if ($profilePicture['error'] == 0) {
-        $targetDir = "uploads/";
+        $targetDir = "";
         $targetFile = $targetDir . basename($profilePicture["name"]);
 
-        if (move_uploaded_file($profilePicture["tmp_name"], $targetFile)) {
+        if (move_uploaded_file($profilePicture["tmp_name"], to: "uploads/" . $targetFile)) {
             try {
                 require_once "databaseHandler.php";
                 $sql = "INSERT INTO users (employeeName, employeeLName, role, accountName, password, picture, SuppliersPerms, TransactionsPerms, InventoryPerms, POSPerms, REPerms, POPerms, UsersPerms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

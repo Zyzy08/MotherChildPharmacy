@@ -735,3 +735,8 @@ resetPasswordBtn.addEventListener('click', function() {
         }, 100);
     }
 });
+
+const toArchivedUsers = document.getElementById('toArchivedUsers');
+toArchivedUsers.addEventListener('click', function(){
+    window.location.href = 'users-archive/archivedusers.php';
+});

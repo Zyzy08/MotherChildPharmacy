@@ -1,14 +1,14 @@
 {
-    "employeeName": "Lance",
-    "employeeLName": "Tiangco",
-    "accountName": "ltiangco",
-    "password": "tiangco-e004",
-    "role": "Admin",
+    "employeeName": "Shrek",
+    "employeeLName": "Shrek",
+    "accountName": "sshrek",
+    "password": "shrek-e038",
+    "role": "Purchaser",
     "SuppliersPerms": "on",
     "TransactionsPerms": "on",
     "InventoryPerms": "on",
     "POSPerms": "on",
     "REPerms": "on",
     "POPerms": "on",
-    "UsersPerms": "on"
+    "UsersPerms": "off"
 }

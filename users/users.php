@@ -78,7 +78,7 @@
 
                         <li>
                             <a class="dropdown-item d-flex align-items-center"
-                                href="../users/users-profile/users-profile.php">
+                                href="users-profile/users-profile.php">
                                 <i class="bi bi-person"></i>
                                 <span>My Profile</span>
                             </a>
@@ -179,8 +179,13 @@
 
         <section class="section users">
             <div class="row">
-                <div class="button" id="addUser">
-                    <img src="../resources/img/add.png">Add User
+                <div class="containerAddArchive">
+                    <div class="button" id="addUser">
+                        <img src="../resources/img/add.png" alt="Add User"> Add User
+                    </div>
+                    <div class="archived-users" id="toArchivedUsers">
+                        Archived Users<img src="../resources/img/right-arrow-3.png" alt="Archive Button">
+                    </div>
                 </div>
                 <br>
                 <!-- <div id="usersNum" class="usercount">
