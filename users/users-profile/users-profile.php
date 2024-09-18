@@ -17,7 +17,9 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="../../resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -47,13 +49,14 @@
       </a>
     </div><!-- End Logo -->
 
-      <nav class="header-nav ms-auto">
+    <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
 
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="../../users/uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile" class="rounded-circle">
+            <img src="../../users/uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile"
+              class="rounded-circle">
             <span class="d-none d-md-block dropdown-toggle ps-2"><?php echo htmlspecialchars($formattedName); ?></span>
           </a><!-- End Profile Image Icon -->
 
@@ -81,7 +84,7 @@
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
-            </li>            
+            </li>
 
           </ul><!-- End Profile Dropdown Items -->
 
@@ -114,24 +117,24 @@
       </li><!-- End Suppliers Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../../transactions/transactions.html">
-          <i class="bi bi-cash-coin"></i>
-          <span>Transactions</span>
-        </a>
+      <a class="nav-link collapsed" href="../../transactions/transactions.html">
+        <i class="bi bi-cash-coin"></i>
+        <span>Transactions</span>
+      </a>
       </li><!-- End Transactions Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../../inventory/inventory.php">
-          <i class="bi bi-box-seam"></i>
-          <span>Inventory</span>
-        </a>
+      <a class="nav-link collapsed" href="../../inventory/inventory.php">
+        <i class="bi bi-box-seam"></i>
+        <span>Inventory</span>
+      </a>
       </li><!-- End Inventory Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../../returnexchange/return.html">
-          <i class="bi bi-cart-dash"></i>
-          <span>Return & Exchange</span>
-        </a>
+      <a class="nav-link collapsed" href="../../returnexchange/return.html">
+        <i class="bi bi-cart-dash"></i>
+        <span>Return & Exchange</span>
+      </a>
       </li><!-- End Return & Exchange Page Nav -->
 
       <li class="nav-item">
@@ -144,10 +147,10 @@
       <li class="nav-heading"></li>
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../../pos/pos.php">
-          <i class="bi bi-printer"></i>
-          <span>POS</span>
-        </a>
+      <a class="nav-link collapsed" href="../../pos/pos.php">
+        <i class="bi bi-printer"></i>
+        <span>POS</span>
+      </a>
       </li><!-- End POS Page Nav -->
 
     </ul>
@@ -174,7 +177,8 @@
           <div class="card">
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-              <img src="../../users/uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile" class="rounded-circle">
+              <img src="../../users/uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile"
+                class="rounded-circle">
               <h2><?php echo htmlspecialchars($employeeName); ?></h2>
               <h3><?php echo htmlspecialchars($role); ?></h3>
 
@@ -191,7 +195,8 @@
               <ul class="nav nav-tabs nav-tabs-bordered">
 
                 <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+                  <button class="nav-link active" data-bs-toggle="tab"
+                    data-bs-target="#profile-overview">Overview</button>
                 </li>
 
                 <li class="nav-item">
@@ -199,7 +204,8 @@
                 </li>
 
                 <li class="nav-item">
-                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change
+                    Password</button>
                 </li>
 
               </ul>
@@ -249,7 +255,8 @@
                       <div class="col-md-8 col-lg-9">
                         <img src="../../users/uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile">
                         <div class="pt-2">
-                          <a href="#" id="upload-button" class="btn btn-primary btn-sm" title="Upload new profile image">
+                          <a href="#" id="upload-button" class="btn btn-primary btn-sm"
+                            title="Upload new profile image">
                             <i class="bi bi-upload"></i>
                           </a>
                           <input type="file" id="upload-input" name="profileImage" style="display:none;">
@@ -263,14 +270,16 @@
                     <div class="row mb-3">
                       <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Full Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="fullName" type="text" class="form-control" id="fullName" value="<?php echo htmlspecialchars($employeeName); ?>">
+                        <input name="fullName" type="text" class="form-control" id="fullName"
+                          value="<?php echo htmlspecialchars($employeeName); ?>">
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="role" class="col-md-4 col-lg-3 col-form-label">Role</label>
                       <div class="col-md-8 col-lg-9">
-                        <a class="form-control d-flex align-items-center collapsed" data-bs-toggle="collapse" href="#role-dropdown" aria-expanded="false">
+                        <a class="form-control d-flex align-items-center collapsed" data-bs-toggle="collapse"
+                          href="#role-dropdown" aria-expanded="false">
                           <span id="role-text"><?php echo htmlspecialchars($role); ?></span>
                           <i class="bi bi-chevron-down ms-auto"></i>
                         </a>
@@ -301,7 +310,8 @@
                     <div class="row mb-3">
                       <label for="accountName" class="col-md-4 col-lg-3 col-form-label">Account Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="accountName" type="text" class="form-control" id="accountName" value="<?php echo htmlspecialchars($accountName); ?>">
+                        <input name="accountName" type="text" class="form-control" id="accountName"
+                          value="<?php echo htmlspecialchars($accountName); ?>">
                       </div>
                     </div>
 
@@ -356,7 +366,7 @@
 
                 <div class="tab-pane fade pt-3" id="profile-change-password">
                   <!-- Change Password Form -->
-                  <form>
+                  <form id="passForm" method="post" enctype="multipart/form-data">
 
                     <div class="row mb-3">
                       <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
@@ -403,11 +413,13 @@
       &copy; Copyright <strong><span>Mother & Child Pharmacy and Medical Supplies</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
-      Designed by <a href="https://www.sti.edu/campuses-details.asp?campus_id=QU5H">STI College Angeles - BSIT4-A s.y 2024-2025 </a>
+      Designed by <a href="https://www.sti.edu/campuses-details.asp?campus_id=QU5H">STI College Angeles - BSIT4-A s.y
+        2024-2025 </a>
     </div>
   </footer><!-- End Footer -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
   <script src="../../resources/vendor/apexcharts/apexcharts.min.js"></script>
@@ -421,6 +433,7 @@
 
   <!-- Template Main JS File -->
   <script src="../../main.js"></script>
+  <script src="profile.js"></script>
 
 </body>
 
