@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 18, 2024 at 12:18 PM
+-- Generation Time: Sep 18, 2024 at 05:04 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -68,17 +68,19 @@ CREATE TABLE `inventory` (
   `PricePerUnit` decimal(10,2) DEFAULT NULL,
   `SupplierID` int(11) DEFAULT NULL,
   `Notes` text DEFAULT NULL,
-  `Status` enum('Active','Inactive') NOT NULL DEFAULT 'Active'
+  `Status` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `ProductIcon` varchar(255) DEFAULT NULL,
+  `ProductCode` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `inventory`
 --
 
-INSERT INTO `inventory` (`ItemID`, `ItemName`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `SupplierID`, `Notes`, `Status`) VALUES
-(1, 'Test', 'Paracetamol', 'Biogesic', 'Medicine', '100', 'mg', 0, 0, NULL, 200.00, NULL, 'hehe', ''),
-(2, 'two', 'Paracetamol', 'Biogesic', 'Medicine', '100', 'mg', 0, 0, NULL, 300.50, NULL, 'a', ''),
-(3, 'Three', 'Phenyl', 'Neozep', 'Medicine', '200', 'mg', 0, 0, NULL, 299.00, NULL, 'None', 'Active');
+INSERT INTO `inventory` (`ItemID`, `ItemName`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`) VALUES
+(1, 'Test', 'Paracetamol', 'Biogesic', 'Medicine', '100', 'mg', 0, 0, NULL, 200.00, NULL, 'hehe', '', NULL, NULL),
+(2, 'two', 'Paracetamol', 'Biogesic', 'Medicine', '100', 'mg', 0, 0, NULL, 300.50, NULL, 'a', '', NULL, NULL),
+(3, 'Three', 'Phenyl', 'Neozep', 'Medicine', '200', 'mg', 0, 0, NULL, 299.00, NULL, 'None', 'Active', NULL, NULL);
 
 -- --------------------------------------------------------
 
