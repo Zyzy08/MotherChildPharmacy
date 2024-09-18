@@ -209,7 +209,7 @@ function setDataTables() {
         "order": [], // Disable initial sorting
         "columnDefs": [
             { "targets": 0, "width": "8%" }, // Item ID
-            { "targets": 1, "width": "10%" }, // Icon 
+            { "targets": 1, "width": "10%", "orderable": false }, // Icon 
             { "targets": 2, "width": "10%" }, // Product Code
             { "targets": 3, "width": "10%" }, // Generic Name
             { "targets": 4, "width": "10%" }, // Brand Name

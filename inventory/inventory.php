@@ -248,7 +248,7 @@
         <!--<hr style="margin-top: 15px;">-->
 
         <div class="textbox">
-          <label for="iconFile">Icon</label>
+          <label for="iconFile">Picture</label>
           <div class="icon-upload">
             <label for="iconFile">
               <img id="iconPreview" src="../resources/img/add_icon.png" alt="+" class="icon-preview"
@@ -304,7 +304,7 @@
                 <thead>
                   <tr class="highlight-row">
                     <th style="text-align: center;">Item ID</th>
-                    <th style="text-align: center;">Icon</th>
+                    <th style="text-align: center;">Picture</th>
                     <th style="text-align: center;">Product Code</th>
                     <th style="text-align: center;">Brand Name</th>
                     <th style="text-align: center;">Generic Name</th>
