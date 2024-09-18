@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0); // Turn off display errors in production
 
 $servername = "localhost";
 $username = "root";
@@ -17,6 +17,7 @@ if ($conn->connect_error) {
     exit;
 }
 
+// Retrieve and validate search query
 $searchQuery = $_POST['searchQuery'] ?? '';
 
 if (empty($searchQuery)) {

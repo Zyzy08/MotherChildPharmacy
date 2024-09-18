@@ -1,4 +1,5 @@
 .Create_PO {
+    margin-bottom: 20px;
     height: 36px; 
     padding: 0 12px; 
     font-size: 14px; 
@@ -78,12 +79,14 @@
 
 /*FORM MODAL*/
 
-
+.h2
+{
+  color: #4154f1;
+}
 
 #PurchaseForm {
-  
     position: fixed;
-    top: 50%;
+    top: 54%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
@@ -114,6 +117,7 @@
     top: 50%; /* Center vertically */
     transform: translateY(-50%); /* Adjust for vertical centering */
   }
+
   /* Close Button */
 #close {
     color: #aaa;
@@ -129,68 +133,6 @@
 }
 /* End close*/
 
-/*SEARCHBOX*/
-.searchbox {
-    position: absolute;
-    top: 105px;
-    right: 0.5%;
-    opacity: 1;
-  }
-  
-  .searchbox input {
-    width: 347px;
-    height: 30px;
-    padding-left: 34px;
-    padding-right: 12px;
-    font-family: Catamaran;
-    font-size: 14px;
-    line-height: 22px;
-    font-weight: 400;
-    background: #F3F4F6FF;
-    /* neutral-200 */
-    border-radius: 3px;
-    /* border-l */
-    border-width: 0px;
-    outline: none;
-  }
-  .searchbox svg {
-    position: absolute;
-    top: 7px;
-    right: 12px;
-    width: 16px;
-    height: 16px;
-    fill: #171A1FFF;
-    /* neutral-900 */
-  }
-  
-  .searchbox svg.left {
-    left: 12px;
-  }
-  
-  /* focused */
-  .searchbox input:focused {
-    color: #BDC1CAFF;
-    /* neutral-400 */
-    background: #FFFFFFFF;
-    /* white */
-  }
-  
-  /* disabled */
-  .searchbox input:disabled {
-    color: #BDC1CAFF;
-    /* neutral-400 */
-    background: #F3F4F6FF;
-    /* neutral-200 */
-  }
-  
-  .searchbox :disabled+.icon,
-  .textbox :disabled+.icon+.icon {
-    fill: #171A1FFF;
-    /* neutral-900 */
-  }
-
-  /*END OF SEARCHBOX*/
-  
   .h3 {
     font-size: 20px; 
     line-height: 30px; 
@@ -200,15 +142,14 @@
   
   /* Form Buttons */
 .form-button button {
-    width: 500px; 
-    height: 36px; 
+    width: 250px; 
+    height: 30px; 
     padding: 0 12px; 
     display: flex;
     padding: 0px 12px;
     border: none;
     cursor: pointer;
     color: #fff;
-    font-family: Catamaran; 
     font-size: 14px; 
     line-height: 22px; 
     font-weight: 400; 
@@ -248,22 +189,18 @@
     color: #171A1FFF; /* neutral-900 */
     background: #F3F4F6FF; /* neutral-200 */
   }
+
+  .textbox {
+    opacity: 1; 
+  }
+
   .textbox input {
     width: 200px; 
-    height: 36px; 
-    padding-left: 12px; 
-    padding-right: 12px; 
-    font-family: Catamaran; 
-    font-size: 14px; 
-    line-height: 22px; 
-    font-weight: 400; 
-    background: #F3F4F6FF; /* neutral-200 */
-    border-radius: 4px; /* border-xl */
-    border-width: 0px; 
-    outline: none; 
+    height: 30px;
   }
+  
+
   .textbox .label {
-    font-family: Catamaran; 
     font-size: 14px; 
     line-height: 22px; 
     font-weight: 700; 
@@ -286,6 +223,42 @@
   .textbox :disabled + .icon, .textbox :disabled + .icon + .icon {
     fill: #171A1FFF; /* neutral-900 */
   }
+
+  .textbox select
+  {
+    width: 200px; 
+    height: 30px; 
+  }
+/* hover */
+.select input:hover {
+  color: #171A1FFF; /* neutral-900 */
+  background: #F3F4F6FF; /* neutral-200 */
+}
+/* focused */
+.select input:focused {
+  color: #171A1FFF; /* neutral-900 */
+  background: #FFFFFFFF; /* white */
+}
+/* disabled */
+.select input:disabled {
+  color: #171A1FFF; /* neutral-900 */
+  background: #F3F4F6FF; /* neutral-200 */
+}
+.select :disabled + .icon, .textbox :disabled + .icon + .icon {
+  fill: #171A1FFF; /* neutral-900 */
+}
+
+
+
+
+
+
+
+
+
+
+
+
   .close {
     position: absolute;
     top: 10px;
@@ -302,111 +275,9 @@
     color: black;
     text-decoration: none;
   }
-  
-  /*End of overlay*/
-
-/***************************************PRODUCT TABLE*****************************/
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    
-}
-th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-th {
-    background-color: #f4f4f4;
-}
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-tr:hover {
-    background-color: #f1f1f1;
-}
 
 
-.table_product {
-margin-left: 30px;
-display: absolute;
-flex-direction: column;
-margin-top: 100px;
-position: absolute;
-width: 80%;
-top: 80px;
-left: 281px;
-height: 10%;
-opacity: 1;
-border-radius: 3px;
-border-collapse: collapse;
-}
-th.col1, td.col1 {
-width: 7%;
-}
 
-th.col2, td.col2 {
-width: 23%;
-}
-
-th.col2pic, td.col2pic {
-width: 2%;
-}
-
-th.col2name, td.col2name {
-width: 20.27%;
-}
-
-th.col3, td.col3 {
-width: 16%;
-}
-
-th.col4, td.col4 {
-width: 14%;
-}
-
-th.col5, td.col5 {
-width: 15%;
-}
-
-th.col6, td.col6 {
-width: 10%;
-}
-
-th.col7, td.col7 {
-width: 10%;
-text-align: center;
-}
-
-th {
-height: 50px;
-text-align: left;
-font-family: Catamaran;
-font-size: 14px;
-font-weight: 600;
-color: #565D6DFF;
-}
-
-td {
-height: 50px;
-font-family: Catamaran;
-font-size: 14px;
-line-height: 22px;
-font-weight: 400;
-color: #171A1FFF;
-}
-
-.highlight-row {
-background-color: #f4f4f4;
-}
-
-.selected {
-background-color: #cfe2ff;
-}
-
-/***************************************PRODUCT TABLE*****************************/
 
 /*NOTIFICATION AND OTHER STUFF*/
 
@@ -533,9 +404,137 @@ background-color: #cfe2ff;
       color: #fff;
   }
   
-  
-  .currency {
-    font-family: 'Catamaran', sans-serif;
-  }
-  /*NOTIFICATION AND OTHER STUFF*/
-  
+
+/* #example
+{
+  margin-top: 40px;
+} */
+
+
+.icon-upload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  position: relative;
+}
+
+
+.icon-upload img {
+  width: 100%; /* Make the image fit the container */
+  height: auto; /* Maintain aspect ratio */
+  max-height: 100px; /* Ensure the image doesn't exceed container height */
+}
+
+.icon-upload input[type="file"] {
+    display: none;
+}
+
+ /*End of overlay*/
+
+/***************************************PRODUCT TABLE*****************************/
+.table_product {
+margin-left: 30px;
+display: absolute;
+flex-direction: column;
+position: absolute;
+width: 80%;
+left: 281px;
+height: 10%;
+opacity: 1;
+border-radius: 3px;
+border-collapse: collapse;
+}
+th.col1, td.col1 {
+width: 7%;
+}
+
+th.col2, td.col2 {
+width: 23%;
+}
+
+th.col2pic, td.col2pic {
+width: 2%;
+}
+
+th.col2name, td.col2name {
+width: 20.27%;
+}
+
+th.col3, td.col3 {
+width: 16%;
+}
+
+th.col4, td.col4 {
+width: 14%;
+}
+
+th.col5, td.col5 {
+width: 15%;
+}
+
+th.col6, td.col6 {
+width: 10%;
+}
+
+th.col7, td.col7 {
+width: 10%;
+text-align: center;
+}
+
+th {
+height: 50px;
+text-align: left;
+
+font-size: 14px;
+font-weight: 600;
+color: #565D6DFF;
+}
+
+td {
+height: 50px;
+
+font-size: 14px;
+line-height: 22px;
+font-weight: 400;
+color: #171A1FFF;
+}
+
+.highlight-row {
+background-color: #f4f4f4;
+}
+
+.selected {
+background-color: #cfe2ff;
+}
+
+
+
+/* Style for Edit and Delete buttons */
+.edit-btn, .delete-btn {
+background-color: #005500; /* Button color */
+color: white;
+border: none;
+padding: 5px 10px;
+cursor: pointer;
+border-radius: 4px;
+margin: 2px;
+}
+
+.delete-btn {
+background-color: #cc0000; /* Delete button color */
+}
+
+.edit-btn:hover, .delete-btn:hover {
+opacity: 0.8; /* Button hover effect */
+}
+/***************************************PRODUCT TABLE*****************************/
+
+.usersTableSize{
+  width: 95%;
+  margin-left: 17px;
+}

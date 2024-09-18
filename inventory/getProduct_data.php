@@ -14,7 +14,16 @@ try {
 
     // Check if an ItemID is provided
     if (isset($_GET['itemID'])) {
-        $itemID = $_GET['itemID'];
+        $itemID = $_GET['itemID']; // Get the itemID from query parameters
+
+        // Validate that itemID is numeric
+        if (!is_numeric($itemID)) {
+            echo json_encode(['success' => false, 'message' => 'Invalid ItemID.']);
+            exit;
+        }
+
+        // Sanitize input
+        $itemID = htmlspecialchars($itemID);
 
         // Fetch details for the specific ItemID
         $sql = "SELECT * FROM inventory WHERE ItemID = ?";
@@ -37,8 +46,9 @@ try {
         echo json_encode(['success' => true, 'data' => $data]);
     }
 } catch (PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 } finally {
+    // Close the database connection
     $pdo = null;
     $stmt = null;
 }

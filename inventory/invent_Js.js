@@ -7,9 +7,6 @@ var btn = document.querySelector(".Create_PO");
 // Get the close button
 var closeBtn = document.getElementById("closeBtn");
 
-// Get the update button
-var updateBtn = document.getElementById("updateProduct");
-
 // Get the notification elements
 var notification = document.getElementById("notification");
 var notificationMessage = document.getElementById("notificationMessage");
@@ -18,7 +15,6 @@ var closeNotification = document.getElementById("closeNotification");
 // For tracking if this is an update or a new product
 var isEditMode = false;
 var currentItemId = null; // Store the ItemID when editing
-var updateModeActive = false; // Flag to indicate if update mode is active
 var formClosedWithoutSubmission = false; // Flag to indicate if form was closed without submission
 
 // When the user clicks the button, open the modal for new product
@@ -26,35 +22,51 @@ btn.onclick = function() {
     modal.style.display = "block";
     isEditMode = false; // Indicate that this is a new product
     document.getElementById('PurchaseForm').reset(); // Clear form fields
+    document.getElementById('iconPreview').src = '../resources/default_icon.png'; // Reset icon preview
 }
 
 // When the user clicks on the close button, close the modal
 closeBtn.onclick = function() {
-    formClosedWithoutSubmission = true; // Set the flag
+    formClosedWithoutSubmission = true; // Set the flag to indicate form was closed without submission
     modal.style.display = "none";
 }
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        formClosedWithoutSubmission = true; // Set the flag
-        modal.style.display = "none";
-    }
-    if (event.target == notification) {
-        notification.style.display = "none";
-    }
-}
+// window.onclick = function(event) {
+//     if (event.target == modal) {
+//         formClosedWithoutSubmission = true; // Set the flag to indicate form was closed without submission
+//         modal.style.display = "none";
+//     }
+//     if (event.target == notification) {
+//         notification.style.display = "none";
+//     }
+// }
 
 // Get the Clear button
 var clearBtn = document.getElementById("Clear");
 
 // When the user clicks the Clear button, clear all text fields
 clearBtn.onclick = function() {
-    var textFields = document.querySelectorAll('#PurchaseForm input[type="text"]');
-    textFields.forEach(function(field) {
-        field.value = "";
-    });
+    document.getElementById('PurchaseForm').reset(); // Reset the form
+    document.getElementById('iconPreview').src = '../resources/default_icon.png'; // Reset icon preview
 }
+
+// Handle icon file selection
+document.getElementById('iconFile').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('iconPreview').src = e.target.result;
+            document.getElementById('iconFile').setAttribute('data-changed', 'true'); // Flag to indicate icon was changed
+        };
+        reader.readAsDataURL(file);
+    } else {
+        // Set the default icon if no file is selected
+        document.getElementById('iconPreview').src = '../resources/default_icon.png';
+        document.getElementById('iconFile').removeAttribute('data-changed'); // Remove the flag
+    }
+});
 
 // Handle form submission (for both adding and updating)
 document.getElementById('PurchaseForm').addEventListener('submit', function(event) {
@@ -62,264 +74,206 @@ document.getElementById('PurchaseForm').addEventListener('submit', function(even
 
     if (formClosedWithoutSubmission) {
         formClosedWithoutSubmission = false; // Reset the flag
-        return; // Exit if form was closed without submission
+        return;
     }
 
     const form = document.getElementById('PurchaseForm');
     const formData = new FormData(form);
 
-    // Log form data to ensure InStock is included
-    for (const [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
+    // Ensure ItemID is included in the form data
+    if (isEditMode) {
+        formData.append('itemID', document.getElementById('itemID').value);
+        
+        // If icon was not changed, remove ProductIcon from FormData
+        if (!document.getElementById('iconFile').hasAttribute('data-changed')) {
+            formData.delete('ProductIcon');
+        }
     }
 
-    const apiUrl = isEditMode ? 'updateInventory.php' : 'getInventory.php';
+    const url = isEditMode ? 'updateInventory.php' : 'insertInventory.php'; // Use update script if in edit mode
 
-    fetch(apiUrl, {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert(data.message); // Show success message
-            form.reset(); // Optionally reset the form
-            modal.style.display = "none"; // Close the modal
-            loadInventory(); // Refresh the inventory table
-        } else {
-            alert('Error: ' + data.message); // Show error message
-        }
-    })
-    .catch(error => console.error('Error:', error));
-});
-
-// Load inventory data when the page loads
-document.addEventListener('DOMContentLoaded', loadInventory);
-
-// Function to load inventory data
-function loadInventory() {
-    fetch('getProduct_data.php')
+    fetch(url, { method: 'POST', body: formData })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                updateTable(data.data);
+                alert(data.message);
+                form.reset();
+                modal.style.display = "none";
+                loadInventory(); // Reload the inventory table
+                location.reload();
             } else {
-                showError(data.message);
+                showError('Error saving product: ' + data.message);
             }
         })
-        .catch(error => showError('Failed to load data. Please try again later.'));
-}
-
-// Function to update the table
-function updateTable(data) {
-    const tableBody = document.getElementById('tableBody');
-    tableBody.innerHTML = ''; // Clear existing rows
-
-    // Ensure data is an array
-    if (Array.isArray(data)) {
-        data.forEach(item => {
-            const row = document.createElement('tr');
-            row.setAttribute('data-id', item.ItemID); // Set data-id attribute
-
-            // Create and append table cells
-            row.innerHTML = `
-                <td style="text-align: center;">${item.ItemName}</td>
-                <td style="text-align: center;">${item.BrandName}</td>
-                <td style="text-align: center;">${item.GenericName}</td>
-                <td style="text-align: center;">${item.ItemType}</td>
-                <td style="text-align: center;">${item.Mass}</td>
-                <td style="text-align: center;" class="currency">₱ ${item.PricePerUnit}</td>
-                <td style="text-align: center;">${item.InStock}</td>
-            `;
-
-            // Add double-click event to load the item data for editing if updateModeActive is true
-            row.addEventListener('dblclick', function() {
-                if (updateModeActive) {
-                    loadFormForEdit(item); // Load item data into the form
-                    updateModeActive = false; // Deactivate update mode
-                }
-            });
-
-            tableBody.appendChild(row);
+        .catch(error => {
+            showError('An error occurred while saving the product.');
         });
-    } else {
-        // Handle the case when data is not in expected format
-        showError('Error: Invalid data format received.');
-    }
+});
+
+// Function to show errors
+function showError(message) {
+    console.error(message);
+    notificationMessage.textContent = message; // Set error message in the notification
+    notification.style.display = "block";
 }
 
-// Function to load form data for editing
-function loadFormForEdit(item) {
-    modal.style.display = "block"; // Open the modal
-    isEditMode = true; // Indicate that this is edit mode
-    currentItemId = item.ItemID; // Store the ItemID for the update
+// Function to handle update button click
+function handleUpdate(itemId) {
+    if (!itemId) {
+        showError('Error: ItemID is missing.');
+        return;
+    }
 
-    // Fill the form with item data
-    document.getElementById('itemName').value = item.ItemName;
+    // Log the itemId for debugging
+    console.log('Fetching data for ItemID:', itemId);
+
+    fetch(`getProduct_data.php?itemID=${encodeURIComponent(itemId)}`)
+        .then(response => {
+            // Check if the response is OK
+            if (response.ok) {
+                // Check if the response is JSON
+                const contentType = response.headers.get('Content-Type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
+                } else {
+                    return response.text().then(text => {
+                        throw new Error(`Unexpected response: ${text}`);
+                    });
+                }
+            } else {
+                throw new Error('Network response was not ok');
+            }
+        })
+        .then(data => {
+            // Log the data for debugging
+            console.log('Fetched data:', data);
+
+            if (data.success) {
+                loadFormForEdit(data.data); // Load item data into the form
+            } else {
+                showError('Error fetching product data: ' + data.message);
+            }
+        })
+        .catch(error => {
+            showError('An error occurred while fetching the product data.');
+        });
+}
+
+// Function to load item data into the form for editing
+function loadFormForEdit(item) {
+    isEditMode = true;
+    currentItemId = item.ItemID;
+
+    document.getElementById('itemID').value = item.ItemID; // Set ItemID field as read-only
+    document.getElementById('productCode').value = item.ProductCode;
     document.getElementById('genericName').value = item.GenericName;
     document.getElementById('brandName').value = item.BrandName;
     document.getElementById('itemType').value = item.ItemType;
     document.getElementById('mass').value = item.Mass;
     document.getElementById('unitOfMeasure').value = item.UnitOfMeasure;
     document.getElementById('pricePerUnit').value = item.PricePerUnit;
-    document.getElementById('notes').value = item.Notes;
     document.getElementById('status').value = item.Status;
-    document.getElementById('InStock').value = item.InStock; // Ensure this field is updated
+    document.getElementById('InStock').value = item.InStock;
+    document.getElementById('Notes').value = item.Notes || ''; // Handle missing Notes
+
+    // Set the icon preview
+    document.getElementById('iconPreview').src = item.ProductIcon || '../resources/default_icon.png'; // Use default if no icon
+
+    modal.style.display = "block";
 }
 
-// When the user clicks the Update button, activate update mode
-updateBtn.onclick = function() {
-    updateModeActive = true; // Activate update mode
-    notificationMessage.textContent = 'Double-click the row that you want to edit.'; // Set the message
-    notification.style.display = "block"; // Show the notification
-}
-
-// Function to show error messages
-function showError(message) {
-    const errorContainer = document.getElementById('errorContainer');
-    errorContainer.innerHTML = `<p class="error-message">${message}</p>`;
-}
-
-// Function to search and update table based on the search query
-function fetchData(query) {
-    fetch('searchProduct.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            searchQuery: query
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            updateTable(data.results);
-        } else {
-            console.error('Search error:', data.message);
-            alert(data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Fetch error:', error);
-        alert('Error: There was an issue with your request.');
-    });
-}
-
-// Search input listener to handle real-time search
-var searchInput = document.getElementById('searchInput');
-searchInput.addEventListener('input', function(event) {
-    const query = event.target.value.trim();
-    if (query.length === 0) {
-        fetch('getProduct_data.php')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                updateTable(data.results);
-            } else {
-                console.error('Fetch error:', data.message);
-                alert('Error fetching product data: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-            alert('Error fetching product data: ' + error);
-        });
-    } else {
-        fetchData(query);
+// Function to initialize or reinitialize DataTables
+function setDataTables() {
+    if ($.fn.dataTable.isDataTable('#example')) {
+        $('#example').DataTable().destroy(); // Destroy the existing instance before reinitializing
     }
-});
 
-// When the user clicks the Close button on the notification, hide the notification
-closeNotification.onclick = function() {
-    notification.style.display = "none"; // Hide the notification
+    $('#example').DataTable({
+        "order": [], // Disable initial sorting
+        "columnDefs": [
+            { "targets": 0, "width": "8%" }, // Item ID
+            { "targets": 1, "width": "10%" }, // Icon 
+            { "targets": 2, "width": "10%" }, // Product Code
+            { "targets": 3, "width": "10%" }, // Generic Name
+            { "targets": 4, "width": "10%" }, // Brand Name
+            { "targets": 5, "width": "10%" }, // Item Type
+            { "targets": 6, "width": "10%" }, // Mass & Unit of Measure
+            { "targets": 7, "width": "10%" }, // Price Per Unit
+            { "targets": 8, "width": "10%" }, // Status
+            { "targets": 9, "width": "10%" }, // In Stock
+            { "targets": 10, "width": "12%", "orderable": false } // Actions
+        ]
+    });
 }
 
-// When the user clicks anywhere outside the notification, hide it
-window.onclick = function(event) {
-    if (event.target == notification) {
-        notification.style.display = "none";
-    }
+// Function to update the table with new data
+function updateTable(items) {
+    var tableBody = document.getElementById('tableBody');
+    tableBody.innerHTML = ''; // Clear existing rows
+
+    items.forEach(item => {
+        var row = document.createElement('tr');
+        row.setAttribute('data-id', item.ItemID); // Set data-id attribute
+
+        row.innerHTML = `
+            <td style="text-align: center;">${item.ItemID}</td>
+            <td style="text-align: center;"><img src="${item.ProductIcon}" alt="Icon" style="width: 50px; height: auto;"></td>
+            <td style="text-align: center;">${item.ProductCode}</td>
+            <td style="text-align: center;">${item.BrandName}</td>
+            <td style="text-align: center;">${item.GenericName}</td>
+            <td style="text-align: center;">${item.ItemType}</td>
+            <td style="text-align: center;">${item.Mass} ${item.UnitOfMeasure}</td> <!-- Concatenated Mass and UnitOfMeasure -->
+            <td style="text-align: center;">${item.PricePerUnit}</td>
+            <td style="text-align: center;">${item.Status}</td>
+            <td style="text-align: center;">${item.InStock}</td>
+            <td style="text-align: center;">
+                <button class="update-btn" onclick="handleUpdate(${item.ItemID})">Update</button>
+                <button class="delete-btn" onclick="handleDelete(${item.ItemID})">Delete</button>
+            </td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+
+    setDataTables(); // Reinitialize DataTables
 }
 
-// DELETE PRODUCT FUNCTIONALITY
-
-document.addEventListener('DOMContentLoaded', () => {
-    let deleteMode = false;
-    let selectedRow = null;
-    let selectedRowId = null;
-
-    const deleteButton = document.getElementById('deleteProduct');
-    const deleteModal = document.getElementById('deleteModal');
-    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-    const closeDeleteBtn = document.getElementById('closeDeleteBtn');
-    const tableBody = document.getElementById('tableBody');
-
-    deleteButton.addEventListener('click', () => {
-        // Check if there are any rows in the table
-        const rows = tableBody.querySelectorAll('tr');
-        if (rows.length === 0) {
-            showNotification('There are no products in the table to delete.');
-            return; // Exit the function if no rows are present
-        }
-
-        deleteMode = true;
-        showNotification('Double-click the row that you want to delete.');
-    });
-
-    tableBody.addEventListener('dblclick', function(event) {
-        if (!deleteMode) return;
-
-        const row = event.target.closest('tr');
-        if (!row) return;
-
-        selectedRowId = row.getAttribute('data-id');
-        selectedRow = row;
-        deleteModal.style.display = 'block'; // Show the delete confirmation modal
-        deleteMode = false; // Deactivate delete mode
-    });
-
-    confirmDeleteBtn.addEventListener('click', () => {
-        if (selectedRowId) {
-            fetch('deleteProduct.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    itemId: selectedRowId
-                })
-            })
+// Function to handle delete operation
+function handleDelete(itemId) {
+    if (confirm('Are you sure you want to delete this item?')) {
+        fetch(`deleteProduct.php?itemID=${encodeURIComponent(itemId)}`, { method: 'POST' })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    selectedRow.remove(); // Remove the row from the table
-                    showNotification('Product deleted successfully.');
+                    alert(data.message);
+                    loadInventory(); // Reload the inventory table
+                    location.reload();
                 } else {
-                    showNotification('Error deleting product: ' + data.message);
+                    showError('Error deleting product: ' + data.message);
                 }
             })
             .catch(error => {
-                console.error('Delete error:', error);
-                showNotification('Error deleting product: ' + error);
+                showError('An error occurred while deleting the product.');
             });
-        }
-        deleteModal.style.display = 'none'; // Close the delete confirmation modal
-    });
-
-    cancelDeleteBtn.addEventListener('click', () => {
-        deleteModal.style.display = 'none'; // Close the delete confirmation modal
-        deleteMode = false; // Deactivate delete mode
-    });
-
-    closeDeleteBtn.addEventListener('click', () => {
-        deleteModal.style.display = 'none'; // Close the delete confirmation modal
-        deleteMode = false; // Deactivate delete mode
-    });
-});
-
-function showNotification(message) {
-    notificationMessage.textContent = message;
-    notification.style.display = "block";
+    }
 }
+
+// Function to load inventory data and refresh the table
+function loadInventory() {
+    console.log("Loading inventory..."); // Debugging line to check if this function is called
+    fetch('getProduct_data.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateTable(data.data); // Update the table with fetched data
+            } else {
+                showError('Error fetching inventory data: ' + data.message);
+            }
+        })
+        .catch(error => {
+            showError('An error occurred while loading inventory data.');
+        });
+}
+
+// Load inventory when the page loads
+window.onload = loadInventory;

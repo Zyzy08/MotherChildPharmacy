@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Dashboard - Mother & Child Pharmacy and Medical Supplies</title>
+  <title>Inventory - Mother & Child Pharmacy and Medical Supplies</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -30,9 +30,17 @@
   <link href="../resources/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="../resources/vendor/simple-datatables/style.css" rel="stylesheet">
 
+  <!-- DataTables Imports -->
+  <link rel="stylesheet" href="../users/dataTablesUsers/dataTables.css" />
+  <!--<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css" /-->
+  <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+
   <!-- Template Main CSS File -->
   <link href="../style.css" rel="stylesheet">
   <link href="../inventory/invent_style.css" rel="stylesheet">
+
+
 
 </head>
 
@@ -101,7 +109,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link" href="../dashboard/dashboard.php">
+        <a class="nav-link collapsed" href="../dashboard/dashboard.php">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -117,14 +125,14 @@
       </li><!-- End Suppliers Page Nav -->
 
       <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../transactions/transactions.html">
+      <a class="nav-link collapsed" href="../transactions/transaction.html">
         <i class="bi bi-cash-coin"></i>
         <span>Transactions</span>
       </a>
       </li><!-- End Transactions Page Nav -->
 
       <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../inventory/inventory.php">
+      <a class="nav-link" href="../inventory/inventory.php">
         <i class="bi bi-box-seam"></i>
         <span>Inventory</span>
       </a>
@@ -138,7 +146,7 @@
       </li><!-- End Return & Exchange Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="../users/users.html">
+        <a class="nav-link collapsed" href="../users/users.php">
           <i class="bi bi-person"></i>
           <span>Users</span>
         </a>
@@ -147,7 +155,7 @@
       <li class="nav-heading"></li>
 
       <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../pos/pos.html">
+      <a class="nav-link collapsed" href="../pos/pos.php">
         <i class="bi bi-printer"></i>
         <span>POS</span>
       </a>
@@ -163,35 +171,42 @@
       <h1>Inventory</h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
+          <li class="breadcrumb-item"><a href="../dashboard/dashboard.php">Home</a></li>
           <li class="breadcrumb-item active">Inventory</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
 
-    <button class="Create_PO">Create Purchase Order</button>
-    <button class="deleteProduct">Delete Product</button>
-    <button id="updateProduct">Update Product</button>
+    <button class="Create_PO">New Product</button>
 
-    <form id="PurchaseForm" class="modal" enctype="multipart/form-data" action="../inventory/getInventory.php"
+    <!--<button class="deleteProduct">Delete Product</button>
+    <button id="updateProduct">Update Product</button>-->
+
+    <form id="PurchaseForm" class="modal" enctype="multipart/form-data" action="../inventory/insertInventory.php"
       method="POST">
       <div class="modal-content">
-        <h2>Create New Purchase Order</h2>
-        <button class="close" id="closeBtn">&times;</button>
-        <hr style="margin-top: 30px;">
 
         <div class="form-section">
-          <h3 class="h3">Supplier Information</h3>
+          <h3 class="h3">Product Information</h3>
 
+          <button class="close" id="closeBtn">&times;</button>
+          <hr style="margin-top: 5px">
           <div>
-            <label style="margin-right: 150px;" for="itemName">Item Name</label>
+            <label style="margin-right: 175px;" for="ItemID">Item ID</label>
             <label for="itemType">Item Type</label>
-
           </div>
 
           <div class="textbox">
-            <input style="margin-right: 30px;" type="text" id="itemName" name="itemName" required>
-            <input type="text" id="itemType" name="itemType" required>
+            <input style="margin-right: 30px;" type="text" id="itemID" name="itemID" readonly>
+            <select class="itemType" id="itemType" name="itemType">
+              <option value=""></option>
+              <option value="Medicine">Medicine</option>
+              <option value="Milk">Milk</option>
+              <option value="Supplements">Supplements</option>
+              <option value="Vitamins">Vitamins</option>
+              <option value="Skincare">Skincare</option>
+              <option value="Cosmetics">Cosmetics</option>
+            </select>
           </div>
 
           <div class="textbox">
@@ -199,51 +214,73 @@
             <label for="genericName">Generic Name</label>
           </div>
           <div class="textbox">
-            <input style="margin-right: 30px;" type="text" id="brandName" name="brandName" required>
-            <input type="text" id="genericName" name="genericName" required>
+            <input style="margin-right: 30px;" type="text" id="brandName" name="brandName">
+            <input type="text" id="genericName" name="genericName">
           </div>
-          <!--<div class="textbox">
-                    <label style="margin-right: 195px;" for="productCode">Product Code</label>
-                    <label for="barcode">Barcode</label>
-                </div>
-                <div class="textbox">
-                    <input style="margin-right: 30px;" type="text" id="productCode" name="productCode">
-                    <input type="text" id="barcode" name="Barcode">
-                </div>-->
+
           <div>
-            <label style="margin-right: 110px;" for="unitOfMeasure">Unit of Measure</label>
-            <label for="mass">Mass</label>
+            <label style="margin-right: 190px;" for="mass">Mass</label>
+            <label for="unitOfMeasure">Unit of Measure</label>
+
           </div>
           <div class="textbox">
-            <input style="margin-right: 30px;" type="text" id="unitOfMeasure" name="unitOfMeasure" required>
-            <input type="text" id="mass" name="mass" required>
+            <input style="margin-right: 30px;" type="text" id="mass" name="mass">
+            <!--<input type="text" id="unitOfMeasure" name="unitOfMeasure">-->
+            <select class="unitOfMeasure" id="unitOfMeasure" name="unitOfMeasure">
+              <option value=""></option>
+              <option value="Milligrams">Milligrams</option>
+              <option value="Grams">Grams</option>
+              <option value="Milliliters">Milliliters</option>
+              <option value="Liters">Liters</option>
+              <option value="Tablets">Tablets</option>
+            </select>
+
           </div>
         </div>
 
-        <hr style="margin-top: 15px;">
-        <div class="form-section">
+        <div>
+          <label style="margin-right: 110px;" for="ProductCode">Product Code</label>
+        </div>
+        <div class="textbox">
+          <input type="text" id="productCode" name="ProductCode">
+        </div>
 
+        <!--<hr style="margin-top: 15px;">-->
+
+        <div class="textbox">
+          <label for="iconFile">Icon</label>
+          <div class="icon-upload">
+            <label for="iconFile">
+              <img id="iconPreview" src="../resources/default_icon.png" alt="Icon Preview" class="icon-preview"
+                style="cursor: pointer;">
+            </label>
+            <input type="file" id="iconFile" name="ProductIcon" accept="image/*" style="display: none;">
+          </div>
+        </div>
+
+
+
+        <div class="form-section">
           <h3 class="h3">Sale Information</h3>
 
           <div class="textbox">
             <label style="margin-right: 130px;" for="pricePerUnit">Price Per Unit</label>
-            <label for="InStock">Instock</label>
+            <label for="InStock">In Stock</label>
           </div>
           <div class="textbox">
-            <input style="margin-right: 30px;" type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱"
-              required>
-            <input type="text" id="InStock" name="InStock" required>
+            <input style="margin-right: 30px;" type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱">
+            <input type="text" id="InStock" name="InStock">
           </div>
           <div class="textbox">
-            <label style="margin-right: 185px;" for="notes">Notes</label>
-            <label for="status">Status</label>
+            <label style="margin-right: 185px;" for="status">Status</label>
+            <label for="notes">Notes</label>
           </div>
           <div class="textbox">
-            <input style="margin-right: 30px;" type="text" id="notes" name="notes" required>
-            <input type="text" id="status" name="status" required>
+            <input style="margin-right: 30px;" type="text" id="status" name="status">
+            <input style="padding: 8px 5px" id="Notes" name="Notes"></input>
+
           </div>
         </div>
-
         <div style="margin-top: 30px;" class="form-button">
           <button type="button" id="Clear">Clear</button>
           <button type="submit" id="saveBtn">Save</button>
@@ -251,79 +288,64 @@
       </div>
     </form>
 
-    <div class="searchbox">
-      <svg class="left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
-        <title>magnifier</title>
-        <g stroke-width="1.5" fill="none" stroke="#212121" class="nc-icon-wrapper">
-          <line x1="15.25" y1="15.25" x2="11.285" y2="11.285" stroke-linecap="round" stroke-linejoin="round"
-            stroke="#212121">
-          </line>
-          <circle cx="7.75" cy="7.75" r="5" stroke-linecap="round" stroke-linejoin="round"></circle>
-        </g>
-      </svg>
-      <input type="text" placeholder="Search Product....." id="searchInput">
-    </div>
-
-
-    <div class="table_product">
-      <div id="errorContainer"></div> <!-- Error message container -->
-      <table>
-        <thead>
-          <tr class="highlight-row">
-            <th class="col7">Item Name</th>
-            <th class="col7">Brand Name</th>
-            <th class="col7">Generic Name</th>
-            <th class="col7">Item Type</th>
-            <th class="col7">Mass</th>
-            <th class="col7">Price Per Unit</th>
-            <th class="col7">Instock</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-          <!-- Data rows will be inserted here by JavaScript -->
-        </tbody>
-      </table>
-
-
-      <!-- Notification Container -->
-      <div id="notification" class="notification">
-        <p id="notificationMessage">Double-click the row that you want to edit.</p>
-        <button id="closeNotification" class="btn btn-secondary">Close</button>
-      </div>
-      <!-- Delete Modal -->
-      <div id="deleteModal" class="deleteModal">
-        <div class="modal-content">
-          <span id="closeDeleteBtn" class="closeBtn">&times;</span>
-          <h2>Delete Confirmation</h2>
-          <p>Are you sure you want to delete this item?</p>
-          <button id="confirmDeleteBtn">Confirm</button>
-          <button id="cancelDeleteBtn">Cancel</button>
+    <section class="section users">
+      <div class="row">
+        <br>
+        <!-- <div id="usersNum" class="usercount">
+                    0 users
+                </div> -->
+        <div class="col-xl-12">
+          <div class="card">
+            <div class="card-body profile-card usersTableSize flex-column align-items-center">
+              <table id="example" class="display">
+                <thead>
+                  <tr class="highlight-row">
+                    <th style="text-align: center;">Item ID</th>
+                    <th style="text-align: center;">Icon</th>
+                    <th style="text-align: center;">Product Code</th>
+                    <th style="text-align: center;">Brand Name</th>
+                    <th style="text-align: center;">Generic Name</th>
+                    <th style="text-align: center;">Item Type</th>
+                    <th style="text-align: center;">Mass & Unit of Measurement</th>
+                    <th style="text-align: center;">Price Per Unit</th>
+                    <th style="text-align: center;">Status</th>
+                    <th style="text-align: center;">In Stock</th>
+                    <th style="text-align: center;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody">
+                  <!-- Data rows will be inserted here by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
+    </section>
 
-      <!-- Notification -->
-      <div id="notification" class="notification">
-        <span id="closeNotification" class="closeNotification">&times;</span>
-        <p id="notificationMessage">Notification message goes here.</p>
+    <!-- Notification, Delete Modal, etc. -->
+    <!-- Notification Container -->
+    <div id="notification" class="notification">
+      <p id="notificationMessage">Double-click the row that you want to edit.</p>
+      <button id="closeNotification" class="btn btn-secondary">Close</button>
+    </div>
+
+    <!-- Delete Modal -->
+    <div id="deleteModal" class="deleteModal">
+      <div class="modal-content">
+        <span id="closeDeleteBtn" class="closeBtn">&times;</span>
+        <h2>Delete Confirmation</h2>
+        <p>Are you sure you want to delete this item?</p>
+        <button id="confirmDeleteBtn">Confirm</button>
+        <button id="cancelDeleteBtn">Cancel</button>
       </div>
+    </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <!-- Notification -->
+    <div id="notification" class="notification">
+      <span id="closeNotification" class="closeNotification">&times;</span>
+      <p id="notificationMessage">Notification message goes here.</p>
+    </div>
 
   </main><!-- End #main -->
 
@@ -358,3 +380,14 @@
 </body>
 
 </html>
+
+<!--<hr style="margin-top: 15px;">-->
+
+<!--<div>
+        <label for="icon">Icon</label>
+              <div class="icon-upload">
+                  <img  id="iconPreview" src="../resources/default_icon.png" alt="Icon Preview" class="icon-preview">
+                  <label for="iconFile" class="icon-label">+</label>
+                  <input  type="file" id="iconFile" accept="image/*" style="display: none;">
+              </div>
+        </div>-->

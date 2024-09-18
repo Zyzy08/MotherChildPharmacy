@@ -1,24 +1,24 @@
 <?php
-ini_set('display_errors', 0); // Turn off error display
+ini_set('display_errors', 1); // Temporarily turn on error display for debugging
 error_reporting(E_ALL); // Report all errors
 header('Content-Type: application/json'); // Ensure JSON content type is set
 
-// Check if itemId is provided
-if (!isset($_POST['itemId'])) {
+// Check if itemID is provided
+if (!isset($_GET['itemID'])) {
     echo json_encode(['success' => false, 'message' => 'ItemID is required.']);
     exit;
 }
 
-// Get itemId from POST request
-$itemId = $_POST['itemId'];
+// Get itemID from GET request
+$itemId = $_GET['itemID'];
 
-// Validate itemId (you may want to add more validation)
+// Validate itemID
 if (empty($itemId)) {
     echo json_encode(['success' => false, 'message' => 'ItemID cannot be empty.']);
     exit;
 }
 
-// Database connection (ensure this is correct)
+// Database connection
 $conn = new mysqli('localhost', 'root', '', 'motherchildpharmacy');
 
 // Check connection
@@ -29,10 +29,19 @@ if ($conn->connect_error) {
 
 // Prepare and execute deletion query
 $stmt = $conn->prepare("DELETE FROM inventory WHERE ItemID = ?");
+if ($stmt === false) {
+    echo json_encode(['success' => false, 'message' => 'Prepare statement failed: ' . $conn->error]);
+    exit;
+}
+
 $stmt->bind_param('i', $itemId);
 
 if ($stmt->execute()) {
-    echo json_encode(['success' => true, 'message' => 'Product deleted successfully.']);
+    if ($stmt->affected_rows > 0) {
+        echo json_encode(['success' => true, 'message' => 'Product deleted successfully.']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'No product found with the given ItemID.']);
+    }
 } else {
     echo json_encode(['success' => false, 'message' => 'Error deleting product: ' . $stmt->error]);
 }

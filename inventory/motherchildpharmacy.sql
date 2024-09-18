@@ -99,6 +99,8 @@ CREATE TABLE `inventory` (
   `SupplierID` int(11) DEFAULT NULL,
   `Notes` text DEFAULT NULL,
   `Status` enum('Active','Inactive') NOT NULL DEFAULT 'Active'
+  `ProductIcon` varchar(255) DEFAULT NULL,
+  `ProductCode` varchar(50) DEFAULT NULL;
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
