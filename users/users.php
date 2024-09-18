@@ -433,6 +433,7 @@
 
 
     <!-- Template Main JS File -->
+    <script src="../main.js"></script>
     <script src="Users.js"></script>
 
     <!-- Vendor JS Files -->

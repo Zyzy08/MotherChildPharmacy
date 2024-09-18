@@ -1,3 +1,5 @@
+const baseUrl = window.location.origin; // http://localhost
+
 /**
  * Upload Dialog
  */
@@ -96,9 +98,13 @@ if (passwordInput && togglePassword) {
   if (signOutLink) {
     signOutLink.addEventListener('click', function (e) {
       e.preventDefault();
+      
+      // baseUrl declared on Top -> window.location.origin;
+      const signoutUrl = `${baseUrl}/MotherChildPharmacy/signOut.php`;
+      const indexUrl = `${baseUrl}/MotherChildPharmacy/index.php`;
 
       // Create an AJAX request to update the connected status
-      fetch('../signOut.php', {
+      fetch(signoutUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +115,7 @@ if (passwordInput && togglePassword) {
         .then(data => {
           if (data.success) {
             // If update is successful, redirect to the desired page
-            window.location.href = '../index.php';
+            window.location.href = indexUrl;
           } else {
             // Handle errors if the update failed
             console.error('Failed to update connected status:', data.message);
