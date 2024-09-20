@@ -83,6 +83,93 @@
         <img src="../resources/img/profile_icon.png" alt="Aileen Castro" class="avatar">
     </div>
     <div class="main-content">
+ <div class="container">
+            <button class="btn btn-primary" onclick="addSupplier()">Add Supplier</button>
+            <table id="supplier-table" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Supplier ID</th>
+                        <th>Supplier Name</th>
+                        <th>Agent Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="supplier-table-body">
+                    <!-- Table data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Overlay for Add New Supplier -->
+        <div id="add-supplier-overlay" class="overlay">
+            <div class="overlay-content">
+                <button type="button" class="btn btn-secondary" onclick="closeOverlay('add-supplier-overlay')">x</button>
+                <h2>Add New Supplier</h2>
+                <hr>
+                <h3>Basic Information</h3>
+                <form id="add-supplier-form" action="addsupplier.php" method="post">
+                    <div class="form-group">
+                        <label for="supplier-name">Supplier Name:</label>
+                        <input type="text" id="supplier-name" name="supplier-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="agent-name">Agent Name:</label>
+                        <input type="text" id="agent-name" name="agent-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone:</label>
+                        <input type="text" id="phone" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <hr>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                    
+                </form>
+            </div>
+        </div>
+        
+        <!-- Overlay for Edit/Update Supplier -->
+        <div id="edit-supplier-overlay" class="overlay">
+            <div class="overlay-content">
+                <button type="button" class="btn btn-secondary" onclick="closeOverlay('edit-supplier-overlay')">x</button>
+                <h2>Edit Supplier</h2>
+                <hr>
+                <h3>Basic Information</h3>
+                <form id="edit-supplier-form" action="updatesupplier.php" method="post">
+                    <div class="form-group">
+                        <label for="supplier-name-edit">Supplier Name:</label>
+                        <input type="text" id="supplier-name-edit" name="supplier-name-edit" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="agent-name-edit">Agent Name:</label>
+                        <input type="text" id="agent-name-edit" name="agent-name-edit" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone-edit">Phone:</label>
+                        <input type="text" id="phone-edit" name="phone-edit" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email-edit">Email:</label>
+                        <input type="email" id="email-edit" name="email-edit" required>
+                    </div>
+                    <hr>
+                    <button type="submit" class="btn btn-primary">Update Supplier</button>
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+                    
+                </form>
+            </div>
+        </div>
+       
+        
+        <script src="supplier.js"></script>
+        
 
     </div>
 </body>
