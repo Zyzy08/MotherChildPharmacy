@@ -117,7 +117,7 @@
       </li><!-- End Suppliers Page Nav -->
 
       <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../../transactions/transactions.html">
+      <a class="nav-link collapsed" href="../../transactions/transactions.php">
         <i class="bi bi-cash-coin"></i>
         <span>Transactions</span>
       </a>
@@ -215,23 +215,18 @@
                   <h5 class="card-title">Profile Details</h5>
 
                   <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Account Name</div>
+                    <div class="col-lg-9 col-md-8"><?php echo htmlspecialchars($accountName); ?></div>
+                  </div>
+                  
+                  <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Full Name</div>
-                    <div class="col-lg-9 col-md-8"><?php echo htmlspecialchars($employeeName); ?></div>
+                    <div class="col-lg-9 col-md-8"><?php echo htmlspecialchars($employeeFullName); ?></div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Role</div>
                     <div class="col-lg-9 col-md-8"><?php echo htmlspecialchars($role); ?></div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Account Name</div>
-                    <div class="col-lg-9 col-md-8"><?php echo htmlspecialchars($accountName); ?></div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Password</div>
-                    <div class="col-lg-9 col-md-8"><?php echo htmlspecialchars(string: $password); ?></div>
                   </div>
 
                   <div class="row">
@@ -252,9 +247,13 @@
                   <form action="upload.php" method="post" enctype="multipart/form-data">
                     <div class="row mb-3">
                       <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
-                      <div class="col-md-8 col-lg-9">
-                        <img src="../../users/uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile">
-                        <div class="pt-2">
+                      <div class="col-md-8 col-lg-9 position-relative">
+                        <img src="../../users/uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile"
+                          class="rounded-circle editPfp">
+                        <div class="rounded-circle overlayEditPfp">
+                          Change<br>Picture
+                        </div>
+                        <!-- <div class="pt-2">
                           <a href="#" id="upload-button" class="btn btn-primary btn-sm"
                             title="Upload new profile image">
                             <i class="bi bi-upload"></i>
@@ -263,12 +262,12 @@
                           <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image">
                             <i class="bi bi-trash"></i>
                           </a>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
 
                     <div class="row mb-3">
-                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Full Name</label>
+                      <label for="fullName" class="col-md-4 col-lg-3 col-form-label">First Name</label>
                       <div class="col-md-8 col-lg-9">
                         <input name="fullName" type="text" class="form-control" id="fullName"
                           value="<?php echo htmlspecialchars($employeeName); ?>">
@@ -276,42 +275,10 @@
                     </div>
 
                     <div class="row mb-3">
-                      <label for="role" class="col-md-4 col-lg-3 col-form-label">Role</label>
+                      <label for="lastName" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <a class="form-control d-flex align-items-center collapsed" data-bs-toggle="collapse"
-                          href="#role-dropdown" aria-expanded="false">
-                          <span id="role-text"><?php echo htmlspecialchars($role); ?></span>
-                          <i class="bi bi-chevron-down ms-auto"></i>
-                        </a>
-                        <ul id="role-dropdown" class="collapse nav-content list-unstyled mt-2">
-                          <li>
-                            <a href="#" onclick="setRole('Admin')">
-                              <i class="bi bi-circle"></i>
-                              <span>Admin</span>
-                            </a>
-                          </li>
-                          <li>
-                            <a href="#" onclick="setRole('Pharmacy Assistant')">
-                              <i class="bi bi-circle"></i>
-                              <span>Pharmacy Assistant</span>
-                            </a>
-                          </li>
-                          <li>
-                            <a href="#" onclick="setRole('Purchaser / Pharmacy Assistant')">
-                              <i class="bi bi-circle"></i>
-                              <span>Purchaser / Pharmacy Assistant</span>
-                            </a>
-                          </li>
-                        </ul>
-                        <input type="hidden" id="role" name="role" value="<?php echo htmlspecialchars($role); ?>">
-                      </div>
-                    </div>
-
-                    <div class="row mb-3">
-                      <label for="accountName" class="col-md-4 col-lg-3 col-form-label">Account Name</label>
-                      <div class="col-md-8 col-lg-9">
-                        <input name="accountName" type="text" class="form-control" id="accountName"
-                          value="<?php echo htmlspecialchars($accountName); ?>">
+                        <input name="lastName" type="text" class="form-control" id="lastName"
+                          value="<?php echo htmlspecialchars($employeeLName); ?>">
                       </div>
                     </div>
 

@@ -114,7 +114,7 @@
       </li><!-- End Suppliers Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../transactions/transactions.html">
+        <a class="nav-link collapsed" href="../transactions/transactions.php">
           <i class="bi bi-cash-coin"></i>
           <span>Transactions</span>
         </a>

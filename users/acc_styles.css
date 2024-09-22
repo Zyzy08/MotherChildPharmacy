@@ -398,7 +398,6 @@ button[type="submit"]:hover {
   color: white;
   /* White text */
   border: none;
-  padding: 10px;
   cursor: pointer;
   border-radius: 5px;
   /* Optional: Rounded corners */
@@ -524,7 +523,7 @@ input[type="file"] {
   border-width: 1px; 
   border-color: rgb(131, 136, 143); /* neutral-300 */
   border-style: solid; 
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 
 /* Modal container */
@@ -611,7 +610,7 @@ input[type="file"] {
   color: rgb(98, 202, 107);
 }
 
-#accountName, #password, #accountNameEdit, #passwordEdit {
+#newEmployeeID, #currentEmployeeID, #accountName, #password, #accountNameEdit, #passwordEdit {
   color:rgb(182, 182, 182);
 }
 
@@ -707,4 +706,10 @@ input[type="file"] {
 .archived-users:hover:active {
   color: #FFFFFFFF;
   background: #111644;
+}
+
+.button-container button{
+  font-size: 14px;
+  height: 30px;
+  padding: 0px;
 }

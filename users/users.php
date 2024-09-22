@@ -125,7 +125,7 @@
             </li><!-- End Suppliers Page Nav -->
 
             <li class="nav-item"></li>
-            <a class="nav-link collapsed" href="../transactions/transactions.html">
+            <a class="nav-link collapsed" href="../transactions/transactions.php">
                 <i class="bi bi-cash-coin"></i>
                 <span>Transactions</span>
             </a>
@@ -243,6 +243,14 @@
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
+                            <label for="newEmployeeID">Employee ID</label><br>
+                        </div>
+                        <input type="text" id="newEmployeeID" name="newEmployeeID" disabled>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
                             <label for="employeeName">Employee First Name</label><br>
                         </div>
                         <input type="text" id="employeeName" name="employeeName" required>
@@ -333,6 +341,14 @@
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
+                            <label for="currentEmployeeID">Employee ID</label><br>
+                        </div>
+                        <input type="text" id="currentEmployeeID" name="currentEmployeeID" disabled>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
                             <label for="employeeNameEdit">Employee First Name</label><br>
                         </div>
                         <input type="text" id="employeeNameEdit" name="employeeNameEdit" required>
@@ -355,7 +371,7 @@
                         <div class="label">
                             <label for="passwordEdit">Password</label><br>
                         </div>
-                        <input id="passwordEdit" name="passwordEdit" required disabled>
+                        <input type="password" id="passwordEdit" name="passwordEdit" required disabled>
                     </div>
                 </div>
                 <div class="container">

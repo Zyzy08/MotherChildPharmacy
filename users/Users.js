@@ -42,6 +42,7 @@ const userlname = document.getElementById('employeeLName');
 const accname = document.getElementById('accountName');
 const pass = document.getElementById('password');
 //EditForm fields
+const currentEmployeeID = document.getElementById('currentEmployeeID');
 const employeeNameEdit = document.getElementById('employeeNameEdit');
 const employeeLNameEdit = document.getElementById('employeeLNameEdit');
 const roleEdit = document.getElementById('roleEdit');
@@ -152,87 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setDataTables();
 });
 
-// function updateTable(data) {
-//     let counter = 0;
-//     const tableBody = document.querySelector('table').getElementsByTagName('tbody')[0];
-
-//     // Clear existing rows (excluding the header)
-//     tableBody.innerHTML = '';
-
-//     data.forEach(row => {
-//         const tr = document.createElement('tr');
-//         // tr.className = 'highlight-row';
-
-//         const avatarCell = document.createElement('td');
-//         const avatarImg = document.createElement('img');
-//         let picsrc = "uploads/" + row.picture;
-//         avatarImg.src = picsrc;
-//         avatarImg.alt = row.employeeName;
-//         avatarImg.className = 'avatar2';
-//         avatarCell.appendChild(avatarImg);
-//         const employeeNameText = document.createTextNode("   " + row.employeeName);
-//         avatarCell.appendChild(employeeNameText);
-//         avatarCell.className = 'col2pic align-left col2name';
-//         tr.appendChild(avatarCell);
-
-//         const roleCell = document.createElement('td');
-//         roleCell.textContent = row.role;
-//         tr.appendChild(roleCell);
-
-//         const accNameCell = document.createElement('td');
-//         accNameCell.textContent = row.accountName;
-//         tr.appendChild(accNameCell);
-
-//         const updateDateCell = document.createElement('td');
-//         updateDateCell.textContent = row.dateCreated;
-//         tr.appendChild(updateDateCell);
-
-//         const connectedCell = document.createElement('td');
-//         if (row.connected == 0) {
-//             connectedCell.textContent = "Offline";
-//             connectedCell.classList.add('status-offline');
-//         } else {
-//             connectedCell.textContent = "Online";
-//             connectedCell.classList.add('status-online');
-//         }
-//         tr.appendChild(connectedCell);
-
-//         //Actions
-//         const selectCell = document.createElement('td');
-//         selectCell.className = 'edit-width';
-//         const editButton = document.createElement('img');
-//         editButton.src = '../resources/img/d-edit.png';
-//         editButton.alt = 'Edit';
-//         editButton.style.cursor = 'pointer';
-//         editButton.style.marginLeft = '10px';
-//         editButton.addEventListener('click', function () {
-//             selectedUser = row.accountName;
-//             fetchUserDetails(selectedUser);
-//         });
-//         selectCell.appendChild(editButton);
-
-//         const archiveButton = document.createElement('img');
-//         archiveButton.src = '../resources/img/s-remove.png';
-//         archiveButton.alt = 'Delete';
-//         archiveButton.style.cursor = 'pointer';
-//         archiveButton.style.marginLeft = '10px';
-//         archiveButton.addEventListener('click', function () {
-//             selectedUser = row.accountName;
-//             showDeleteOptions();
-//         });
-//         selectCell.appendChild(archiveButton);
-
-//         tr.appendChild(selectCell);
-
-//         tableBody.appendChild(tr);
-
-
-//         counter++;
-//     });
-
-//     // usersNum.innerHTML = `<strong>${counter}</strong> users`;
-// }
-
 function updateTable(data) {
     let counter = 0;
     const table = $('#example').DataTable();
@@ -247,8 +167,11 @@ function updateTable(data) {
             row.accountName,
             row.dateCreated,
             row.connected == 0 ? '<span class="status-offline">Offline</span>' : '<span class="status-online">Online</span>',
-            `<img src="../resources/img/d-edit.png" alt="Edit" style="cursor:pointer;margin-left:10px;" onclick="fetchUserDetails('${row.accountName}')"/>
-             <img src="../resources/img/s-remove.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="showDeleteOptions('${row.accountName}')"/>`
+            row.connected == 0
+                ? `<img src="../resources/img/d-edit.png" alt="Edit" style="cursor:pointer;margin-left:10px;" onclick="fetchUserDetails('${row.accountName}')"/> 
+                   <img src="../resources/img/s-remove.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="showDeleteOptions('${row.accountName}')"/>`
+                : `<img src="../resources/img/d-edit-disabled.png" alt="Edit" style="cursor:not-allowed;margin-left:10px; opacity: 0.5;"/> 
+                   <img src="../resources/img/s-remove-disabled.png" alt="Delete" style="cursor:not-allowed;margin-left:10px; opacity: 0.5;"/>`
         ]);
 
         counter++;
@@ -257,8 +180,6 @@ function updateTable(data) {
     // Draw the updated table
     table.draw();
 
-    // Optional: Update a user count display
-    // usersNum.innerHTML = `<strong>${counter}</strong> users`;
 }
 
 
@@ -268,6 +189,7 @@ function fetchUserDetails(accountName) {
         .then(data => {
             if (data) {
                 // Populate the overlay form with user details
+                currentEmployeeID.value = data.AccountID;
                 employeeNameEdit.value = data.employeeName;
                 employeeLNameEdit.value = data.employeeLName;
                 roleEdit.value = data.role;
@@ -447,6 +369,7 @@ closeBtnAD.addEventListener('click', closeADOverlay);
 // });
 
 let newID = 0;
+const newEmployeeID = document.getElementById('newEmployeeID');
 addUserBtn.addEventListener('click', function(event) {
     showOverlay();
     fetch('getNewAccountID.php')
@@ -454,6 +377,7 @@ addUserBtn.addEventListener('click', function(event) {
         .then(data => {
             if (data.nextAutoIncrement) {
                 newID = parseInt(data.nextAutoIncrement);
+                newEmployeeID.value = newID;
             } else {
                 console.error('No nextAutoIncrement found in the response.');
             }
@@ -740,3 +664,19 @@ const toArchivedUsers = document.getElementById('toArchivedUsers');
 toArchivedUsers.addEventListener('click', function(){
     window.location.href = 'users-archive/archivedusers.php';
 });
+
+employeeNameEdit.addEventListener('input', function(event){
+    updateAccountNameEditField();
+});
+
+employeeLNameEdit.addEventListener('input', function(event){
+    updateAccountNameEditField();
+});
+
+function updateAccountNameEditField(){
+    let firstNameEdit = employeeNameEdit.value;
+    let firstLetterEdit = firstNameEdit.charAt(0).toLowerCase();
+    let lastNameEdit = employeeLNameEdit.value.toLowerCase();
+
+    accountNameEdit.value = firstLetterEdit + lastNameEdit;
+}

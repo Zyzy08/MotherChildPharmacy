@@ -66,14 +66,14 @@
                       <div class="col-12">
                         <label for="username" class="form-label">Username</label>
                         <div class="input-group has-validation">
-                          <input type="text" name="username" class="form-control" id="username" required>
+                          <input type="text" name="username" class="form-control" id="username" autocomplete="off" required>
                           <div class="invalid-feedback">Please enter your username.</div>
                         </div>
                       </div>
 
                       <div class="col-12 position-relative">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" id="password" required>
+                        <input type="password" name="password" class="form-control" id="password" autocomplete="off" required>
                         <div class="invalid-feedback">Please enter your password!</div>
                         <!-- Password toggle icon -->
                         <img src="resources/img/show.png" alt="Toggle Password" id="toggle-password" class="toggle-password">
