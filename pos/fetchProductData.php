@@ -18,14 +18,14 @@ $searchQuery = isset($_POST['query']) ? $_POST['query'] : '';
 
 // Prepare the SQL statement to fetch products
 if ($searchQuery) {
-    $sql = "SELECT BrandName, GenericName, picture FROM inventory WHERE BrandName LIKE ? OR GenericName LIKE ?";
+    $sql = "SELECT BrandName, GenericName, ProductIcon FROM inventory WHERE BrandName LIKE ? OR GenericName LIKE ?";
     $stmt = $conn->prepare($sql);
     $searchTerm = "%" . $searchQuery . "%";
     $stmt->bind_param('ss', $searchTerm, $searchTerm);
     $stmt->execute();
     $result = $stmt->get_result();
 } else {
-    $sql = "SELECT BrandName, GenericName, picture FROM inventory";
+    $sql = "SELECT BrandName, GenericName, ProductIcon FROM inventory";
     $result = $conn->query($sql);
 }
 

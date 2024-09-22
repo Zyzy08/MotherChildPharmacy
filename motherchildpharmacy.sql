@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 18, 2024 at 05:04 PM
+-- Generation Time: Sep 22, 2024 at 03:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -56,7 +56,6 @@ CREATE TABLE `goodsreturn` (
 
 CREATE TABLE `inventory` (
   `ItemID` int(11) NOT NULL,
-  `ItemName` varchar(255) NOT NULL,
   `GenericName` varchar(255) DEFAULT NULL,
   `BrandName` varchar(255) DEFAULT NULL,
   `ItemType` varchar(50) DEFAULT NULL,
@@ -77,10 +76,16 @@ CREATE TABLE `inventory` (
 -- Dumping data for table `inventory`
 --
 
-INSERT INTO `inventory` (`ItemID`, `ItemName`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`) VALUES
-(1, 'Test', 'Paracetamol', 'Biogesic', 'Medicine', '100', 'mg', 0, 0, NULL, 200.00, NULL, 'hehe', '', NULL, NULL),
-(2, 'two', 'Paracetamol', 'Biogesic', 'Medicine', '100', 'mg', 0, 0, NULL, 300.50, NULL, 'a', '', NULL, NULL),
-(3, 'Three', 'Phenyl', 'Neozep', 'Medicine', '200', 'mg', 0, 0, NULL, 299.00, NULL, 'None', 'Active', NULL, NULL);
+INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`) VALUES
+(2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Milligrams', 0, 0, NULL, 200.00, NULL, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
+(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Milligrams', 0, 0, NULL, 300.00, NULL, '', '', 'products-icon/neozep.png', 'NeozepForte500mg'),
+(4, 'Ibuprofen', 'Advil', 'Medicine', '200', 'Milligrams', 0, 0, NULL, 299.00, NULL, '', '', 'products-icon/Advil.png', 'AdvilIbuprofen200mg'),
+(5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Milligrams', 0, 0, NULL, 499.00, NULL, '', '', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg'),
+(6, 'Loperamide', 'Diatabs', 'Medicine', '2', 'Milligrams', 0, 0, NULL, 149.00, NULL, '', '', 'products-icon/Diatabs.png', 'DiatabsLoperamide2mg'),
+(7, 'Loperamide', 'Imodium', 'Medicine', '2', 'Milligrams', 0, 0, NULL, 149.00, NULL, '', '', 'products-icon/Imodium.png', 'ImodiumLoperamide2mg'),
+(8, 'Aluminum Hydroxide Magnesium Hydroxide Simeticone', 'Kremil-S', 'Medicine', '30', 'Milligrams', 0, 0, NULL, 499.00, NULL, '', '', 'products-icon/kremilS.png', 'KremilS30mg'),
+(9, 'Ibuprofen', 'Medicol Advance', 'Medicine', '200', 'Milligrams', 0, 0, NULL, 200.00, NULL, '', '', 'products-icon/medicol.png', 'MedicolAdvance200mg'),
+(10, 'Bisacodyl', 'Dulcolax', 'Medicine', '5', 'Milligrams', 0, 0, NULL, 149.00, NULL, '', '', 'products-icon/dulcolax.png', 'Dulcolax5mg');
 
 -- --------------------------------------------------------
 
@@ -152,15 +157,6 @@ CREATE TABLE `suppliers` (
   `Notes` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `suppliers`
---
-
-INSERT INTO 'suppliers'('SupplierID', 'SupplierName', 'AgentName', 'Phone', 'Email', 'Status', 'Notes') VALUES
-(2, 'PharmaSupply Corp', 'Maria Santos', '09123456789', 'maria.santos@pharmasupply.ph', 'Active', NULL)
-(3, 'MediGoods Distributors', 'John Reyes', '09171234567', 'john.reyes@medigoods.ph', '', NULL)
-(4, 'HealthPlus Supplies', 'Clara Lopez', '09985379334', 'clara.lopez@healthplus.ph', 'Active', NULL)
-  
 -- --------------------------------------------------------
 
 --
@@ -192,9 +188,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`AccountID`, `employeeName`, `employeeLName`, `role`, `accountName`, `password`, `picture`, `dateCreated`, `status`, `connected`, `SuppliersPerms`, `TransactionsPerms`, `InventoryPerms`, `POSPerms`, `REPerms`, `POPerms`, `UsersPerms`) VALUES
-(3, 'Lance', 'Tiangco', 'Admin', 'ltiangco', 'tiangco-e003', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '1', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
+(3, 'Lance', 'Tiangco', 'Admin', 'ltiangco', 'twice-7', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
 (37, 'Robert', 'Parr', 'Pharmacy Assistant', 'rparr', 'parr-e037', 'Incredibles.png', '2024-09-18 17:24:00', 'Inactive', '0', 'off', 'on', 'off', 'on', 'on', 'off', 'off'),
-(38, 'Shrek', 'Shrek', 'Purchaser', 'sshrek', 'shrek-e038', 'Shrek.png', '2024-09-18 17:36:27', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'off');
+(38, 'Shrek', 'Shrek', 'Purchaser', 'sshrek', 'shrek-e038', 'Shrek.png', '2024-09-18 17:36:27', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'off'),
+(39, 'Sayra', 'Jackson', 'Admin', 'sjackson', 'jackson-e036', 'Chichi.jpg', '2024-09-22 21:27:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on');
 
 --
 -- Indexes for dumped tables
@@ -269,7 +266,7 @@ ALTER TABLE `goodsissue`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `ItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `ItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `purchaseorders`
@@ -293,7 +290,7 @@ ALTER TABLE `suppliers`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `AccountID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `AccountID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- Constraints for dumped tables

@@ -245,7 +245,7 @@ function updateTable(items) {
             <td style="text-align: center;">
                 
 
-            <img src="../resources/img/d-edit.png" alt="Edit" style="cursor:pointer;margin-left:10px;" onclick="handleUpdate('${item.ItemID}')"/>
+            <img src="../resources/img/d-edit.png" alt="Edit" style="cursor:pointer;" onclick="handleUpdate('${item.ItemID}')"/>
              <img src="../resources/img/s-remove2.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="handleDelete('${item.ItemID}')"/>
             </td>
         `;

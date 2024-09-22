@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $icon = $_FILES['ProductIcon'];
 
         // Ensure the image is uploaded to a proper directory
-        $uploadDir = 'uploads/'; // Ensure this directory exists and has proper permissions
+        $uploadDir = 'products-icon/'; // Ensure this directory exists and has proper permissions
         if (!is_dir($uploadDir)) {
             if (!mkdir($uploadDir, 0755, true)) {
                 echo json_encode(['success' => false, 'message' => 'Failed to create upload directory']);

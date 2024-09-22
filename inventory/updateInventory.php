@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_FILES['ProductIcon']) && $_FILES['ProductIcon']['error'] == UPLOAD_ERR_OK) {
         $icon = $_FILES['ProductIcon'];
 
-        $uploadDir = '../uploads/';
+        $uploadDir = 'products-icon/';
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0755, true);
         }

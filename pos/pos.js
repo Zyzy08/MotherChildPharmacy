@@ -49,7 +49,7 @@ async function loadProducts() {
         const productHTML = `
             <div class="col-lg-3">
                 <div class="card clickable-card" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}">
-                    <img src="../inventory/products-icon/${product.picture}" class="card-img-top"
+                    <img src="../inventory/${product.ProductIcon}" class="card-img-top"
                         style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
                     <div class="card-body">
                         <h5 class="card-title">${product.BrandName}</h5>
