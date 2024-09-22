@@ -32,6 +32,7 @@
 
   <!-- Template Main CSS File -->
   <link href="../../style.css" rel="stylesheet">
+  <link href="userprofile_styles.css" rel="stylesheet">
 
 </head>
 
@@ -218,7 +219,7 @@
                     <div class="col-lg-3 col-md-4 label">Account Name</div>
                     <div class="col-lg-9 col-md-8"><?php echo htmlspecialchars($accountName); ?></div>
                   </div>
-                  
+
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Full Name</div>
                     <div class="col-lg-9 col-md-8"><?php echo htmlspecialchars($employeeFullName); ?></div>
@@ -244,15 +245,18 @@
                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
                   <!-- Profile Edit Form -->
-                  <form action="upload.php" method="post" enctype="multipart/form-data">
+                  <form id="profileEditForm" action="updateUserDetails.php" method="post" enctype="multipart/form-data">
                     <div class="row mb-3">
                       <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                       <div class="col-md-8 col-lg-9 position-relative">
-                        <img src="../../users/uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile"
-                          class="rounded-circle editPfp">
-                        <div class="rounded-circle overlayEditPfp">
+                        <img id="previewImage" src="../../users/uploads/<?php echo htmlspecialchars($picture); ?>"
+                          alt="Profile" class="rounded-circle editPfp">
+                        <div class="rounded-circle overlayEditPfp"
+                          onclick="document.getElementById('upload-input').click();">
                           Change<br>Picture
                         </div>
+                        <input type="file" id="upload-input" name="profileImage" style="display:none;" accept="image/*"
+                          onchange="previewFile()">
                         <!-- <div class="pt-2">
                           <a href="#" id="upload-button" class="btn btn-primary btn-sm"
                             title="Upload new profile image">
@@ -269,7 +273,7 @@
                     <div class="row mb-3">
                       <label for="fullName" class="col-md-4 col-lg-3 col-form-label">First Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="fullName" type="text" class="form-control" id="fullName"
+                        <input autocomplete="off" name="fullName" type="text" class="form-control" id="fullName"
                           value="<?php echo htmlspecialchars($employeeName); ?>">
                       </div>
                     </div>
@@ -277,13 +281,14 @@
                     <div class="row mb-3">
                       <label for="lastName" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="lastName" type="text" class="form-control" id="lastName"
+                        <input autocomplete="off" name="lastName" type="text" class="form-control" id="lastName"
                           value="<?php echo htmlspecialchars($employeeLName); ?>">
                       </div>
                     </div>
 
                     <div class="text-center">
                       <button type="submit" class="btn btn-primary">Save Changes</button>
+                      <button type="reset" class="btn btn-danger" id="resetButton">Reset</button>
                     </div>
                   </form><!-- End Profile Edit Form -->
 
@@ -401,6 +406,17 @@
   <!-- Template Main JS File -->
   <script src="../../main.js"></script>
   <script src="profile.js"></script>
+  <script>
+    const resetButton = document.getElementById('resetButton');
+    const originalImageSrc = '../../users/uploads/<?php echo htmlspecialchars($picture); ?>'; // Store original image source
+    const previewImage = document.getElementById('previewImage');
+
+    resetButton.addEventListener('click', () => {
+      // Reset to original image
+      previewImage.src = originalImageSrc;
+      document.getElementById('upload-input').value = ''; // Clear the file input
+    });
+  </script>
 
 </body>
 
