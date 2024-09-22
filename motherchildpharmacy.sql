@@ -152,6 +152,15 @@ CREATE TABLE `suppliers` (
   `Notes` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `suppliers`
+--
+
+INSERT INTO 'suppliers'('SupplierID', 'SupplierName', 'AgentName', 'Phone', 'Email', 'Status', 'Notes') VALUES
+(2, 'PharmaSupply Corp', 'Maria Santos', '09123456789', 'maria.santos@pharmasupply.ph', 'Active', NULL)
+(3, 'MediGoods Distributors', 'John Reyes', '09171234567', 'john.reyes@medigoods.ph', '', NULL)
+(4, 'HealthPlus Supplies', 'Clara Lopez', '09985379334', 'clara.lopez@healthplus.ph', 'Active', NULL)
+  
 -- --------------------------------------------------------
 
 --
