@@ -1,4 +1,5 @@
 <?php include '../fetchUser.php'; ?>
+<?php include 'fetchProductData.php'; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -114,7 +115,7 @@
       </li><!-- End Suppliers Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../transactions/transactions.html">
+        <a class="nav-link collapsed" href="../transactions/transactions.php">
           <i class="bi bi-cash-coin"></i>
           <span>Transactions</span>
         </a>
@@ -180,175 +181,56 @@
                 <div class="card-header">
                   <div class="search-bar">
                     <form class="search-form d-flex align-items-center" method="POST" action="#">
-                      <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-                      <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
+                        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
                     </form>
                   </div>
                 </div><!-- End Card Header -->
                 
                 <div class="card-body">
 
-                  <div class="row align-items-top">
-
-                    <div class="col-lg-3">
-                      <!-- Card with an image on top -->
-                      <div class="card clickable-card">
-                        <img src="../inventory/products-icon/biogesic.png" class="card-img-top"
-                          style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
-                        <div class="card-body">
-                          <h5 class="card-title">Biogesic</h5>
-                          <p class="card-text">Paracetamol</p>
-                        </div>
-                      </div><!-- End Card with an image on top -->
-                    </div>
-
-                    <div class="col-lg-3">
-                      <!-- Card with an image on top -->
-                      <div class="card clickable-card">
-                        <img src="../inventory/products-icon/Advil.png" class="card-img-top"
-                          style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
-                        <div class="card-body">
-                          <h5 class="card-title">Advil</h5>
-                          <p class="card-text">Ibuprofen</p>
-                        </div>
-                      </div><!-- End Card with an image on top -->
-                    </div>
-
-                    <style>
-                      .clickable-card {
-                        cursor: pointer;
-                        transition: background-color 0.3s, box-shadow 0.3s;
-                      }
-
-                      .clickable-card:hover {
-                        background-color: #f8f9fa; /* Light highlight color on hover */
-                      }
-
-                      .clickable-card.active {
-                        background-color: #e0e0e0; /* Highlight color when clicked */
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                      }
-                    </style>
-
-                    <script>
-                      // Select all card elements
-                      const cards = document.querySelectorAll('.clickable-card');
-
-                      // Add a click event listener to each card
-                      cards.forEach(card => {
-                        card.addEventListener('click', function() {
-                          // Remove 'active' class from all cards
-                          cards.forEach(c => c.classList.remove('active'));
-                          // Add 'active' class to the clicked card
-                          this.classList.add('active');
-                        });
-                      });
-                    </script>
-
-
-                    <div class="col-lg-3">
-                      <!-- Card with an image on top -->
-                      <div class="card">
-                        <img src="../inventory/products-icon/buscopanVenus.png" class="card-img-top"
-                          style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
-                        <div class="card-body">
-                          <h5 class="card-title">Buscopan Venus</h5>
-                          <p class="card-text">Hyoscine</p>
-                        </div>
-                      </div><!-- End Card with an image on top -->
-                    </div>
-
-                    <div class="col-lg-3">
-                      <!-- Card with an image on top -->
-                      <div class="card">
-                        <img src="../inventory/products-icon/Diatabs.png" class="card-img-top"
-                          style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
-                        <div class="card-body">
-                          <h5 class="card-title">Diatabs</h5>
-                          <p class="card-text">Loperamide</p>
-                        </div>
-                      </div><!-- End Card with an image on top -->
-                    </div>
-
-                  </div>
-
-                  <div class="row align-items-top">
-                    
-                    <div class="col-lg-3">
-                      <!-- Card with an image on top -->
-                      <div class="card">
-                        <img src="../inventory/products-icon/Imodium.png" class="card-img-top"
-                          style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
-                        <div class="card-body">
-                          <h5 class="card-title">Imodium</h5>
-                          <p class="card-text">Loperamide</p>
-                        </div>
-                      </div><!-- End Card with an image on top -->
-                    </div>
-
-                    <div class="col-lg-3">
-                      <!-- Card with an image on top -->
-                      <div class="card">
-                        <img src="../inventory/products-icon/kremilS.png" class="card-img-top"
-                          style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
-                        <div class="card-body">
-                          <h5 class="card-title">Kremil S</h5>
-                          <p class="card-text">Aluminum Hydroxide</p>
-                        </div>
-                      </div><!-- End Card with an image on top -->
-                    </div>
-
-                    <div class="col-lg-3">
-                      <!-- Card with an image on top -->
-                      <div class="card">
-                        <img src="../inventory/products-icon/medicol.png" class="card-img-top"
-                          style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
-                        <div class="card-body">
-                          <h5 class="card-title">Medicol Advance</h5>
-                          <p class="card-text">Ibuprofen</p>
-                        </div>
-                      </div><!-- End Card with an image on top -->
-                    </div>
-
-                    <div class="col-lg-3">
-                      <!-- Card with an image on top -->
-                      <div class="card">
-                        <img src="../inventory/products-icon/neozep.png" class="card-img-top"
-                          style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
-                        <div class="card-body">
-                          <h5 class="card-title">Neozep</h5>
-                          <p class="card-text">Paracetamol</p>
-                        </div>
-                      </div><!-- End Card with an image on top -->
-                    </div>
-
+                  <div class="row align-items-top" id="product-list">
+                    <!-- Product items will be inserted here dynamically -->
                   </div>
 
                 </div><!-- End Card Body -->
 
+                <!-- Pagination -->
                 <div class="card-footer">
                   <div class="row align-items-top">
 
-                    <!-- Pages -->
+                    <!-- Pagination controls -->
                     <div class="col-lg-6">
-                      <nav aria-label="Pages">
+                      <nav aria-label="Page navigation">
                         <ul class="pagination">
-                          <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                          <li class="page-item" id="prev-page">
+                            <a class="page-link" href="#">Previous</a>
                           </li>
-                          <li class="page-item active" aria-current="page"><a class="page-link" href="#">1</a></li>
-                          <li class="page-item"><a class="page-link" href="#">2</a></li>
-                          <li class="page-item"><a class="page-link" href="#">3</a></li>
-                          <li class="page-item">
+                          <li class="page-item active" id="page-1">
+                            <a class="page-link" href="#">1</a>
+                          </li>
+                          <li class="page-item" id="page-2">
+                            <a class="page-link" href="#">2</a>
+                          </li>
+                          <li class="page-item" id="page-3">
+                            <a class="page-link" href="#">3</a>
+                          </li>
+                          <li class="page-item" id="page-4">
+                            <a class="page-link" href="#">4</a>
+                          </li>
+                          <li class="page-item" id="page-5">
+                            <a class="page-link" href="#">5</a>
+                          </li>
+                          <li class="page-item" id="next-page">
                             <a class="page-link" href="#">Next</a>
                           </li>
                         </ul>
                       </nav>
-                    </div>
-                    
+                    </div><!-- End Pagination -->
+
                     <!-- Quantity -->
                     <div class="col-lg-3">
-                      <input type="number" class="form-control">
+                      <input type="number" class="form-control" placeholder="Quantity" min="1">
                     </div>
 
                     <!-- Add Item Button -->
@@ -360,7 +242,6 @@
 
                   </div>
                 </div><!-- End Card Footer -->
-
               </div>
             </div><!-- End Product List -->
 
@@ -458,6 +339,9 @@
 
   <!-- Template Main JS File -->
   <script src="../main.js"></script>
+  
+  <!-- Template POS JS File -->
+  <script src="pos.js"></script>
 
 </body>
 

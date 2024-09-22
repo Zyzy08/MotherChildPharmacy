@@ -179,7 +179,7 @@
 
               <img src="../../users/uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile"
                 class="rounded-circle">
-              <h2><?php echo htmlspecialchars($employeeName); ?></h2>
+              <h2><?php echo htmlspecialchars($employeeFullName); ?></h2>
               <h3><?php echo htmlspecialchars($role); ?></h3>
 
             </div>

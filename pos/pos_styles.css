@@ -1275,3 +1275,17 @@
     font-size: 0.875rem;
     line-height: 1;
   }
+
+  .clickable-card {
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+
+  .clickable-card:hover {
+    background-color: #f8f9fa; /* Light highlight color on hover */
+  }
+
+  .clickable-card.active {
+    background-color: #e0e0e0; /* Highlight color when clicked */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }

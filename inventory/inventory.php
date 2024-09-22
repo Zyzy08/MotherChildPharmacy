@@ -70,7 +70,7 @@
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6><?php echo htmlspecialchars($employeeName); ?></h6>
+              <h6><?php echo htmlspecialchars($employeeFullName); ?></h6>
               <span><?php echo htmlspecialchars($role); ?></span>
             </li>
             <li>
