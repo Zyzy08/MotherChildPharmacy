@@ -29,11 +29,10 @@
     <link href="../resources/vendor/quill/quill.bubble.css" rel="stylesheet">
     <link href="../resources/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="../resources/vendor/simple-datatables/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="acc_styles.css">
     <link rel="stylesheet" href="trans_styles.css">
 
     <!-- DataTables Imports -->
-    <link rel="stylesheet" href="dataTablesUsers/dataTables.css" />
+    <link rel="stylesheet" href="dataTablesTransactions/dataTablesT.css" />
     <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
 
@@ -78,8 +77,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center"
-                                href="users-profile/users-profile.php">
+                            <a class="dropdown-item d-flex align-items-center" href="users-profile/users-profile.php">
                                 <i class="bi bi-person"></i>
                                 <span>My Profile</span>
                             </a>
@@ -182,8 +180,22 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-body profile-card flex-column align-items-center">
-                            
+                        <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
+                            <table id="example" class="display">
+                                <thead>
+                                    <tr class="highlight-row">
+                                        <th>Invoice ID</th>
+                                        <th>Date</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th>Payment</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    <!-- Data rows will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -210,7 +222,7 @@
 
     <!-- Template Main JS File -->
     <script src="../main.js"></script>
-    <script src="Users.js"></script>
+    <script src="JS-transactions.js"></script>
 
     <!-- Vendor JS Files -->
     <script src="../resources/vendor/apexcharts/apexcharts.min.js"></script>
