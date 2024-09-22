@@ -29,6 +29,22 @@ async function fetchProducts(query = '') {
     }
 }
 
+//Unit of measure format
+function formatUnitOfMeasure(unit) {
+    switch (unit.toLowerCase()) {
+        case 'milligrams':
+            return 'mg';
+        case 'grams':
+            return 'g';
+        case 'liters':
+            return 'L';
+        case 'milliliters':
+            return 'mL';
+        default:
+            return unit; // Return the original unit if no match
+    }
+}
+
 async function loadProducts() {
     const products = await fetchProducts(searchQuery);
     const productContainer = document.getElementById('product-list');
@@ -46,12 +62,31 @@ async function loadProducts() {
 
     // Append products to the product list
     paginatedProducts.forEach(product => {
+        const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure); // Format the unit
+        let stockBadge = ''; // Initialize an empty string for the stock badge
+    
+       // Check the stock level and set the appropriate badge
+        if (product.InStock == 0) {
+            stockBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
+        } else if (product.InStock < 50 && product.InStock > 0) {
+            stockBadge = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock</span>`;
+        }
+    
         const productHTML = `
             <div class="col-lg-3">
-                <div class="card clickable-card" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}">
+                <div class="card clickable-card" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-in-stock="${product.InStock}">
+                    ${stockBadge}
                     <img src="../inventory/${product.ProductIcon}" class="card-img-top"
                         style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
                     <div class="card-body">
+                        <div class="row align-items-top">
+                            <div class="col-lg-4">
+                                <span class="badge rounded-pill bg-light text-dark">${product.Mass}${formattedUnit}</span>
+                            </div>
+                            <div class="col-lg-3 mx-3">
+                                <span class="badge bg-success">₱${product.PricePerUnit}</span>
+                            </div>
+                        </div>
                         <h5 class="card-title">${product.BrandName}</h5>
                         <p class="card-text">${product.GenericName}</p>
                     </div>
@@ -59,7 +94,7 @@ async function loadProducts() {
             </div>
         `;
         productContainer.insertAdjacentHTML('beforeend', productHTML);
-    });
+    });    
 
     // Reattach event listeners to the newly loaded cards
     attachCardListeners();
@@ -134,6 +169,12 @@ function attachCardListeners() {
     }
 
     function highlightCard(card) {
+        // Check if the card has the "Out-of-Stock" badge (bg-danger)
+        const outOfStockBadge = card.querySelector('.badge.bg-danger');
+        if (outOfStockBadge) {
+            return;
+        }
+    
         const selectedCardId = localStorage.getItem('selectedCardId');
         if (card.getAttribute('data-id') === selectedCardId) {
             card.classList.remove('active');
@@ -143,7 +184,7 @@ function attachCardListeners() {
             card.classList.add('active');
             localStorage.setItem('selectedCardId', card.getAttribute('data-id'));
         }
-    }
+    }    
 
     cards.forEach(card => {
         card.addEventListener('click', function() {
@@ -161,3 +202,98 @@ document.querySelector('input[name="query"]').addEventListener('input', function
 
 // Load initial products and pagination
 loadProducts();
+
+let basket = [];
+let basketTotal = 0;
+
+// Function to add item to the basket
+function addItemToBasket() {
+    const selectedCard = document.querySelector('.clickable-card.active');
+    if (!selectedCard) {
+        alert("Please select a product first.");
+        return;
+    }
+
+    const quantityInput = document.getElementById('quantity-input');
+    const quantity = parseInt(quantityInput.value, 10);
+    
+    if (quantity < 1 || isNaN(quantity)) {
+        alert("Please enter a valid quantity.");
+        return;
+    }
+
+    const inStock = parseInt(selectedCard.getAttribute('data-in-stock'), 10);
+    
+    const existingItemIndex = basket.findIndex(item => item.id === selectedCard.getAttribute('data-id'));
+
+    if (existingItemIndex > -1) {
+        // Check if adding the quantity would exceed in-stock amount
+        const newQuantity = basket[existingItemIndex].quantity + quantity;
+        if (newQuantity > inStock) {
+            alert(`Cannot add more. Only ${inStock} items are in stock.`);
+            return;
+        }
+        basket[existingItemIndex].quantity += quantity;
+    } else {
+        if (quantity > inStock) {
+            alert(`Cannot add more. Only ${inStock} items are in stock.`);
+            return;
+        }
+        const product = {
+            id: selectedCard.getAttribute('data-id'),
+            BrandName: selectedCard.querySelector('.card-title').textContent,
+            GenericName: selectedCard.querySelector('.card-text').textContent,
+            PricePerUnit: parseFloat(selectedCard.querySelector('.badge.bg-success').textContent.replace('₱', '')),
+            quantity: quantity
+        };
+        basket.push(product);
+    }
+
+    updateBasketDisplay();
+    // Remove highlight and reset quantity
+    selectedCard.classList.remove('active');
+    quantityInput.value = ''; // Reset quantity input
+}
+
+// Function to update the basket display
+function updateBasketDisplay() {
+    const basketItemsContainer = document.getElementById('basket-items');
+    basketItemsContainer.innerHTML = ''; // Clear previous items
+    basketTotal = 0; // Reset total
+
+    basket.forEach(item => {
+        const itemTotal = item.PricePerUnit * item.quantity; // Calculate total for the item
+        basketTotal += itemTotal; // Add to the overall basket total
+
+        const itemHTML = `
+            <a href="#" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">${item.BrandName}</h5>
+                    <button type="button" class="btn btn-danger btn-sm-custom" onclick="removeItemFromBasket('${item.id}')">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+                <p class="mb-1">${item.GenericName}</p>
+                <div class="d-flex w-100 justify-content-between">
+                    <small>₱${itemTotal.toFixed(2)}</small>
+                    <small>x${item.quantity}</small>
+                </div>
+            </a>
+        `;
+        basketItemsContainer.insertAdjacentHTML('beforeend', itemHTML); // Add item to the display
+    });
+
+    const tax = (basketTotal * 0.12).toFixed(2); // Calculate tax
+    const totalWithTax = (basketTotal + parseFloat(tax)).toFixed(2); // Calculate total with tax
+    document.getElementById('basket-total').textContent = `₱${totalWithTax}`; // Update total
+    document.getElementById('basket-tax').textContent = `₱${tax}`; // Update tax display
+}
+
+// Function to remove item from the basket
+function removeItemFromBasket(itemId) {
+    basket = basket.filter(item => item.id !== itemId); // Remove item from basket
+    updateBasketDisplay(); // Update display
+}
+
+// Add event listener to the "Add Item" button
+document.getElementById('add-item-button').addEventListener('click', addItemToBasket);
