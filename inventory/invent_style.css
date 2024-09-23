@@ -144,9 +144,9 @@
   padding: 20px;
   border: 1px solid #ddd;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 80%;
+  width: 100%;
   /* Responsive width */
-  max-width: 500px;
+  max-width: 800px;
   /* Max width for large screens */
   top: 50%;
   /* Center vertically */
@@ -181,7 +181,7 @@
 
 /* Form Buttons */
 .form-button button {
-  width: 250px;
+  width: 80px;
   height: 30px;
   padding: 0 12px;
   display: flex;
@@ -200,15 +200,17 @@
   border: none;
   border-radius: 4px;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .form-button #Clear {
   background-color: #f44336;
+  /*margin-right: auto; /* Align Clear button to the left */
 }
 
 .form-button #saveBtn {
   background-color: #4CAF50;
+  /*margin-left: auto; /* Align Save button to the right */
 }
 
 .form-button {
@@ -645,4 +647,17 @@ td {
 .usersTableSize {
   width: 95%;
   margin-left: 17px;
+}
+
+
+
+.text-center {
+  text-align: center;
+}
+
+.text-truncate {
+  overflow: hidden; /* Hide overflow text */
+  white-space: nowrap; /* Prevent text from wrapping */
+  text-overflow: ellipsis; /* Show ellipsis for overflowing text */
+  max-width: 150px; /* Adjust as needed for your design */
 }

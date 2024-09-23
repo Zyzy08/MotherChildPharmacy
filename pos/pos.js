@@ -297,3 +297,4 @@ function removeItemFromBasket(itemId) {
 
 // Add event listener to the "Add Item" button
 document.getElementById('add-item-button').addEventListener('click', addItemToBasket);
+
