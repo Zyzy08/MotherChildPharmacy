@@ -228,16 +228,16 @@
                       </nav>
                     </div><!-- End Pagination -->
 
-                    <!-- Quantity -->
+                    <!-- Quantity Input -->
                     <div class="col-lg-3">
-                      <input type="number" class="form-control" placeholder="Quantity" min="1">
+                        <input type="number" class="form-control" id="quantity-input" placeholder="Quantity" min="1">
                     </div>
 
                     <!-- Add Item Button -->
                     <div class="col-lg-3">
-                      <div class="d-grid gap-2">
-                        <button class="btn btn-primary" type="button">Add Item</button>
-                      </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" id="add-item-button" type="button">Add Item</button>
+                        </div>
                     </div>
 
                   </div>
@@ -252,62 +252,28 @@
         <div class="col-lg-4">
 
           <!-- Basket -->
-          <div class="card">
-            <div class="card-body">
-              <div class="list-group" style="height: 500px; overflow-y: auto;">
-
-                <a href="#" class="list-group-item list-group-item-action">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Biogesic</h5>
-                    <button type="button" class="btn btn-danger btn-sm-custom">
-                      <i class="bi bi-trash"></i>
-                    </button>
+          <div class="card" id="basket">
+              <div class="card-body">
+                  <div class="list-group" id="basket-items" style="height: 500px; overflow-y: auto;">
+                      <!-- Items will be dynamically inserted here -->
                   </div>
-                  <p class="mb-1">Paracetamol</p>
-                  <div class="d-flex w-100 justify-content-between">
-                    <small>₱20</small>
-                    <small>x2</small>
+              </div>
+              <div>
+                  <div class="card-footer">
+                      <div class="d-flex w-100 justify-content-between">
+                          <small>Tax 12%:</small>
+                          <p id="basket-tax">₱0.00</p>
+                      </div>
+                      <div class="d-flex w-100 justify-content-between">
+                          <small>Total:</small>
+                          <p id="basket-total">₱0.00</p>
+                      </div>
+                      <div class="d-grid gap-2 mt-3">
+                          <button class="btn btn-primary" type="button">Checkout</button>
+                      </div>
                   </div>
-                </a>
-
-                <a href="#" class="list-group-item list-group-item-action">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Advil</h5>
-                    <button type="button" class="btn btn-danger btn-sm-custom">
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </div>
-                  <p class="mb-1">Ibuprofen</p>
-                  <div class="d-flex w-100 justify-content-between">
-                    <small>₱10</small>
-                    <small>x1</small>
-                  </div>
-                </a>
-
-              </div><!-- End List group Advanced Content -->
-            </div>
-
-            <div>
-              <div class="card-footer">
-
-                <div class="d-flex w-100 justify-content-between">
-                  <small>Tax 12%:</small>
-                  <p>₱3.6</p>
-                </div><!-- Tax -->
-
-                <div class="d-flex w-100 justify-content-between">
-                  <small>Total:</small>
-                  <p>₱30.6</p>
-                </div><!-- Total -->
-
-                <div class="d-grid gap-2 mt-3">
-                  <button class="btn btn-primary" type="button">Checkout</button>
-                </div><!-- Checkout Button -->
-
-              </div><!-- End Basket Footer -->
-            </div>
-
-          </div><!-- End Basket -->
+              </div>
+          </div>
         </div><!-- End Right side columns -->
 
       </div>
