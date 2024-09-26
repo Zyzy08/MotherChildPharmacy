@@ -40,6 +40,8 @@ function formatUnitOfMeasure(unit) {
             return 'L';
         case 'milliliters':
             return 'mL';
+        case 'piece':
+                return 'pc';
         default:
             return unit; // Return the original unit if no match
     }
@@ -99,6 +101,14 @@ async function loadProducts() {
     // Reattach event listeners to the newly loaded cards
     attachCardListeners();
     updatePaginationControls(); // Update pagination after loading products
+
+    // If there's a search query, select the first card
+    if (searchQuery && paginatedProducts.length > 0) {
+        const firstCard = document.querySelector('.clickable-card');
+        if (firstCard) {
+            highlightCard(firstCard);
+        }
+    }
 }
 
 function updatePaginationControls() {
@@ -168,24 +178,6 @@ function attachCardListeners() {
         }
     }
 
-    function highlightCard(card) {
-        // Check if the card has the "Out-of-Stock" badge (bg-danger)
-        const outOfStockBadge = card.querySelector('.badge.bg-danger');
-        if (outOfStockBadge) {
-            return;
-        }
-    
-        const selectedCardId = localStorage.getItem('selectedCardId');
-        if (card.getAttribute('data-id') === selectedCardId) {
-            card.classList.remove('active');
-            localStorage.removeItem('selectedCardId');
-        } else {
-            cards.forEach(c => c.classList.remove('active'));
-            card.classList.add('active');
-            localStorage.setItem('selectedCardId', card.getAttribute('data-id'));
-        }
-    }    
-
     cards.forEach(card => {
         card.addEventListener('click', function() {
             highlightCard(this);
@@ -193,12 +185,72 @@ function attachCardListeners() {
     });
 }
 
+function highlightCard(card) {
+    // Check if the card has the "Out-of-Stock" badge (bg-danger)
+    const outOfStockBadge = card.querySelector('.badge.bg-danger');
+    if (outOfStockBadge) {
+        return;
+    }
+
+    const selectedCardId = localStorage.getItem('selectedCardId');
+    if (card.getAttribute('data-id') === selectedCardId) {
+        card.classList.remove('active');
+        localStorage.removeItem('selectedCardId');
+    } else {
+        const cards = document.querySelectorAll('.clickable-card');
+        cards.forEach(c => c.classList.remove('active'));
+        card.classList.add('active');
+        localStorage.setItem('selectedCardId', card.getAttribute('data-id'));
+    }
+}    
+
 // Add event listener for the search input
-document.querySelector('input[name="query"]').addEventListener('input', function() {
+const searchInput = document.querySelector('input[name="query"]');
+searchInput.addEventListener('input', function() {
     searchQuery = this.value; // Update the search query
     currentPage = 1; // Reset to the first page
     loadProducts(); // Load products based on the new query
 });
+
+// Add event listener for the Enter key on the search input
+searchInput.addEventListener('keypress', async function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent form submission if it's in a form
+        const selectedCardId = localStorage.getItem('selectedCardId');
+        const firstCard = document.querySelector('.clickable-card');
+
+        if (selectedCardId && firstCard) {
+            // Check if the product is already selected (to add to quantity)
+            if (selectedCardId === firstCard.getAttribute('data-id')) {
+                // Product is already selected, increment the quantity by 1
+                const quantityInput = document.getElementById('quantity-input');
+                let currentQuantity = parseInt(quantityInput.value, 10) || 0;
+                quantityInput.value = currentQuantity + 1; // Increment quantity
+            }
+        } else {
+            // If no product is selected, update the search query and load products
+            searchQuery = this.value; 
+            currentPage = 1; 
+            await loadProducts(); // Await the loadProducts function
+            // Highlight the first product and set quantity to 1
+            if (firstCard) {
+                highlightCard(firstCard);
+                const quantityInput = document.getElementById('quantity-input');
+                if (quantityInput) {
+                    quantityInput.value = 1; // Automatically set the value to 1
+                    quantityInput.focus();    // Focus on the quantity input
+                }
+            }
+        }
+        
+        // Clear the search bar
+        this.value = ''; 
+        
+        // Set focus back to the search input
+        searchInput.focus(); 
+    }
+});
+
 
 // Load initial products and pagination
 loadProducts();
@@ -297,4 +349,3 @@ function removeItemFromBasket(itemId) {
 
 // Add event listener to the "Add Item" button
 document.getElementById('add-item-button').addEventListener('click', addItemToBasket);
-
