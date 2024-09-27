@@ -48,7 +48,7 @@
 
         <div class="d-flex align-items-center justify-content-between">
             <i class="bi bi-list toggle-sidebar-btn"></i>
-            <a href="dashboard.php" class="logo d-flex align-items-center">
+            <a href="../dashboard/dashboard.php" class="logo d-flex align-items-center">
                 <img src="../resources/img/logo.png" alt="">
                 <span class="d-none d-lg-block span1">Mother & Child</span>
                 <span class="d-none d-lg-block span2">Pharmacy and Medical Supplies</span>
@@ -77,7 +77,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="users-profile/users-profile.php">
+                            <a class="dropdown-item d-flex align-items-center" href="../users/users-profile/users-profile.php">
                                 <i class="bi bi-person"></i>
                                 <span>My Profile</span>
                             </a>
@@ -117,7 +117,7 @@
             <li class="nav-heading"></li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../suppliers/suppliers.html">
+                <a class="nav-link collapsed" href="../suppliers2/suppliers.php">
                     <i class="bi bi-truck"></i>
                     <span>Suppliers</span>
                 </a>

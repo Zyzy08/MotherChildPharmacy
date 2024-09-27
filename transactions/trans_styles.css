@@ -610,10 +610,6 @@ input[type="file"] {
   color: rgb(98, 202, 107);
 }
 
-#newEmployeeID, #currentEmployeeID, #accountName, #password, #accountNameEdit, #passwordEdit {
-  color:rgb(182, 182, 182);
-}
-
 .transactionsTableSize{
   width: 95%;
   margin-left: 17px;

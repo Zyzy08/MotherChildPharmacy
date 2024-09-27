@@ -389,8 +389,16 @@ username.addEventListener('input', function(event){
     let firstName = username.value;
     let firstLetter = firstName.charAt(0).toLowerCase();
     let lastName = userlname.value.toLowerCase();
+    let code = '';
+    if(newID < 10){
+        code = 'E00' + newID + '_';
+    }else if(newID < 100){
+        code = 'E0' + newID + '_';
+    }else{
+        code = 'E' + newID + '_';
+    }
 
-    accountName.value = firstLetter + lastName;
+    accountName.value = code + firstLetter + lastName;
 });
 
 userlname.addEventListener('input', function(event){
@@ -398,15 +406,19 @@ userlname.addEventListener('input', function(event){
     let firstLetter = firstName.charAt(0).toLowerCase();
     let lastName = userlname.value.toLowerCase();
     let code = '';
+    let code2 = '';
     if(newID < 10){
         code = '-e00' + newID;
+        code2 = 'E00' + newID + '_';
     }else if(newID < 100){
         code = '-e0' + newID;
+        code2 = 'E0' + newID + '_';
     }else{
         code = '-e' + newID;
+        code2 = 'E' + newID + '_';
     }
 
-    accountName.value = firstLetter + lastName;
+    accountName.value = code2 + firstLetter + lastName;
     pass.value = lastName + code;
 });
 
@@ -674,9 +686,18 @@ employeeLNameEdit.addEventListener('input', function(event){
 });
 
 function updateAccountNameEditField(){
+    let code = '';
+    if(currentEmployeeID.value < 10){
+        code = 'E00';
+    }else if(currentEmployeeID.value < 100){
+        code = 'E0';
+    }else{
+        code = 'E';
+    }
+
     let firstNameEdit = employeeNameEdit.value;
     let firstLetterEdit = firstNameEdit.charAt(0).toLowerCase();
     let lastNameEdit = employeeLNameEdit.value.toLowerCase();
 
-    accountNameEdit.value = firstLetterEdit + lastNameEdit;
+    accountNameEdit.value = code + currentEmployeeID.value + '_' + firstLetterEdit + lastNameEdit;
 }

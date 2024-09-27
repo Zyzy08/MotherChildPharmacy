@@ -303,7 +303,7 @@
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  width: 41%;
+  width: flex;
   position: relative;
 }
 
@@ -712,4 +712,9 @@ input[type="file"] {
   font-size: 14px;
   height: 30px;
   padding: 0px;
+}
+
+input[type="text"]:disabled, input[type="password"]:disabled {
+  background: rgb(228, 229, 231);
+  cursor: not-allowed;
 }

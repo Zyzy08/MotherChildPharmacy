@@ -107,7 +107,7 @@
       <li class="nav-heading"></li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="../suppliers/suppliers.html">
+        <a class="nav-link collapsed" href="../suppliers2/suppliers.php">
           <i class="bi bi-truck"></i>
           <span>Suppliers</span>
         </a>

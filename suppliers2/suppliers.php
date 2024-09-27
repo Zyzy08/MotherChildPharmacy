@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Users - Mother & Child Pharmacy and Medical Supplies</title>
+    <title>Suppliers - Mother & Child Pharmacy and Medical Supplies</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -29,10 +29,10 @@
     <link href="../resources/vendor/quill/quill.bubble.css" rel="stylesheet">
     <link href="../resources/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="../resources/vendor/simple-datatables/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="acc_styles.css">
+    <link rel="stylesheet" href="supp_styles.css">
 
     <!-- DataTables Imports -->
-    <link rel="stylesheet" href="dataTablesUsers/dataTables.css" />
+    <link rel="stylesheet" href="../users/dataTablesUsers/dataTables.css" />
     <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
 
@@ -118,7 +118,7 @@
             <li class="nav-heading"></li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../suppliers2/suppliers.php">
+                <a class="nav-link" href="#">
                     <i class="bi bi-truck"></i>
                     <span>Suppliers</span>
                 </a>
@@ -146,7 +146,7 @@
             </li><!-- End Return & Exchange Page Nav -->
 
             <li class="nav-item">
-                <a class="nav-link" href="../users/users.php">
+                <a class="nav-link collapsed" href="../users/users.php">
                     <i class="bi bi-person"></i>
                     <span>Users</span>
                 </a>
@@ -168,11 +168,11 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Users</h1>
+            <h1>Suppliers</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="../dashboard/dashboard.php">Home</a></li>
-                    <li class="breadcrumb-item active">Users</li>
+                    <li class="breadcrumb-item active">Suppliers</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
@@ -181,10 +181,10 @@
             <div class="row">
                 <div class="containerAddArchive">
                     <div class="button" id="addUser">
-                        <img src="../resources/img/add.png" alt="Add User"> Add User
+                        <img src="../resources/img/add.png" alt="Add Supplier"> Add New
                     </div>
                     <div class="archived-users" id="toArchivedUsers">
-                        Archived Users<img src="../resources/img/right-arrow-3.png" alt="Archive Button">
+                        Archived Suppliers<img src="../resources/img/right-arrow-3.png" alt="Archive Button">
                     </div>
                 </div>
                 <br>
@@ -197,11 +197,11 @@
                             <table id="example" class="display">
                                 <thead>
                                     <tr class="highlight-row">
-                                        <th>Employee Name</th>
-                                        <th>Role</th>
-                                        <th>Account Name</th>
-                                        <th>Date Created</th>
-                                        <th>Status</th>
+                                        <th>Company Name</th>
+                                        <th>Agent Name</th>
+                                        <th>Contact No.</th>
+                                        <th>Email</th>
+                                        <th>Notes</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -235,24 +235,24 @@
     <div id="overlay" class="overlay">
         <div class="overlay-content">
             <span id="closeBtn" class="close-btn">&times;</span>
-            <h2>Add New User</h2>
+            <h2>Add New Supplier</h2>
             <hr>
-            <form id="userForm" action="addAccount.php" method="post" enctype="multipart/form-data"
+            <form id="userForm" action="addData.php" method="post" enctype="multipart/form-data"
                 onsubmit="handleFormSubmit()">
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
-                            <label for="newEmployeeID">Employee ID</label><br>
+                            <label for="newID">Supplier ID</label><br>
                         </div>
-                        <input type="text" id="newEmployeeID" name="newEmployeeID" disabled>
+                        <input type="text" id="newID" name="newID" disabled>
                     </div>
                 </div>
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
-                            <label for="employeeName">Employee First Name</label><br>
+                            <label for="companyName">Company Name</label><br>
                         </div>
-                        <input type="text" id="employeeName" name="employeeName" required>
+                        <input type="text" id="companyName" name="companyName" required>
                     </div>
                     <!-- <div class="textbox">
                         <div class="label">
@@ -262,68 +262,34 @@
                     </div> -->
                     <div class="textbox">
                         <div class="label">
-                            <label for="employeeLName">Employee Last Name</label><br>
+                            <label for="agentName">Agent Name</label><br>
                         </div>
-                        <input type="text" id="employeeLName" name="employeeLName" required>
+                        <input type="text" id="agentName" name="agentName" required>
                     </div>
                 </div>
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
-                            <label for="accountName">Account Name</label><br>
+                            <label for="ContactNo">Contact No.</label><br>
                         </div>
-                        <input type="text" id="accountName" name="accountName" required disabled>
+                        <input type="text" id="ContactNo" name="ContactNo" required>
                     </div>
                     <div class="textbox">
                         <div class="label">
-                            <label for="password">Password</label><br>
+                            <label for="Email">Email</label><br>
                         </div>
-                        <input type="text" id="password" name="password" required disabled>
+                        <input type="email" id="Email" name="Email" required>
                     </div>
                 </div>
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
-                            <label for="profilePicture">Profile Picture</label><br>
+                            <label for="Notes">Notes</label><br>
                         </div>
-                        <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
-                    </div>
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="preview">Image Preview</label><br>
-                        </div>
-                        <img id="preview" src="" alt="Image Preview" style="display: none;">
+                        <input type="text" id="Notes" name="Notes">
                     </div>
                 </div>
-                <div class="container">
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="role">Role</label><br>
-                        </div>
-                        <select name="role" id="role">
-                            <option value="Pharmacy Assistant">Pharmacy Assistant</option>
-                            <option value="Purchaser">Purchaser</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                    </div>
-                    <!-- Modify Permissions -->
-                    <div class="permissionsBox">
-                        <div class="label">
-                            <label for="permsSelect">Permissions</label>
-                            <img src="../resources/img/toggle-off.png" id="permsToggle">
-                            <br>
-                        </div>
-                        <div class="permissionsSelect">
-                            <input type="checkbox" id="SuppliersPerms" disabled> Suppliers
-                            <input type="checkbox" id="TransactionsPerms" disabled> Sales
-                            <input type="checkbox" id="InventoryPerms" disabled> Inventory
-                            <input type="checkbox" id="POSPerms" disabled> POS
-                            <input type="checkbox" id="REPerms" disabled> Return & Exchange
-                            <input type="checkbox" id="POPerms" disabled> Purchase Orders
-                            <input type="checkbox" id="UsersPerms" disabled> Users
-                        </div>
-                    </div>
-                </div>
+                
                 <br>
                 <div class="line"></div>
                 <div class="button-container">
@@ -459,7 +425,7 @@
 
     <!-- Template Main JS File -->
     <script src="../main.js"></script>
-    <script src="Users.js"></script>
+    <script src="Suppliers.js"></script>
 
     <!-- Vendor JS Files -->
     <script src="../resources/vendor/apexcharts/apexcharts.min.js"></script>

@@ -27,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Create accountName based on the first letter of the first name and the entire last name
-    $accountName = strtolower(substr($fullName, 0, 1) . $lastName);
+    $dynamicPrefix = 'E' . str_pad($accountID, 3, '0', STR_PAD_LEFT);
+    $accountName = $dynamicPrefix . '_' . strtolower(substr($fullName, 0, 1) . $lastName);
 
     // Prepare the SQL statement
     $stmt = $conn->prepare("UPDATE users SET employeeName = ?, employeeLName = ?, accountName = ?" . ($picture && $picture['error'] == 0 ? ", picture = ?" : "") . " WHERE AccountID = ?");
