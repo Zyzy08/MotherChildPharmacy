@@ -269,7 +269,9 @@
                           <p id="basket-total">₱0.00</p>
                       </div>
                       <div class="d-grid gap-2 mt-3">
-                          <button class="btn btn-primary" type="button">Checkout</button>
+                          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
+                            Checkout
+                          </button>
                       </div>
                   </div>
               </div>
@@ -278,6 +280,42 @@
 
       </div>
     </section>
+
+    <!-- Checkout Modal -->
+    <div class="modal fade" id="verticalycentered" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Checkout</h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+              <label class="form-check-label" for="flexSwitchCheckDefault">Senior Citizen / PWD (20%)</label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+              <label class="form-check-label" for="flexSwitchCheckDefault">Promotional (10%)</label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+              <label class="form-check-label" for="flexSwitchCheckDefault">Other (5%)</label>
+            </div>
+            <br><h2 id="total-display">Total: ₱0.00</h2><br>
+            <div class="row mb-3">
+              <h2 for="inputNumber" class="col-sm-4">Charge: ₱</h2>
+              <div class="col-sm-6">
+                <input type="number" class="form-control" min="1">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   </main><!-- End #main -->
 
