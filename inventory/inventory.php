@@ -187,18 +187,21 @@
       <div class="modal-content">
 
         <div class="form-section">
-          <h3 class="h3">Product Information</h3>
+          <h3 class="h3">Product Information & Sale Information</h3>
+          
 
           <button class="close" id="closeBtn">&times;</button>
           <hr style="margin-top: 5px">
           <div>
             <label style="margin-right: 175px;" for="ItemID">Item ID</label>
-            <label for="itemType">Item Type</label>
+            <label style="margin-right: 155px;" for="itemType">Item Type</label>
+            
+            <label for="pricePerUnit">Price Per Unit</label>
           </div>
 
           <div class="textbox">
             <input style="margin-right: 30px;" type="text" id="itemID" name="itemID" readonly>
-            <select class="itemType" id="itemType" name="itemType">
+            <select style="margin-right: 30px;" class="itemType" id="itemType" name="itemType">
               <option value=""></option>
               <option value="Medicine">Medicine</option>
               <option value="Milk">Milk</option>
@@ -207,15 +210,19 @@
               <option value="Skincare">Skincare</option>
               <option value="Cosmetics">Cosmetics</option>
             </select>
+            <input  type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱">
           </div>
 
           <div class="textbox">
             <label style="margin-right: 135px;" for="brandName">Brand Name</label>
-            <label for="genericName">Generic Name</label>
+            <label style="margin-right: 125px;" for="genericName">Generic Name</label>
+            <label for="notes">Notes</label>
           </div>
+
           <div class="textbox">
             <input style="margin-right: 30px;" type="text" id="brandName" name="brandName">
-            <input type="text" id="genericName" name="genericName">
+            <input style="margin-right: 30px;" type="text" id="genericName" name="genericName">
+            <input style="padding: 8px 5px" id="Notes" name="Notes"></input>
           </div>
 
           <div>
@@ -237,15 +244,14 @@
 
           </div>
         </div>
-
         <div>
           <label style="margin-right: 110px;" for="ProductCode">Product Code</label>
         </div>
         <div class="textbox">
           <input type="text" id="productCode" name="ProductCode">
         </div>
+        <div class=""></div>
 
-        <!--<hr style="margin-top: 15px;">-->
 
         <div class="textbox">
           <label for="iconFile">Picture</label>
@@ -260,31 +266,36 @@
 
 
 
-        <div class="form-section">
+        <!--<div class="form-section">
           <h3 class="h3">Sale Information</h3>
 
           <div class="textbox">
             <label style="margin-right: 130px;" for="pricePerUnit">Price Per Unit</label>
             <label for="notes">Notes</label>
-            <!--<label for="InStock">In Stock</label>-->
+            <<label for="InStock">In Stock</label>
           </div>
           <div class="textbox">
             <input style="margin-right: 30px;" type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱">
-            <!--<input type="text" id="InStock" name="InStock">-->
+            <input type="text" id="InStock" name="InStock">
             <input style="padding: 8px 5px" id="Notes" name="Notes"></input>
           </div>
-           <!--<div class="textbox">
+
+
+          
+           <<div class="textbox">
 
            <label style="margin-right: 185px;" for="status">Status</label>
             <label for="notes">Notes</label>
-          </div>-->
+          </div>
 
-          <!--<div class="textbox">
+          <div class="textbox">
             <input style="margin-right: 30px;" type="text" id="status" name="status">
             <input style="padding: 8px 5px" id="Notes" name="Notes"></input>
-          </div>-->
-        </div>
-        <div style="margin-top: 30px;" class="form-button">
+          </div>
+        </div>-->
+        <hr style="margin-top: 15px;">
+
+        <div style="margin-top: 10px;" class="form-button">
           <button type="button" id="Clear">Clear</button>
           <button type="submit" id="saveBtn">Save</button>
         </div>
@@ -306,8 +317,8 @@
                     <th style="text-align: center;">Item ID</th>
                     <th style="text-align: center;">Picture</th>
                     <th style="text-align: center;">Product Code</th>
-                    <th style="text-align: center;">Brand Name</th>
                     <th style="text-align: center;">Generic Name</th>
+                    <th style="text-align: center;">Brand Name</th>
                     <th style="text-align: center;">Item Type</th>
                     <th style="text-align: center;">Mass & Unit of Measurement</th>
                     <th style="text-align: center;">Price Per Unit</th>
