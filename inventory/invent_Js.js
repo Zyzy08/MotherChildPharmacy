@@ -130,9 +130,23 @@ document.getElementById('PurchaseForm').addEventListener('submit', function(even
 // Function to show errors
 function showError(message) {
     console.error(message);
-    notificationMessage.textContent = message; // Set error message in the notification
-    notification.style.display = "block";
+    const notificationMessage = document.getElementById("notificationMessage");
+    const notification = document.getElementById("notification");
+    
+    notificationMessage.textContent = message; // Set the error message
+    notification.style.display = "block"; // Show the notification
+
+    // Add event listener to the close button
+    document.getElementById("closeNotification").addEventListener("click", closeError);
 }
+
+
+function closeError() {
+    const notification = document.getElementById("notification");
+    notification.style.display = "none"; // Hide the notification
+}
+
+
 
 // Function to handle update button click
 function handleUpdate(itemId) {
@@ -233,21 +247,19 @@ function updateTable(items) {
         row.setAttribute('data-id', item.ItemID); // Set data-id attribute
 
         row.innerHTML = `
-            <td style="text-align: center;">${item.ItemID}</td>
-            <td style="text-align: center;"><img src="${item.ProductIcon}" alt="Icon" style="width: 50px; height: auto;"></td>
-            <td style="text-align: center;">${item.ProductCode}</td>
-            <td style="text-align: center;">${item.BrandName}</td>
-            <td style="text-align: center;">${item.GenericName}</td>
-            <td style="text-align: center;">${item.ItemType}</td>
-            <td style="text-align: center;">${item.Mass} ${item.UnitOfMeasure}</td> <!-- Concatenated Mass and UnitOfMeasure -->
-            <td style="text-align: center;">${item.PricePerUnit}</td>
-            <td style="text-align: center;">${item.InStock}</td>
-            <td style="text-align: center;">
-                
-
-            <img src="../resources/img/d-edit.png" alt="Edit" style="cursor:pointer;" onclick="handleUpdate('${item.ItemID}')"/>
-             <img src="../resources/img/s-remove2.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="handleDelete('${item.ItemID}')"/>
-            </td>
+                <td class="text-center text-truncate">${item.ItemID}</td>
+                <td class="text-center"><img src="${item.ProductIcon}" alt="Icon" style="width: 50px; height: auto;"></td>
+                <td class="text-center text-truncate">${item.ProductCode}</td>
+                <td class="text-center text-truncate">${item.GenericName}</td>
+                <td class="text-center text-truncate">${item.BrandName}</td>
+                <td class="text-center text-truncate">${item.ItemType}</td>
+                <td class="text-center text-truncate">${item.Mass} ${item.UnitOfMeasure}</td>
+                <td class="text-center text-truncate">${item.PricePerUnit}</td>
+                <td class="text-center text-truncate">${item.InStock}</td>
+                <td class="text-center">
+                <img src="../resources/img/d-edit.png" alt="Edit" style="cursor:pointer;" onclick="handleUpdate('${item.ItemID}')" />
+                <img src="../resources/img/s-remove2.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="handleDelete('${item.ItemID}')" />
+    </td>
         `;
 
         tableBody.appendChild(row);
