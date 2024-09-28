@@ -3,6 +3,7 @@ const itemsPerPage = 8; // Number of items per page
 let totalItems = 0; // Total number of items
 let totalPages = 0; // Total pages
 let searchQuery = ''; // Store the current search query
+let totalAmount = 0; // This should be updated with the actual total
 
 // Function to fetch products from the server
 async function fetchProducts(query = '') {
@@ -216,6 +217,17 @@ searchInput.addEventListener('input', function() {
 searchInput.addEventListener('keypress', async function(event) {
     if (event.key === 'Enter') {
         event.preventDefault(); // Prevent form submission if it's in a form
+        
+        // Check if the search input is empty
+        if (this.value.trim() === '') {
+            // If the search input is empty, focus on the quantity input field
+            const quantityInput = document.getElementById('quantity-input');
+            if (quantityInput) {
+                quantityInput.focus(); // Focus on the quantity input
+            }
+            return; // Exit the function to avoid further execution
+        }
+
         const selectedCardId = localStorage.getItem('selectedCardId');
         const firstCard = document.querySelector('.clickable-card');
 
@@ -242,7 +254,15 @@ searchInput.addEventListener('keypress', async function(event) {
                 }
             }
         }
-        
+
+        // Ensure the product is highlighted before triggering the add button
+        setTimeout(() => {
+            const addItemButton = document.getElementById('add-item-button');
+            if (addItemButton && document.querySelector('.clickable-card.active')) {
+                addItemButton.click(); // Simulate a click on the "Add Item" button
+            }
+        }, 100); // Delay the click to allow proper product selection
+
         // Clear the search bar
         this.value = ''; 
         
@@ -250,7 +270,6 @@ searchInput.addEventListener('keypress', async function(event) {
         searchInput.focus(); 
     }
 });
-
 
 // Load initial products and pagination
 loadProducts();
@@ -302,9 +321,11 @@ function addItemToBasket() {
     }
 
     updateBasketDisplay();
+    updateCheckoutButtonState();
     // Remove highlight and reset quantity
-    selectedCard.classList.remove('active');
+    //selectedCard.classList.remove('active');
     quantityInput.value = ''; // Reset quantity input
+    searchInput.focus(); // Set focus back to the search input
 }
 
 // Function to update the basket display
@@ -336,16 +357,93 @@ function updateBasketDisplay() {
     });
 
     const tax = (basketTotal * 0.12).toFixed(2); // Calculate tax
-    const totalWithTax = (basketTotal + parseFloat(tax)).toFixed(2); // Calculate total with tax
-    document.getElementById('basket-total').textContent = `₱${totalWithTax}`; // Update total
+    const totalAmount = (basketTotal + parseFloat(tax)).toFixed(2); // Calculate total with tax
+    document.getElementById('basket-total').textContent = `₱${totalAmount}`; // Update total
     document.getElementById('basket-tax').textContent = `₱${tax}`; // Update tax display
+    updateCheckoutButtonState();
 }
 
 // Function to remove item from the basket
 function removeItemFromBasket(itemId) {
     basket = basket.filter(item => item.id !== itemId); // Remove item from basket
     updateBasketDisplay(); // Update display
+    updateCheckoutButtonState();
 }
+
+// Update Checkout button state
+function updateCheckoutButtonState() {
+    const checkoutButton = document.querySelector('button[data-bs-target="#verticalycentered"]');
+    if (basket.length === 0) {
+        checkoutButton.disabled = true;
+        checkoutButton.classList.add('btn-secondary');
+        checkoutButton.classList.remove('btn-primary');
+    } else {
+        checkoutButton.disabled = false;
+        checkoutButton.classList.add('btn-primary');
+        checkoutButton.classList.remove('btn-secondary');
+    }
+}
+
+// Call this function on page load to set initial state
+document.addEventListener('DOMContentLoaded', updateCheckoutButtonState);
 
 // Add event listener to the "Add Item" button
 document.getElementById('add-item-button').addEventListener('click', addItemToBasket);
+
+// Add event listener for the Enter key on the quantity input
+const quantityInput = document.getElementById('quantity-input');
+quantityInput.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent form submission if it's in a form
+        addItemToBasket(); // Call the function to add item to the basket
+    }
+});
+
+document.getElementById('clear-search').addEventListener('click', function() {
+    const searchInput = document.querySelector('input[name="query"]');
+    searchInput.value = ''; // Clear the input field
+    searchQuery = ''; // Reset the search query
+    currentPage = 1; // Reset to the first page
+    loadProducts(); // Load all products
+    searchInput.focus(); // Focus back on the input
+});
+
+// Update the modal total and set charge minimum when it's shown
+document.getElementById('verticalycentered').addEventListener('show.bs.modal', function (event) {
+    updateModalTotal();
+});
+
+// Update total when discounts are applied
+const discountCheckboxes = document.querySelectorAll('#verticalycentered .form-check-input');
+discountCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', updateModalTotal);
+});
+
+function updateModalTotal() {
+    const basketTotal = parseFloat(document.getElementById('basket-total').textContent.replace('₱', ''));
+    let discountPercentage = 0;
+
+    if (document.getElementById('seniorCitizenCheckbox').checked) discountPercentage += 20;
+    if (document.getElementById('promoCheckbox').checked) discountPercentage += 10;
+    if (document.getElementById('otherDiscountCheckbox').checked) discountPercentage += 5;
+
+    const discountAmount = basketTotal * (discountPercentage / 100);
+    const discountedTotal = basketTotal - discountAmount;
+
+    document.getElementById('total-display').textContent = `Total: ₱${discountedTotal.toFixed(2)}`;
+    
+    // Update the charge input minimum
+    updateChargeMinimum(discountedTotal);
+}
+
+function updateChargeMinimum(total) {
+    const chargeInput = document.querySelector('#verticalycentered input[type="number"]');
+    chargeInput.min = total.toFixed(2);
+    chargeInput.value = total.toFixed(2); // Optionally set the initial value to the total
+}
+
+// Add event listener to update charge when total changes
+document.getElementById('total-display').addEventListener('DOMSubtreeModified', function() {
+    const total = parseFloat(this.textContent.replace('Total: ₱', ''));
+    updateChargeMinimum(total);
+});

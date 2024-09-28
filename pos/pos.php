@@ -180,10 +180,17 @@
 
                 <div class="card-header">
                   <div class="search-bar">
-                    <form class="search-form d-flex align-items-center" method="POST" action="#">
-                        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-                        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-                    </form>
+                      <form class="search-form d-flex align-items-center" method="POST" action="#">
+                          <div class="input-group">
+                              <input type="text" name="query" placeholder="Search" title="Enter search keyword" class="form-control">
+                              <span class="input-group-text">
+                                  <i class="bi bi-search"></i>
+                              </span>
+                              <button type="button" title="Clear" class="btn btn-outline-secondary" id="clear-search">
+                                  <i class="bi bi-x"></i>
+                              </button>
+                          </div>
+                      </form>
                   </div>
                 </div><!-- End Card Header -->
                 
@@ -269,9 +276,9 @@
                           <p id="basket-total">₱0.00</p>
                       </div>
                       <div class="d-grid gap-2 mt-3">
-                          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
-                            Checkout
-                          </button>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
+                          Checkout
+                        </button>
                       </div>
                   </div>
               </div>
@@ -290,20 +297,20 @@
           </div>
           <div class="modal-body">
             <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-              <label class="form-check-label" for="flexSwitchCheckDefault">Senior Citizen / PWD (20%)</label>
+              <input class="form-check-input" type="checkbox" id="seniorCitizenCheckbox">
+              <label class="form-check-label" for="seniorCitizenCheckbox">Senior Citizen / PWD (20%)</label>
             </div>
             <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-              <label class="form-check-label" for="flexSwitchCheckDefault">Promotional (10%)</label>
+              <input class="form-check-input" type="checkbox" id="promoCheckbox">
+              <label class="form-check-label" for="promoCheckbox">Promotional (10%)</label>
             </div>
             <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-              <label class="form-check-label" for="flexSwitchCheckDefault">Other (5%)</label>
+              <input class="form-check-input" type="checkbox" id="otherDiscountCheckbox">
+              <label class="form-check-label" for="otherDiscountCheckbox">Other (5%)</label>
             </div>
-            <br><h2 id="total-display">Total: ₱0.00</h2><br>
-            <div class="row mb-3">
-              <h2 for="inputNumber" class="col-sm-4">Charge: ₱</h2>
+            <br><h2 id="total-display" style="font-weight: bold;">Total: ₱0.00</h2><br>
+            <div class="row mb-0">
+              <h2 for="inputNumber" class="col-sm-5" style="font-weight: bold;">Charge: ₱</h2>
               <div class="col-sm-6">
                 <input type="number" class="form-control" min="1">
               </div>
@@ -311,12 +318,155 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary">Confirm</button>
+            <div class="d-grid gap-2">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal">
+                Confirm
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Receipt Modal -->
+    <div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Receipt</h5>
+          </div>
+
+          <br><h5 style="font-weight: bold; text-align: center;">Mother & Child Pharmacy and Medical Supplies</h5>
+          <h6 style="text-align: center;">Gen. Luna Street, Babo Sacan, Porac, Pampanga</h6>
+          <h6 style="text-align: center;">
+            ---------------------------------------------------------------------------------
+          </h6><br>
+          <div class="modal-body">
+          <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+          </div>
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5">
+              <small>Total Items:</small>
+            </div>
+            <div class="col-xl-5">
+              <small>0</small>
+            </div>
+          </div>
+
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5">
+              <small>Subtotal:</small>
+            </div>
+            <div class="col-xl-5">
+              <small>₱0.00</small>
+            </div>
+          </div>
+
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5">
+              <small>Tax 12%:</small>
+            </div>
+            <div class="col-xl-5">
+              <small>₱0.00</small>
+            </div>
+          </div>
+
+          <div class="row text-center justify-content-between" style="font-weight: bold;">
+            <div class="col-xl-5">
+              <small>Amount Due:</small>
+            </div>
+            <div class="col-xl-5">
+              <small >₱0.00</small>
+            </div>
+          </div>
+
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5">
+              <small>Charge:</small>
+            </div>
+            <div class="col-xl-5">
+              <small>₱0.00</small>
+            </div>
+          </div>
+
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5">
+              <small>Change:</small>
+            </div>
+            <div class="col-xl-5">
+              <small>₱0.00</small>
+            </div>
+          </div>
+
+          <h6 style="text-align: center;">
+            ---------------------------------------------------------------------------------
+          </h6>
+
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-6">
+              <small>Order No.: #0000000</small>
+            </div>
+            <div class="col-xl-6">
+              <small>Date: <?php echo date('F j, Y'); ?></small>
+            </div>
+          </div>
+
+          <div class="row mb-3 text-center justify-content-between">
+            <div class="col-xl-6">
+              <small>Staff: <?php echo htmlspecialchars($employeeFullName); ?></small>
+            </div>
+            <div class="col-xl-6">
+              <small>Time: <?php echo date('h:i A'); ?></small>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <div class="d-grid gap-2">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
