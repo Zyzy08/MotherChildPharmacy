@@ -77,7 +77,8 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="../users/users-profile/users-profile.php">
+                            <a class="dropdown-item d-flex align-items-center"
+                                href="../users/users-profile/users-profile.php">
                                 <i class="bi bi-person"></i>
                                 <span>My Profile</span>
                             </a>
@@ -179,14 +180,30 @@
         <section class="section users">
             <div class="row">
                 <div class="col-xl-12">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="1-tab" data-bs-toggle="tab" data-bs-target="#home"
+                                type="button" role="tab" aria-controls="home" aria-selected="true">Sales</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="2-tab" data-bs-toggle="tab" data-bs-target="#contact"
+                                type="button" role="tab" aria-controls="contact" aria-selected="false"
+                                tabindex="-1">Return/Exchange</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="3-tab" data-bs-toggle="tab" data-bs-target="#contact"
+                                type="button" role="tab" aria-controls="contact" aria-selected="false"
+                                tabindex="-1">Purchase Orders</button>
+                        </li>
+                    </ul>
                     <div class="card">
                         <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
                             <table id="example" class="display">
                                 <thead>
                                     <tr class="highlight-row">
                                         <th>Invoice ID</th>
-                                        <th>Date</th>
-                                        <th>Quantity</th>
+                                        <th>Date (Time)</th>
+                                        <th>No. of Items</th>
                                         <th>Total</th>
                                         <th>Payment</th>
                                         <th>Actions</th>
@@ -218,6 +235,119 @@
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
+
+    <div id="overlayEdit" class="overlay">
+        <div class="overlay-content">
+            <span id="closeBtnEdit" class="close-btn">&times;</span>
+            <h2>Transaction Details</h2>
+            <hr>
+            <form id="userFormEdit" action="updateAccount.php" method="post" enctype="multipart/form-data"
+                onsubmit="handleFormSubmit()">
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="identifierID">Invoice ID</label><br>
+                        </div>
+                        <input type="text" id="identifierID" name="identifierID" disabled>
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="transactionType">Type of Transaction</label><br>
+                        </div>
+                        <input type="text" id="transactionType" name="transactionType" disabled>
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="cashierID">Cashier</label><br>
+                        </div>
+                        <input type="text" id="cashierID" name="cashierID" disabled>
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="datetimeID">Date (Time)</label><br>
+                        </div>
+                        <input type="text" id="datetimeID" name="datetimeID" disabled>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="listQTY">List of Items</label><br>
+                        </div>
+                        <textarea id="listQTY" name="listQTY" disabled></textarea>
+                    </div>
+                </div>
+                <div class="textboxHidden">
+                    <div class="label">
+                        <label for="AccountID">AccountID</label><br>
+                    </div>
+                    <input type="text" id="AccountID" name="AccountID" required>
+                </div>
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="VATable">VATable Sales</label><br>
+                        </div>
+                        <input type="text" id="VATable" name="VATable" disabled>
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="VATAmount">VAT Amount</label><br>
+                        </div>
+                        <input type="text" id="VATAmount" name="VATAmount" disabled>
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="Discount">Discount</label><br>
+                        </div>
+                        <input type="text" id="Discount" name="Discount" disabled>
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="NetAmount">Net Amount</label><br>
+                        </div>
+                        <input type="text" id="NetAmount" name="NetAmount" disabled>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="modePay">Mode of Payment</label><br>
+                        </div>
+                        <input type="text" id="modePay" name="modePay" disabled>
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="amtPaid">Amount Paid</label><br>
+                        </div>
+                        <input type="text" id="amtPaid" name="amtPaid" disabled>
+                    </div>
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="amtChange">Amount Change</label><br>
+                        </div>
+                        <input type="text" id="amtChange" name="amtChange" disabled>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- End of Overlay for View -->
+
+    <div id="overlayAD" class="overlay">
+        <div class="overlayAD-content">
+            <span id="closeBtnAD" class="close-btn">&times;</span>
+            <h3>Other Options</h3>
+            <h4 id="overlayADtitle"></h4>
+            <hr>
+            <form id="userFormAD" action="deleteData.php" method="post" enctype="multipart/form-data"
+                onsubmit="handleFormSubmit()">
+                <button id="deleteDataBtn" type="button"><img src="../resources/img/delete.png"
+                        style="padding-bottom: 2px;"> Void Transaction</button>
+            </form>
+        </div>
+    </div>
+    <!-- End of Overlay for Options -->
 
 
     <!-- Template Main JS File -->
