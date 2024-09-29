@@ -125,21 +125,21 @@
       </li><!-- End Transactions Page Nav -->
 
       <li class="nav-item"></li>
+            <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
+                <i class="bi bi-mailbox"></i>
+                <span>Purchase Orders</span>
+            </a>
+            </li><!-- End Purchase Order Page Nav -->
+
+      <li class="nav-item"></li>
       <a class="nav-link collapsed" href="../../inventory/inventory.php">
         <i class="bi bi-box-seam"></i>
         <span>Inventory</span>
       </a>
       </li><!-- End Inventory Page Nav -->
 
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../../returnexchange/return.html">
-        <i class="bi bi-cart-dash"></i>
-        <span>Return & Exchange</span>
-      </a>
-      </li><!-- End Return & Exchange Page Nav -->
-
       <li class="nav-item">
-        <a class="nav-link" href="../users.php">
+        <a class="nav-link collapsed" href="../users.php">
           <i class="bi bi-person"></i>
           <span>Users</span>
         </a>
@@ -153,6 +153,13 @@
         <span>POS</span>
       </a>
       </li><!-- End POS Page Nav -->
+
+      <li class="nav-item"></li>
+      <a class="nav-link collapsed" href="../../returnexchange/return.html">
+        <i class="bi bi-cart-dash"></i>
+        <span>Return & Exchange</span>
+      </a>
+      </li><!-- End Return & Exchange Page Nav -->
 
     </ul>
 

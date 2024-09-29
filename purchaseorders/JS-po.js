@@ -4,7 +4,7 @@ function setDataTables() {
             "order": [], // Disable initial sorting
             "columnDefs": [
                 {
-                    "targets": 0, // InvoiceID
+                    "targets": 0, // OrderID
                     "width": "17.6%"
                 },
                 {
@@ -12,15 +12,15 @@ function setDataTables() {
                     "width": "23.6%"
                 },
                 {
-                    "targets": 2, // Quantity
+                    "targets": 2, // Supplier
                     "width": "15.6%"
                 },
                 {
-                    "targets": 3, // Total
+                    "targets": 3, // Qty
                     "width": "16.6%"
                 },
                 {
-                    "targets": 4, // Payment
+                    "targets": 4, // Status
                     "width": "15%"
                 },
                 {
@@ -37,7 +37,7 @@ function setDataTables() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('getTransactions.php')
+    fetch('getPOs.php')
         .then(response => response.json())
         .then(data => updateTable(data))
         .catch(error => alert('Error fetching transactions data:', error));
@@ -51,17 +51,29 @@ function updateTable(data) {
     table.clear();
 
     data.forEach(row => {
+        let statusColor;
+        if (row.Status === "Pending") {
+            statusColor = '#B8860B';
+        } else if (row.Status === "Cancelled") {
+            statusColor = 'red';
+        } else if (row.Status === "Received") {
+            statusColor = 'green';
+        } else {
+            statusColor = 'black';
+        }
+
+        // Add the row to the table
         table.row.add([
-            row.InvoiceID,
-            row.SalesDate,
+            row.PurchaseOrderID,
+            row.OrderDate,
+            row.SupplierName,
             row.TotalItems,
-            "₱ " + row.NetAmount,
-            row.PaymentMethod,
-            // `<img src="../resources/img/viewfile.png" alt="View" style="cursor:pointer;margin-left:20px;" onclick="fetchDetails('${row.InvoiceID}')"/>`
-            `<img src="../resources/img/viewfile.png" alt="View" style="cursor:pointer;margin-left:10px;" onclick="fetchDetails('${row.InvoiceID}')"/> 
-            <img src="../resources/img/s-remove.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="showOptions('${row.InvoiceID}')"/>`
+            `<span style="color: ${statusColor};">${row.Status}</span>`, // Apply the color to the Status
+            `<img src="../resources/img/viewfile.png" alt="View" style="cursor:pointer;margin-left:10px;" onclick="fetchDetails('${row.PurchaseOrderID}')"/> 
+             <img src="../resources/img/s-remove.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="showOptions('${row.PurchaseOrderID}')"/>`
         ]);
     });
+
 
     // Draw the updated table
     table.draw();
@@ -74,15 +86,14 @@ const identifierID = document.getElementById('identifierID');
 const cashierID = document.getElementById('cashierID');
 const datetimeID = document.getElementById('datetimeID');
 const listQTY = document.getElementById('listQTY');
-const VATable = document.getElementById('VATable');
-const VATAmount = document.getElementById('VATAmount');
+const Status = document.getElementById('Status');
+const TotalCost = document.getElementById('TotalCost');
 const Discount = document.getElementById('Discount');
 const NetAmount = document.getElementById('NetAmount');
 const modePay = document.getElementById('modePay');
 const amtPaid = document.getElementById('amtPaid');
 const amtChange = document.getElementById('amtChange');
-const transactionType = document.getElementById('transactionType');
-
+const supplierName = document.getElementById('supplierName');
 
 function fetchDetails(identifier) {
     fetch(`getData.php?InvoiceID=${encodeURIComponent(identifier)}`)
@@ -90,17 +101,21 @@ function fetchDetails(identifier) {
         .then(data => {
             if (data) {
                 // Populate the overlay form with details
-                identifierID.value = data.InvoiceID;
+                identifierID.value = data.PurchaseOrderID;
+                supplierName.value = data.SupplierName;
                 cashierID.value = data.employeeName + " " + data.employeeLName;
-                datetimeID.value = data.SalesDate;
-                VATable.value = "₱ " + data.Subtotal;
-                VATAmount.value = "₱ " + data.Tax;
-                Discount.value = "₱ " + data.Discount;
-                NetAmount.value = "₱ " + data.NetAmount;
-                modePay.value = data.PaymentMethod;
-                amtPaid.value = "₱ " + data.AmountPaid;
-                amtChange.value = "₱ " + data.AmountChange;
-                transactionType.value = data.Status;
+                datetimeID.value = data.OrderDate;
+                Status.value = data.Status;
+                if (data.Status === "Pending") {
+                    Status.style.color = '#B8860B'; // Change text color to yellow
+                } else if (data.Status === "Cancelled") {
+                    Status.style.color = 'red'; // Change text color to red
+                } else if (data.Status === "Received") {
+                    Status.style.color = 'green'; // Change text color to green
+                } else {
+                    Status.style.color = 'black'; // Default color (optional)
+                }
+                TotalCost.value = data.NetAmount !== null ? data.NetAmount : "-";
 
                 // Set listQTY input value
                 listQTY.value = data.listQTY; // Update the listQTY input
@@ -127,9 +142,35 @@ const overlayAD = document.getElementById('overlayAD');
 const overlayADtitle = document.getElementById('overlayADtitle');
 
 let selectedID = '';
+const deleteDataBtn = document.getElementById('deleteDataBtn');
 function showOptions(identifier) {
     selectedID = identifier;
-    overlayADtitle.textContent = "InvoiceID " + identifier;
+    overlayADtitle.textContent = "OrderID " + identifier;
+
+    fetch(`getData.php?InvoiceID=${encodeURIComponent(identifier)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                const orderDate = new Date(data.OrderDateOrig);
+                const currentDate = new Date();
+
+                const oneHourInMillis = 60 * 60 * 1000; // 1 hour in milliseconds
+                const timeDifference = currentDate - orderDate; // Time difference in milliseconds
+
+                // Enable or disable the delete button
+                if (timeDifference <= oneHourInMillis) {
+                    deleteDataBtn.disabled = false; // Enable the button
+                } else {
+                    deleteDataBtn.disabled = true; // Disable the button
+                }
+            } else {
+                console.error('No data found for the given id.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching details:', error);
+        });
+
     overlayAD.style.display = 'flex';
 };
 
@@ -138,9 +179,9 @@ closeBtnAD.addEventListener('click', function () {
     overlayAD.style.display = 'none';
 })
 
-const deleteDataBtn = document.getElementById('deleteDataBtn');
+
 deleteDataBtn.addEventListener('click', function () {
-    let confirmationUser = confirm("Are you sure you want to void this transaction?");
+    let confirmationUser = confirm("Are you sure you want to cancel this order?");
     if (confirmationUser === true) {
         if (!selectedID || selectedID.trim() === '') {
             alert('No data selected.');
@@ -170,23 +211,4 @@ deleteDataBtn.addEventListener('click', function () {
 
     }
 });
-
-//Tabs for Types
-const tab1 = document.getElementById('1-tab');
-const tab2 = document.getElementById('2-tab');
-// const tab3 = document.getElementById('3-tab');
-
-function fetchTransactions(tab) {
-    fetch(`getTransactions.php?tab=${tab}`)
-        .then(response => response.json())
-        .then(data => updateTable(data))
-        .catch(error => {
-            console.error('Error fetching transactions:', error);
-        });
-}
-
-// Event listeners for tab clicks
-tab1.addEventListener('click', () => fetchTransactions('1'));
-tab2.addEventListener('click', () => fetchTransactions('2'));
-// tab3.addEventListener('click', () => fetchTransactions('3'));
 

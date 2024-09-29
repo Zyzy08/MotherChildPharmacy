@@ -24,9 +24,9 @@ switch ($selectedTab) {
     case '2':
         $sql = "SELECT InvoiceID, DATE_FORMAT(SaleDate, '%m/%d/%y (%l:%i %p)') AS SalesDate, TotalItems, NetAmount, PaymentMethod FROM sales WHERE Status = 'ReturnExchange'";
         break;
-    case '3':
-        $sql = "SELECT InvoiceID, DATE_FORMAT(SaleDate, '%m/%d/%y (%l:%i %p)') AS SalesDate, TotalItems, NetAmount, PaymentMethod FROM sales WHERE Status = 'PurchaseOrder'";
-        break;
+    // case '3':
+    //     $sql = "SELECT PurchaseOrderID, DATE_FORMAT(OrderDate, '%m/%d/%y (%l:%i %p)') AS SalesDate, TotalItems, NetAmount, PaymentMethod FROM sales WHERE Status = 'PurchaseOrder'";
+    //     break;
     // Default to tab 1 is already handled
 }
 

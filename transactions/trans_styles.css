@@ -482,8 +482,8 @@ button[type="reset"]:hover {
   /* white */
 }
 
-.textbox input:disabled {
-  color: #171A1FFF;
+textarea, .textbox input:disabled {
+  color:rgb(182, 182, 182);
   /* neutral-900 */
   background: #F3F4F6FF;
   /* neutral-200 */
