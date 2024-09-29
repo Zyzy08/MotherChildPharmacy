@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 22, 2024 at 03:28 PM
+-- Generation Time: Sep 29, 2024 at 05:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -77,8 +77,8 @@ CREATE TABLE `inventory` (
 --
 
 INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`) VALUES
-(2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Milligrams', 0, 0, NULL, 200.00, NULL, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
-(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Milligrams', 0, 0, NULL, 300.00, NULL, '', '', 'products-icon/neozep.png', 'NeozepForte500mg'),
+(2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Milligrams', 5, 0, NULL, 200.00, NULL, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
+(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Milligrams', 3, 0, NULL, 300.00, NULL, '', '', 'products-icon/neozep.png', 'NeozepForte500mg'),
 (4, 'Ibuprofen', 'Advil', 'Medicine', '200', 'Milligrams', 0, 0, NULL, 299.00, NULL, '', '', 'products-icon/Advil.png', 'AdvilIbuprofen200mg'),
 (5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Milligrams', 0, 0, NULL, 499.00, NULL, '', '', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg'),
 (6, 'Loperamide', 'Diatabs', 'Medicine', '2', 'Milligrams', 0, 0, NULL, 149.00, NULL, '', '', 'products-icon/Diatabs.png', 'DiatabsLoperamide2mg'),
@@ -112,11 +112,18 @@ CREATE TABLE `purchaseorders` (
   `OrderDate` datetime DEFAULT current_timestamp(),
   `SupplierID` int(11) NOT NULL,
   `AccountID` int(10) UNSIGNED NOT NULL,
-  `ItemName` text DEFAULT NULL,
-  `ItemQuantity` int(11) DEFAULT NULL,
-  `TotalCost` decimal(10,2) DEFAULT NULL,
+  `OrderDetails` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`OrderDetails`)),
+  `TotalItems` int(11) NOT NULL,
+  `NetAmount` decimal(10,2) DEFAULT NULL,
   `Status` enum('Pending','Received','Cancelled') DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `purchaseorders`
+--
+
+INSERT INTO `purchaseorders` (`PurchaseOrderID`, `OrderDate`, `SupplierID`, `AccountID`, `OrderDetails`, `TotalItems`, `NetAmount`, `Status`) VALUES
+(1, '2024-09-29 19:37:52', 1, 3, '{\r\n	\"1\":{\r\n		\"itemID\":\"2\",\r\n		\"qty\":100\r\n	},\r\n	\"2\":{\r\n		\"itemID\":\"3\",\r\n		\"qty\":100\r\n	}\r\n}', 200, NULL, 'Pending');
 
 -- --------------------------------------------------------
 
@@ -141,6 +148,13 @@ CREATE TABLE `sales` (
   `RefundAmount` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `sales`
+--
+
+INSERT INTO `sales` (`InvoiceID`, `SaleDate`, `AccountID`, `SalesDetails`, `TotalItems`, `Subtotal`, `Tax`, `Discount`, `AmountPaid`, `PaymentMethod`, `Status`, `RefundAmount`) VALUES
+(1, '2024-09-29 01:34:29', 3, '{\r\n	\"1\":{\r\n		\"itemID\":\"2\",\r\n		\"qty\":5\r\n	},\r\n	\"2\":{\r\n		\"itemID\":\"3\",\r\n		\"qty\":3\r\n	}\r\n}', 8, 1900.00, 228.00, 0.00, 2500.00, 'Cash', 'Sales', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -154,8 +168,15 @@ CREATE TABLE `suppliers` (
   `Phone` varchar(20) NOT NULL,
   `Email` varchar(255) DEFAULT NULL,
   `Status` enum('Active','Inactive') DEFAULT 'Active',
-  `Notes` text DEFAULT NULL
+  `Notes` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `suppliers`
+--
+
+INSERT INTO `suppliers` (`SupplierID`, `SupplierName`, `AgentName`, `Phone`, `Email`, `Status`, `Notes`) VALUES
+(1, 'Jollibee', 'Daisy Duck', '09987652931', 'jollibee@business', 'Active', '');
 
 -- --------------------------------------------------------
 
@@ -188,10 +209,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`AccountID`, `employeeName`, `employeeLName`, `role`, `accountName`, `password`, `picture`, `dateCreated`, `status`, `connected`, `SuppliersPerms`, `TransactionsPerms`, `InventoryPerms`, `POSPerms`, `REPerms`, `POPerms`, `UsersPerms`) VALUES
-(3, 'Lance', 'Tiangco', 'Admin', 'ltiangco', 'twice-7', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
-(37, 'Robert', 'Parr', 'Pharmacy Assistant', 'rparr', 'parr-e037', 'Incredibles.png', '2024-09-18 17:24:00', 'Inactive', '0', 'off', 'on', 'off', 'on', 'on', 'off', 'off'),
-(38, 'Shrek', 'Shrek', 'Purchaser', 'sshrek', 'shrek-e038', 'Shrek.png', '2024-09-18 17:36:27', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'off'),
-(39, 'Sayra', 'Jackson', 'Admin', 'sjackson', 'jackson-e036', 'Chichi.jpg', '2024-09-22 21:27:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on');
+(3, 'Lance', 'Tiangco', 'Admin', 'E003_ltiangco', 'twice-7', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
+(37, 'Robert', 'Parr', 'Pharmacy Assistant', 'E037_rparr', 'parr-e037', 'Incredibles.png', '2024-09-18 17:24:00', 'Inactive', '0', 'off', 'on', 'off', 'on', 'on', 'off', 'off'),
+(38, 'Shrek@', 'Third', 'Purchaser', 'E038_sthird', 'shrek-e038', 'Shrek.png', '2024-09-18 17:36:27', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'off'),
+(39, 'Sayra', 'Jackson', 'Admin', 'E039_sjackson', 'jackson-e036', 'Chichi.jpg', '2024-09-22 21:27:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on');
 
 --
 -- Indexes for dumped tables
@@ -272,19 +293,19 @@ ALTER TABLE `inventory`
 -- AUTO_INCREMENT for table `purchaseorders`
 --
 ALTER TABLE `purchaseorders`
-  MODIFY `PurchaseOrderID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `PurchaseOrderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `sales`
 --
 ALTER TABLE `sales`
-  MODIFY `InvoiceID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `InvoiceID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `SupplierID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `SupplierID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
