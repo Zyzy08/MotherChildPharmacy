@@ -235,11 +235,16 @@
             <!--<input type="text" id="unitOfMeasure" name="unitOfMeasure">-->
             <select class="unitOfMeasure" id="unitOfMeasure" name="unitOfMeasure">
               <option value=""></option>
-              <option value="Milligrams">Milligrams</option>
-              <option value="Grams">Grams</option>
-              <option value="Milliliters">Milliliters</option>
-              <option value="Liters">Liters</option>
-              <option value="Tablets">Tablets</option>
+              <option value="Kilograms">kg</option>
+              <option value="Grams">g</option>
+              <option value="Milligrams">mg</option>
+              <option value="microgram">mcg/µg</option>
+              <option value="nanogram">ng</option>
+              <option value="Litre">L</option>
+              <option value="Millilitre">mL</option>
+              <option value="cubic centimetre">cc</option>
+              <option value="mole">mol</option>
+              <option value="	millimole">mmol</option>
             </select>
 
           </div>
