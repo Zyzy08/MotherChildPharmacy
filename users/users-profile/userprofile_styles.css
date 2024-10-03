@@ -1,0 +1,16 @@
+.valid {
+    background-color: rgb(184, 233, 184);
+}
+
+.invalid {
+    background-color: rgb(238, 178, 178);
+}
+
+#passList {
+    margin-top: -30px;
+    font-size: 12px;
+    display: flex;
+    /* Use Flexbox */
+    gap: 60px;
+    /* Space between the elements */
+}

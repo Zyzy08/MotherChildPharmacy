@@ -1,14 +1,14 @@
 {
-    "employeeName": "Sayra",
-    "employeeLName": "Jackson",
-    "accountName": "sjackson",
-    "password": "jackson-e039",
-    "role": "Admin",
+    "employeeName": "Shrek",
+    "employeeLName": "Third",
+    "accountName": "E042_sthird",
+    "password": "third-e042",
+    "role": "Purchaser",
     "SuppliersPerms": "on",
     "TransactionsPerms": "on",
     "InventoryPerms": "on",
     "POSPerms": "on",
     "REPerms": "on",
     "POPerms": "on",
-    "UsersPerms": "on"
+    "UsersPerms": "off"
 }

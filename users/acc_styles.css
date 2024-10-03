@@ -191,6 +191,7 @@
 .edit-width {
   width: 80px;
 }
+
 .same-width {
   width: 150px;
 }
@@ -198,6 +199,7 @@
 .avatar2block {
   width: auto;
 }
+
 .avatar2 {
   width: 30px;
   height: 30px;
@@ -284,7 +286,9 @@
   /* Hidden by default */
   align-items: center;
   justify-content: center;
-  z-index: 1000; /* High z-index value to ensure it's on top */
+  z-index: 1000;
+  /* High z-index value to ensure it's on top */
+  
 }
 
 .overlay-content h3 {
@@ -345,7 +349,8 @@ input {
   background-color: #a04545;
 }
 
-#unarchiveUserBtn, #archiveUserBtn {
+#unarchiveUserBtn,
+#archiveUserBtn {
   width: 250px;
   background-color: #af844c;
   color: white;
@@ -355,7 +360,8 @@ input {
   border-radius: 5px;
 }
 
-#unarchiveUserBtn:hover, #archiveUserBtn:hover {
+#unarchiveUserBtn:hover,
+#archiveUserBtn:hover {
   background-color: #a07545;
 }
 
@@ -392,7 +398,9 @@ button[type="submit"]:hover {
   /* Darker green on hover */
 }
 
-#cancelBtn, #resetEdit, button[type="reset"] {
+#cancelBtn,
+#resetEdit,
+button[type="reset"] {
   width: 80px;
   background-color: #af4c4c;
   color: white;
@@ -403,7 +411,9 @@ button[type="submit"]:hover {
   /* Optional: Rounded corners */
 }
 
-#cancelBtn, #resetEdit:hover, button[type="reset"]:hover {
+#cancelBtn,
+#resetEdit:hover,
+button[type="reset"]:hover {
   background-color: #a04545;
 }
 
@@ -486,13 +496,16 @@ button[type="submit"]:hover {
 }
 
 .container {
-  display: flex; /* Use Flexbox */
-  gap: 40px; /* Space between the elements */
+  display: flex;
+  /* Use Flexbox */
+  gap: 40px;
+  /* Space between the elements */
 }
 
 .button-container {
   display: flex;
-  justify-content: space-between; /* Distribute space between the buttons */
+  justify-content: space-between;
+  /* Distribute space between the buttons */
 }
 
 #preview {
@@ -517,35 +530,44 @@ input[type="file"] {
   display: block;
 }
 
-.line { 
-  width: 100%; 
-  height: 0px; 
-  border-width: 1px; 
-  border-color: rgb(131, 136, 143); /* neutral-300 */
-  border-style: solid; 
+.line {
+  width: 100%;
+  height: 0px;
+  border-width: 1px;
+  border-color: rgb(131, 136, 143);
+  /* neutral-300 */
+  border-style: solid;
   margin-bottom: 15px;
 }
 
 /* Modal container */
 .modal {
-  display: none; /* Hidden by default */
+  display: none;
+  /* Hidden by default */
   position: fixed;
-  z-index: 1; /* Sit on top */
+  z-index: 1;
+  /* Sit on top */
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Black w/ opacity */
 }
 
 /* Modal content */
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
+  margin: 15% auto;
+  /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+  width: 80%;
+  /* Could be more or less, depending on screen size */
 }
 
 /* Close button */
@@ -610,11 +632,16 @@ input[type="file"] {
   color: rgb(98, 202, 107);
 }
 
-#newEmployeeID, #currentEmployeeID, #accountName, #password, #accountNameEdit, #passwordEdit {
-  color:rgb(182, 182, 182);
+#newEmployeeID,
+#currentEmployeeID,
+#accountName,
+#password,
+#accountNameEdit,
+#passwordEdit {
+  color: rgb(182, 182, 182);
 }
 
-.usersTableSize{
+.usersTableSize {
   width: 95%;
   margin-left: 17px;
 }
@@ -624,14 +651,16 @@ input[type="file"] {
   line-height: 22px;
   font-weight: 700;
   display: flex;
-  align-items: center; /* Aligns the label and switch vertically */
+  align-items: center;
+  /* Aligns the label and switch vertically */
 }
 
 .permissionsBox {
   width: 230px;
 }
 
-.permissionsSelect, .permissionsSelectEdit {
+.permissionsSelect,
+.permissionsSelectEdit {
   color: rgb(194, 195, 199);
   background: #F3F4F6FF;
   display: grid;
@@ -648,18 +677,24 @@ input[type="file"] {
   width: 100%;
 }
 
-.permissionsSelect.enabled, .permissionsSelectEdit.enabled {
+.permissionsSelect.enabled,
+.permissionsSelectEdit.enabled {
   color: black;
 }
 
-.permissionsSelectEdit input[type="checkbox"], .permissionsSelect input[type="checkbox"] {
-  width: auto; /* Ensure width is not set to a specific value */
+.permissionsSelectEdit input[type="checkbox"],
+.permissionsSelect input[type="checkbox"] {
+  width: auto;
+  /* Ensure width is not set to a specific value */
   height: fit-content;
-  margin-right: 3px; /* Space between checkbox and label */
-  vertical-align: middle; /* Align checkboxes with text */
+  margin-right: 3px;
+  /* Space between checkbox and label */
+  vertical-align: middle;
+  /* Align checkboxes with text */
 }
 
-#permsToggleEdit, #permsToggle{
+#permsToggleEdit,
+#permsToggle {
   cursor: pointer;
   margin-left: 4px;
   padding-bottom: 4px;
@@ -676,7 +711,8 @@ input[type="file"] {
 }
 
 .archived-users {
-  margin-left: auto; /* This will push it to the right */
+  margin-left: auto;
+  /* This will push it to the right */
   cursor: pointer;
   height: 36px;
   width: 145px;
@@ -708,13 +744,33 @@ input[type="file"] {
   background: #111644;
 }
 
-.button-container button{
+.button-container button {
   font-size: 14px;
   height: 30px;
   padding: 0px;
 }
 
-input[type="text"]:disabled, input[type="password"]:disabled {
+input[type="text"]:disabled,
+input[type="password"]:disabled {
   background: rgb(228, 229, 231);
   cursor: not-allowed;
+}
+
+
+#successAlert {
+  position: fixed;
+  /* Fixes the element to the viewport */
+  top: 11%;
+  /* Distance from the bottom */
+  left: 80%;
+  /* Center it horizontally */
+  transform: translateX(-50%);
+  /* Adjust for the width */
+  width: 500px;
+  /* Adjust as needed */
+
+}
+
+#disablebackdrop-Front{
+  z-index: 2000;
 }

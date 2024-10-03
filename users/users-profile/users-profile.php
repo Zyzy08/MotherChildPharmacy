@@ -125,11 +125,11 @@
       </li><!-- End Transactions Page Nav -->
 
       <li class="nav-item"></li>
-            <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
-                <i class="bi bi-mailbox"></i>
-                <span>Purchase Orders</span>
-            </a>
-            </li><!-- End Purchase Order Page Nav -->
+      <a class="nav-link collapsed" href="../../purchaseorders/purchaseorders.php">
+        <i class="bi bi-mailbox"></i>
+        <span>Purchase Orders</span>
+      </a>
+      </li><!-- End Purchase Order Page Nav -->
 
       <li class="nav-item"></li>
       <a class="nav-link collapsed" href="../../inventory/inventory.php">
@@ -241,11 +241,6 @@
                     <div class="col-lg-9 col-md-8"><?php echo htmlspecialchars($dateCreatedFormatted); ?></div>
                   </div>
 
-                  <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Status</div>
-                    <div class="col-lg-9 col-md-8"><?php echo htmlspecialchars($status); ?></div>
-                  </div>
-
                 </div>
 
                 <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
@@ -263,37 +258,27 @@
                         </div>
                         <input type="file" id="upload-input" name="profileImage" style="display:none;" accept="image/*"
                           onchange="previewFile()">
-                        <!-- <div class="pt-2">
-                          <a href="#" id="upload-button" class="btn btn-primary btn-sm"
-                            title="Upload new profile image">
-                            <i class="bi bi-upload"></i>
-                          </a>
-                          <input type="file" id="upload-input" name="profileImage" style="display:none;">
-                          <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image">
-                            <i class="bi bi-trash"></i>
-                          </a>
-                        </div> -->
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="fullName" class="col-md-4 col-lg-3 col-form-label">First Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input autocomplete="off" name="fullName" type="text" class="form-control" id="fullName"
-                          value="<?php echo htmlspecialchars($employeeName); ?>">
+                        <input required autocomplete="off" name="fullName" type="text" class="form-control"
+                          id="fullName" value="<?php echo htmlspecialchars($employeeName); ?>">
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="lastName" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
                       <div class="col-md-8 col-lg-9">
-                        <input autocomplete="off" name="lastName" type="text" class="form-control" id="lastName"
-                          value="<?php echo htmlspecialchars($employeeLName); ?>">
+                        <input required autocomplete="off" name="lastName" type="text" class="form-control"
+                          id="lastName" value="<?php echo htmlspecialchars($employeeLName); ?>">
                       </div>
                     </div>
 
                     <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                      <button type="submit" class="btn btn-primary" disabled id="submitButton">Save Changes</button>
                       <button type="reset" class="btn btn-danger" id="resetButton">Reset</button>
                     </div>
                   </form><!-- End Profile Edit Form -->
@@ -349,26 +334,43 @@
                     <div class="row mb-3">
                       <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="password" type="password" class="form-control" id="currentPassword">
+                        <input required name="password" type="password" class="form-control" id="currentPassword">
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New Password</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="newpassword" type="password" class="form-control" id="newPassword">
+                        <input required name="newpassword" type="password" class="form-control" id="newPassword">
                       </div>
                     </div>
 
                     <div class="row mb-3">
                       <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
                       <div class="col-md-8 col-lg-9">
-                        <input name="renewpassword" type="password" class="form-control" id="renewPassword">
+                        <input required name="renewpassword" type="password" class="form-control" id="renewPassword"
+                          disabled>
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label class="col-md-4 col-lg-3 col-form-label"></label>
+                      <div class="col-md-8 col-lg-9">
+                        <ul id="passList">
+                          <div>
+                            <li id="p1">Minimum 7 characters</li>
+                            <li id="p2">Contains one letter</li>
+                          </div>
+                          <div>
+                            <li id="p3">Contains one number</li>
+                            <li id="p4">Contains one symbol</li>
+                          </div>
+                        </ul>
                       </div>
                     </div>
 
                     <div class="text-center">
-                      <button type="submit" class="btn btn-primary">Change Password</button>
+                      <button type="submit" class="btn btn-primary" disabled id="changePasswordBtn">Change Password</button>
                     </div>
                   </form><!-- End Change Password Form -->
 
@@ -384,6 +386,19 @@
     </section>
 
   </main><!-- End #main -->
+
+  <div class="modal" id="disablebackdrop-Front" tabindex="-1">
+    <div class="modal-dialog" data-bs-backdrop="false">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalVerifyTitle-Front">Title Text</h5>
+        </div>
+        <div class="modal-body" id="modalVerifyText-Front">
+          Text
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
@@ -423,6 +438,114 @@
       document.getElementById('upload-input').value = ''; // Clear the file input
     });
   </script>
+  <script>
+    let storedPassword = '<?php echo htmlspecialchars($password); ?>'; // Assume this comes from PHP
+
+    // Validate the current password input in real-time
+    document.getElementById('currentPassword').addEventListener('input', function () {
+      const currentPasswordInput = this.value;
+
+      if (currentPasswordInput === storedPassword) {
+        this.classList.remove('invalid');
+        this.classList.add('valid');
+      } else {
+        this.classList.remove('valid');
+        this.classList.add('invalid');
+      }
+
+      updateChangePasswordButton(); // Update button state
+    });
+
+    // Validate the new password input in real-time
+    document.getElementById('newPassword').addEventListener('input', function () {
+      const password = this.value;
+
+      // Requirements
+      const minLength = password.length >= 7;
+      const hasLetter = /[a-zA-Z]/.test(password);
+      const hasNumber = /\d/.test(password);
+      const hasSymbol = /[!@#$%^&*(),.?":{}|<>-]/.test(password);
+
+      // Update background color based on validity
+      if (minLength && hasLetter && hasNumber && hasSymbol) {
+        this.classList.remove('invalid');
+        this.classList.add('valid');
+        document.getElementById('renewPassword').disabled = false; // Enable re-enter password field
+      } else {
+        this.classList.remove('valid');
+        this.classList.add('invalid');
+        document.getElementById('renewPassword').disabled = true; // Keep re-enter password field disabled
+        document.getElementById('renewPassword').value = '';
+        document.getElementById('renewPassword').classList.remove('valid');
+        document.getElementById('renewPassword').classList.remove('invalid');
+      }
+
+      // Update the requirements list
+      document.getElementById('p1').style.color = minLength ? 'green' : 'inherit';
+      document.getElementById('p2').style.color = hasLetter ? 'green' : 'inherit';
+      document.getElementById('p3').style.color = hasNumber ? 'green' : 'inherit';
+      document.getElementById('p4').style.color = hasSymbol ? 'green' : 'inherit';
+
+      // Re-validate the re-enter password
+      validateReenterPassword();
+      updateChangePasswordButton(); // Update button state
+    });
+
+    // Validate re-enter password
+    document.getElementById('renewPassword').addEventListener('input', function () {
+      validateReenterPassword();
+      updateChangePasswordButton(); // Update button state
+    });
+
+    // Function to validate re-enter password
+    function validateReenterPassword() {
+      const newPassword = document.getElementById('newPassword').value;
+      const reenteredPassword = document.getElementById('renewPassword').value;
+
+      if (reenteredPassword === newPassword) {
+        document.getElementById('renewPassword').classList.remove('invalid');
+        document.getElementById('renewPassword').classList.add('valid');
+      } else {
+        document.getElementById('renewPassword').classList.remove('valid');
+        document.getElementById('renewPassword').classList.add('invalid');
+      }
+    }
+
+    // Update the Change Password button state
+    function updateChangePasswordButton() {
+      const isCurrentPasswordValid = document.getElementById('currentPassword').classList.contains('valid');
+      const isNewPasswordValid = document.getElementById('newPassword').classList.contains('valid');
+      const isReenterPasswordValid = document.getElementById('renewPassword').classList.contains('valid');
+
+      const changePasswordBtn = document.getElementById('changePasswordBtn');
+      changePasswordBtn.disabled = !(isCurrentPasswordValid && isNewPasswordValid && isReenterPasswordValid);
+    }
+  </script>
+  <script>
+    // Store current first name and last name
+    const currentFirstName = '<?php echo htmlspecialchars($employeeName); ?>';
+    const currentLastName = '<?php echo htmlspecialchars($employeeLName); ?>';
+
+    // Function to enable or disable the submit button
+    function updateSubmitButton() {
+        const firstNameInput = document.getElementById('fullName').value.trim();
+        const lastNameInput = document.getElementById('lastName').value.trim();
+        const submitButton = document.getElementById('submitButton');
+
+        // Check if first name and last name are not empty and different from current values
+        if (firstNameInput && lastNameInput &&
+            (firstNameInput !== currentFirstName || lastNameInput !== currentLastName)) {
+            submitButton.disabled = false;
+        } else {
+            submitButton.disabled = true;
+        }
+    }
+
+    // Add event listeners to the input fields
+    document.getElementById('fullName').addEventListener('input', updateSubmitButton);
+    document.getElementById('lastName').addEventListener('input', updateSubmitButton);
+</script>
+
 
 </body>
 

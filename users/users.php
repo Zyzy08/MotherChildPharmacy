@@ -77,8 +77,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center"
-                                href="users-profile/users-profile.php">
+                            <a class="dropdown-item d-flex align-items-center" href="users-profile/users-profile.php">
                                 <i class="bi bi-person"></i>
                                 <span>My Profile</span>
                             </a>
@@ -442,6 +441,18 @@
                 </div>
             </form>
         </div>
+        <div class="modal" id="disablebackdrop" tabindex="-1" data-bs-backdrop="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalVerifyTitle">Success</h5>
+                    </div>
+                    <div class="modal-body" id="modalVerifyText">
+                        User's data has been updated successfully.
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- End of Overlay for Edit -->
 
@@ -450,18 +461,57 @@
             <span id="closeBtnAD" class="close-btn">&times;</span>
             <h2>Other Options</h2>
             <hr>
-            <form id="userFormAD" action="archiveAccount.php" method="post" enctype="multipart/form-data"
-                onsubmit="handleFormSubmit()">
-                <button id="archiveUserBtn" type="button"><img src="../resources/img/archive.png"> Archive User
-                    Account</button>
-                <button id="deleteUserBtn" type="button"><img src="../resources/img/delete.png"> Delete User
-                    Permanently</button>
-                <button id="resetPasswordBtn" type="button"><img src="../resources/img/resetPass.png"> Reset
-                    Password</button>
-            </form>
+            <button id="archiveUserBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD"><img
+                    src="../resources/img/archive.png"> Archive User
+                Account</button>
+            <!-- <button id="deleteUserBtn" type="button"><img src="../resources/img/delete.png"> Delete User
+                    Permanently</button> -->
+            <br>
+            <button id="resetPasswordBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD"><img
+                    src="../resources/img/resetPass.png"> Reset
+                Password</button>
+
+            <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalVerifyTitle-AD">Confirmation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                id="modalClose-AD"></button>
+                        </div>
+                        <div class="modal-body" id="modalVerifyText-AD">
+                            Are you sure you want to do this?
+                        </div>
+                        <div class="modal-footer" id="modal-footer-AD">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-primary" id="modalYes">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- End of Overlay for Archive/Delete -->
+
+    <!-- <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
+        <i class="bi bi-check-circle me-1"></i>
+        A simple success alert with icon—check it out!
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div> -->
+
+    <div class="modal" id="disablebackdrop-Front" tabindex="-1">
+        <div class="modal-dialog" data-bs-backdrop="false">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalVerifyTitle-Front">Title Text</h5>
+                </div>
+                <div class="modal-body" id="modalVerifyText-Front">
+                    Text
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <!-- Template Main JS File -->

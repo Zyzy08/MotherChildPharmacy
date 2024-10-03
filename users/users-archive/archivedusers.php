@@ -181,7 +181,7 @@
         <section class="section users">
             <div class="row">
                 <div class="containerAddArchive">
-                    <div class="archived-users" id="toUsers">                        
+                    <div class="archived-users" id="toUsers">
                         <img src="../../resources/img/left-arrow-3.png" alt="Users Button">Back to Users
                     </div>
                 </div>
@@ -232,13 +232,26 @@
             <span id="closeBtnAD" class="close-btn">&times;</span>
             <h2>Other Options</h2>
             <hr>
-            <form id="userFormAD" action="archiveAccount.php" method="post" enctype="multipart/form-data"
-                onsubmit="handleFormSubmit()">
-                <button id="unarchiveUserBtn" type="button"><img src="../../resources/img/archive.png"> Unarchive User
-                    Account</button>
-                <button id="deleteUserBtn" type="button"><img src="../../resources/img/delete.png"> Delete User
-                    Permanently</button>
-            </form>
+            <button id="unarchiveUserBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD"><img src="../../resources/img/archive.png"> Unarchive User
+                Account</button>
+            <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalVerifyTitle-AD">Confirmation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                id="modalClose-AD"></button>
+                        </div>
+                        <div class="modal-body" id="modalVerifyText-AD">
+                            Are you sure you want to do this?
+                        </div>
+                        <div class="modal-footer" id="modal-footer-AD">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-primary" id="modalYes">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- End of Overlay for Archive/Delete -->

@@ -4,7 +4,6 @@ const overlayAD = document.getElementById('overlayAD');
 const closeBtnAD = document.getElementById('closeBtnAD');
 
 const AccountID = document.getElementById('AccountID');
-const deleteUserBtn = document.getElementById('deleteUserBtn');
 //etc
 const tableBody = document.getElementById('tableBody');
 const optUserBtn = document.getElementById('optionsUser');
@@ -44,41 +43,6 @@ function updateTable(data) {
     // Draw the updated table
     table.draw();
 }
-
-deleteUserBtn.addEventListener('click', function () {
-    let confirmationUser = confirm("Are you sure you want to delete this user?");
-    if (confirmationUser === true) {
-        // if(){
-
-        // }
-        if (!selectedUser || selectedUser.trim() === '') {
-            alert('No user selected.');
-            return;
-        }
-
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '../deleteUser.php', true);
-        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-
-        // Handle the response
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                const response = JSON.parse(xhr.responseText);
-            } else {
-                alert('Error: ' + xhr.status);
-            }
-        };
-
-
-        xhr.send(JSON.stringify({ accountName: selectedUser }));
-        alert("User deleted successfully!");
-        setTimeout(() => {
-            window.location.href = 'archivedusers.php'; // Redirect on success
-        }, 100);
-    } else {
-
-    }
-});
 
 function showDeleteOptions(accountName) {
     selectedUser = accountName;
@@ -129,9 +93,21 @@ function setDataTables() {
 
 // Archiving Accounts
 const unarchiveUserBtn = document.getElementById('unarchiveUserBtn');
+const modalYes = document.getElementById('modalYes');
+const modalVerifyTextAD = document.getElementById('modalVerifyText-AD');
+const modalVerifyTitleAD = document.getElementById('modalVerifyTitle-AD');
+const modalFooterAD = document.getElementById('modal-footer-AD');
+const modalCloseAD = document.getElementById('modalClose-AD');
+let modalStatus = '';
+
 unarchiveUserBtn.addEventListener('click', function () {
-    let confirmationUser = confirm("Are you sure you want to unarchive this user?");
-    if (confirmationUser === true) {
+    modalVerifyTextAD.textContent = 'Are you sure you want to unarchive this user?'
+    modalStatus = 'archive';
+})
+
+
+modalYes.addEventListener('click', function () {
+    if (modalStatus === 'archive') {
         if (!selectedUser || selectedUser.trim() === '') {
             alert('No user selected.');
             return;
@@ -150,10 +126,14 @@ unarchiveUserBtn.addEventListener('click', function () {
         };
 
         xhr.send(JSON.stringify({ accountName: selectedUser }));
-        alert("User unarchived successfully!");
+        //Extra
+        modalFooterAD.style.display = 'none'; // Set display to none to hide it
+        modalCloseAD.style.display = 'none';
+        modalVerifyTextAD.textContent = 'User has been unarchived successfully!';
+        modalVerifyTitleAD.textContent = 'Success';
         setTimeout(() => {
             window.location.href = 'archivedusers.php';
-        }, 100);
+        }, 1000);
     }
 });
 

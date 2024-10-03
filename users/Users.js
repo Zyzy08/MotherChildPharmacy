@@ -50,7 +50,7 @@ const accountNameEdit = document.getElementById('accountNameEdit');
 const passwordEdit = document.getElementById('passwordEdit');
 const previewEdit = document.getElementById('previewEdit');
 const AccountID = document.getElementById('AccountID');
-const deleteUserBtn = document.getElementById('deleteUserBtn');
+// const deleteUserBtn = document.getElementById('deleteUserBtn');
 //etc
 const usersNum = document.getElementById('usersNum');
 const tableBody = document.getElementById('tableBody');
@@ -202,7 +202,7 @@ function fetchUserDetails(accountName) {
                 resetPermissionsEdit();
 
                 // Update checkboxes based on the permissions data
-                SuppliersPermsEdit.checked = data.SuppliersPerms === 'on'; 
+                SuppliersPermsEdit.checked = data.SuppliersPerms === 'on';
                 TransactionsPermsEdit.checked = data.TransactionsPerms === 'on';
                 InventoryPermsEdit.checked = data.InventoryPerms === 'on';
                 POSPermsEdit.checked = data.POSPerms === 'on';
@@ -223,41 +223,44 @@ function fetchUserDetails(accountName) {
 }
 
 
-deleteUserBtn.addEventListener('click', function () {
-    let confirmationUser = confirm("Are you sure you want to delete this user?");
-    if (confirmationUser === true) {
-        // if(){
+// deleteUserBtn.addEventListener('click', function () {
+//     let confirmationUser = confirm("Are you sure you want to delete this user?");
+//     if (confirmationUser === true) {
+//         // if(){
 
-        // }
-        if (!selectedUser || selectedUser.trim() === '') {
-            alert('No user selected.');
-            return;
-        }
+//         // }
+//         if (!selectedUser || selectedUser.trim() === '') {
+//             alert('No user selected.');
+//             return;
+//         }
 
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'deleteUser.php', true);
-        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+//         const xhr = new XMLHttpRequest();
+//         xhr.open('POST', 'deleteUser.php', true);
+//         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 
-        // Handle the response
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                const response = JSON.parse(xhr.responseText);
-                document.getElementById('modalMessage').textContent = response.message;
-            } else {
-                alert('Error: ' + xhr.status);
-            }
-        };
+//         // Handle the response
+//         xhr.onload = function () {
+//             if (xhr.status >= 200 && xhr.status < 300) {
+//                 const response = JSON.parse(xhr.responseText);
+//                 document.getElementById('modalMessage').textContent = response.message;
+//             } else {
+//                 alert('Error: ' + xhr.status);
+//             }
+//         };
 
 
-        xhr.send(JSON.stringify({ accountName: selectedUser }));
-        alert("User deleted successfully!");
-        setTimeout(() => {
-            window.location.href = 'users.php'; // Redirect on success
-        }, 100);
-    } else {
+//         xhr.send(JSON.stringify({ accountName: selectedUser }));
+//         alert("User deleted successfully!");
+//         setTimeout(() => {
+//             window.location.href = 'users.php'; // Redirect on success
+//         }, 100);
+//     } else {
 
-    }
-});
+//     }
+// });
+
+const modalVerifyTitleFront = document.getElementById('modalVerifyTitle-Front');
+const modalVerifyTextFront = document.getElementById('modalVerifyText-Front');
 
 document.getElementById('userForm').addEventListener('submit', function (event) {
     document.getElementById('accountName').disabled = false;
@@ -281,9 +284,11 @@ document.getElementById('userForm').addEventListener('submit', function (event) 
     })
         .then(response => response.json())
         .then(data => {
-            alert(data.message);
-
             if (data.success) {
+                const confirmationModalFront = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
+                modalVerifyTitleFront.textContent = 'Success';
+                modalVerifyTextFront.textContent = 'User was added succesfully!';
+                confirmationModalFront.show();
                 setTimeout(() => {
                     window.location.href = 'users.php'; // Redirect on success
                 }, 1000);
@@ -316,12 +321,13 @@ document.getElementById('userFormEdit').addEventListener('submit', function (eve
     })
         .then(response => response.json())
         .then(data => {
-            alert(data.message);
+            const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+            confirmationModal.show();
 
             if (data.success) {
                 setTimeout(() => {
                     window.location.href = 'users.php'; // Redirect on success
-                }, 100);
+                }, 1000);
             }
         })
         .catch(error => {
@@ -370,7 +376,7 @@ closeBtnAD.addEventListener('click', closeADOverlay);
 
 let newID = 0;
 const newEmployeeID = document.getElementById('newEmployeeID');
-addUserBtn.addEventListener('click', function(event) {
+addUserBtn.addEventListener('click', function (event) {
     showOverlay();
     fetch('getNewAccountID.php')
         .then(response => response.json())
@@ -385,35 +391,35 @@ addUserBtn.addEventListener('click', function(event) {
         .catch(error => console.error('Error fetching data:', error));
 });
 
-username.addEventListener('input', function(event){
+username.addEventListener('input', function (event) {
     let firstName = username.value;
     let firstLetter = firstName.charAt(0).toLowerCase();
     let lastName = userlname.value.toLowerCase();
     let code = '';
-    if(newID < 10){
+    if (newID < 10) {
         code = 'E00' + newID + '_';
-    }else if(newID < 100){
+    } else if (newID < 100) {
         code = 'E0' + newID + '_';
-    }else{
+    } else {
         code = 'E' + newID + '_';
     }
 
     accountName.value = code + firstLetter + lastName;
 });
 
-userlname.addEventListener('input', function(event){
+userlname.addEventListener('input', function (event) {
     let firstName = username.value;
     let firstLetter = firstName.charAt(0).toLowerCase();
     let lastName = userlname.value.toLowerCase();
     let code = '';
     let code2 = '';
-    if(newID < 10){
+    if (newID < 10) {
         code = '-e00' + newID;
         code2 = 'E00' + newID + '_';
-    }else if(newID < 100){
+    } else if (newID < 100) {
         code = '-e0' + newID;
         code2 = 'E0' + newID + '_';
-    }else{
+    } else {
         code = '-e' + newID;
         code2 = 'E' + newID + '_';
     }
@@ -474,13 +480,13 @@ const POSPerms = document.getElementById('POSPerms');
 const REPerms = document.getElementById('REPerms');
 const POPerms = document.getElementById('POPerms');
 
-permsToggle.addEventListener('click', function(){
-    if(permsToggleStatus === 1){
+permsToggle.addEventListener('click', function () {
+    if (permsToggleStatus === 1) {
         permsToggle.src = '../resources/img/toggle-off.png';
         permsToggleStatus = 0;
         setCheckboxesDisabled(true); // Disable checkboxes
         permissionsSelectContainer.classList.remove('enabled'); // Remove enabled class
-    }else{
+    } else {
         permsToggleStatus = 1;
         permsToggle.src = '../resources/img/toggle-on.png';
         setCheckboxesDisabled(false); // Enable checkboxes
@@ -495,20 +501,20 @@ function setCheckboxesDisabled(disabled) {
     });
 }
 
-function setPAPermissions(){
+function setPAPermissions() {
     TransactionsPerms.checked = true;
     POSPerms.checked = true;
     REPerms.checked = true;
 }
 
-function setAdminPermissions(){
+function setAdminPermissions() {
     checkboxes.forEach(checkbox => {
         checkbox.checked = true;
     });
 }
 
-function resetPermissions(){
-    if (permsToggleStatus == 1){
+function resetPermissions() {
+    if (permsToggleStatus == 1) {
         permissionsSelectContainer.classList.remove('enabled');
         permsToggle.src = '../resources/img/toggle-off.png';
         setCheckboxesDisabled(true);
@@ -525,9 +531,9 @@ function handleSelectChange(event) {
     const selectedValue = event.target.value; // Get the selected value
     if (selectedValue === "Pharmacy Assistant") {
         setPAPermissions();
-    }else if (selectedValue === "Admin") {
+    } else if (selectedValue === "Admin") {
         setAdminPermissions();
-    }else if (selectedValue === "Purchaser"){
+    } else if (selectedValue === "Purchaser") {
         setAdminPermissions();
         UsersPerms.checked = false;
     }
@@ -551,13 +557,13 @@ const POSPermsEdit = document.getElementById('POSPermsEdit');
 const REPermsEdit = document.getElementById('REPermsEdit');
 const POPermsEdit = document.getElementById('POPermsEdit');
 
-permsToggleEdit.addEventListener('click', function(){
-    if(permsToggleStatusEdit === 1){
+permsToggleEdit.addEventListener('click', function () {
+    if (permsToggleStatusEdit === 1) {
         permsToggleEdit.src = '../resources/img/toggle-off.png';
         permsToggleStatusEdit = 0;
         setCheckboxesEditDisabled(true); // Disable checkboxes
         permissionsSelectContainerEdit.classList.remove('enabled'); // Remove enabled class
-    }else{
+    } else {
         permsToggleStatusEdit = 1;
         permsToggleEdit.src = '../resources/img/toggle-on.png';
         setCheckboxesEditDisabled(false); // Enable checkboxes
@@ -571,20 +577,20 @@ function setCheckboxesEditDisabled(disabled) {
     });
 }
 
-function setPAPermissionsEdit(){
+function setPAPermissionsEdit() {
     TransactionsPermsEdit.checked = true;
     POSPermsEdit.checked = true;
     REPermsEdit.checked = true;
 }
 
-function setAdminPermissionsEdit(){
+function setAdminPermissionsEdit() {
     checkboxesEdit.forEach(checkbox => {
         checkbox.checked = true;
     });
 }
 
-function resetPermissionsEdit(){
-    if (permsToggleStatusEdit == 1){
+function resetPermissionsEdit() {
+    if (permsToggleStatusEdit == 1) {
         permissionsSelectContainerEdit.classList.remove('enabled');
         permsToggleEdit.src = '../resources/img/toggle-off.png';
         setCheckboxesEditDisabled(true);
@@ -601,9 +607,9 @@ function handleSelectChangeEdit(event) {
     const selectedValueEdit = event.target.value; // Get the selected value
     if (selectedValueEdit === "Pharmacy Assistant") {
         setPAPermissionsEdit();
-    }else if (selectedValueEdit === "Admin") {
+    } else if (selectedValueEdit === "Admin") {
         setAdminPermissionsEdit();
-    }else if (selectedValueEdit === "Purchaser"){
+    } else if (selectedValueEdit === "Purchaser") {
         setAdminPermissionsEdit();
         UsersPermsEdit.checked = false;
     }
@@ -612,10 +618,29 @@ function handleSelectChangeEdit(event) {
 roleEdit.addEventListener('change', handleSelectChangeEdit);
 
 // Archiving Accounts
+// Resetting to Default Password
+const resetPasswordBtn = document.getElementById('resetPasswordBtn');
 const archiveUserBtn = document.getElementById('archiveUserBtn');
-archiveUserBtn.addEventListener('click', function() {
-    let confirmationUser = confirm("Are you sure you want to archive this user?");
-    if (confirmationUser === true) {
+const modalVerifyTextAD = document.getElementById('modalVerifyText-AD');
+const modalVerifyTitleAD = document.getElementById('modalVerifyTitle-AD');
+const modalFooterAD = document.getElementById('modal-footer-AD');
+const modalCloseAD = document.getElementById('modalClose-AD');
+
+let modalStatus = '';
+
+archiveUserBtn.addEventListener('click', function () {
+    modalVerifyTextAD.textContent = 'Are you sure you want to archive this user?'
+    modalStatus = 'archive';
+})
+
+resetPasswordBtn.addEventListener('click', function () {
+    modalVerifyTextAD.textContent = 'Are you sure you want to reset the password of this user?'
+    modalStatus = 'resetPass';
+})
+
+const modalYes = document.getElementById('modalYes');
+modalYes.addEventListener('click', function () {
+    if (modalStatus === 'archive') {
         if (!selectedUser || selectedUser.trim() === '') {
             alert('No user selected.');
             return;
@@ -635,18 +660,16 @@ archiveUserBtn.addEventListener('click', function() {
         };
 
         xhr.send(JSON.stringify({ accountName: selectedUser }));
-        alert("User archived successfully!");
+        //Extra
+        modalFooterAD.style.display = 'none'; // Set display to none to hide it
+        modalCloseAD.style.display = 'none';
+        modalVerifyTextAD.textContent = 'User has been archived successfully!';
+        modalVerifyTitleAD.textContent = 'Success';
         setTimeout(() => {
             window.location.href = 'users.php';
-        }, 100);
+        }, 1000);
     }
-});
-
-// Resetting to Default Password
-const resetPasswordBtn = document.getElementById('resetPasswordBtn');
-resetPasswordBtn.addEventListener('click', function() {
-    let confirmationUser = confirm("Are you sure you want to reset the password of this user?");
-    if (confirmationUser === true) {
+    else if (modalStatus === 'resetPass') {
         if (!selectedUser || selectedUser.trim() === '') {
             alert('No user selected.');
             return;
@@ -665,33 +688,37 @@ resetPasswordBtn.addEventListener('click', function() {
         };
 
         xhr.send(JSON.stringify({ accountName: selectedUser }));
-        alert("Password reset successfully!");
+        //Extra
+        modalFooterAD.style.display = 'none'; // Set display to none to hide it
+        modalCloseAD.style.display = 'none';
+        modalVerifyTextAD.textContent = 'User password has been reset successfully!';
+        modalVerifyTitleAD.textContent = 'Success';
         setTimeout(() => {
             window.location.href = 'users.php';
-        }, 100);
+        }, 1000);
     }
 });
 
 const toArchivedUsers = document.getElementById('toArchivedUsers');
-toArchivedUsers.addEventListener('click', function(){
+toArchivedUsers.addEventListener('click', function () {
     window.location.href = 'users-archive/archivedusers.php';
 });
 
-employeeNameEdit.addEventListener('input', function(event){
+employeeNameEdit.addEventListener('input', function (event) {
     updateAccountNameEditField();
 });
 
-employeeLNameEdit.addEventListener('input', function(event){
+employeeLNameEdit.addEventListener('input', function (event) {
     updateAccountNameEditField();
 });
 
-function updateAccountNameEditField(){
+function updateAccountNameEditField() {
     let code = '';
-    if(currentEmployeeID.value < 10){
+    if (currentEmployeeID.value < 10) {
         code = 'E00';
-    }else if(currentEmployeeID.value < 100){
+    } else if (currentEmployeeID.value < 100) {
         code = 'E0';
-    }else{
+    } else {
         code = 'E';
     }
 
