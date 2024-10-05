@@ -68,7 +68,7 @@ async function loadProducts() {
         const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure); // Format the unit
         let stockBadge = ''; // Initialize an empty string for the stock badge
     
-       // Check the stock level and set the appropriate badge
+        // Check the stock level and set the appropriate badge
         if (product.InStock == 0) {
             stockBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
         } else if (product.InStock < 50 && product.InStock > 0) {
@@ -91,7 +91,8 @@ async function loadProducts() {
                             </div>
                         </div>
                         <h5 class="card-title">${product.BrandName}</h5>
-                        <p class="card-text">${product.GenericName}</p>
+                        <p class="card-text generic-name">${product.GenericName}</p>
+                        <p class="card-text full-generic-name" style="display: none;">${product.GenericName}</p>
                     </div>
                 </div>
             </div>
@@ -102,6 +103,7 @@ async function loadProducts() {
     // Reattach event listeners to the newly loaded cards
     attachCardListeners();
     updatePaginationControls(); // Update pagination after loading products
+    truncateGenericNames(); // Truncate generic names after loading products
 
     // If there's a search query, select the first card
     if (searchQuery && paginatedProducts.length > 0) {
@@ -110,6 +112,18 @@ async function loadProducts() {
             highlightCard(firstCard);
         }
     }
+}
+
+// Function to truncate generic names
+function truncateGenericNames() {
+    const genericNames = document.querySelectorAll('.generic-name');
+    genericNames.forEach(name => {
+        const text = name.textContent;
+        const words = text.split(' ');
+        if (words.length > 1) {
+            name.textContent = words[0] + '...';
+        }
+    });
 }
 
 function updatePaginationControls() {
@@ -197,13 +211,23 @@ function highlightCard(card) {
     if (card.getAttribute('data-id') === selectedCardId) {
         card.classList.remove('active');
         localStorage.removeItem('selectedCardId');
+        // Hide full generic name and show truncated version
+        card.querySelector('.full-generic-name').style.display = 'none';
+        card.querySelector('.generic-name').style.display = 'block';
     } else {
         const cards = document.querySelectorAll('.clickable-card');
-        cards.forEach(c => c.classList.remove('active'));
+        cards.forEach(c => {
+            c.classList.remove('active');
+            c.querySelector('.full-generic-name').style.display = 'none';
+            c.querySelector('.generic-name').style.display = 'block';
+        });
         card.classList.add('active');
         localStorage.setItem('selectedCardId', card.getAttribute('data-id'));
+        // Show full generic name and hide truncated version
+        card.querySelector('.full-generic-name').style.display = 'block';
+        card.querySelector('.generic-name').style.display = 'none';
     }
-}    
+}
 
 // Add event listener for the search input
 const searchInput = document.querySelector('input[name="query"]');
@@ -277,11 +301,20 @@ loadProducts();
 let basket = [];
 let basketTotal = 0;
 
+
+function showToast(message) {
+    const toastBody = document.querySelector('#alert-toast .toast-body');
+    toastBody.textContent = message; // Set the custom message
+
+    const toast = new bootstrap.Toast(document.getElementById('alert-toast'));
+    toast.show(); // Show the toast
+}
+
 // Function to add item to the basket
 function addItemToBasket() {
     const selectedCard = document.querySelector('.clickable-card.active');
     if (!selectedCard) {
-        alert("Please select a product first.");
+        showToast("Please select a product first.");
         return;
     }
 
@@ -289,7 +322,7 @@ function addItemToBasket() {
     const quantity = parseInt(quantityInput.value, 10);
     
     if (quantity < 1 || isNaN(quantity)) {
-        alert("Please enter a valid quantity.");
+        showToast("Please enter a valid quantity.");
         return;
     }
 
@@ -322,8 +355,6 @@ function addItemToBasket() {
 
     updateBasketDisplay();
     updateCheckoutButtonState();
-    // Remove highlight and reset quantity
-    //selectedCard.classList.remove('active');
     quantityInput.value = ''; // Reset quantity input
     searchInput.focus(); // Set focus back to the search input
 }
@@ -425,25 +456,149 @@ function updateModalTotal() {
 
     if (document.getElementById('seniorCitizenCheckbox').checked) discountPercentage += 20;
     if (document.getElementById('promoCheckbox').checked) discountPercentage += 10;
-    if (document.getElementById('otherDiscountCheckbox').checked) discountPercentage += 5;
 
     const discountAmount = basketTotal * (discountPercentage / 100);
     const discountedTotal = basketTotal - discountAmount;
 
     document.getElementById('total-display').textContent = `Total: ₱${discountedTotal.toFixed(2)}`;
+}
+
+// Store for receipt items
+let receiptItems = [];
+
+// Function to generate receipt items from basket and update the receipt display
+function generateReceiptItems() {
+    // Generate receipt items from the basket
+    receiptItems = basket.map(item => ({
+        quantity: item.quantity,
+        item_name: item.BrandName,
+        total_item_price: (item.PricePerUnit * item.quantity).toFixed(2) // Calculate total item price for each item
+    }));
+
+    // Update total items, subtotal, tax, and amount due display
+    updateTotalItemsDisplay(); // Update total items
+    updateSubtotalDisplay(); // Update subtotal display
+    updateTaxDisplay(); // Update tax display
+    updateAmountDueDisplay(); // Update amount due display
+}
+
+// Function to update total items display
+function updateTotalItemsDisplay() {
+    const totalQuantity = receiptItems.reduce((total, item) => total + item.quantity, 0); // Calculate total quantity
+    document.getElementById('total-items').textContent = totalQuantity; // Update HTML using the ID
+}
+
+// Function to update subtotal display
+function updateSubtotalDisplay() {
+    const subtotal = receiptItems.reduce((total, item) => total + parseFloat(item.total_item_price), 0).toFixed(2); // Calculate subtotal
+    document.getElementById('sub-total').textContent = `₱${subtotal}`; // Update subtotal display
+}
+
+// Function to update tax display
+function updateTaxDisplay() {
+    const subtotal = receiptItems.reduce((total, item) => total + parseFloat(item.total_item_price), 0); // Calculate subtotal for tax calculation
+    const tax = (subtotal * 0.12).toFixed(2); // Calculate 12% tax
+    document.getElementById('tax').textContent = `₱${tax}`; // Update tax display
+}
+
+// Function to update amount due display
+function updateAmountDueDisplay() {
+    const subtotal = receiptItems.reduce((total, item) => total + parseFloat(item.total_item_price), 0); // Calculate subtotal
+    const tax = (subtotal * 0.12); // Calculate 12% tax
+    const amountDue = (parseFloat(subtotal) + parseFloat(tax)).toFixed(2); // Calculate total amount due
+    document.getElementById('amount-due').textContent = `₱${amountDue}`; // Update amount due display
+}
+
+// Function to display receipt items
+function displayReceiptItems() {
+    const receiptContainer = document.getElementById('receiptItems');
+    receiptContainer.innerHTML = ''; // Clear existing items
     
-    // Update the charge input minimum
-    updateChargeMinimum(discountedTotal);
+    // Create header row
+    const headerHTML = `
+        <div class="row text-center mb-2">
+            <div class="col-4">
+                <small><strong>Quantity</strong></small>
+            </div>
+            <div class="col-4">
+                <small><strong>Item</strong></small>
+            </div>
+            <div class="col-3">
+                <small><strong>Price</strong></small>
+            </div>
+        </div>
+    `;
+    receiptContainer.insertAdjacentHTML('beforeend', headerHTML);
+    
+    // Add each item
+    receiptItems.forEach(item => {
+        const itemHTML = `
+            <div class="row text-center">
+                <div class="col-4">
+                    <small>${item.quantity}</small>
+                </div>
+                <div class="col-4">
+                    <small>${item.item_name}</small>
+                </div>
+                <div class="col-3">
+                    <small>₱${item.total_item_price}</small>
+                </div>
+            </div>
+        `;
+        receiptContainer.insertAdjacentHTML('beforeend', itemHTML);
+    });
 }
 
-function updateChargeMinimum(total) {
-    const chargeInput = document.querySelector('#verticalycentered input[type="number"]');
-    chargeInput.min = total.toFixed(2);
-    chargeInput.value = total.toFixed(2); // Optionally set the initial value to the total
+// Function to update payment display
+function updatePaymentDisplay() {
+    const paymentValue = document.getElementById("paymentInput").value;
+    const payment = parseFloat(paymentValue) || 0;
+    document.getElementById("payment").textContent = `₱${payment.toFixed(2)}`;
 }
 
-// Add event listener to update charge when total changes
-document.getElementById('total-display').addEventListener('DOMSubtreeModified', function() {
-    const total = parseFloat(this.textContent.replace('Total: ₱', ''));
-    updateChargeMinimum(total);
+// Function to update change display
+function updateChangeDisplay() {
+    const paymentValue = document.getElementById("paymentInput").value;
+    const payment = parseFloat(paymentValue) || 0;
+    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g,""));
+    const change = payment - amountDue;
+    document.getElementById("change").textContent = `₱${Math.max(0, change).toFixed(2)}`;
+}
+
+// Modify the existing checkout button event listener
+document.getElementById('checkout').addEventListener('click', function() {
+    generateReceiptItems();
+    displayReceiptItems();
+    updatePaymentDisplay();
+    updateChangeDisplay();
 });
+
+// Update payment input event listener
+document.getElementById('paymentInput').addEventListener('input', function() {
+    const payment = parseFloat(this.value) || 0;
+    const totalAmount = parseFloat(document.getElementById('total-display').textContent.replace(/[^0-9.-]+/g,""));
+    const change = payment - totalAmount;
+    
+    const confirmButton = document.getElementById('confirm-button');
+    
+    if (payment >= totalAmount) {
+        confirmButton.removeAttribute('disabled');
+        document.getElementById('change-display').textContent = `Change: ₱${change.toFixed(2)}`;
+    } else {
+        confirmButton.setAttribute('disabled', 'true');
+        document.getElementById('change-display').textContent = 'Change: ₱0.00';
+    }
+    
+    // Update the receipt modal as well
+    updatePaymentDisplay();
+    updateChangeDisplay();
+});
+
+document.getElementById('cancel-receipt').addEventListener('click', function() {
+    // After dismissing the current modal, show the Checkout modal again
+    setTimeout(() => {
+        const checkoutModal = new bootstrap.Modal(document.getElementById('verticalycentered')); // Select the checkout modal
+        checkoutModal.show(); // Reopen the checkout modal
+    }, 100); // Optional delay for smooth modal transition
+});
+

@@ -1279,6 +1279,8 @@
   .clickable-card {
     cursor: pointer;
     transition: background-color 0.3s, box-shadow 0.3s;
+    height: 280px; /* Set a fixed height for the cards */
+    overflow: hidden;
   }
 
   .clickable-card:hover {
@@ -1286,6 +1288,25 @@
   }
 
   .clickable-card.active {
+    height: auto; /* Allow the card to expand when active */
     background-color: #e0e0e0; /* Highlight color when clicked */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .card-text {
+      margin-bottom: 0;
+  }
+
+  .full-generic-name {
+      margin-top: 10px;
+  }
+
+  input[class="form-control no-arrows"]::-webkit-outer-spin-button,
+  input[class="form-control no-arrows"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    appearance: textfield;
   }
