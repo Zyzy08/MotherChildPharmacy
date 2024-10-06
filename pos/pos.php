@@ -1,5 +1,7 @@
 <?php include '../fetchUser.php'; ?>
 <?php include 'fetchProductData.php'; ?>
+<?php include 'fetchOrderNumber.php'; ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -91,6 +93,19 @@
       </ul>
     </nav><!-- End Icons Navigation -->
 
+    <!-- Error Dialog -->
+    <div class="toast-container position-fixed top-0 end-0 p-3"><div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+      <div id="alert-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+              <strong class="me-auto">Error</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+              Enter a valid quantity.
+          </div>
+      </div>
+    </div>
+
   </header><!-- End Header -->
 
   <!-- ======= Sidebar ======= -->
@@ -99,57 +114,64 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="../dashboard/dashboard.php">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
+          <a class="nav-link collapsed" href="../dashboard/dashboard.php">
+              <i class="bi bi-grid"></i>
+              <span>Dashboard</span>
+          </a>
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-heading"></li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="../suppliers/suppliers.html">
-          <i class="bi bi-truck"></i>
-          <span>Suppliers</span>
-        </a>
+          <a class="nav-link collapsed" href="../suppliers/suppliers.php">
+              <i class="bi bi-truck"></i>
+              <span>Suppliers</span>
+          </a>
       </li><!-- End Suppliers Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../transactions/transactions.php">
+      <a class="nav-link collapsed" href="../transactions/transactions.php">
           <i class="bi bi-cash-coin"></i>
           <span>Transactions</span>
-        </a>
+      </a>
       </li><!-- End Transactions Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../inventory/inventory.php">
-          <i class="bi bi-box-seam"></i>
-          <span>Inventory</span>
-        </a>
-      </li><!-- End Inventory Page Nav -->
+      <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
+          <i class="bi bi-mailbox"></i>
+          <span>Purchase Orders</span>
+      </a>
+      </li><!-- End Purchase Order Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../returnexchange/return.html">
-          <i class="bi bi-cart-dash"></i>
-          <span>Return & Exchange</span>
-        </a>
-      </li><!-- End Return & Exchange Page Nav -->
+      <a class="nav-link collapsed" href="../inventory/inventory.php">
+          <i class="bi bi-box-seam"></i>
+          <span>Inventory</span>
+      </a>
+      </li><!-- End Inventory Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="../users/users.php">
-          <i class="bi bi-person"></i>
-          <span>Users</span>
-        </a>
+          <a class="nav-link collapsed" href="../users/users.php">
+              <i class="bi bi-person"></i>
+              <span>Users</span>
+          </a>
       </li><!-- End Users Page Nav -->
 
       <li class="nav-heading"></li>
 
       <li class="nav-item"></li>
-        <a class="nav-link" href="pos.php">
+      <a class="nav-link" href="pos.php">
           <i class="bi bi-printer"></i>
           <span>POS</span>
-        </a>
+      </a>
       </li><!-- End POS Page Nav -->
+
+      <li class="nav-item"></li>
+      <a class="nav-link collapsed" href="../returnexchange/return.html">
+          <i class="bi bi-cart-dash"></i>
+          <span>Return & Exchange</span>
+      </a>
+      </li><!-- End Return & Exchange Page Nav -->
 
     </ul>
 
@@ -276,7 +298,7 @@
                           <p id="basket-total">₱0.00</p>
                       </div>
                       <div class="d-grid gap-2 mt-3">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
+                        <button id="checkout" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
                           Checkout
                         </button>
                       </div>
@@ -304,22 +326,21 @@
               <input class="form-check-input" type="checkbox" id="promoCheckbox">
               <label class="form-check-label" for="promoCheckbox">Promotional (10%)</label>
             </div>
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="otherDiscountCheckbox">
-              <label class="form-check-label" for="otherDiscountCheckbox">Other (5%)</label>
-            </div>
             <br><h2 id="total-display" style="font-weight: bold;">Total: ₱0.00</h2><br>
+
             <div class="row mb-0">
-              <h2 for="inputNumber" class="col-sm-5" style="font-weight: bold;">Charge: ₱</h2>
+              <h2 for="paymentInput" class="col-sm-5" style="font-weight: bold;">Payment: ₱</h2>
               <div class="col-sm-6">
-                <input type="number" class="form-control" min="1">
+                <input type="number" id="paymentInput" class="form-control no-arrows" min="1" placeholder="0">
               </div>
             </div>
+
+            <br><h2 id="change-display" style="font-weight: bold;">Change: ₱0.00</h2>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             <div class="d-grid gap-2">
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal">
+              <button id="confirm-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal" disabled>
                 Confirm
               </button>
             </div>
@@ -342,49 +363,15 @@
             ---------------------------------------------------------------------------------
           </h6><br>
           <div class="modal-body">
-          <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
+            <div id="receiptItems"></div> <!-- Container for receipt items -->
           </div>
+          
           <div class="row text-center justify-content-between">
             <div class="col-xl-5">
               <small>Total Items:</small>
             </div>
             <div class="col-xl-5">
-              <small>0</small>
+              <small id="total-items">0</small>
             </div>
           </div>
 
@@ -393,7 +380,7 @@
               <small>Subtotal:</small>
             </div>
             <div class="col-xl-5">
-              <small>₱0.00</small>
+              <small id="sub-total">₱0.00</small>
             </div>
           </div>
 
@@ -402,7 +389,7 @@
               <small>Tax 12%:</small>
             </div>
             <div class="col-xl-5">
-              <small>₱0.00</small>
+              <small id="tax">₱0.00</small>
             </div>
           </div>
 
@@ -411,16 +398,16 @@
               <small>Amount Due:</small>
             </div>
             <div class="col-xl-5">
-              <small >₱0.00</small>
+              <small id="amount-due">₱0.00</small>
             </div>
           </div>
 
           <div class="row text-center justify-content-between">
             <div class="col-xl-5">
-              <small>Charge:</small>
+              <small>Payment:</small>
             </div>
             <div class="col-xl-5">
-              <small>₱0.00</small>
+              <small id="payment">₱0.00</small>
             </div>
           </div>
 
@@ -429,7 +416,7 @@
               <small>Change:</small>
             </div>
             <div class="col-xl-5">
-              <small>₱0.00</small>
+              <small id="change">₱0.00</small>
             </div>
           </div>
 
@@ -439,7 +426,7 @@
 
           <div class="row text-center justify-content-between">
             <div class="col-xl-6">
-              <small>Order No.: #0000000</small>
+              <small id="order-num">Order No.: #0000000</small>
             </div>
             <div class="col-xl-6">
               <small>Date: <?php echo date('F j, Y'); ?></small>
@@ -451,22 +438,27 @@
               <small>Staff: <?php echo htmlspecialchars($employeeFullName); ?></small>
             </div>
             <div class="col-xl-6">
-              <small>Time: <?php echo date('h:i A'); ?></small>
+              <small>Time: 
+                <?php date_default_timezone_set('Asia/Manila'); // Set timezone to GMT+8
+                echo date('h:i A');?>
+              </small>
             </div>
           </div>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
+            <button id="cancel-receipt" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+
             <div class="d-grid gap-2">
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">
-                Confirm
+              <button id="print-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">
+                Print
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
+
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->

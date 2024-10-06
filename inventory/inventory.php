@@ -109,57 +109,64 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="../dashboard/dashboard.php">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
+          <a class="nav-link collapsed" href="../dashboard/dashboard.php">
+              <i class="bi bi-grid"></i>
+              <span>Dashboard</span>
+          </a>
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-heading"></li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="../suppliers2/suppliers.php">
-          <i class="bi bi-truck"></i>
-          <span>Suppliers</span>
-        </a>
+          <a class="nav-link collapsed" href="../suppliers/suppliers.php">
+              <i class="bi bi-truck"></i>
+              <span>Suppliers</span>
+          </a>
       </li><!-- End Suppliers Page Nav -->
 
       <li class="nav-item"></li>
       <a class="nav-link collapsed" href="../transactions/transactions.php">
-        <i class="bi bi-cash-coin"></i>
-        <span>Transactions</span>
+          <i class="bi bi-cash-coin"></i>
+          <span>Transactions</span>
       </a>
       </li><!-- End Transactions Page Nav -->
 
       <li class="nav-item"></li>
-      <a class="nav-link" href="../inventory/inventory.php">
-        <i class="bi bi-box-seam"></i>
-        <span>Inventory</span>
+      <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
+          <i class="bi bi-mailbox"></i>
+          <span>Purchase Orders</span>
+      </a>
+      </li><!-- End Purchase Order Page Nav -->
+
+      <li class="nav-item"></li>
+      <a class="nav-link" href="inventory.php">
+          <i class="bi bi-box-seam"></i>
+          <span>Inventory</span>
       </a>
       </li><!-- End Inventory Page Nav -->
 
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../returnexchange/return.html">
-        <i class="bi bi-cart-dash"></i>
-        <span>Return & Exchange</span>
-      </a>
-      </li><!-- End Return & Exchange Page Nav -->
-
       <li class="nav-item">
-        <a class="nav-link collapsed" href="../users/users.php">
-          <i class="bi bi-person"></i>
-          <span>Users</span>
-        </a>
+          <a class="nav-link collapsed" href="../users/users.php">
+              <i class="bi bi-person"></i>
+              <span>Users</span>
+          </a>
       </li><!-- End Users Page Nav -->
 
       <li class="nav-heading"></li>
 
       <li class="nav-item"></li>
       <a class="nav-link collapsed" href="../pos/pos.php">
-        <i class="bi bi-printer"></i>
-        <span>POS</span>
+          <i class="bi bi-printer"></i>
+          <span>POS</span>
       </a>
       </li><!-- End POS Page Nav -->
+
+      <li class="nav-item"></li>
+      <a class="nav-link collapsed" href="../returnexchange/return.html">
+          <i class="bi bi-cart-dash"></i>
+          <span>Return & Exchange</span>
+      </a>
+      </li><!-- End Return & Exchange Page Nav -->
 
     </ul>
 
@@ -177,7 +184,19 @@
       </nav>
     </div><!-- End Page Title -->
 
-    <button class="Create_PO"><img src="../resources/img/add.png" alt="Add"> New Product</button>
+    <!--<button class="Create_PO"><img src="../resources/img/add.png" alt="Add"> New Product</button>
+    <div class="archived-users" id="toArchivedUsers">
+                        Archived Users<img src="../resources/img/right-arrow-3.png" alt="Archive Button">
+    </div>-->
+    <div class="row">
+        <div class="containerAddArchive">
+            <div class="button" id="addUser">
+                  <button class="Create_PO"><img src="../resources/img/add.png" alt="Add"> New Product</button>
+            </div>
+            <div class="archived-users" id="toArchivedUsers">
+                Archived Product<img src="../resources/img/right-arrow-3.png" alt="Archive Button">
+            </div>
+    </div>
 
     <!--<button class="deleteProduct">Delete Product</button>
     <button id="updateProduct">Update Product</button>-->
@@ -227,17 +246,18 @@
 
           <div>
             <label style="margin-right: 190px;" for="mass">Mass</label>
-            <label for="unitOfMeasure">Unit of Measure</label>
+            <label style="margin-right: 110px;" for="unitOfMeasure">Unit of Measure</label>
+            <label for="Discount">Discount</label>
 
           </div>
           <div class="textbox">
             <input style="margin-right: 30px;" type="text" id="mass" name="mass">
             <!--<input type="text" id="unitOfMeasure" name="unitOfMeasure">-->
-            <select class="unitOfMeasure" id="unitOfMeasure" name="unitOfMeasure">
+            <select style="margin-right: 30px;" class="unitOfMeasure" id="unitOfMeasure" name="unitOfMeasure">
               <option value=""></option>
               <option value="Kilograms">kg</option>
               <option value="Grams">g</option>
-              <option value="Milligrams">mg</option>
+              <option value="Milligrams">Mg</option>
               <option value="microgram">mcg/µg</option>
               <option value="nanogram">ng</option>
               <option value="Litre">L</option>
@@ -246,14 +266,22 @@
               <option value="mole">mol</option>
               <option value="	millimole">mmol</option>
             </select>
+            <select name="Discount" id="Discount">
+              <option value=""></option>
+              <option value="Yes">Available</option>
+              <option value="No">Unavailable</option>
+
+            </select>
 
           </div>
         </div>
         <div>
-          <label style="margin-right: 110px;" for="ProductCode">Product Code</label>
+          <label style="margin-right: 130px;" for="ProductCode">Product Code</label>
+          <label  for="InStock">Instock</label>
         </div>
         <div class="textbox">
-          <input type="text" id="productCode" name="ProductCode">
+          <input style="margin-right: 30px;" type="text" id="productCode" name="ProductCode">
+          <input type="text" id="InStock" name="InStock">
         </div>
         <div class=""></div>
 
@@ -321,14 +349,15 @@
                   <tr class="highlight-row">
                     <th style="text-align: center;">Item ID</th>
                     <th style="text-align: center;">Picture</th>
-                    <th style="text-align: center;">Product Code</th>
                     <th style="text-align: center;">Generic Name</th>
                     <th style="text-align: center;">Brand Name</th>
                     <th style="text-align: center;">Item Type</th>
-                    <th style="text-align: center;">Mass & Unit of Measurement</th>
-                    <th style="text-align: center;">Price Per Unit</th>
+                    <th style="text-align: center;">Measurement</th>
+                    <th style="text-align: center;">Price</th>
                     <!--<th style="text-align: center;">Status</th>-->
-                    <th style="text-align: center;">In Stock</th>
+                    <th style="text-align: center;">InStock</th>
+                    <th style="text-align: center;">Ordered</th>
+                    <th style="text-align: center;">ReorderLevel</th>
                     <th style="text-align: center;">Actions</th>
                   </tr>
                 </thead>

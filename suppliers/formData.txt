@@ -1,0 +1,7 @@
+{
+    "companyName": "Jollibee",
+    "agentName": "Daisy Duck",
+    "ContactNo": "09987652931",
+    "Email": "jollibee@business",
+    "Notes": ""
+}
