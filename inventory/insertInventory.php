@@ -28,12 +28,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $unitOfMeasure = $_POST['unitOfMeasure'] ?? '';
     $mass = $_POST['mass'] ?? '';
     $pricePerUnit = $_POST['pricePerUnit'] ?? '';
+    $Discount = $_POST['Discount'] ?? '';
     $InStock = $_POST['InStock'] ?? '';
     $notes = $_POST['notes'] ?? '';
     $status = $_POST['status'] ?? '';
 
     // Validate required fields
-    if (empty($productCode) || empty($itemType) || empty($brandName) || empty($genericName) || empty($unitOfMeasure) || empty($mass) || empty($pricePerUnit)) {
+    if (empty($productCode) || empty($itemType) || empty($brandName) || empty($genericName) || empty($unitOfMeasure) || empty($mass) || empty($pricePerUnit) || empty($Discount)) {
         echo json_encode(['success' => false, 'message' => 'Missing required fields']);
         exit;
     }
@@ -74,14 +75,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     // Prepare SQL statement to insert data
-    $stmt = $conn->prepare("INSERT INTO inventory (ProductCode, ItemType, BrandName, GenericName, UnitOfMeasure, Mass, PricePerUnit, InStock, Notes, Status, ProductIcon) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO inventory (ProductCode, ItemType, BrandName, GenericName, UnitOfMeasure, Mass, PricePerUnit, Discount, InStock, Notes, Status, ProductIcon) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?)");
     if ($stmt === false) {
         echo json_encode(['success' => false, 'message' => 'Prepare failed: ' . $conn->error]);
         exit;
     }
 
     // Bind the parameters
-    $stmt->bind_param("ssssssissss", $productCode, $itemType, $brandName, $genericName, $unitOfMeasure, $mass, $pricePerUnit, $InStock, $notes, $status, $iconPath);
+    $stmt->bind_param("ssssssisssss", $productCode, $itemType, $brandName, $genericName, $unitOfMeasure, $mass, $pricePerUnit, $Discount, $InStock, $notes, $status, $iconPath);
 
     // Execute the statement and check for success
     if ($stmt->execute()) {

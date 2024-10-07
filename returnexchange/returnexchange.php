@@ -10,7 +10,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>POS - Mother & Child Pharmacy and Medical Supplies</title>
+  <title>Return & Exchange - Mother & Child Pharmacy and Medical Supplies</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -31,8 +31,8 @@
   <link href="../resources/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="../resources/vendor/simple-datatables/style.css" rel="stylesheet">
 
-  <!-- POS CSS File -->
-  <link href="pos_styles.css" rel="stylesheet">
+  <!-- Return & Exchange CSS File -->
+  <link href="returnexchange.css" rel="stylesheet">
 
 </head>
 
@@ -43,7 +43,7 @@
 
     <div class="d-flex align-items-center justify-content-between">
       <i class="bi bi-list toggle-sidebar-btn"></i>
-      <a href="pos.php" class="logo d-flex align-items-center">
+      <a href="returnexchange.php" class="logo d-flex align-items-center">
         <img src="../resources/img/logo.png" alt="">
         <span class="d-none d-lg-block span1">Mother & Child</span>
         <span class="d-none d-lg-block span2">Pharmacy and Medical Supplies</span>
@@ -160,14 +160,14 @@
       <li class="nav-heading"></li>
 
       <li class="nav-item"></li>
-      <a class="nav-link" href="pos.php">
+      <a class="nav-link" href="../pos/pos.php">
           <i class="bi bi-printer"></i>
           <span>POS</span>
       </a>
       </li><!-- End POS Page Nav -->
 
       <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
+      <a class="nav-link collapsed" href="returnexchange.php">
           <i class="bi bi-cart-dash"></i>
           <span>Return & Exchange</span>
       </a>
@@ -180,11 +180,11 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>POS</h1>
+      <h1>Return & Exchange</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="../dashboard/dashboard.php">Home</a></li>
-          <li class="breadcrumb-item active">POS</li>
+          <li class="breadcrumb-item active">Return & Exchange</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -486,8 +486,8 @@
   <!-- Template Main JS File -->
   <script src="../main.js"></script>
   
-  <!-- Template POS JS File -->
-  <script src="pos.js"></script>
+  <!-- Template Return & Exchange JS File -->
+  <script src="returnexchange.js"></script>
 
 </body>
 

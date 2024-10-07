@@ -118,21 +118,21 @@
             <li class="nav-heading"></li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../suppliers2/suppliers.php">
+                <a class="nav-link collapsed" href="../suppliers/suppliers.php">
                     <i class="bi bi-truck"></i>
                     <span>Suppliers</span>
                 </a>
             </li><!-- End Suppliers Page Nav -->
 
             <li class="nav-item"></li>
-            <a class="nav-link collapsed" href="../Transactions/transactions.php">
+            <a class="nav-link collapsed" href="../transactions/transactions.php">
                 <i class="bi bi-cash-coin"></i>
                 <span>Transactions</span>
             </a>
             </li><!-- End Transactions Page Nav -->
 
             <li class="nav-item"></li>
-            <a class="nav-link" href="../purchaseorders/purchaseorders.php">
+            <a class="nav-link" href="purchaseorders.php">
                 <i class="bi bi-mailbox"></i>
                 <span>Purchase Orders</span>
             </a>
@@ -162,7 +162,7 @@
             </li><!-- End POS Page Nav -->
 
             <li class="nav-item"></li>
-            <a class="nav-link collapsed" href="../returnexchange/return.html">
+            <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
                 <i class="bi bi-cart-dash"></i>
                 <span>Return & Exchange</span>
             </a>

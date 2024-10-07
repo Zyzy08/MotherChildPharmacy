@@ -109,7 +109,7 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../dashboard/dashboard.php">
+                <a class="nav-link collapsed" href="../dahsboard/dashboard.php">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
@@ -118,7 +118,7 @@
             <li class="nav-heading"></li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../suppliers2/suppliers.php">
+                <a class="nav-link collapsed" href="../suppliers/suppliers.php">
                     <i class="bi bi-truck"></i>
                     <span>Suppliers</span>
                 </a>
@@ -143,7 +143,7 @@
                 <i class="bi bi-box-seam"></i>
                 <span>Inventory</span>
             </a>
-            </li><!-- End Inventory Page Nav -->            
+            </li><!-- End Inventory Page Nav -->
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="../users/users.php">
@@ -162,7 +162,7 @@
             </li><!-- End POS Page Nav -->
 
             <li class="nav-item"></li>
-            <a class="nav-link collapsed" href="../returnexchange/return.html">
+            <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
                 <i class="bi bi-cart-dash"></i>
                 <span>Return & Exchange</span>
             </a>

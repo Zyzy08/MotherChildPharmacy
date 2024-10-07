@@ -162,7 +162,7 @@
             </li><!-- End POS Page Nav -->
 
             <li class="nav-item"></li>
-            <a class="nav-link collapsed" href="../returnexchange/return.html">
+            <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
                 <i class="bi bi-cart-dash"></i>
                 <span>Return & Exchange</span>
             </a>

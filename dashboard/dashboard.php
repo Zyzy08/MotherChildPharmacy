@@ -98,57 +98,64 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link" href="dashboard.php">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
+          <a class="nav-link" href="dashboard.php">
+              <i class="bi bi-grid"></i>
+              <span>Dashboard</span>
+          </a>
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-heading"></li>
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="../suppliers2/suppliers.php">
-          <i class="bi bi-truck"></i>
-          <span>Suppliers</span>
-        </a>
+          <a class="nav-link collapsed" href="../suppliers/suppliers.php">
+              <i class="bi bi-truck"></i>
+              <span>Suppliers</span>
+          </a>
       </li><!-- End Suppliers Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../transactions/transactions.php">
+      <a class="nav-link collapsed" href="../transactions/transactions.php">
           <i class="bi bi-cash-coin"></i>
           <span>Transactions</span>
-        </a>
+      </a>
       </li><!-- End Transactions Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../inventory/inventory.php">
-          <i class="bi bi-box-seam"></i>
-          <span>Inventory</span>
-        </a>
-      </li><!-- End Inventory Page Nav -->
+      <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
+          <i class="bi bi-mailbox"></i>
+          <span>Purchase Orders</span>
+      </a>
+      </li><!-- End Purchase Order Page Nav -->
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../returnexchange/return.html">
-          <i class="bi bi-cart-dash"></i>
-          <span>Return & Exchange</span>
-        </a>
-      </li><!-- End Return & Exchange Page Nav -->
+      <a class="nav-link collapsed" href="../inventory/inventory.php">
+          <i class="bi bi-box-seam"></i>
+          <span>Inventory</span>
+      </a>
+      </li><!-- End Inventory Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="../users/users.php">
-          <i class="bi bi-person"></i>
-          <span>Users</span>
-        </a>
+          <a class="nav-link collapsed" href="../users/users.php">
+              <i class="bi bi-person"></i>
+              <span>Users</span>
+          </a>
       </li><!-- End Users Page Nav -->
 
       <li class="nav-heading"></li>
 
       <li class="nav-item"></li>
-        <a class="nav-link collapsed" href="../pos/pos.php">
+      <a class="nav-link collapsed" href="../pos/pos.php">
           <i class="bi bi-printer"></i>
           <span>POS</span>
-        </a>
+      </a>
       </li><!-- End POS Page Nav -->
+
+      <li class="nav-item"></li>
+      <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
+          <i class="bi bi-cart-dash"></i>
+          <span>Return & Exchange</span>
+      </a>
+      </li><!-- End Return & Exchange Page Nav -->
 
     </ul>
 
