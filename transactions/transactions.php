@@ -109,7 +109,7 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../dahsboard/dashboard.php">
+                <a class="nav-link collapsed" href="../dashboard/dashboard.php">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
