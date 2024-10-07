@@ -117,7 +117,7 @@
             <li class="nav-heading"></li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../suppliers2/suppliers.php">
+                <a class="nav-link collapsed" href="../suppliers/suppliers.php">
                     <i class="bi bi-truck"></i>
                     <span>Suppliers</span>
                 </a>
@@ -145,7 +145,7 @@
             </li><!-- End Inventory Page Nav -->
 
             <li class="nav-item">
-                <a class="nav-link" href="../users/users.php">
+                <a class="nav-link" href="users.php">
                     <i class="bi bi-person"></i>
                     <span>Users</span>
                 </a>
@@ -161,7 +161,7 @@
             </li><!-- End POS Page Nav -->
 
             <li class="nav-item"></li>
-            <a class="nav-link collapsed" href="../returnexchange/return.html">
+            <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
                 <i class="bi bi-cart-dash"></i>
                 <span>Return & Exchange</span>
             </a>
