@@ -139,7 +139,7 @@
       </li><!-- End Inventory Page Nav -->
 
       <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../returnexchange/return.html">
+      <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
         <i class="bi bi-cart-dash"></i>
         <span>Return & Exchange</span>
       </a>
@@ -177,7 +177,19 @@
       </nav>
     </div><!-- End Page Title -->
 
-    <button class="Create_PO"><img src="../resources/img/add.png" alt="Add"> New Product</button>
+    <!--<button class="Create_PO"><img src="../resources/img/add.png" alt="Add"> New Product</button>
+    <div class="archived-users" id="toArchivedUsers">
+                        Archived Users<img src="../resources/img/right-arrow-3.png" alt="Archive Button">
+    </div>-->
+    <div class="row">
+        <div class="containerAddArchive">
+            <div class="button" id="addUser">
+                  <button class="Create_PO"><img src="../resources/img/add.png" alt="Add"> New Product</button>
+            </div>
+            <div class="archived-users" id="toArchivedUsers">
+                Archived Product<img src="../resources/img/right-arrow-3.png" alt="Archive Button">
+            </div>
+    </div>
 
     <!--<button class="deleteProduct">Delete Product</button>
     <button id="updateProduct">Update Product</button>-->
@@ -216,28 +228,35 @@
           <div class="textbox">
             <label style="margin-right: 135px;" for="brandName">Brand Name</label>
             <label style="margin-right: 125px;" for="genericName">Generic Name</label>
-            <label for="notes">Notes</label>
+            <label for="Discount">Discount</label>
           </div>
 
           <div class="textbox">
             <input style="margin-right: 30px;" type="text" id="brandName" name="brandName">
             <input style="margin-right: 30px;" type="text" id="genericName" name="genericName">
-            <input style="padding: 8px 5px" id="Notes" name="Notes"></input>
+            <select name="Discount" id="Discount">
+              <option value=""></option>
+              <option value="Yes">Available</option>
+              <option value="No">Unavailable</option>
+
+            </select>
+            
           </div>
 
           <div>
             <label style="margin-right: 190px;" for="mass">Mass</label>
-            <label for="unitOfMeasure">Unit of Measure</label>
+            <label style="margin-right: 110px;" for="unitOfMeasure">Unit of Measure</label>
+            
 
           </div>
           <div class="textbox">
             <input style="margin-right: 30px;" type="text" id="mass" name="mass">
             <!--<input type="text" id="unitOfMeasure" name="unitOfMeasure">-->
-            <select class="unitOfMeasure" id="unitOfMeasure" name="unitOfMeasure">
+            <select style="margin-right: 30px;" class="unitOfMeasure" id="unitOfMeasure" name="unitOfMeasure">
               <option value=""></option>
               <option value="Kilograms">kg</option>
               <option value="Grams">g</option>
-              <option value="Milligrams">mg</option>
+              <option value="Milligrams">Mg</option>
               <option value="microgram">mcg/µg</option>
               <option value="nanogram">ng</option>
               <option value="Litre">L</option>
@@ -246,14 +265,16 @@
               <option value="mole">mol</option>
               <option value="	millimole">mmol</option>
             </select>
-
           </div>
         </div>
         <div>
-          <label style="margin-right: 110px;" for="ProductCode">Product Code</label>
+          <label style="margin-right: 130px;" for="ProductCode">Product Code</label>
+          <label  for="InStock">Instock</label>
         </div>
         <div class="textbox">
-          <input type="text" id="productCode" name="ProductCode">
+          <input style="margin-right: 30px;" type="text" id="productCode" name="ProductCode">
+          <input type="text" id="InStock" name="InStock">
+          
         </div>
         <div class=""></div>
 
@@ -321,14 +342,15 @@
                   <tr class="highlight-row">
                     <th style="text-align: center;">Item ID</th>
                     <th style="text-align: center;">Picture</th>
-                    <th style="text-align: center;">Product Code</th>
                     <th style="text-align: center;">Generic Name</th>
                     <th style="text-align: center;">Brand Name</th>
                     <th style="text-align: center;">Item Type</th>
-                    <th style="text-align: center;">Mass & Unit of Measurement</th>
-                    <th style="text-align: center;">Price Per Unit</th>
+                    <th style="text-align: center;">Measurement</th>
+                    <th style="text-align: center;">Price</th>
                     <!--<th style="text-align: center;">Status</th>-->
-                    <th style="text-align: center;">In Stock</th>
+                    <th style="text-align: center;">InStock</th>
+                    <th style="text-align: center;">Ordered</th>
+                    <th style="text-align: center;">ReorderLevel</th>
                     <th style="text-align: center;">Actions</th>
                   </tr>
                 </thead>
@@ -365,6 +387,43 @@
       <span id="closeNotification" class="closeNotification">&times;</span>
       <p id="notificationMessage">Notification message goes here.</p>
     </div>
+
+
+  <!-- Archive Modal (overlayAD) -->
+  <div id="overlayAD" class="overlay" style="display: none;"> <!-- Initially hidden -->
+      <div class="overlayAD-content">
+          <span id="closeBtnAD" class="close-btn">&times;</span>
+          <h2>Other Options</h2>
+          <hr>
+          <button id="archiveUserBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD">
+              <img src="../resources/img/box-archive.png"> Archive Product
+          </button>
+          <br>
+          <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="modalVerifyTitle-AD">Confirmation</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalClose-AD"></button>
+                      </div>
+                      <div class="modal-body" id="modalVerifyText-AD">
+                          Are you sure you want to do this?
+                      </div>
+                      <div class="modal-footer" id="modal-footer-AD">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                          <button type="button" class="btn btn-primary" id="modalYes">Yes</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+
+
+
+
+
 
   </main><!-- End #main -->
 
