@@ -236,7 +236,7 @@
     <div id="overlayEdit" class="overlay">
         <div class="overlay-content">
             <span id="closeBtnEdit" class="close-btn">&times;</span>
-            <h2>Transaction Details</h2>
+            <h2>Purchase Order Details</h2>
             <hr>
             <form id="userFormEdit" action="updateAccount.php" method="post" enctype="multipart/form-data"
                 onsubmit="handleFormSubmit()">
@@ -274,6 +274,30 @@
                         <textarea id="listQTY" name="listQTY" disabled></textarea>
                     </div>
                 </div>
+                <table class="table table-sm" id="listTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Item Description</th>
+                            <th scope="col">Lot No.</th>
+                            <th scope="col">Expiry Date</th>
+                            <th scope="col">Qty. Ordered</th>
+                            <th scope="col">Qty. Received</th>
+                            <th scope="col">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>FLUIMICIL 100MG/5ML SYR 100ML</td>
+                            <td>20062354</td>
+                            <td>02/28/2026</td>
+                            <td>10</td>
+                            <td>10</td>
+                            <td>2,923.20</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <div class="textboxHidden">
                     <div class="label">
                         <label for="AccountID">AccountID</label><br>
@@ -293,6 +317,12 @@
                         </div>
                         <input type="text" id="TotalCost" name="TotalCost" disabled>
                     </div>
+                </div>
+                <br>
+                <div class="line"></div>
+                <div class="button-container">
+                    <button id="cancelBtn" type="button" onclick="closeEditOverlay()">Cancel</button>
+                    <button type="button" id="confirmButton">Receive Delivery</button>
                 </div>
             </form>
         </div>

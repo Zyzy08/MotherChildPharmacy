@@ -9,7 +9,7 @@ function getNextIncrementID() {
                 
             } else {
                 const nextAutoIncrement = data.nextAutoIncrement;
-                newID.value = parseInt(nextAutoIncrement);
+                newID.value = "PO-0" + parseInt(nextAutoIncrement).toString();
             }
         })
         .catch(error => console.error('Error fetching next increment ID:', error));

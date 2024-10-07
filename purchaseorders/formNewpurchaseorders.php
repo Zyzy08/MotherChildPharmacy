@@ -210,11 +210,29 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="container">
+                                    <table class="table table-sm table-bordered" id="listTableNew">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Item Description</th>
+                                                <th scope="col">Quantity Order</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row" class="head1">1</th>
+                                                <td class="editable head2" onclick="editCell(this)"></td>
+                                                <td class="editable head3" onclick="editCell(this)"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <br>
                                 <div class="line"></div>
                                 <div class="button-container">
                                     <button id="cancelBtn" type="button" onclick="closeOverlay()">Cancel</button>
-                                    <button type="submit">Add</button>
+                                    <button type="submit">Send</button>
                                 </div>
                             </form>
                         </div>
@@ -253,6 +271,50 @@
     <script src="../resources/vendor/simple-datatables/simple-datatables.js"></script>
     <script src="../resources/vendor/tinymce/tinymce.min.js"></script>
     <script src="../resources/vendor/php-email-form/validate.js"></script>
+
+    <script>
+        function editCell(cell) {
+            // Check if a dropdown is already present
+            if (cell.querySelector('select')) return;
+
+            const currentValue = cell.textContent.trim();
+
+            // Create a dropdown
+            const dropdown = document.createElement('select');
+
+            // Sample options (you can customize these)
+            const options = ['25', '30', '35', '40'];
+            options.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option;
+                opt.textContent = option;
+                if (option === currentValue) {
+                    opt.selected = true; // Select current value
+                }
+                dropdown.appendChild(opt);
+            });
+
+            // Replace cell content with dropdown
+            cell.innerHTML = ''; // Clear cell content
+            cell.appendChild(dropdown); // Add dropdown to cell
+
+            // Set the dropdown's width to match the cell's width
+            dropdown.style.width = '100%';
+
+            // Focus the dropdown
+            dropdown.focus();
+
+            // Handle dropdown losing focus
+            dropdown.onblur = function () {
+                cell.textContent = dropdown.value; // Update cell with selected value
+            };
+
+            // Handle selection change
+            dropdown.onchange = function () {
+                cell.textContent = dropdown.value; // Update cell with selected value
+            };
+        }
+    </script>
 
 </body>
 
