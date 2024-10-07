@@ -203,9 +203,10 @@ function loadFormForEdit(item) {
     document.getElementById('mass').value = item.Mass;
     document.getElementById('unitOfMeasure').value = item.UnitOfMeasure;
     document.getElementById('pricePerUnit').value = item.PricePerUnit;
-    //document.getElementById('status').value = item.Status;
-    //document.getElementById('InStock').value = item.InStock;
-    document.getElementById('Notes').value = item.Notes || ''; // Handle missing Notes
+    document.getElementById('Discount').value = item.Discount;
+    document.getElementById('InStock').value = item.InStock;
+
+
 
     // Set the icon preview
     document.getElementById('iconPreview').src = item.ProductIcon || '../resources/img/add_icon.png'; // Use default if no icon
@@ -224,15 +225,15 @@ function setDataTables() {
         "columnDefs": [
             { "targets": 0, "width": "8%" }, // Item ID
             { "targets": 1, "width": "10%", "orderable": false }, // Icon 
-            { "targets": 2, "width": "10%" }, // Product Code
-            { "targets": 3, "width": "10%" }, // Generic Name
-            { "targets": 4, "width": "10%" }, // Brand Name
-            { "targets": 5, "width": "10%" }, // Item Type
-            { "targets": 6, "width": "10%" }, // Mass & Unit of Measure
-            { "targets": 7, "width": "10%" }, // Price Per Unit
-            //{ "targets": 8, "width": "10%" }, // Status
-            { "targets": 8, "width": "10%" }, // In Stock
-            { "targets": 9, "width": "12%", "orderable": false } // Actions
+            { "targets": 2, "width": "10%" }, // Generic Name
+            { "targets": 3, "width": "10%" }, // Brand Name
+            { "targets": 4, "width": "10%" }, // Item Type
+            { "targets": 5, "width": "10%" }, // Mass & Unit of Measure
+            { "targets": 6, "width": "10%" }, // Price Per Unit
+            { "targets": 7, "width": "10%" }, // InStock
+            { "targets": 8, "width": "10%" }, // Ordered
+            { "targets": 9, "width": "10%" }, // ReOrderLVl
+            { "targets": 10, "width": "12%", "orderable": false } // Actions
         ]
     });
 }
@@ -249,16 +250,18 @@ function updateTable(items) {
         row.innerHTML = `
                 <td class="text-center text-truncate">${item.ItemID}</td>
                 <td class="text-center"><img src="${item.ProductIcon}" alt="Icon" style="width: 50px; height: auto;"></td>
-                <td class="text-center text-truncate">${item.ProductCode}</td>
+               
                 <td class="text-center text-truncate">${item.GenericName}</td>
                 <td class="text-center text-truncate">${item.BrandName}</td>
                 <td class="text-center text-truncate">${item.ItemType}</td>
                 <td class="text-center text-truncate">${item.Mass} ${item.UnitOfMeasure}</td>
                 <td class="text-center text-truncate">${item.PricePerUnit}</td>
                 <td class="text-center text-truncate">${item.InStock}</td>
+                <td class="text-center text-truncate">${item.Ordered}</td>
+                <td class="text-center text-truncate">${item.ReorderLevel}</td>
                 <td class="text-center">
                 <img src="../resources/img/d-edit.png" alt="Edit" style="cursor:pointer;" onclick="handleUpdate('${item.ItemID}')" />
-                <img src="../resources/img/s-remove2.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="handleDelete('${item.ItemID}')" />
+                <img src="../resources/img/s-remove.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="showDeleteOptions('${item.ItemID}')"/>
     </td>
         `;
 
@@ -309,3 +312,99 @@ function loadInventory() {
 
 // Load inventory when the page loads
 window.onload = loadInventory;
+
+//////////////////////////Archive//////////////////////////////////
+const overlayAD = document.getElementById('overlayAD');
+const closeBtnAD = document.getElementById('closeBtnAD');
+const archiveUserBtn = document.getElementById('archiveUserBtn');
+const modalYes = document.getElementById('modalYes');
+const modalVerifyTextAD = document.getElementById('modalVerifyText-AD');
+const modalFooterAD = document.getElementById('modal-footer-AD');
+const modalCloseAD = document.getElementById('modalClose-AD');
+
+let selectedUser = '';  // Store the selected user ID
+let modalStatus = '';  // To store the status of the modal action
+
+
+
+
+const toArchivedUsers = document.getElementById('toArchivedUsers');
+toArchivedUsers.addEventListener('click', function () {
+    window.location.href = '../inventory/ArchiveProduct/ArchiveProd.php';
+});
+
+
+
+
+
+
+// Function to display the modal with the selected user
+function showDeleteOptions(ItemID) {
+    selectedUser = ItemID;
+    overlayAD.style.display = 'flex';
+}
+
+// Event listener for archive button click
+archiveUserBtn.addEventListener('click', function () {
+    modalVerifyTextAD.textContent = 'Are you sure you want to archive this user?';
+    modalStatus = 'archive';
+});
+
+// Event listener for 'Yes' button in the modal
+modalYes.addEventListener('click', function () {
+    if (modalStatus === 'archive') {
+        if (!selectedUser || selectedUser.trim() === '') {
+            alert('No user selected.');
+            return;
+        }
+
+        // Sending the archive request via XMLHttpRequest
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '../inventory/ArchiveProduct/ArchiveProd.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+        // Handling the response from the server
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                const response = JSON.parse(xhr.responseText);
+                modalVerifyTextAD.textContent = response.message;
+            } else {
+                alert('Error: ' + xhr.status);
+            }
+        };
+
+        // Sending user data to archive
+        xhr.send(JSON.stringify({ accountName: selectedUser }));
+
+        // Display success message and hide modal controls
+        modalFooterAD.style.display = 'none';
+        modalCloseAD.style.display = 'none';
+        modalVerifyTextAD.textContent = 'Product has been archived successfully!';
+        document.getElementById('modalVerifyTitle-AD').textContent = 'Success';
+
+        // Redirect after a short delay
+        setTimeout(() => {
+            window.location.href = 'inventory.php';
+        }, 1000);
+    }
+});
+
+
+
+// Function to show the overlayAD modal
+function showDeleteOptions(ItemID) {
+    selectedUser = ItemID;  // Store the selected user ID
+    overlayAD.style.display = 'flex';  // Display the modal
+}
+
+// Event listener for the close button (x) inside the modal
+closeBtnAD.addEventListener('click', function () {
+    overlayAD.style.display = 'none';  // Hide the modal when the close button is clicked
+});
+
+// Optional: Click anywhere outside the modal to close it
+window.addEventListener('click', function (event) {
+    if (event.target === overlayAD) {
+        overlayAD.style.display = 'none';  // Hide the modal if clicked outside of it
+    }
+});
