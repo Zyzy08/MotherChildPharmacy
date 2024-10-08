@@ -139,7 +139,7 @@
       </li><!-- End Inventory Page Nav -->
 
       <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
+      <a class="nav-link collapsed" href="../returnexchange/return.html">
         <i class="bi bi-cart-dash"></i>
         <span>Return & Exchange</span>
       </a>
@@ -222,7 +222,8 @@
               <option value="Skincare">Skincare</option>
               <option value="Cosmetics">Cosmetics</option>
             </select>
-            <input  type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱">
+            
+            <input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱" onfocus="addPesoSign()" oninput="addPesoSign()" />
           </div>
 
           <div class="textbox">
@@ -289,36 +290,6 @@
             <input type="file" id="iconFile" name="ProductIcon" accept="image/*" style="display: none;">
           </div>
         </div>
-
-
-
-        <!--<div class="form-section">
-          <h3 class="h3">Sale Information</h3>
-
-          <div class="textbox">
-            <label style="margin-right: 130px;" for="pricePerUnit">Price Per Unit</label>
-            <label for="notes">Notes</label>
-            <<label for="InStock">In Stock</label>
-          </div>
-          <div class="textbox">
-            <input style="margin-right: 30px;" type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱">
-            <input type="text" id="InStock" name="InStock">
-            <input style="padding: 8px 5px" id="Notes" name="Notes"></input>
-          </div>
-
-
-          
-           <<div class="textbox">
-
-           <label style="margin-right: 185px;" for="status">Status</label>
-            <label for="notes">Notes</label>
-          </div>
-
-          <div class="textbox">
-            <input style="margin-right: 30px;" type="text" id="status" name="status">
-            <input style="padding: 8px 5px" id="Notes" name="Notes"></input>
-          </div>
-        </div>-->
         <hr style="margin-top: 15px;">
 
         <div style="margin-top: 10px;" class="form-button">

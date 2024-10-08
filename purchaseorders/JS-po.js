@@ -9,11 +9,11 @@ function setDataTables() {
                 },
                 {
                     "targets": 1, // Date
-                    "width": "23.6%"
+                    "width": "20.6%"
                 },
                 {
                     "targets": 2, // Supplier
-                    "width": "15.6%"
+                    "width": "18.6%"
                 },
                 {
                     "targets": 3, // Qty

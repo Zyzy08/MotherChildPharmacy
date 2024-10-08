@@ -852,14 +852,15 @@ h4 {
 }
 
 #listTable {
-padding: 12px;
-margin: 20px;
-max-width: 1030px;
+  padding: 12px;
+  margin: 20px;
+  max-width: 1030px;
 }
 
 .editable {
   background-color: #f9f9f9;
 }
+
 .dropdown2 {
   display: none;
 }
@@ -869,27 +870,132 @@ max-width: 1030px;
   font-size: 14px;
 }
 
-#listTableNew th, #listTableNew td, #listTableNew tr{
+#listTableNew th,
+#listTableNew td,
+#listTableNew tr {
   padding: 10px;
 }
 
 #listTableNew .head1 {
   border: 1px solid #ccc;
   text-align: left;
-  cursor: pointer; /* Makes it clear that the cell is clickable */
-  width: 10px; /* Set a fixed width for the cells */
+  cursor: pointer;
+  /* Makes it clear that the cell is clickable */
+  width: 10px;
+  /* Set a fixed width for the cells */
 }
 
 #listTableNew .head2 {
   border: 1px solid #ccc;
   text-align: left;
-  cursor: pointer; /* Makes it clear that the cell is clickable */
-  width: 160px; /* Set a fixed width for the cells */
+  cursor: pointer;
+  /* Makes it clear that the cell is clickable */
+  width: 160px;
+  /* Set a fixed width for the cells */
 }
 
 #listTableNew .head3 {
   border: 1px solid #ccc;
   text-align: left;
-  cursor: pointer; /* Makes it clear that the cell is clickable */
-  width: 50px; /* Set a fixed width for the cells */
+  cursor: pointer;
+  /* Makes it clear that the cell is clickable */
+  width: 50px;
+  /* Set a fixed width for the cells */
+}
+
+.centered-td {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  /* Adjust as needed */
+}
+
+#listTableNew input {
+  border: none;
+  margin-bottom: 0px;
+  padding: 0px;
+  font-size: 14px;
+  width: 100%;
+}
+
+#productSelect {
+  width: 405px;
+}
+
+#qtySelect {
+  width: 430px;
+}
+
+#supplierSelect {
+  width: 410px;
+}
+
+button[type="submit"]:disabled {
+  width: 80px;
+  background-color: #7c8d7d;
+  /* Green background */
+  color: white;
+  /* White text */
+  border: none;
+  cursor: not-allowed;
+  border-radius: 5px;
+  /* Optional: Rounded corners */
+}
+
+button[type="submit"]:hover:disabled {
+  background-color: #7c8d7d;
+}
+
+#tableBody {
+  font-size: 15px;
+}
+
+tr:hover .remove-icon img {
+  display: block;
+  /* Show the image on hover */
+}
+
+.remove-icon img {
+  display: none;
+  /* Hide the image by default */
+}
+
+.remove-icon {
+  position: relative;
+  /* Set relative positioning for the cell */
+  width: 30px;
+  /* Set a fixed width for the column */
+  height: 30px;
+  /* Set a fixed height if necessary */
+  text-align: center;
+  /* Center the content */
+}
+
+.remove-icon img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  /* Hide the image by default */
+  transition: display 0.2s;
+  /* Optional: smooth transition */
+}
+
+tr:hover .remove-icon img {
+  display: block;
+  /* Show the image on hover */
+}
+
+#numCol {
+  width: 30.05px;
+}
+
+#itemCol {
+  width: 561.53px;
+}
+
+#qtyCol {
+  width: 369.42px;
 }

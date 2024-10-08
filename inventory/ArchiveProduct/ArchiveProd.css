@@ -1,0 +1,86 @@
+.table_product {
+    margin-left: 30px;
+    display: absolute;
+    flex-direction: column;
+    position: absolute;
+    width: 100%;
+    left: 281px;
+    height: 50%;
+    opacity: 1;
+    border-radius: 3px;
+    border-collapse: collapse;
+  }
+  
+  th.col1,
+  td.col1 {
+    width: 7%;
+  }
+  
+  th.col2,
+  td.col2 {
+    width: 23%;
+  }
+  
+  th.col2pic,
+  td.col2pic {
+    width: 2%;
+  }
+  
+  th.col2name,
+  td.col2name {
+    width: 20.27%;
+  }
+  
+  th.col3,
+  td.col3 {
+    width: 16%;
+  }
+  
+  th.col4,
+  td.col4 {
+    width: 14%;
+  }
+  
+  th.col5,
+  td.col5 {
+    width: 15%;
+  }
+  
+  th.col6,
+  td.col6 {
+    width: 10%;
+  }
+  
+  th.col7,
+  td.col7 {
+    width: 10%;
+    text-align: center;
+  }
+  
+  th {
+    height: 50px;
+    text-align: left;
+  
+    font-size: 14px;
+    font-weight: 600;
+    color: #565D6DFF;
+  }
+  
+  td {
+    height: 50px;
+  
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 400;
+    color: #171A1FFF;
+  }
+  
+  .highlight-row {
+    background-color: #f4f4f4;
+  }
+  
+  .selected {
+    background-color: #cfe2ff;
+  }
+  
+  

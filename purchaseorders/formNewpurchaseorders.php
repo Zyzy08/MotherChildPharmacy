@@ -191,8 +191,7 @@
                     <div class="card">
                         <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
                             <br>
-                            <form id="userForm" action="addData.php" method="post" enctype="multipart/form-data"
-                                onsubmit="handleFormSubmit()">
+                            <form id="userForm" method="post" enctype="multipart/form-data">
                                 <div class="container">
                                     <div class="textbox">
                                         <div class="label">
@@ -214,16 +213,21 @@
                                     <table class="table table-sm table-bordered" id="listTableNew">
                                         <thead>
                                             <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Item Description</th>
-                                                <th scope="col">Quantity Order</th>
+                                                <th scope="col" id="numCol">#</th>
+                                                <th scope="col" id="itemCol">Item Description</th>
+                                                <th scope="col" id="qtyCol">Quantity Order</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <th scope="row" class="head1">1</th>
-                                                <td class="editable head2" onclick="editCell(this)"></td>
-                                                <td class="editable head3" onclick="editCell(this)"></td>
+                                                <td colspan="3" id="addNewRow"
+                                                    style="font-size: 13px; text-align: center; vertical-align: middle;">
+                                                    <div id="addNewRowClick"
+                                                        style="cursor:pointer; display: inline-block;"
+                                                        onclick="triggerAddProducts()">
+                                                        <i class="bi bi-plus-square"></i> Add Product
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -231,8 +235,8 @@
                                 <br>
                                 <div class="line"></div>
                                 <div class="button-container">
-                                    <button id="cancelBtn" type="button" onclick="closeOverlay()">Cancel</button>
-                                    <button type="submit">Send</button>
+                                    <button id="cancelBtn" type="button" onclick="goBack()">Cancel</button>
+                                    <button id="sendButton" type="submit" disabled>Send</button>
                                 </div>
                             </form>
                         </div>
@@ -258,6 +262,43 @@
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
 
+    <div id="overlay" class="overlay">
+        <div class="overlay-content">
+            <span id="closeBtn" class="close-btn" onclick="closeOverlay()">&times;</span>
+            <h3>Select Product</h3>
+            <hr>
+            <form id="productSelectForm" method="post" enctype="multipart/form-data">
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="productSelect">Item Description</label><br>
+                        </div>
+                        <select id="productSelect" name="productSelect" required>
+                            <!-- Options will be populated here -->
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div class="container">
+                    <div class="textbox">
+                        <div class="label">
+                            <label for="qtySelect">Quantity</label><br>
+                        </div>
+                        <input type="number" id="qtySelect" name="qtySelect" required step="1" min="0"
+                            onkeydown="return event.key >= '0' && event.key <= '9' || event.key === 'Backspace' || event.key === 'Tab';">
+                    </div>
+                </div>
+                <br>
+                <div class="line"></div>
+                <div class="button-container">
+                    <button id="cancelBtn" type="button" onclick="closeOverlay()">Cancel</button>
+                    <button type="submit" id="addProductToListBtn">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- End of Overlay for Add -->
+
     <!-- Template Main JS File -->
     <script src="../main.js"></script>
     <script src="JS-newPO.js"></script>
@@ -271,50 +312,6 @@
     <script src="../resources/vendor/simple-datatables/simple-datatables.js"></script>
     <script src="../resources/vendor/tinymce/tinymce.min.js"></script>
     <script src="../resources/vendor/php-email-form/validate.js"></script>
-
-    <script>
-        function editCell(cell) {
-            // Check if a dropdown is already present
-            if (cell.querySelector('select')) return;
-
-            const currentValue = cell.textContent.trim();
-
-            // Create a dropdown
-            const dropdown = document.createElement('select');
-
-            // Sample options (you can customize these)
-            const options = ['25', '30', '35', '40'];
-            options.forEach(option => {
-                const opt = document.createElement('option');
-                opt.value = option;
-                opt.textContent = option;
-                if (option === currentValue) {
-                    opt.selected = true; // Select current value
-                }
-                dropdown.appendChild(opt);
-            });
-
-            // Replace cell content with dropdown
-            cell.innerHTML = ''; // Clear cell content
-            cell.appendChild(dropdown); // Add dropdown to cell
-
-            // Set the dropdown's width to match the cell's width
-            dropdown.style.width = '100%';
-
-            // Focus the dropdown
-            dropdown.focus();
-
-            // Handle dropdown losing focus
-            dropdown.onblur = function () {
-                cell.textContent = dropdown.value; // Update cell with selected value
-            };
-
-            // Handle selection change
-            dropdown.onchange = function () {
-                cell.textContent = dropdown.value; // Update cell with selected value
-            };
-        }
-    </script>
 
 </body>
 

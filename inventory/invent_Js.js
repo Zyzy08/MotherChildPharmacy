@@ -313,6 +313,7 @@ function loadInventory() {
 // Load inventory when the page loads
 window.onload = loadInventory;
 
+
 //////////////////////////Archive//////////////////////////////////
 const overlayAD = document.getElementById('overlayAD');
 const closeBtnAD = document.getElementById('closeBtnAD');
@@ -322,89 +323,79 @@ const modalVerifyTextAD = document.getElementById('modalVerifyText-AD');
 const modalFooterAD = document.getElementById('modal-footer-AD');
 const modalCloseAD = document.getElementById('modalClose-AD');
 
-let selectedUser = '';  // Store the selected user ID
+let selectedItemID = '';  // Store the selected product ID
 let modalStatus = '';  // To store the status of the modal action
 
-
-
-
-const toArchivedUsers = document.getElementById('toArchivedUsers');
-toArchivedUsers.addEventListener('click', function () {
-    window.location.href = '../inventory/ArchiveProduct/ArchiveProd.php';
-});
-
-
-
-
-
-
-// Function to display the modal with the selected user
+// Function to show the overlayAD modal
 function showDeleteOptions(ItemID) {
-    selectedUser = ItemID;
-    overlayAD.style.display = 'flex';
+    selectedItemID = ItemID;  // Store the selected item ID
+    overlayAD.style.display = 'flex';  // Show the overlay
 }
 
 // Event listener for archive button click
 archiveUserBtn.addEventListener('click', function () {
-    modalVerifyTextAD.textContent = 'Are you sure you want to archive this user?';
-    modalStatus = 'archive';
+    modalVerifyTextAD.textContent = 'Are you sure you want to archive this product?';
+    modalStatus = 'archive';  // Set the modal status to 'archive'
+    document.getElementById('disablebackdrop-AD').style.display = 'block'; // Show the modal for confirmation
 });
 
 // Event listener for 'Yes' button in the modal
 modalYes.addEventListener('click', function () {
     if (modalStatus === 'archive') {
-        if (!selectedUser || selectedUser.trim() === '') {
-            alert('No user selected.');
+        if (!selectedItemID || selectedItemID.trim() === '') {
+            alert('No product selected.');
             return;
         }
 
-        // Sending the archive request via XMLHttpRequest
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '../inventory/ArchiveProduct/ArchiveProd.php', true);
-        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-
-        // Handling the response from the server
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                const response = JSON.parse(xhr.responseText);
-                modalVerifyTextAD.textContent = response.message;
-            } else {
-                alert('Error: ' + xhr.status);
+        // Sending the archive request via fetch API
+        fetch('../inventory/ArchiveProduct/getArchiveProd.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ itemID: selectedItemID }) // Sending itemID
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
             }
-        };
+            return response.json();
+        })
+        .then(data => {
+            modalVerifyTextAD.textContent = data.message; // Display the response message
+            modalFooterAD.style.display = 'none';
+            modalCloseAD.style.display = 'none';
+            modalVerifyTextAD.textContent = 'Product has been archived successfully!';
+            document.getElementById('modalVerifyTitle-AD').textContent = 'Success';
 
-        // Sending user data to archive
-        xhr.send(JSON.stringify({ accountName: selectedUser }));
-
-        // Display success message and hide modal controls
-        modalFooterAD.style.display = 'none';
-        modalCloseAD.style.display = 'none';
-        modalVerifyTextAD.textContent = 'Product has been archived successfully!';
-        document.getElementById('modalVerifyTitle-AD').textContent = 'Success';
-
-        // Redirect after a short delay
-        setTimeout(() => {
-            window.location.href = 'inventory.php';
-        }, 1000);
+            // Redirect after a short delay
+            setTimeout(() => {
+                window.location.href = '../inventory/ArchiveProduct/ArchiveProd.php'; // Adjust URL if necessary
+            }, 1000);
+        })
+        .catch(error => {
+            alert('Error: ' + error.message);
+        });
     }
 });
 
-
-
-// Function to show the overlayAD modal
-function showDeleteOptions(ItemID) {
-    selectedUser = ItemID;  // Store the selected user ID
-    overlayAD.style.display = 'flex';  // Display the modal
-}
-
-// Event listener for the close button (x) inside the modal
+// Event listener for close button (x) inside the modal
 closeBtnAD.addEventListener('click', function () {
-    overlayAD.style.display = 'none';  // Hide the modal when the close button is clicked
+    overlayAD.style.display = 'none'; // Hide the overlay when the close button is clicked
+    document.getElementById('disablebackdrop-AD').style.display = 'none'; // Hide the modal
 });
 
 // Optional: Click anywhere outside the modal to close it
 window.addEventListener('click', function (event) {
     if (event.target === overlayAD) {
-        overlayAD.style.display = 'none';  // Hide the modal if clicked outside of it
+        overlayAD.style.display = 'none'; // Hide the modal if clicked outside of it
+        document.getElementById('disablebackdrop-AD').style.display = 'none'; // Hide the modal
     }
 });
+
+// Redirect to archived users page
+const toArchivedUsers = document.getElementById('toArchivedUsers');
+toArchivedUsers.addEventListener('click', function () {
+    window.location.href = 'ArchiveProduct/ArchiveProd.php';
+});
+

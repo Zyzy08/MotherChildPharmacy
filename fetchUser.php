@@ -34,6 +34,7 @@ $result = $sql->get_result();
 // Fetch the employeeName, role, and picture
 if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
+    $AccountID = $user['AccountID'];
     $employeeName = $user['employeeName'];
     $employeeLName = $user['employeeLName'];
     $role = $user['role'];
