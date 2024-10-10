@@ -10,16 +10,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Retrieve POST data
     $supplierName = $_POST["supplierSelect"];
-    $orderDetails = $_POST["orderDetails"]; // This should be a JSON string
+    $orderDetails = $_POST["orderDetails"];
+    $totalItems = $_POST["totalItems"];
+
     if (isset($_POST['orderDetails'])) {
-        $orderDetails = json_decode($_POST['orderDetails'], true); // Decode JSON to associative array
-        // Now you can work with $orderDetails as an array
+        $orderDetails = json_decode($orderDetails, true); // Decode JSON to associative array
     }
-
-    $totalItems = $_POST["totalItems"]; // Total quantity of items, you need to calculate this
-
-    // Decode the order details JSON to process it
-    $orderDetailsArray = json_decode($orderDetails, true);
 
     // Prepare to get SupplierID based on SupplierName
     $sqlSupplier = "SELECT SupplierID FROM suppliers WHERE SupplierName = ?";
@@ -39,7 +35,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Execute the statement
     try {
         $stmt->execute([$supplierID, $accountID, $orderDetails, $totalItems]);
-        echo json_encode(['success' => true, 'message' => 'Purchase order added successfully.']);
+        
+        $orderDetailsArray = json_decode($orderDetails, true); // Decode JSON to associative array
+
+        // Now update the inventory
+        foreach ($orderDetailsArray as $detail) {
+            $itemID = $detail['itemID'];
+            $quantity = $detail['qty'];
+
+            // Prepare the update statement for the inventory table
+            $sqlUpdate = "UPDATE inventory SET Ordered = Ordered + ? WHERE ItemID = ?";
+            $stmtUpdate = $pdo->prepare($sqlUpdate);
+            $stmtUpdate->execute([$quantity, $itemID]);
+        }
+
+        echo json_encode(['success' => true, 'message' => 'Purchase order added and inventory updated successfully.']);
     } catch (PDOException $e) {
         echo json_encode(['success' => false, 'message' => 'Error adding purchase order: ' . $e->getMessage()]);
     }

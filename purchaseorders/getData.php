@@ -55,21 +55,25 @@ if (isset($_GET['InvoiceID'])) {
             $qty = $detail['qty'];
     
             // Fetch the item details from the inventory
-            $sqlItem = "SELECT GenericName, BrandName, PricePerUnit FROM inventory WHERE ItemID = '$itemID'";
+            $sqlItem = "SELECT GenericName, BrandName, Mass, UnitOfMeasure FROM inventory WHERE ItemID = '$itemID'";
             $itemResult = $conn->query($sqlItem);
             if ($itemResult->num_rows > 0) {
                 $itemData = $itemResult->fetch_assoc();
                 $genericName = $itemData['GenericName'];
                 $brandName = $itemData['BrandName'];
-                $pricePerUnit = $itemData['PricePerUnit'];
-                
-                // Format the item string
-                $listItems[] = "$qty  @  $pricePerUnit\t| $genericName $brandName";
+                $mass = $itemData['Mass'];
+                $unitOfMeasure = $itemData['UnitOfMeasure'];
+
+                // Add item to the list with Mass and Unit of Measure
+                $listItems[] = [
+                    'description' => "$brandName $genericName ($mass $unitOfMeasure)",
+                    'quantity' => $qty
+                ];
             }
         }
-    
-        // Join all items into a single string with new lines
-        $data['listQTY'] = implode("\n", $listItems);
+
+        // Add the list of items to the data
+        $data['listItems'] = $listItems;
     } else {
         $data = null;
     }

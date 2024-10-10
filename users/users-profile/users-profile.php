@@ -102,64 +102,87 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-          <a class="nav-link collapsed" href="../../dashboard/dashboard.php">
-              <i class="bi bi-grid"></i>
-              <span>Dashboard</span>
-          </a>
+        <a class="nav-link collapsed" href="../../dashboard/dashboard.php">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
       </li><!-- End Dashboard Nav -->
 
       <li class="nav-heading"></li>
 
       <li class="nav-item">
-          <a class="nav-link collapsed" href="../../suppliers/suppliers.php">
-              <i class="bi bi-truck"></i>
-              <span>Suppliers</span>
-          </a>
+        <a class="nav-link collapsed" href="../../suppliers/suppliers.php">
+          <i class="bi bi-shop"></i>
+          <span>Suppliers</span>
+        </a>
       </li><!-- End Suppliers Page Nav -->
 
       <li class="nav-item"></li>
       <a class="nav-link collapsed" href="../../transactions/transactions.php">
-          <i class="bi bi-cash-coin"></i>
-          <span>Transactions</span>
+        <i class="bi bi-cash-coin"></i>
+        <span>Transactions</span>
       </a>
       </li><!-- End Transactions Page Nav -->
 
       <li class="nav-item"></li>
       <a class="nav-link collapsed" href="../../purchaseorders/purchaseorders.php">
-          <i class="bi bi-mailbox"></i>
-          <span>Purchase Orders</span>
+        <i class="bi bi-mailbox"></i>
+        <span>Purchase Orders</span>
       </a>
       </li><!-- End Purchase Order Page Nav -->
 
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="../../delivery/delivery.php">
+          <i class="bi bi-truck"></i>
+          <span>Delivery</span>
+        </a>
+      </li><!-- End Delivery Page Nav -->
+
       <li class="nav-item"></li>
       <a class="nav-link collapsed" href="../../inventory/inventory.php">
-          <i class="bi bi-box-seam"></i>
-          <span>Inventory</span>
+        <i class="bi bi-box-seam"></i>
+        <span>Inventory</span>
       </a>
       </li><!-- End Inventory Page Nav -->
-
-      <li class="nav-item">
-          <a class="nav-link" href="../../users/users.php">
-              <i class="bi bi-person"></i>
-              <span>Users</span>
-          </a>
-      </li><!-- End Users Page Nav -->
 
       <li class="nav-heading"></li>
 
       <li class="nav-item"></li>
       <a class="nav-link collapsed" href="../../pos/pos.php">
-          <i class="bi bi-printer"></i>
-          <span>POS</span>
+        <i class="bi bi-printer"></i>
+        <span>POS</span>
       </a>
       </li><!-- End POS Page Nav -->
 
       <li class="nav-item"></li>
       <a class="nav-link collapsed" href="../../returnexchange/returnexchange.php">
-          <i class="bi bi-cart-dash"></i>
-          <span>Return & Exchange</span>
+        <i class="bi bi-cart-dash"></i>
+        <span>Return & Exchange</span>
       </a>
       </li><!-- End Return & Exchange Page Nav -->
+
+      <li class="nav-heading"></li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="../../users/users.php">
+          <i class="bi bi-person"></i>
+          <span>Users</span>
+        </a>
+      </li><!-- End Users Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="../../audittrail/audittrail.php">
+          <i class="bi bi-clipboard-data"></i>
+          <span>Audit Trail</span>
+        </a>
+      </li><!-- End Audit Trail Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="../../backuprestore/backuprestore.php">
+          <i class="bi bi-cloud-check"></i>
+          <span>Backup & Restore</span>
+        </a>
+      </li><!-- End B&R Page Nav -->
 
     </ul>
 
@@ -370,7 +393,8 @@
                     </div>
 
                     <div class="text-center">
-                      <button type="submit" class="btn btn-primary" disabled id="changePasswordBtn">Change Password</button>
+                      <button type="submit" class="btn btn-primary" disabled id="changePasswordBtn">Change
+                        Password</button>
                     </div>
                   </form><!-- End Change Password Form -->
 
@@ -528,23 +552,23 @@
 
     // Function to enable or disable the submit button
     function updateSubmitButton() {
-        const firstNameInput = document.getElementById('fullName').value.trim();
-        const lastNameInput = document.getElementById('lastName').value.trim();
-        const submitButton = document.getElementById('submitButton');
+      const firstNameInput = document.getElementById('fullName').value.trim();
+      const lastNameInput = document.getElementById('lastName').value.trim();
+      const submitButton = document.getElementById('submitButton');
 
-        // Check if first name and last name are not empty and different from current values
-        if (firstNameInput && lastNameInput &&
-            (firstNameInput !== currentFirstName || lastNameInput !== currentLastName)) {
-            submitButton.disabled = false;
-        } else {
-            submitButton.disabled = true;
-        }
+      // Check if first name and last name are not empty and different from current values
+      if (firstNameInput && lastNameInput &&
+        (firstNameInput !== currentFirstName || lastNameInput !== currentLastName)) {
+        submitButton.disabled = false;
+      } else {
+        submitButton.disabled = true;
+      }
     }
 
     // Add event listeners to the input fields
     document.getElementById('fullName').addEventListener('input', updateSubmitButton);
     document.getElementById('lastName').addEventListener('input', updateSubmitButton);
-</script>
+  </script>
 
 
 </body>

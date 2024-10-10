@@ -208,7 +208,6 @@
                                         <th>Agent Name</th>
                                         <th>Contact No.</th>
                                         <th>Email</th>
-                                        <th>Notes</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>

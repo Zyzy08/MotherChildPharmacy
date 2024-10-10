@@ -118,7 +118,7 @@
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="../suppliers/suppliers.php">
-                    <i class="bi bi-truck"></i>
+                    <i class="bi bi-shop"></i>
                     <span>Suppliers</span>
                 </a>
             </li><!-- End Suppliers Page Nav -->
@@ -137,19 +137,19 @@
             </a>
             </li><!-- End Purchase Order Page Nav -->
 
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="../delivery/delivery.php">
+                    <i class="bi bi-truck"></i>
+                    <span>Delivery</span>
+                </a>
+            </li><!-- End Delivery Page Nav -->
+
             <li class="nav-item"></li>
             <a class="nav-link collapsed" href="../inventory/inventory.php">
                 <i class="bi bi-box-seam"></i>
                 <span>Inventory</span>
             </a>
             </li><!-- End Inventory Page Nav -->
-
-            <li class="nav-item">
-                <a class="nav-link" href="users.php">
-                    <i class="bi bi-person"></i>
-                    <span>Users</span>
-                </a>
-            </li><!-- End Users Page Nav -->
 
             <li class="nav-heading"></li>
 
@@ -167,7 +167,36 @@
             </a>
             </li><!-- End Return & Exchange Page Nav -->
 
+            <li class="nav-heading"></li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="../users/users.php">
+                    <i class="bi bi-person"></i>
+                    <span>Users</span>
+                </a>
+            </li><!-- End Users Page Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="../audittrail/audittrail.php">
+                    <i class="bi bi-clipboard-data"></i>
+                    <span>Audit Trail</span>
+                </a>
+            </li><!-- End Audit Trail Page Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
+                    <i class="bi bi-cloud-check"></i>
+                    <span>Backup & Restore</span>
+                </a>
+            </li><!-- End B&R Page Nav -->
+
+
+
         </ul>
+
+    </aside><!-- End Sidebar-->
+
+    </ul>
 
     </aside><!-- End Sidebar-->
 

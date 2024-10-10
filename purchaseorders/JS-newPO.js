@@ -210,6 +210,10 @@ function goBack() {
 }
 
 //sending PO to Supplier and storing to database
+
+const modalVerifyTitleFront = document.getElementById('modalVerifyTitle-Front');
+const modalVerifyTextFront = document.getElementById('modalVerifyText-Front');
+
 const userForm = document.getElementById('userForm');
 userForm.addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent the default form submission
@@ -222,6 +226,7 @@ userForm.addEventListener('submit', function (event) {
         const formData = new FormData();
         formData.append('supplierSelect', supplierSelect.options[supplierSelect.selectedIndex].text);
         formData.append('orderDetails', JSON.stringify(orderDetails)); // Ensure this is correctly stringified
+        console.log(JSON.stringify(orderDetails));
         formData.append('totalItems', totalItems);
 
         // Submit the form via Fetch API
@@ -233,14 +238,25 @@ userForm.addEventListener('submit', function (event) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert(data.message); // Handle success response
-            // window.location.href = 'purchaseorders.php'; // Redirect if needed
+            const confirmationModalFront = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
+                modalVerifyTitleFront.textContent = 'Success';
+                modalVerifyTextFront.textContent = 'Purchase order was placed succesfully!';
+                confirmationModalFront.show();
+                setTimeout(() => {
+                    window.location.href = 'purchaseorders.php'; // Redirect on success
+                }, 1000);
         } else {
-            alert(data.message); // Handle error response
+            const confirmationModalFront = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
+                modalVerifyTitleFront.textContent = 'Error';
+                modalVerifyTextFront.textContent = 'Purchase order was added due to an error!';
+                confirmationModalFront.show();
+                setTimeout(() => {
+                    window.location.href = 'purchaseorders.php'; // Redirect on success
+                }, 1000);
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Error Yikes:', error);
     });
 });
 
@@ -308,6 +324,7 @@ async function createOrderDetails() {
     return orderDetailsJSON; // Return the JSON string
 }
 
+//Voiding transactions
 
 
 

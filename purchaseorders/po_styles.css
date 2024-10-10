@@ -518,6 +518,12 @@ textarea,
   /* Distribute space between the buttons */
 }
 
+.button-container-2 {
+  display: flex;
+  justify-content: end;
+  /* Distribute space between the buttons */
+}
+
 #preview {
   width: 40px;
   height: 40px;
@@ -550,30 +556,10 @@ input[type="file"] {
   margin-bottom: 15px;
 }
 
-/* Modal container */
-.modal {
-  display: none;
-  /* Hidden by default */
-  position: fixed;
-  z-index: 1;
-  /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%;
-  /* Full width */
-  height: 100%;
-  /* Full height */
-  overflow: auto;
-  /* Enable scroll if needed */
-  background-color: rgba(0, 0, 0, 0.4);
-  /* Black w/ opacity */
-}
-
 /* Modal content */
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto;
-  /* 15% from the top and centered */
+  margin: 50% auto;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
@@ -745,7 +731,7 @@ input[type="file"] {
   background: #111644;
 }
 
-.button-container button {
+.button-container-2 button, .button-container button {
   font-size: 14px;
   height: 30px;
   padding: 0px;
@@ -853,8 +839,22 @@ h4 {
 
 #listTable {
   padding: 12px;
-  margin: 20px;
+  margin-bottom: 20px;
   max-width: 1030px;
+  font-size: 14px;
+}
+
+#listTableLabel {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  margin-left: -7px;
+}
+
+#poDetailsTable {
+  font-size: 15px;
+  min-width: 800px;
+  margin-bottom: 20px;
 }
 
 .editable {

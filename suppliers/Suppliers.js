@@ -99,7 +99,6 @@ function updateTable(data) {
             row.AgentName,
             row.Phone,
             row.Email,
-            row.Notes,
             `<img src="../resources/img/d-edit.png" alt="View" style="cursor:pointer;margin-left:10px;"/> 
             <img src="../resources/img/s-remove.png" alt="Delete" style="cursor:pointer;margin-left:10px;"/>`
         ]);
@@ -305,30 +304,26 @@ function setDataTables() {
             "columnDefs": [
                 {
                     "targets": 0, // Employee Name
-                    "width": "23.6%"
+                    "width": "20%"
                 },
                 {
                     "targets": 1, // Role
-                    "width": "20.6%"
+                    "width": "20%"
                 },
                 {
                     "targets": 2, // Account Name
-                    "width": "16.6%"
+                    "width": "20%"
                 },
                 {
                     "targets": 3, // Date
-                    "width": "16.6%"
+                    "width": "20%"
                 },
                 {
-                    "targets": 4, // Status
-                    "width": "12.6%"
+                    "targets": 4, // Actions
+                    "width": "20%"
                 },
                 {
-                    "targets": 5, // Actions
-                    "width": "10.6%"
-                },
-                {
-                    "targets": 5, // Index of the column to disable sorting
+                    "targets": 4, // Index of the column to disable sorting
                     "orderable": false // Disable sorting for column 5 - Actions
                 }
             ]

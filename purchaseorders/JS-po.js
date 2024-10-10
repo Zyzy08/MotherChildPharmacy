@@ -1,7 +1,7 @@
 function setDataTables() {
     $(document).ready(function () {
         $('#example').DataTable({
-            "order": [], // Disable initial sorting
+            "order": [[1, 'desc']], // Sort by the first column (OrderID) in descending order
             "columnDefs": [
                 {
                     "targets": 0, // OrderID
@@ -85,9 +85,7 @@ const closeBtnEdit = document.getElementById('closeBtnEdit');
 const identifierID = document.getElementById('identifierID');
 const cashierID = document.getElementById('cashierID');
 const datetimeID = document.getElementById('datetimeID');
-const listQTY = document.getElementById('listQTY');
 const Status = document.getElementById('Status');
-const TotalCost = document.getElementById('TotalCost');
 const Discount = document.getElementById('Discount');
 const NetAmount = document.getElementById('NetAmount');
 const modePay = document.getElementById('modePay');
@@ -102,11 +100,11 @@ function fetchDetails(identifier) {
         .then(data => {
             if (data) {
                 // Populate the overlay form with details
-                identifierID.value = "PO-0" + data.PurchaseOrderID;
-                supplierName.value = data.SupplierName;
-                cashierID.value = data.employeeName + " " + data.employeeLName;
-                datetimeID.value = data.OrderDate;
-                Status.value = data.Status;
+                identifierID.textContent = "PO-0" + data.PurchaseOrderID;
+                supplierName.textContent = data.SupplierName;
+                cashierID.textContent = data.employeeName + " " + data.employeeLName;
+                datetimeID.textContent = data.OrderDate;
+                Status.textContent = data.Status;
                 if (data.Status === "Pending") {
                     Status.style.color = '#B8860B'; // Change text color to yellow
                 } else if (data.Status === "Cancelled") {
@@ -116,10 +114,22 @@ function fetchDetails(identifier) {
                 } else {
                     Status.style.color = 'black'; // Default color (optional)
                 }
-                TotalCost.value = data.NetAmount !== null ? data.NetAmount : "-";
 
-                // Set listQTY input value
-                listQTY.value = data.listQTY; // Update the listQTY input
+                // Set table rows
+                if (data && data.listItems) {
+                    const tableBody = document.querySelector('#listTable tbody');
+                    tableBody.innerHTML = ''; // Clear existing rows
+
+                    data.listItems.forEach((item, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <th scope="row">${index + 1}</th>
+                            <td>${item.description}</td>
+                            <td>${item.quantity}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
 
                 // Show the overlay
                 overlayEdit.style.display = 'flex';
@@ -154,6 +164,8 @@ function showOptions(identifier) {
             if (data) {
                 const orderDate = new Date(data.OrderDateOrig);
                 const currentDate = new Date();
+                console.log("Order's date: " + orderDate);
+                console.log("Current date: " + currentDate);
 
                 const oneHourInMillis = 60 * 60 * 1000; // 1 hour in milliseconds
                 const timeDifference = currentDate - orderDate; // Time difference in milliseconds
@@ -180,17 +192,27 @@ closeBtnAD.addEventListener('click', function () {
     overlayAD.style.display = 'none';
 })
 
+//Main modal
+const modalVerifyTitleFront = document.getElementById('modalVerifyTitle-Front');
+const modalVerifyTextFront = document.getElementById('modalVerifyText-Front');
 
-deleteDataBtn.addEventListener('click', function () {
-    let confirmationUser = confirm("Are you sure you want to cancel this order?");
-    if (confirmationUser === true) {
+
+//Cancel Order
+const modalVerifyTextAD = document.getElementById('modalVerifyText-AD');
+const modalVerifyTitleAD = document.getElementById('modalVerifyTitle-AD');
+const modalFooterAD = document.getElementById('modal-footer-AD');
+const modalCloseAD = document.getElementById('modalClose-AD');
+let modalStatus = 'cancel';
+
+const modalYes = document.getElementById('modalYes');
+modalYes.addEventListener('click', function () {
+    if (modalStatus === 'cancel') {
         if (!selectedID || selectedID.trim() === '') {
-            alert('No data selected.');
+            alert('No ID selected.');
             return;
         }
-
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'deleteData.php', true);
+        xhr.open('POST', 'cancelOrder.php', true);
         xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 
         // Handle the response
@@ -204,31 +226,34 @@ deleteDataBtn.addEventListener('click', function () {
         };
 
         xhr.send(JSON.stringify({ selectedID: selectedID }));
-        alert("Transaction voided successfully!");
+        //Extra
+        overlayAD.style.display = 'none';
+        const confirmationModalFront = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
+        modalVerifyTitleFront.textContent = 'Success';
+        modalVerifyTextFront.textContent = 'Purchase order was cancelled succesfully!';
+        confirmationModalFront.show();
         setTimeout(() => {
-            window.location.href = 'transactions.php'; // Redirect on success
-        }, 100);
-    } else {
-
+            window.location.href = 'purchaseorders.php';
+        }, 1000);
     }
 });
 
-function closeEditOverlay(){
+function closeEditOverlay() {
     overlayEdit.style.display = 'none';
 }
 
-function resetFields(){
+function resetFields() {
     confirmButton.textContent = "Receive Delivery";
 }
 
 const confirmButton = document.getElementById('confirmButton');
 
-confirmButton.addEventListener('click', function(){
-    if(confirmButton.textContent === "Receive Delivery"){
+confirmButton.addEventListener('click', function () {
+    if (confirmButton.textContent === "Receive Delivery") {
         confirmButton.textContent = "Complete Delivery";
         Status.value = 'Delivered';
         Status.style.color = 'green';
-    } else if(confirmButton.textContent === "Complete Delivery"){
-        
+    } else if (confirmButton.textContent === "Complete Delivery") {
+
     }
 });

@@ -119,7 +119,7 @@
 
             <li class="nav-item">
                 <a class="nav-link collapsed" href="../suppliers/suppliers.php">
-                    <i class="bi bi-truck"></i>
+                    <i class="bi bi-shop"></i>
                     <span>Suppliers</span>
                 </a>
             </li><!-- End Suppliers Page Nav -->
@@ -138,19 +138,19 @@
             </a>
             </li><!-- End Purchase Order Page Nav -->
 
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="../delivery/delivery.php">
+                    <i class="bi bi-truck"></i>
+                    <span>Delivery</span>
+                </a>
+            </li><!-- End Delivery Page Nav -->
+
             <li class="nav-item"></li>
             <a class="nav-link collapsed" href="../inventory/inventory.php">
                 <i class="bi bi-box-seam"></i>
                 <span>Inventory</span>
             </a>
             </li><!-- End Inventory Page Nav -->
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="../users/users.php">
-                    <i class="bi bi-person"></i>
-                    <span>Users</span>
-                </a>
-            </li><!-- End Users Page Nav -->
 
             <li class="nav-heading"></li>
 
@@ -167,6 +167,29 @@
                 <span>Return & Exchange</span>
             </a>
             </li><!-- End Return & Exchange Page Nav -->
+
+            <li class="nav-heading"></li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="../users/users.php">
+                    <i class="bi bi-person"></i>
+                    <span>Users</span>
+                </a>
+            </li><!-- End Users Page Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="../audittrail/audittrail.php">
+                    <i class="bi bi-clipboard-data"></i>
+                    <span>Audit Trail</span>
+                </a>
+            </li><!-- End Audit Trail Page Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
+                    <i class="bi bi-cloud-check"></i>
+                    <span>Backup & Restore</span>
+                </a>
+            </li><!-- End B&R Page Nav -->
 
         </ul>
 
@@ -237,91 +260,61 @@
         <div class="overlay-content">
             <span id="closeBtnEdit" class="close-btn">&times;</span>
             <h2>Purchase Order Details</h2>
-            <hr>
             <form id="userFormEdit" action="updateAccount.php" method="post" enctype="multipart/form-data"
                 onsubmit="handleFormSubmit()">
                 <div class="container">
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="identifierID">Order ID</label><br>
-                        </div>
-                        <input type="text" id="identifierID" name="identifierID" disabled>
-                    </div>
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="supplierName">Supplier Name</label><br>
-                        </div>
-                        <input type="text" id="supplierName" name="supplierName" disabled>
-                    </div>
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="cashierID">Purchaser</label><br>
-                        </div>
-                        <input type="text" id="cashierID" name="cashierID" disabled>
-                    </div>
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="datetimeID">Date (Time)</label><br>
-                        </div>
-                        <input type="text" id="datetimeID" name="datetimeID" disabled>
-                    </div>
+                    <table class="table table-sm" id="poDetailsTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Order ID</th>
+                                <th scope="col">Supplier Name</th>
+                                <th scope="col">Purchaser</th>
+                                <th scope="col">Date (Time)</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="identifierID">12345</td> <!-- Replace with dynamic value -->
+                                <td id="supplierName">Supplier ABC</td> <!-- Replace with dynamic value -->
+                                <td id="cashierID">John Doe</td> <!-- Replace with dynamic value -->
+                                <td id="datetimeID">10/10/2024 (12:30 PM)</td> <!-- Replace with dynamic value -->
+                                <td id="Status">Completed</td> <!-- Replace with dynamic value -->
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
-                            <label for="listQTY">List of Items</label><br>
+                            <label for="listTable" id="listTableLabel"><u>LIST OF ITEMS</u></label>
                         </div>
-                        <textarea id="listQTY" name="listQTY" disabled></textarea>
                     </div>
                 </div>
-                <table class="table table-sm" id="listTable">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Item Description</th>
-                            <th scope="col">Lot No.</th>
-                            <th scope="col">Expiry Date</th>
-                            <th scope="col">Qty. Ordered</th>
-                            <th scope="col">Qty. Received</th>
-                            <th scope="col">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>FLUIMICIL 100MG/5ML SYR 100ML</td>
-                            <td>20062354</td>
-                            <td>02/28/2026</td>
-                            <td>10</td>
-                            <td>10</td>
-                            <td>2,923.20</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="textboxHidden">
-                    <div class="label">
-                        <label for="AccountID">AccountID</label><br>
-                    </div>
-                    <input type="text" id="AccountID" name="AccountID" required>
-                </div>
+
                 <div class="container">
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="Status">Status</label><br>
-                        </div>
-                        <input type="text" id="Status" name="Status" disabled>
-                    </div>
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="TotalCost">Total Cost</label><br>
-                        </div>
-                        <input type="text" id="TotalCost" name="TotalCost" disabled>
-                    </div>
+                    <table class="table table-sm" id="listTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Item Description</th>
+                                <th scope="col">Qty. Ordered</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>FLUIMICIL 100MG/5ML SYR 100ML</td>
+                                <td>10</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+
                 <br>
                 <div class="line"></div>
-                <div class="button-container">
-                    <button id="cancelBtn" type="button" onclick="closeEditOverlay()">Cancel</button>
+                <div class="button-container-2">
                     <button type="button" id="confirmButton">Receive Delivery</button>
                 </div>
             </form>
@@ -335,20 +328,48 @@
             <h3>Other Options</h3>
             <h4 id="overlayADtitle"></h4>
             <hr>
-            <form id="userFormAD" action="deleteData.php" method="post" enctype="multipart/form-data"
-                onsubmit="handleFormSubmit()">
-                <div style="position: relative; display: inline-block;">
-                    <button id="deleteDataBtn" type="button">
-                        <img src="../resources/img/delete.png" style="padding-bottom: 2px;"> Cancel Order
-                    </button>
-                    <span id="tooltip" class="tooltip-text">Orders can only be cancelled within 1 hour of
-                        creation.</span>
+            <div style="position: relative; display: inline-block;">
+                <button id="deleteDataBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD">
+                    <img src="../resources/img/delete.png" style="padding-bottom: 2px;"> Cancel Order
+                </button>
+                <span id="tooltip" class="tooltip-text">Orders can only be cancelled within 1 hour of
+                    creation.</span>
+            </div>
+            <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalVerifyTitle-AD">Confirm Cancellation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                id="modalClose-AD"></button>
+                        </div>
+                        <div class="modal-body" id="modalVerifyText-AD">
+                            Are you sure you want to cancel this order?
+                        </div>
+                        <div class="modal-footer" id="modal-footer-AD">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-primary" id="modalYes">Yes</button>
+                        </div>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
     <!-- End of Overlay for Options -->
+
+    <div class="modal" id="disablebackdrop-Front" tabindex="-1">
+        <div class="modal-dialog" data-bs-backdrop="false">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalVerifyTitle-Front">Title Text</h5>
+                </div>
+                <div class="modal-body" id="modalVerifyText-Front">
+                    Text
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Template Main JS File -->
