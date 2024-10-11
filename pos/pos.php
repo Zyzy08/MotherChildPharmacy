@@ -310,7 +310,7 @@
           <div class="modal-footer">
             <div class="row align-items-top w-100">
               <div class="col-lg-3">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button id="quantity-cancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
               </div>
               <div class="col-lg-4">
                 <input type="number" class="form-control" id="modal-quantity-input" placeholder="Quantity" min="1">
@@ -508,3 +508,5 @@
 </body>
 
 </html>
+
+<!--Updated-->
