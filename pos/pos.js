@@ -79,7 +79,7 @@ async function loadProducts() {
     
         const productHTML = `
             <div class="col-lg-3">
-                <div class="card clickable-card" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-in-stock="${product.InStock}">
+                <div class="card clickable-card" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-in-stock="${product.InStock}" data-bs-toggle="modal" data-bs-target="#quantity-modal">
                     ${stockBadge}
                     <img src="../inventory/${product.ProductIcon}" class="card-img-top"
                         style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
@@ -93,8 +93,7 @@ async function loadProducts() {
                             </div>
                         </div>
                         <h5 class="card-title">${product.BrandName}</h5>
-                        <p class="card-text generic-name">${product.GenericName}</p>
-                        <p class="card-text full-generic-name" style="display: none;">${product.GenericName}</p>
+                        <p class="card-text">${product.GenericName}</p>
                     </div>
                 </div>
             </div>
@@ -112,18 +111,6 @@ async function loadProducts() {
             highlightCard(firstCard);
         }
     }
-}
-
-// Function to truncate generic names
-function truncateGenericNames() {
-    const genericNames = document.querySelectorAll('.generic-name');
-    genericNames.forEach(name => {
-        const text = name.textContent;
-        const words = text.split(' ');
-        if (words.length > 1) {
-            name.textContent = words[0] + '...';
-        }
-    });
 }
 
 function updatePaginationControls() {
@@ -211,21 +198,13 @@ function highlightCard(card) {
     if (card.getAttribute('data-id') === selectedCardId) {
         card.classList.remove('active');
         localStorage.removeItem('selectedCardId');
-        // Hide full generic name and show truncated version
-        card.querySelector('.full-generic-name').style.display = 'none';
-        card.querySelector('.generic-name').style.display = 'block';
     } else {
         const cards = document.querySelectorAll('.clickable-card');
         cards.forEach(c => {
             c.classList.remove('active');
-            c.querySelector('.full-generic-name').style.display = 'none';
-            c.querySelector('.generic-name').style.display = 'block';
         });
         card.classList.add('active');
         localStorage.setItem('selectedCardId', card.getAttribute('data-id'));
-        // Show full generic name and hide truncated version
-        card.querySelector('.full-generic-name').style.display = 'block';
-        card.querySelector('.generic-name').style.display = 'none';
     }
 }
 
@@ -295,6 +274,48 @@ searchInput.addEventListener('keypress', async function(event) {
     }
 });
 
+function showQuantityModal(product) {
+    const modalBody = document.getElementById('quantity-modal-body');
+    const stockBadge = product.InStock > 0
+        ? `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`
+        : `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
+
+    modalBody.innerHTML = `
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    ${stockBadge}
+                    <img src="${product.ProductIcon}" class="img-fluid rounded-start" alt="Product Icon">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">${product.BrandName} <p class="card-text">${product.UnitOfMeasure}</p></h5>
+                        <p class="card-text">${product.GenericName} ₱${product.PricePerUnit}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const quantityInput = document.getElementById('modal-quantity-input');
+    quantityInput.value = 1;
+    quantityInput.max = product.InStock;
+
+    const addItemButton = document.getElementById('modal-add-item-button');
+    addItemButton.onclick = () => {
+        const quantity = parseInt(quantityInput.value, 10);
+        if (quantity > 0 && quantity <= product.InStock) {
+            addItemToBasket(product, quantity);
+            bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
+        } else {
+            showToast("Please enter a valid quantity.");
+        }
+    };
+
+    const modal = new bootstrap.Modal(document.getElementById('quantity-modal'));
+    modal.show();
+}
+
 // Load initial products and pagination
 loadProducts();
 
@@ -312,20 +333,6 @@ function showToast(message) {
 
 // Function to add item to the basket
 function addItemToBasket() {
-    const selectedCard = document.querySelector('.clickable-card.active');
-    if (!selectedCard) {
-        showToast("Please select a product first.");
-        return;
-    }
-
-    const quantityInput = document.getElementById('quantity-input');
-    const quantity = parseInt(quantityInput.value, 10);
-    
-    if (quantity < 1 || isNaN(quantity)) {
-        showToast("Please enter a valid quantity.");
-        return;
-    }
-
     const inStock = parseInt(selectedCard.getAttribute('data-in-stock'), 10);
     
     const existingItemIndex = basket.findIndex(item => item.id === selectedCard.getAttribute('data-id'));

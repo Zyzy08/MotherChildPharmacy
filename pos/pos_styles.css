@@ -1288,17 +1288,13 @@
   }
 
   .clickable-card.active {
-    height: auto; /* Allow the card to expand when active */
+    height: 300px;
     background-color: #e0e0e0; /* Highlight color when clicked */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
   .card-text {
       margin-bottom: 0;
-  }
-
-  .full-generic-name {
-      margin-top: 10px;
   }
 
   input[class="form-control no-arrows"]::-webkit-outer-spin-button,

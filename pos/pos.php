@@ -256,19 +256,6 @@
                         </ul>
                       </nav>
                     </div><!-- End Pagination -->
-
-                    <!-- Quantity Input -->
-                    <div class="col-lg-3">
-                        <input type="number" class="form-control" id="quantity-input" placeholder="Quantity" min="1">
-                    </div>
-
-                    <!-- Add Item Button -->
-                    <div class="col-lg-3">
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-primary" id="add-item-button" type="button">Add Item</button>
-                        </div>
-                    </div>
-
                   </div>
                 </div><!-- End Card Footer -->
               </div>
@@ -309,6 +296,35 @@
 
       </div>
     </section>
+
+    <!-- Quantity Modal -->
+    <div class="modal fade" id="quantity-modal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Quantity</h5>
+          </div>
+          <div class="modal-body" id="quantity-modal-body">
+            <!-- Dynamic content will be inserted here -->
+          </div>
+          <div class="modal-footer">
+            <div class="row align-items-top w-100">
+              <div class="col-lg-3">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              </div>
+              <div class="col-lg-4">
+                <input type="number" class="form-control" id="modal-quantity-input" placeholder="Quantity" min="1">
+              </div>
+              <div class="col-lg-5">
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary" id="modal-add-item-button" type="button">Add Item</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Checkout Modal -->
     <div class="modal fade" id="verticalycentered" tabindex="-1" aria-hidden="true">
