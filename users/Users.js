@@ -127,6 +127,29 @@ fileInput.addEventListener('change', function (event) {
     }
 });
 
+const fileInputEdit = document.getElementById('profilePictureEdit');
+const previewImgEdit = document.getElementById('previewEdit');
+
+// Function to handle file selection and image preview
+fileInputEdit.addEventListener('change', function (event) {
+    const file = event.target.files[0]; // Get the selected file
+    if (file) {
+        const reader = new FileReader(); // Create a FileReader object
+
+        // Set up the FileReader to read the file as a data URL
+        reader.onload = function (e) {
+            previewImgEdit.Editsrc = e.target.result; // Set the image source to the data URL
+            previewImgEdit.style.display = 'block'; // Show the image preview
+        };
+
+        // Read the file as a data URL
+        reader.readAsDataURL(file);
+    } else {
+        previewImgEdit.src = '';
+        previewImgEdit.style.display = 'none'; // Hide the image preview if no file is selected
+    }
+});
+
 // Get reference to the form element
 const form = document.getElementById('userForm');
 
