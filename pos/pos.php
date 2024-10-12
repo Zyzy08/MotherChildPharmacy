@@ -238,18 +238,6 @@
                           <li class="page-item active" id="page-1">
                             <a class="page-link" href="#">1</a>
                           </li>
-                          <li class="page-item" id="page-2">
-                            <a class="page-link" href="#">2</a>
-                          </li>
-                          <li class="page-item" id="page-3">
-                            <a class="page-link" href="#">3</a>
-                          </li>
-                          <li class="page-item" id="page-4">
-                            <a class="page-link" href="#">4</a>
-                          </li>
-                          <li class="page-item" id="page-5">
-                            <a class="page-link" href="#">5</a>
-                          </li>
                           <li class="page-item" id="next-page">
                             <a class="page-link" href="#">Next</a>
                           </li>
@@ -285,7 +273,7 @@
                           <p id="basket-total">₱0.00</p>
                       </div>
                       <div class="d-grid gap-2 mt-3">
-                        <button id="checkout" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
+                        <button id="checkout" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered" disabled>
                           Checkout
                         </button>
                       </div>

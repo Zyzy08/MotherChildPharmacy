@@ -429,6 +429,13 @@ function updateBasketDisplay() {
     console.log('Basket updated. Total items:', basket.length, 'Total amount:', basketTotal.toFixed(2));
 }
 
+// Get the current basket total
+function getBasketTotal() {
+    const basketTotal = basket.reduce((total, item) => total + (item.PricePerUnit * item.quantity), 0);
+    const tax = basketTotal * 0.12;
+    return (basketTotal + tax).toFixed(2);
+}
+
 // Function to remove item from the basket
 function removeItemFromBasket(itemId) {
     basket = basket.filter(item => item.id !== itemId); // Remove item from basket
@@ -436,7 +443,7 @@ function removeItemFromBasket(itemId) {
     updateCheckoutButtonState();
 }
 
-// Update Checkout button state
+// Checkout button state
 function updateCheckoutButtonState() {
     const checkoutButton = document.querySelector('button[data-bs-target="#verticalycentered"]');
     if (basket.length === 0) {
@@ -618,32 +625,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 showToast("Your basket is empty. Please add items before checking out.");
                 return;
             }
-            console.log('Checkout button clicked'); // Debugging line
 
-            // Calculate the total from the basket
-            const basketTotal = basket.reduce((total, item) => {
-                return total + (item.PricePerUnit * item.quantity);
-            }, 0);
-
-            // Calculate tax (assuming 12% tax rate)
-            const tax = basketTotal * 0.12;
-
-            // Calculate total with tax
-            const totalWithTax = basketTotal + tax;
+            const totalWithTax = getBasketTotal();
 
             // Update the total display in the modal
             const totalDisplay = document.getElementById('total-display');
             if (totalDisplay) {
-                totalDisplay.textContent = `Total: ₱${totalWithTax.toFixed(2)}`;
+                totalDisplay.textContent = `Total: ₱${totalWithTax}`;
             } else {
                 console.error('Total display element not found');
             }
 
-            generateReceiptItems();
-            displayReceiptItems();
-            updatePaymentDisplay();
-            updateChangeDisplay();
-            updateModalTotal();
+            // Reset discount checkboxes
+            document.getElementById('seniorCitizenCheckbox').checked = false;
+            document.getElementById('promoCheckbox').checked = false;
+
+            // Reset payment input
+            document.getElementById('paymentInput').value = '';
+
+            // Reset change display
+            document.getElementById('change-display').textContent = 'Change: ₱0.00';
 
             // Show the checkout modal
             const checkoutModal = new bootstrap.Modal(document.getElementById('verticalycentered'));
@@ -654,7 +655,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Update payment input event listener
+// Payment input event listener
 document.getElementById('paymentInput').addEventListener('input', function() {
     const payment = parseFloat(this.value) || 0;
     const totalAmount = parseFloat(document.getElementById('total-display').textContent.replace(/[^0-9.-]+/g,""));
