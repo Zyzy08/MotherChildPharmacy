@@ -44,6 +44,23 @@ if ($result->num_rows > 0) {
     $dateCreated = $user['dateCreated'];
     $status = $user['status'];
     $employeeFullName = $employeeName . " " . $employeeLName;
+    $SuppliersPerms = $user['SuppliersPerms'];
+    $TransactionsPerms = $user['TransactionsPerms'];
+    $InventoryPerms = $user['InventoryPerms'];
+    $POSPerms = $user['POSPerms'];
+    $REPerms = $user['REPerms'];
+    $POPerms = $user['POPerms'];
+    $UsersPerms = $user['UsersPerms'];
+
+    // Store permissions in the session
+    $_SESSION['SuppliersPerms'] = $SuppliersPerms;
+    $_SESSION['TransactionsPerms'] = $TransactionsPerms;
+    $_SESSION['InventoryPerms'] = $InventoryPerms;
+    $_SESSION['POSPerms'] = $POSPerms;
+    $_SESSION['REPerms'] = $REPerms;
+    $_SESSION['POPerms'] = $POPerms;
+    $_SESSION['UsersPerms'] = $UsersPerms;
+
 
     // Split the employeeName into words
     $nameParts = explode(' ', $employeeFullName);
@@ -61,8 +78,7 @@ if ($result->num_rows > 0) {
 
     // Format the dateCreated field as "Month Day, Year"
     $dateCreatedFormatted = (new DateTime($dateCreated))->format('F j, Y');
-}
-else {
+} else {
     // Default values in case no data is found
     $formattedName = "Unknown";
     $role = "Unknown";
