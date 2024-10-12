@@ -432,8 +432,7 @@ function updateBasketDisplay() {
 // Get the current basket total
 function getBasketTotal() {
     const basketTotal = basket.reduce((total, item) => total + (item.PricePerUnit * item.quantity), 0);
-    const tax = basketTotal * 0.12;
-    return (basketTotal + tax).toFixed(2);
+    return basketTotal.toFixed(2);
 }
 
 // Function to remove item from the basket
@@ -495,25 +494,10 @@ document.getElementById('verticalycentered').addEventListener('show.bs.modal', f
     updateModalTotal();
 });
 
-// Update total when discounts are applied
-const discountCheckboxes = document.querySelectorAll('#verticalycentered .form-check-input');
-discountCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', updateModalTotal);
-});
-
 function updateModalTotal() {
-    const subtotal = basket.reduce((total, item) => total + (item.PricePerUnit * item.quantity), 0);
-    const tax = subtotal * 0.12; // 12% tax
-    let discountPercentage = 0;
-
-    if (document.getElementById('seniorCitizenCheckbox').checked) discountPercentage += 20;
-    if (document.getElementById('promoCheckbox').checked) discountPercentage += 10;
-
-    const discountAmount = subtotal * (discountPercentage / 100);
-    const discountedTotal = subtotal + tax - discountAmount;
-
-    document.getElementById('total-display').textContent = `Total: ₱${discountedTotal.toFixed(2)}`;
-    console.log('Updated total:', discountedTotal.toFixed(2)); // Add this line for debugging
+    const basketTotal = getBasketTotal();
+    document.getElementById('total-display').textContent = `Total: ₱${basketTotal}`;
+    console.log('Updated total:', basketTotal);
 }
 
 // Store for receipt items
@@ -626,19 +610,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            const totalWithTax = getBasketTotal();
+            const totalAmount = getBasketTotal();
 
             // Update the total display in the modal
             const totalDisplay = document.getElementById('total-display');
             if (totalDisplay) {
-                totalDisplay.textContent = `Total: ₱${totalWithTax}`;
+                totalDisplay.textContent = `Total: ₱${totalAmount}`;
             } else {
                 console.error('Total display element not found');
             }
-
-            // Reset discount checkboxes
-            document.getElementById('seniorCitizenCheckbox').checked = false;
-            document.getElementById('promoCheckbox').checked = false;
 
             // Reset payment input
             document.getElementById('paymentInput').value = '';
