@@ -301,11 +301,11 @@
                 <button id="quantity-cancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
               </div>
               <div class="col-lg-4">
-                <input type="number" class="form-control" id="modal-quantity-input" placeholder="Quantity" min="1">
+                <input type="number" class="form-control" id="quantity-input" placeholder="Quantity" min="1">
               </div>
               <div class="col-lg-5">
                 <div class="d-grid gap-2">
-                  <button class="btn btn-primary" id="modal-add-item-button" type="button">Add Item</button>
+                  <button class="btn btn-primary" id="add-item-button" type="button">Add Item</button>
                 </div>
               </div>
             </div>
@@ -342,7 +342,7 @@
             <br><h2 id="change-display" style="font-weight: bold;">Change: ₱0.00</h2>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="checkout-cancel-button">Cancel</button>
             <div class="d-grid gap-2">
               <button id="confirm-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal" disabled>
                 Confirm
