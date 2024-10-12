@@ -48,7 +48,7 @@ function formatUnitOfMeasure(unit) {
     }
 }
 
-// Update the loadProducts function
+// LoadProducts function
 async function loadProducts() {
     const products = await fetchProducts(searchQuery);
     const productContainer = document.getElementById('product-list');
@@ -371,18 +371,24 @@ function deselectCurrentItem() {
     localStorage.removeItem('selectedCardId');
 }
 
-// Update the event listener for the "Add Item" button
+// Event listener for the "Add Item" button
 document.getElementById('modal-add-item-button').onclick = () => {
     const quantityInput = document.getElementById('modal-quantity-input');
     const quantity = parseInt(quantityInput.value, 10);
-    const productData = JSON.parse(document.querySelector('.clickable-card.active').dataset.product);
+    const activeCard = document.querySelector('.clickable-card.active');
     
-    if (quantity > 0 && quantity <= productData.InStock) {
-        addItemToBasket(productData, quantity);
-        bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
-        // The item is automatically deselected in the addItemToBasket function
+    if (activeCard) {
+        const productData = JSON.parse(activeCard.dataset.product);
+        
+        if (quantity > 0 && quantity <= productData.InStock) {
+            addItemToBasket(productData, quantity);
+            bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
+            // The item is automatically deselected in the addItemToBasket function
+        } else {
+            showToast("Please enter a valid quantity.");
+        }
     } else {
-        showToast("Please enter a valid quantity.");
+        showToast("No item selected. Please select an item before adding to basket.");
     }
 };
 
@@ -603,9 +609,9 @@ function updateChangeDisplay() {
     document.getElementById("change").textContent = `₱${Math.max(0, change).toFixed(2)}`;
 }
 
-// Modify the existing checkout button event listener
+// Checkout button event listener
 document.addEventListener('DOMContentLoaded', function() {
-    const checkoutButton = document.getElementById('checkout');
+    const checkoutButton = document.querySelector('button[data-bs-target="#verticalycentered"]');
     if (checkoutButton) {
         checkoutButton.addEventListener('click', function() {
             if (basket.length === 0) {
@@ -613,6 +619,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             console.log('Checkout button clicked'); // Debugging line
+
+            // Calculate the total from the basket
+            const basketTotal = basket.reduce((total, item) => {
+                return total + (item.PricePerUnit * item.quantity);
+            }, 0);
+
+            // Calculate tax (assuming 12% tax rate)
+            const tax = basketTotal * 0.12;
+
+            // Calculate total with tax
+            const totalWithTax = basketTotal + tax;
+
+            // Update the total display in the modal
+            const totalDisplay = document.getElementById('total-display');
+            if (totalDisplay) {
+                totalDisplay.textContent = `Total: ₱${totalWithTax.toFixed(2)}`;
+            } else {
+                console.error('Total display element not found');
+            }
+
             generateReceiptItems();
             displayReceiptItems();
             updatePaymentDisplay();
@@ -676,7 +702,7 @@ document.addEventListener('DOMContentLoaded', fetchInvoiceID);
 
 // Add this event listener for the print button
 document.getElementById('print-button').addEventListener('click', async function() {
-    /*try {
+    try {
         // Gather all required data
         const orderNumber = document.getElementById('order-num').textContent.match(/\d+/)[0];
         const saleDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
@@ -745,6 +771,7 @@ document.getElementById('print-button').addEventListener('click', async function
             basket = [];
             updateBasketDisplay();
             fetchInvoiceID();
+            window.location.reload();  // Reloads the current page
         } else {
             console.error('Failed to record sale:', result.error);
             alert('Failed to save sale. Please check the console for details.');
@@ -752,9 +779,7 @@ document.getElementById('print-button').addEventListener('click', async function
     } catch (error) {
         console.error('Error in print button handler:', error);
         alert('An error occurred while saving the sale. Please check the console for details.');
-    }*/
-
-    window.location.reload();  // Reloads the current page
+    }
 });
 
 //updated
