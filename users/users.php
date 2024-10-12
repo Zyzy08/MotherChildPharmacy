@@ -374,7 +374,7 @@
                             <input type="checkbox" id="POSPerms" disabled> POS
                             <input type="checkbox" id="REPerms" disabled> Return & Exchange
                             <input type="checkbox" id="POPerms" disabled> Purchase Orders
-                            <input type="checkbox" id="UsersPerms" disabled> Users
+                            <input type="checkbox" id="UsersPerms" disabled> Utilities
                         </div>
                     </div>
                 </div>
@@ -471,7 +471,7 @@
                             <input type="checkbox" id="POSPermsEdit" disabled> POS
                             <input type="checkbox" id="REPermsEdit" disabled> Return & Exchange
                             <input type="checkbox" id="POPermsEdit" disabled> Purchase Orders
-                            <input type="checkbox" id="UsersPermsEdit" disabled> Users
+                            <input type="checkbox" id="UsersPermsEdit" disabled> Utilities
                         </div>
                     </div>
                 </div>
