@@ -775,3 +775,7 @@ h4 {
 .nav-link {
   color: rgb(182, 182, 182);
 }
+
+#tableBody {
+  font-size: 15px;
+}
