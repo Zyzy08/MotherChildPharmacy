@@ -15,18 +15,18 @@ async function fetchProducts(query = '') {
             },
             body: new URLSearchParams({ query })
         });
-        const text = await response.text(); // Get the response as text
+        const text = await response.text();
 
-        // Extract JSON from the comment
         const jsonMatch = text.match(/<!-- (.*?) -->/);
-        const data = jsonMatch ? JSON.parse(jsonMatch[1]) : []; // Parse JSON if found
+        const data = jsonMatch ? JSON.parse(jsonMatch[1]) : [];
 
-        totalItems = data.length; // Set total items based on fetched data
-        totalPages = Math.ceil(totalItems / itemsPerPage); // Calculate total pages
+        totalItems = data.length;
+        totalPages = Math.ceil(totalItems / itemsPerPage);
 
         return data;
     } catch (error) {
         console.error('Error fetching products:', error);
+        return [];
     }
 }
 
@@ -48,6 +48,7 @@ function formatUnitOfMeasure(unit) {
     }
 }
 
+// Update the loadProducts function
 async function loadProducts() {
     const products = await fetchProducts(searchQuery);
     const productContainer = document.getElementById('product-list');
@@ -67,10 +68,12 @@ async function loadProducts() {
     paginatedProducts.forEach(product => {
         const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
         let stockBadge = '';
+        let cardClass = 'clickable-card';
     
         // Check the stock level and set the appropriate badge with actual InStock value
         if (product.InStock == 0) {
             stockBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
+            cardClass = 'non-clickable-card'; // New class for out-of-stock items
         } else if (product.InStock < 50 && product.InStock > 0) {
             stockBadge = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
         } else {
@@ -79,7 +82,7 @@ async function loadProducts() {
     
         const productHTML = `
             <div class="col-lg-3">
-                <div class="card clickable-card" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-in-stock="${product.InStock}">
+                <div class="card ${cardClass}" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-product='${JSON.stringify(product)}'>
                     ${stockBadge}
                     <img src="../inventory/${product.ProductIcon}" class="card-img-top"
                         style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
@@ -93,18 +96,16 @@ async function loadProducts() {
                             </div>
                         </div>
                         <h5 class="card-title">${product.BrandName}</h5>
-                        <p class="card-text generic-name">${product.GenericName}</p>
-                        <p class="card-text full-generic-name" style="display: none;">${product.GenericName}</p>
+                        <p class="card-text">${product.GenericName}</p>
                     </div>
                 </div>
             </div>
         `;
         productContainer.insertAdjacentHTML('beforeend', productHTML);
-    });    
+    });
 
     attachCardListeners();
     updatePaginationControls();
-    truncateGenericNames();
 
     if (searchQuery && paginatedProducts.length > 0) {
         const firstCard = document.querySelector('.clickable-card');
@@ -112,18 +113,6 @@ async function loadProducts() {
             highlightCard(firstCard);
         }
     }
-}
-
-// Function to truncate generic names
-function truncateGenericNames() {
-    const genericNames = document.querySelectorAll('.generic-name');
-    genericNames.forEach(name => {
-        const text = name.textContent;
-        const words = text.split(' ');
-        if (words.length > 1) {
-            name.textContent = words[0] + '...';
-        }
-    });
 }
 
 function updatePaginationControls() {
@@ -183,51 +172,27 @@ function updatePaginationControls() {
     });
 }
 
+// Update the card click event in attachCardListeners
 function attachCardListeners() {
     const cards = document.querySelectorAll('.clickable-card');
-    const selectedCardId = localStorage.getItem('selectedCardId');
-    if (selectedCardId) {
-        const selectedCard = document.querySelector(`.clickable-card[data-id="${selectedCardId}"]`);
-        if (selectedCard) {
-            selectedCard.classList.add('active');
-        }
-    }
-
     cards.forEach(card => {
         card.addEventListener('click', function() {
             highlightCard(this);
+            const productData = JSON.parse(this.dataset.product);
+            showQuantityModal(productData);
         });
     });
 }
 
-function highlightCard(card) {
-    // Check if the card has the "Out-of-Stock" badge (bg-danger)
-    const outOfStockBadge = card.querySelector('.badge.bg-danger');
-    if (outOfStockBadge) {
-        return;
+// Add this CSS to your stylesheet
+const style = document.createElement('style');
+style.textContent = `
+    .non-clickable-card {
+        opacity: 0.6;
+        cursor: not-allowed;
     }
-
-    const selectedCardId = localStorage.getItem('selectedCardId');
-    if (card.getAttribute('data-id') === selectedCardId) {
-        card.classList.remove('active');
-        localStorage.removeItem('selectedCardId');
-        // Hide full generic name and show truncated version
-        card.querySelector('.full-generic-name').style.display = 'none';
-        card.querySelector('.generic-name').style.display = 'block';
-    } else {
-        const cards = document.querySelectorAll('.clickable-card');
-        cards.forEach(c => {
-            c.classList.remove('active');
-            c.querySelector('.full-generic-name').style.display = 'none';
-            c.querySelector('.generic-name').style.display = 'block';
-        });
-        card.classList.add('active');
-        localStorage.setItem('selectedCardId', card.getAttribute('data-id'));
-        // Show full generic name and hide truncated version
-        card.querySelector('.full-generic-name').style.display = 'block';
-        card.querySelector('.generic-name').style.display = 'none';
-    }
-}
+`;
+document.head.appendChild(style);
 
 // Add event listener for the search input
 const searchInput = document.querySelector('input[name="query"]');
@@ -240,60 +205,121 @@ searchInput.addEventListener('input', function() {
 // Add event listener for the Enter key on the search input
 searchInput.addEventListener('keypress', async function(event) {
     if (event.key === 'Enter') {
-        event.preventDefault(); // Prevent form submission if it's in a form
+        event.preventDefault();
         
-        // Check if the search input is empty
         if (this.value.trim() === '') {
-            // If the search input is empty, focus on the quantity input field
-            const quantityInput = document.getElementById('quantity-input');
-            if (quantityInput) {
-                quantityInput.focus(); // Focus on the quantity input
-            }
-            return; // Exit the function to avoid further execution
+            return;
         }
 
-        const selectedCardId = localStorage.getItem('selectedCardId');
-        const firstCard = document.querySelector('.clickable-card');
+        searchQuery = this.value;
+        currentPage = 1;
+        await loadProducts();
 
-        if (selectedCardId && firstCard) {
-            // Check if the product is already selected (to add to quantity)
-            if (selectedCardId === firstCard.getAttribute('data-id')) {
-                // Product is already selected, increment the quantity by 1
-                const quantityInput = document.getElementById('quantity-input');
-                let currentQuantity = parseInt(quantityInput.value, 10) || 0;
-                quantityInput.value = currentQuantity + 1; // Increment quantity
-            }
+        // Find the first clickable (in-stock) card
+        const firstClickableCard = document.querySelector('.clickable-card');
+        if (firstClickableCard) {
+            // Highlight the card
+            highlightCard(firstClickableCard);
+            
+            // Simulate a click on the card
+            firstClickableCard.click();
         } else {
-            // If no product is selected, update the search query and load products
-            searchQuery = this.value; 
-            currentPage = 1; 
-            await loadProducts(); // Await the loadProducts function
-            // Highlight the first product and set quantity to 1
-            if (firstCard) {
-                highlightCard(firstCard);
-                const quantityInput = document.getElementById('quantity-input');
-                if (quantityInput) {
-                    quantityInput.value = 1; // Automatically set the value to 1
-                    quantityInput.focus();    // Focus on the quantity input
-                }
-            }
+            showToast("No in-stock products found for your search.");
         }
 
-        // Ensure the product is highlighted before triggering the add button
-        setTimeout(() => {
-            const addItemButton = document.getElementById('add-item-button');
-            if (addItemButton && document.querySelector('.clickable-card.active')) {
-                addItemButton.click(); // Simulate a click on the "Add Item" button
-            }
-        }, 100); // Delay the click to allow proper product selection
-
-        // Clear the search bar
-        this.value = ''; 
-        
-        // Set focus back to the search input
-        searchInput.focus(); 
+        this.value = '';
+        this.focus();
     }
 });
+
+function showQuantityModal(product) {
+    const modalBody = document.getElementById('quantity-modal-body');
+    const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
+    let stockBadge = '';
+
+    // Check the stock level and set the appropriate badge with actual InStock value
+    if (product.InStock < 50 && product.InStock > 0) {
+        stockBadge = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
+    } else {
+        stockBadge = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
+    }
+    
+    modalBody.innerHTML = `
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="../inventory/${product.ProductIcon}" class="img-fluid rounded-start" alt="Product Icon">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        ${stockBadge}
+                        <small class="card-text">₱${product.PricePerUnit}</small>
+                        <h5 class="card-title">${product.BrandName} ${product.Mass}${formattedUnit}</h5>
+                        <p class="card-text">${product.GenericName}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const quantityInput = document.getElementById('modal-quantity-input');
+    quantityInput.value = 1;
+    quantityInput.max = product.InStock;
+
+    const addItemButton = document.getElementById('modal-add-item-button');
+    addItemButton.onclick = () => {
+        const quantity = parseInt(quantityInput.value, 10);
+        if (quantity > 0 && quantity <= product.InStock) {
+            addItemToBasket(product, quantity);
+            bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
+        } else {
+            showToast("Please enter a valid quantity.");
+        }
+    };
+
+    const modal = new bootstrap.Modal(document.getElementById('quantity-modal'));
+    modal.show();
+}
+
+// Find the cancel button in the quantity modal
+const cancelButton = document.getElementById('quantity-cancel');
+
+// Add click event listener to the cancel button
+cancelButton.addEventListener('click', function() {
+    // Remove the 'active' class from all cards
+    const cards = document.querySelectorAll('.clickable-card');
+    cards.forEach(card => {
+        card.classList.remove('active');
+    });
+
+    // Remove the selected card ID from localStorage
+    localStorage.removeItem('selectedCardId');
+});
+
+// Update the highlightCard function to work with the new behavior
+function highlightCard(card) {
+    // Check if the card has the "Out-of-Stock" badge (bg-danger)
+    const outOfStockBadge = card.querySelector('.badge.bg-danger');
+    if (outOfStockBadge) {
+        return;
+    }
+
+    const cards = document.querySelectorAll('.clickable-card');
+    cards.forEach(c => {
+        c.classList.remove('active');
+    });
+    card.classList.add('active');
+    localStorage.setItem('selectedCardId', card.getAttribute('data-id'));
+
+    // Scroll the card into view
+    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function showToast(message) {
+    const toast = new bootstrap.Toast(document.getElementById('alert-toast'));
+    document.querySelector('#alert-toast .toast-body').textContent = message;
+    toast.show();
+}
 
 // Load initial products and pagination
 loadProducts();
@@ -311,53 +337,54 @@ function showToast(message) {
 }
 
 // Function to add item to the basket
-function addItemToBasket() {
-    const selectedCard = document.querySelector('.clickable-card.active');
-    if (!selectedCard) {
-        showToast("Please select a product first.");
-        return;
-    }
-
-    const quantityInput = document.getElementById('quantity-input');
-    const quantity = parseInt(quantityInput.value, 10);
-    
-    if (quantity < 1 || isNaN(quantity)) {
-        showToast("Please enter a valid quantity.");
-        return;
-    }
-
-    const inStock = parseInt(selectedCard.getAttribute('data-in-stock'), 10);
-    
-    const existingItemIndex = basket.findIndex(item => item.id === selectedCard.getAttribute('data-id'));
+function addItemToBasket(product, quantity) {
+    const existingItemIndex = basket.findIndex(item => item.id === product.BrandName.toLowerCase().replace(/ /g, "-"));
 
     if (existingItemIndex > -1) {
-        // Check if adding the quantity would exceed in-stock amount
-        const newQuantity = basket[existingItemIndex].quantity + quantity;
-        if (newQuantity > inStock) {
-            alert(`Cannot add more. Only ${inStock} items are in stock.`);
-            return;
-        }
         basket[existingItemIndex].quantity += quantity;
     } else {
-        if (quantity > inStock) {
-            alert(`Cannot add more. Only ${inStock} items are in stock.`);
-            return;
-        }
-        const product = {
-            id: selectedCard.getAttribute('data-id'),
-            BrandName: selectedCard.querySelector('.card-title').textContent,
-            GenericName: selectedCard.querySelector('.card-text').textContent,
-            PricePerUnit: parseFloat(selectedCard.querySelector('.badge.bg-success').textContent.replace('₱', '')),
+        basket.push({
+            id: product.BrandName.toLowerCase().replace(/ /g, "-"),
+            BrandName: product.BrandName,
+            GenericName: product.GenericName,
+            PricePerUnit: product.PricePerUnit,
             quantity: quantity
-        };
-        basket.push(product);
+        });
     }
 
+    console.log('Item added to basket:', product.BrandName, 'Quantity:', quantity);
     updateBasketDisplay();
     updateCheckoutButtonState();
-    quantityInput.value = ''; // Reset quantity input
-    searchInput.focus(); // Set focus back to the search input
+
+    // Deselect the currently selected item
+    deselectCurrentItem();
 }
+
+function deselectCurrentItem() {
+    // Remove the 'active' class from all cards
+    const cards = document.querySelectorAll('.clickable-card');
+    cards.forEach(card => {
+        card.classList.remove('active');
+    });
+
+    // Remove the selected card ID from localStorage
+    localStorage.removeItem('selectedCardId');
+}
+
+// Update the event listener for the "Add Item" button
+document.getElementById('modal-add-item-button').onclick = () => {
+    const quantityInput = document.getElementById('modal-quantity-input');
+    const quantity = parseInt(quantityInput.value, 10);
+    const productData = JSON.parse(document.querySelector('.clickable-card.active').dataset.product);
+    
+    if (quantity > 0 && quantity <= productData.InStock) {
+        addItemToBasket(productData, quantity);
+        bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
+        // The item is automatically deselected in the addItemToBasket function
+    } else {
+        showToast("Please enter a valid quantity.");
+    }
+};
 
 // Function to update the basket display
 function updateBasketDisplay() {
@@ -392,6 +419,8 @@ function updateBasketDisplay() {
     document.getElementById('basket-total').textContent = `₱${totalAmount}`; // Update total
     document.getElementById('basket-tax').textContent = `₱${tax}`; // Update tax display
     updateCheckoutButtonState();
+
+    console.log('Basket updated. Total items:', basket.length, 'Total amount:', basketTotal.toFixed(2));
 }
 
 // Function to remove item from the basket
@@ -430,14 +459,23 @@ quantityInput.addEventListener('keypress', function(event) {
     }
 });
 
-document.getElementById('clear-search').addEventListener('click', function() {
+document.getElementById('clear-search').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent any default action
+    clearSearch();
+});
+
+function clearSearch() {
     const searchInput = document.querySelector('input[name="query"]');
     searchInput.value = ''; // Clear the input field
     searchQuery = ''; // Reset the search query
     currentPage = 1; // Reset to the first page
     loadProducts(); // Load all products
     searchInput.focus(); // Focus back on the input
-});
+    // Clear any highlighted cards
+    const cards = document.querySelectorAll('.clickable-card');
+    cards.forEach(card => card.classList.remove('active'));
+    localStorage.removeItem('selectedCardId');
+}
 
 // Update the modal total and set charge minimum when it's shown
 document.getElementById('verticalycentered').addEventListener('show.bs.modal', function (event) {
@@ -451,16 +489,18 @@ discountCheckboxes.forEach(checkbox => {
 });
 
 function updateModalTotal() {
-    const basketTotal = parseFloat(document.getElementById('basket-total').textContent.replace('₱', ''));
+    const subtotal = basket.reduce((total, item) => total + (item.PricePerUnit * item.quantity), 0);
+    const tax = subtotal * 0.12; // 12% tax
     let discountPercentage = 0;
 
     if (document.getElementById('seniorCitizenCheckbox').checked) discountPercentage += 20;
     if (document.getElementById('promoCheckbox').checked) discountPercentage += 10;
 
-    const discountAmount = basketTotal * (discountPercentage / 100);
-    const discountedTotal = basketTotal - discountAmount;
+    const discountAmount = subtotal * (discountPercentage / 100);
+    const discountedTotal = subtotal + tax - discountAmount;
 
     document.getElementById('total-display').textContent = `Total: ₱${discountedTotal.toFixed(2)}`;
+    console.log('Updated total:', discountedTotal.toFixed(2)); // Add this line for debugging
 }
 
 // Store for receipt items
@@ -468,18 +508,16 @@ let receiptItems = [];
 
 // Function to generate receipt items from basket and update the receipt display
 function generateReceiptItems() {
-    // Generate receipt items from the basket
     receiptItems = basket.map(item => ({
         quantity: item.quantity,
         item_name: item.BrandName,
-        total_item_price: (item.PricePerUnit * item.quantity).toFixed(2) // Calculate total item price for each item
+        total_item_price: (item.PricePerUnit * item.quantity).toFixed(2)
     }));
 
-    // Update total items, subtotal, tax, and amount due display
-    updateTotalItemsDisplay(); // Update total items
-    updateSubtotalDisplay(); // Update subtotal display
-    updateTaxDisplay(); // Update tax display
-    updateAmountDueDisplay(); // Update amount due display
+    updateTotalItemsDisplay();
+    updateSubtotalDisplay();
+    updateTaxDisplay();
+    updateAmountDueDisplay();
 }
 
 // Function to update total items display
@@ -566,11 +604,28 @@ function updateChangeDisplay() {
 }
 
 // Modify the existing checkout button event listener
-document.getElementById('checkout').addEventListener('click', function() {
-    generateReceiptItems();
-    displayReceiptItems();
-    updatePaymentDisplay();
-    updateChangeDisplay();
+document.addEventListener('DOMContentLoaded', function() {
+    const checkoutButton = document.getElementById('checkout');
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', function() {
+            if (basket.length === 0) {
+                showToast("Your basket is empty. Please add items before checking out.");
+                return;
+            }
+            console.log('Checkout button clicked'); // Debugging line
+            generateReceiptItems();
+            displayReceiptItems();
+            updatePaymentDisplay();
+            updateChangeDisplay();
+            updateModalTotal();
+
+            // Show the checkout modal
+            const checkoutModal = new bootstrap.Modal(document.getElementById('verticalycentered'));
+            checkoutModal.show();
+        });
+    } else {
+        console.error('Checkout button not found in the DOM');
+    }
 });
 
 // Update payment input event listener
@@ -701,3 +756,5 @@ document.getElementById('print-button').addEventListener('click', async function
 
     window.location.reload();  // Reloads the current page
 });
+
+//updated
