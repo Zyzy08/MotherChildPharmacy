@@ -601,20 +601,22 @@ function updateChangeDisplay() {
 }
 
 // Checkout button event listener
-document.addEventListener('DOMContentLoaded', function() {
-    const checkoutButton = document.querySelector('button[data-bs-target="#verticalycentered"]');
-    
-    if (checkoutButton) {
-        checkoutButton.addEventListener('click', function() {
-            const totalAmount = getBasketTotal();  // Get the total amount for the basket
+/*const checkoutButton = document.querySelector('button[data-bs-target="#verticalycentered"]');
+if (checkoutButton) {
+    checkoutButton.addEventListener('click', function() {
+        // Get the modal element by ID
+        const checkoutModalElement = document.getElementById('verticalycentered');
+
+        if (checkoutModalElement) {
+            // Show the modal first (optional step for debugging)
+            const checkoutModal = new bootstrap.Modal(checkoutModalElement);
+            checkoutModal.show();
 
             // Get the modal body container
-            const modalBody = document.querySelector('#verticalycentered .modal-body');
-            
-            // Clear the modal body to prevent duplicate content
-            modalBody.innerHTML = '';
+            const modalBody = checkoutModalElement.querySelector('.modal-body');
+            modalBody.innerHTML = ''; // Clear any existing content
 
-            // Create the Senior Citizen / PWD discount checkbox
+            // Create Senior Citizen / PWD discount checkbox
             const seniorCheckboxDiv = document.createElement('div');
             seniorCheckboxDiv.className = 'form-check form-switch';
             const seniorCheckbox = document.createElement('input');
@@ -628,7 +630,7 @@ document.addEventListener('DOMContentLoaded', function() {
             seniorCheckboxDiv.appendChild(seniorCheckbox);
             seniorCheckboxDiv.appendChild(seniorLabel);
 
-            // Create the Promotional discount checkbox
+            // Create Promotional discount checkbox
             const promoCheckboxDiv = document.createElement('div');
             promoCheckboxDiv.className = 'form-check form-switch';
             const promoCheckbox = document.createElement('input');
@@ -642,13 +644,13 @@ document.addEventListener('DOMContentLoaded', function() {
             promoCheckboxDiv.appendChild(promoCheckbox);
             promoCheckboxDiv.appendChild(promoLabel);
 
-            // Create the Total display
+            // Create Total display
             const totalDisplay = document.createElement('h2');
             totalDisplay.id = 'total-display';
             totalDisplay.style.fontWeight = 'bold';
-            totalDisplay.textContent = `Total: ₱${totalAmount.toFixed(2)}`;
+            totalDisplay.textContent = 'Total: ₱0.00'; // Placeholder for total amount
 
-            // Create the Payment input field
+            // Create Payment input field
             const paymentRow = document.createElement('div');
             paymentRow.className = 'row mb-0';
             const paymentLabel = document.createElement('h2');
@@ -667,7 +669,7 @@ document.addEventListener('DOMContentLoaded', function() {
             paymentRow.appendChild(paymentLabel);
             paymentRow.appendChild(paymentInputDiv);
 
-            // Create the Change display
+            // Create Change display
             const changeDisplay = document.createElement('h2');
             changeDisplay.id = 'change-display';
             changeDisplay.style.fontWeight = 'bold';
@@ -683,17 +685,25 @@ document.addEventListener('DOMContentLoaded', function() {
             modalBody.appendChild(document.createElement('br'));
             modalBody.appendChild(changeDisplay);
 
-            // Reset payment input and change display
+            // Reset payment input and change display (if needed)
             paymentInput.value = '';
             changeDisplay.textContent = 'Change: ₱0.00';
+        } else {
+            console.error('Checkout modal not found in the DOM');
+        }
+    });
+} else {
+    console.error('Checkout button not found in the DOM');
+}*/
 
-            // Show the checkout modal
-            const checkoutModal = new bootstrap.Modal(document.getElementById('verticalycentered'));
-            checkoutModal.show();
-        });
-    } else {
-        console.error('Checkout button not found in the DOM');
-    }
+// Get the checkout button and total display element
+const checkoutButton = document.getElementById('checkout');
+const totalDisplay = document.getElementById('total-display');
+
+// Add a click event listener to the checkout button
+checkoutButton.addEventListener('click', function () {
+  // Change the total display text to "Hi"
+  totalDisplay.textContent = 'Hi';
 });
 
 // Payment input event listener
