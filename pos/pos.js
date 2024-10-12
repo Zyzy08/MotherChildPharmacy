@@ -603,28 +603,89 @@ function updateChangeDisplay() {
 // Checkout button event listener
 document.addEventListener('DOMContentLoaded', function() {
     const checkoutButton = document.querySelector('button[data-bs-target="#verticalycentered"]');
+    
     if (checkoutButton) {
         checkoutButton.addEventListener('click', function() {
-            if (basket.length === 0) {
-                showToast("Your basket is empty. Please add items before checking out.");
-                return;
-            }
+            const totalAmount = getBasketTotal();  // Get the total amount for the basket
 
-            const totalAmount = getBasketTotal();
+            // Get the modal body container
+            const modalBody = document.querySelector('#verticalycentered .modal-body');
+            
+            // Clear the modal body to prevent duplicate content
+            modalBody.innerHTML = '';
 
-            // Update the total display in the modal
-            const totalDisplay = document.getElementById('total-display');
-            if (totalDisplay) {
-                totalDisplay.textContent = `Total: ₱${totalAmount}`;
-            } else {
-                console.error('Total display element not found');
-            }
+            // Create the Senior Citizen / PWD discount checkbox
+            const seniorCheckboxDiv = document.createElement('div');
+            seniorCheckboxDiv.className = 'form-check form-switch';
+            const seniorCheckbox = document.createElement('input');
+            seniorCheckbox.className = 'form-check-input';
+            seniorCheckbox.type = 'checkbox';
+            seniorCheckbox.id = 'seniorCitizenCheckbox';
+            const seniorLabel = document.createElement('label');
+            seniorLabel.className = 'form-check-label';
+            seniorLabel.setAttribute('for', 'seniorCitizenCheckbox');
+            seniorLabel.textContent = 'Senior Citizen / PWD (20%)';
+            seniorCheckboxDiv.appendChild(seniorCheckbox);
+            seniorCheckboxDiv.appendChild(seniorLabel);
 
-            // Reset payment input
-            document.getElementById('paymentInput').value = '';
+            // Create the Promotional discount checkbox
+            const promoCheckboxDiv = document.createElement('div');
+            promoCheckboxDiv.className = 'form-check form-switch';
+            const promoCheckbox = document.createElement('input');
+            promoCheckbox.className = 'form-check-input';
+            promoCheckbox.type = 'checkbox';
+            promoCheckbox.id = 'promoCheckbox';
+            const promoLabel = document.createElement('label');
+            promoLabel.className = 'form-check-label';
+            promoLabel.setAttribute('for', 'promoCheckbox');
+            promoLabel.textContent = 'Promotional (10%)';
+            promoCheckboxDiv.appendChild(promoCheckbox);
+            promoCheckboxDiv.appendChild(promoLabel);
 
-            // Reset change display
-            document.getElementById('change-display').textContent = 'Change: ₱0.00';
+            // Create the Total display
+            const totalDisplay = document.createElement('h2');
+            totalDisplay.id = 'total-display';
+            totalDisplay.style.fontWeight = 'bold';
+            totalDisplay.textContent = `Total: ₱${totalAmount.toFixed(2)}`;
+
+            // Create the Payment input field
+            const paymentRow = document.createElement('div');
+            paymentRow.className = 'row mb-0';
+            const paymentLabel = document.createElement('h2');
+            paymentLabel.className = 'col-sm-5';
+            paymentLabel.style.fontWeight = 'bold';
+            paymentLabel.textContent = 'Payment: ₱';
+            const paymentInputDiv = document.createElement('div');
+            paymentInputDiv.className = 'col-sm-6';
+            const paymentInput = document.createElement('input');
+            paymentInput.type = 'number';
+            paymentInput.id = 'paymentInput';
+            paymentInput.className = 'form-control no-arrows';
+            paymentInput.min = '1';
+            paymentInput.placeholder = '0';
+            paymentInputDiv.appendChild(paymentInput);
+            paymentRow.appendChild(paymentLabel);
+            paymentRow.appendChild(paymentInputDiv);
+
+            // Create the Change display
+            const changeDisplay = document.createElement('h2');
+            changeDisplay.id = 'change-display';
+            changeDisplay.style.fontWeight = 'bold';
+            changeDisplay.textContent = 'Change: ₱0.00';
+
+            // Append all elements to the modal body
+            modalBody.appendChild(seniorCheckboxDiv);
+            modalBody.appendChild(promoCheckboxDiv);
+            modalBody.appendChild(document.createElement('br'));
+            modalBody.appendChild(totalDisplay);
+            modalBody.appendChild(document.createElement('br'));
+            modalBody.appendChild(paymentRow);
+            modalBody.appendChild(document.createElement('br'));
+            modalBody.appendChild(changeDisplay);
+
+            // Reset payment input and change display
+            paymentInput.value = '';
+            changeDisplay.textContent = 'Change: ₱0.00';
 
             // Show the checkout modal
             const checkoutModal = new bootstrap.Modal(document.getElementById('verticalycentered'));

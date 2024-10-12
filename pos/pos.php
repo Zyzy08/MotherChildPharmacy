@@ -322,24 +322,7 @@
             <h5 class="modal-title">Checkout</h5>
           </div>
           <div class="modal-body">
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="seniorCitizenCheckbox">
-              <label class="form-check-label" for="seniorCitizenCheckbox">Senior Citizen / PWD (20%)</label>
-            </div>
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="promoCheckbox">
-              <label class="form-check-label" for="promoCheckbox">Promotional (10%)</label>
-            </div>
-            <br><h2 id="total-display" style="font-weight: bold;">Total: ₱0.00</h2><br>
-
-            <div class="row mb-0">
-              <h2 for="paymentInput" class="col-sm-5" style="font-weight: bold;">Payment: ₱</h2>
-              <div class="col-sm-6">
-                <input type="number" id="paymentInput" class="form-control no-arrows" min="1" placeholder="0">
-              </div>
-            </div>
-
-            <br><h2 id="change-display" style="font-weight: bold;">Change: ₱0.00</h2>
+            <!-- Dynamic content will be added here via JavaScript -->
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
