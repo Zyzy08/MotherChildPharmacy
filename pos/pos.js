@@ -220,7 +220,7 @@ function showQuantityModal(product) {
     quantityInput.max = product.InStock;
 
     const addItemButton = document.getElementById('add-item-button');
-    const addItemToBasketHandler = () => {
+    addItemButton.onclick = () => {
         const quantity = parseInt(quantityInput.value, 10);
         if (quantity > 0 && quantity <= product.InStock) {
             addItemToBasket(product, quantity);
@@ -230,12 +230,11 @@ function showQuantityModal(product) {
         }
     };
 
-    addItemButton.onclick = addItemToBasketHandler;
-
+    // Add event listener for Enter key
     quantityInput.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
-            event.preventDefault();
-            addItemToBasketHandler();
+            event.preventDefault(); // Prevent form submission
+            addItemButton.click(); // Trigger the Add Item button click
         }
     });
 
