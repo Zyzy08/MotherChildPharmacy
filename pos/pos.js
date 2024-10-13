@@ -495,29 +495,87 @@ function fetchInvoiceID() {
 document.addEventListener('DOMContentLoaded', fetchInvoiceID);
 
 document.getElementById('print-button').addEventListener('click', function() {
-    // Get the InvoiceID from the order number
+    // Collect all the necessary data
     const invoiceID = parseInt(document.getElementById('order-num').textContent.match(/\d+/)[0]);
+    const saleDate = document.getElementById('date').textContent + ' ' + document.getElementById('time').textContent;
+    const accountID = parseInt(document.getElementById('staff').textContent.match(/\d+/)[0]);
+    
+    // Collect sales details
+    const salesDetails = [];
+    document.querySelectorAll('#receiptItems .row:not(:first-child)').forEach(row => {
+        const columns = row.querySelectorAll('small');
+        salesDetails.push({
+            quantity: parseInt(columns[0].textContent),
+            item_name: columns[1].textContent,
+            total_item_price: parseFloat(columns[2].textContent.replace('₱', ''))
+        });
+    });
+    
+    const totalItems = parseInt(document.getElementById('total-items').textContent);
+    const subtotal = parseFloat(document.getElementById('sub-total').textContent.replace('₱', ''));
+    const tax = parseFloat(document.getElementById('tax').textContent.replace('₱', ''));
+    const discount = parseFloat(document.getElementById('total-display').textContent.match(/Total: ₱([\d.]+)/)[1]) - subtotal - tax;
+    const netAmount = parseFloat(document.getElementById('amount-due').textContent.replace('₱', ''));
+    const amountPaid = parseFloat(document.getElementById('payment').textContent.replace('₱', ''));
+    const amountChange = parseFloat(document.getElementById('change').textContent.replace('₱', ''));
 
-    console.log('Sending InvoiceID:', invoiceID);
+    // Prepare the data object
+    const saleData = {
+        invoiceID,
+        saleDate,
+        accountID,
+        salesDetails: JSON.stringify(salesDetails),
+        totalItems,
+        subtotal,
+        tax,
+        discount,
+        netAmount,
+        amountPaid,
+        amountChange
+    };
 
-    // Send only the InvoiceID to the server
+    console.log('Sale data being sent:', saleData);
+
+    // Send the data to the server
     fetch('update_sales.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ invoiceID: invoiceID }),
+        body: JSON.stringify(saleData),
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Raw response:', response);
+        return response.text();
+    })
+    .then(text => {
+        console.log('Response text:', text);
+        try {
+            return JSON.parse(text);
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            throw new Error('Invalid JSON response');
+        }
+    })
     .then(data => {
         if (data.success) {
-            console.log('InvoiceID recorded successfully');
+            console.log('Sale recorded successfully');
             // Proceed with printing logic here
             window.print();
+            // Clear the basket and update the UI
+            basket = [];
+            updateBasketDisplay();
+            updateCheckoutButtonState();
+            // Close the modal
+            bootstrap.Modal.getInstance(document.getElementById('verticalycentered')).hide();
             // Show a success message
-            showToast('Sale recorded and printed successfully!');
+            showToast('Sale completed and printed successfully!');
+            // Reload the page after a short delay
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
         } else {
-            console.error('Error recording InvoiceID:', data.error);
+            console.error('Error recording sale:', data.error);
             showToast('Error recording sale. Please try again.');
         }
     })

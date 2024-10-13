@@ -30,21 +30,80 @@ logError("Received data: " . $rawData);
 // Parse the JSON data
 $data = json_decode($rawData, true);
 
-if ($data === null || !isset($data['invoiceID'])) {
-    logError("Invalid or missing InvoiceID");
-    die(json_encode(['success' => false, 'error' => 'Invalid or missing InvoiceID']));
+if ($data === null) {
+    logError("Failed to parse JSON data");
+    die(json_encode(['success' => false, 'error' => 'Failed to parse JSON data']));
 }
 
 try {
-    // Prepare the SQL statement
-    $sql = "INSERT INTO sales (InvoiceID) VALUES (?) ON DUPLICATE KEY UPDATE InvoiceID = InvoiceID";
-    
-    $stmt = $conn->prepare($sql);
-    if (!$stmt) {
-        throw new Exception("Prepare failed: " . $conn->error);
+    // Validate required fields
+    $requiredFields = ['invoiceID', 'saleDate', 'accountID', 'salesDetails', 'totalItems', 
+                       'subtotal', 'tax', 'discount', 'netAmount', 'amountPaid', 'amountChange'];
+    foreach ($requiredFields as $field) {
+        if (!isset($data[$field])) {
+            throw new Exception("Missing required field: $field");
+        }
     }
 
-    $stmt->bind_param("i", $data['invoiceID']);
+    // Check if the InvoiceID already exists
+    $checkSql = "SELECT InvoiceID FROM sales WHERE InvoiceID = ?";
+    $checkStmt = $conn->prepare($checkSql);
+    if (!$checkStmt) {
+        throw new Exception("Prepare failed for check: " . $conn->error);
+    }
+    $checkStmt->bind_param("i", $data['invoiceID']);
+    if (!$checkStmt->execute()) {
+        throw new Exception("Execute failed for check: " . $checkStmt->error);
+    }
+    $result = $checkStmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // InvoiceID already exists, update the record
+        $sql = "UPDATE sales SET SaleDate = ?, AccountID = ?, SalesDetails = ?, TotalItems = ?, 
+                Subtotal = ?, Tax = ?, Discount = ?, NetAmount = ?, AmountPaid = ?, AmountChange = ? 
+                WHERE InvoiceID = ?";
+        
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            throw new Exception("Prepare failed for update: " . $conn->error);
+        }
+        $stmt->bind_param("sisidddddddi", 
+            $data['saleDate'],
+            $data['accountID'],
+            $data['salesDetails'],
+            $data['totalItems'],
+            $data['subtotal'],
+            $data['tax'],
+            $data['discount'],
+            $data['netAmount'],
+            $data['amountPaid'],
+            $data['amountChange'],
+            $data['invoiceID']
+        );
+    } else {
+        // InvoiceID doesn't exist, insert a new record
+        $sql = "INSERT INTO sales (InvoiceID, SaleDate, AccountID, SalesDetails, TotalItems, 
+                Subtotal, Tax, Discount, NetAmount, AmountPaid, AmountChange) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            throw new Exception("Prepare failed for insert: " . $conn->error);
+        }
+        $stmt->bind_param("isisidddddd", 
+            $data['invoiceID'],
+            $data['saleDate'],
+            $data['accountID'],
+            $data['salesDetails'],
+            $data['totalItems'],
+            $data['subtotal'],
+            $data['tax'],
+            $data['discount'],
+            $data['netAmount'],
+            $data['amountPaid'],
+            $data['amountChange']
+        );
+    }
 
     // Execute the statement
     if (!$stmt->execute()) {
