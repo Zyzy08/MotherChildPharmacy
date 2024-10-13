@@ -433,16 +433,16 @@
               <small id="order-num">Order No.: #0000000</small>
             </div>
             <div class="col-xl-6">
-              <small>Date: <?php echo date('F j, Y'); ?></small>
+              <small id="date">Date: <?php echo date('F j, Y'); ?></small>
             </div>
           </div>
 
           <div class="row mb-3 text-center justify-content-between">
             <div class="col-xl-6">
-              <small>Staff: <?php echo htmlspecialchars($employeeFullName); ?></small>
+              <small id="staff">Staff: <?php echo htmlspecialchars($employeeFullName); ?></small>
             </div>
             <div class="col-xl-6">
-              <small>Time: 
+              <small id="time">Time: 
                 <?php date_default_timezone_set('Asia/Manila'); // Set timezone to GMT+8
                 echo date('h:i A');?>
               </small>

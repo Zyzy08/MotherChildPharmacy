@@ -474,16 +474,6 @@ document.getElementById('paymentInput').addEventListener('input', function() {
     updateChangeDisplay();
 });
 
-document.getElementById('paymentInput').addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        const confirmButton = document.getElementById('confirm-button');
-        if (!confirmButton.hasAttribute('disabled')) {
-            confirmButton.click();
-        }
-    }
-});
-
 document.getElementById('cancel-receipt').addEventListener('click', function() {
     setTimeout(() => {
         const checkoutModal = new bootstrap.Modal(document.getElementById('verticalycentered'));
@@ -505,5 +495,34 @@ function fetchInvoiceID() {
 document.addEventListener('DOMContentLoaded', fetchInvoiceID);
 
 document.getElementById('print-button').addEventListener('click', function() {
-    window.location.reload();
+    // Get the InvoiceID from the order number
+    const invoiceID = parseInt(document.getElementById('order-num').textContent.match(/\d+/)[0]);
+
+    console.log('Sending InvoiceID:', invoiceID);
+
+    // Send only the InvoiceID to the server
+    fetch('update_sales.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ invoiceID: invoiceID }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('InvoiceID recorded successfully');
+            // Proceed with printing logic here
+            window.print();
+            // Show a success message
+            showToast('Sale recorded and printed successfully!');
+        } else {
+            console.error('Error recording InvoiceID:', data.error);
+            showToast('Error recording sale. Please try again.');
+        }
+    })
+    .catch((error) => {
+        console.error('Fetch error:', error);
+        showToast('An error occurred. Please try again.');
+    });
 });

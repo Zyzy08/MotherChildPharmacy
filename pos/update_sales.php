@@ -3,6 +3,11 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Function to log errors
+function logError($message) {
+    error_log(date('[Y-m-d H:i:s] ') . $message . "\n", 3, 'error.log');
+}
+
 // Database connection parameters
 $servername = "localhost";
 $username = "root";
@@ -14,54 +19,32 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
+    logError("Connection failed: " . $conn->connect_error);
     die(json_encode(['success' => false, 'error' => "Connection failed: " . $conn->connect_error]));
 }
 
 // Get the raw POST data
 $rawData = file_get_contents('php://input');
-// Log the raw data
-error_log("Received data: " . $rawData);
+logError("Received data: " . $rawData);
 
 // Parse the JSON data
 $data = json_decode($rawData, true);
 
-if ($data === null) {
-    die(json_encode(['success' => false, 'error' => 'Failed to parse JSON data']));
+if ($data === null || !isset($data['invoiceID'])) {
+    logError("Invalid or missing InvoiceID");
+    die(json_encode(['success' => false, 'error' => 'Invalid or missing InvoiceID']));
 }
 
 try {
-    // Validate required fields
-    $requiredFields = ['invoiceID', 'saleDate', 'accountID', 'salesDetails', 'totalItems', 
-                       'subtotal', 'tax', 'discount', 'netAmount', 'amountPaid', 'amountChange'];
-    foreach ($requiredFields as $field) {
-        if (!isset($data[$field])) {
-            throw new Exception("Missing required field: $field");
-        }
-    }
-
     // Prepare the SQL statement
-    $sql = "INSERT INTO sales (InvoiceID, SaleDate, AccountID, SalesDetails, TotalItems, 
-            Subtotal, Tax, Discount, NetAmount, AmountPaid, AmountChange) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO sales (InvoiceID) VALUES (?) ON DUPLICATE KEY UPDATE InvoiceID = InvoiceID";
     
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         throw new Exception("Prepare failed: " . $conn->error);
     }
 
-    $stmt->bind_param("isisidddddd", 
-        $data['invoiceID'],
-        $data['saleDate'],
-        $data['accountID'],
-        $data['salesDetails'],
-        $data['totalItems'],
-        $data['subtotal'],
-        $data['tax'],
-        $data['discount'],
-        $data['netAmount'],
-        $data['amountPaid'],
-        $data['amountChange']
-    );
+    $stmt->bind_param("i", $data['invoiceID']);
 
     // Execute the statement
     if (!$stmt->execute()) {
@@ -73,7 +56,7 @@ try {
     $stmt->close();
 
 } catch (Exception $e) {
-    error_log("Error in update_sales.php: " . $e->getMessage());
+    logError("Error in update_sales.php: " . $e->getMessage());
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
 
