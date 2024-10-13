@@ -230,14 +230,6 @@ function showQuantityModal(product) {
         }
     };
 
-    // Add event listener for Enter key
-    quantityInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent form submission
-            addItemButton.click(); // Trigger the Add Item button click
-        }
-    });
-
     new bootstrap.Modal(document.getElementById('quantity-modal')).show();
 }
 
@@ -480,6 +472,16 @@ document.getElementById('paymentInput').addEventListener('input', function() {
     
     updatePaymentDisplay();
     updateChangeDisplay();
+});
+
+document.getElementById('paymentInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const confirmButton = document.getElementById('confirm-button');
+        if (!confirmButton.hasAttribute('disabled')) {
+            confirmButton.click();
+        }
+    }
 });
 
 document.getElementById('cancel-receipt').addEventListener('click', function() {
