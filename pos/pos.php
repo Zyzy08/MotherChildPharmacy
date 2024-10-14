@@ -238,18 +238,6 @@
                           <li class="page-item active" id="page-1">
                             <a class="page-link" href="#">1</a>
                           </li>
-                          <li class="page-item" id="page-2">
-                            <a class="page-link" href="#">2</a>
-                          </li>
-                          <li class="page-item" id="page-3">
-                            <a class="page-link" href="#">3</a>
-                          </li>
-                          <li class="page-item" id="page-4">
-                            <a class="page-link" href="#">4</a>
-                          </li>
-                          <li class="page-item" id="page-5">
-                            <a class="page-link" href="#">5</a>
-                          </li>
                           <li class="page-item" id="next-page">
                             <a class="page-link" href="#">Next</a>
                           </li>
@@ -285,7 +273,7 @@
                           <p id="basket-total">₱0.00</p>
                       </div>
                       <div class="d-grid gap-2 mt-3">
-                        <button id="checkout" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
+                        <button id="checkout" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered" disabled>
                           Checkout
                         </button>
                       </div>
@@ -313,11 +301,11 @@
                 <button id="quantity-cancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
               </div>
               <div class="col-lg-4">
-                <input type="number" class="form-control" id="modal-quantity-input" placeholder="Quantity" min="1">
+                <input type="number" class="form-control" id="quantity-input" placeholder="Quantity" min="1">
               </div>
               <div class="col-lg-5">
                 <div class="d-grid gap-2">
-                  <button class="btn btn-primary" id="modal-add-item-button" type="button">Add Item</button>
+                  <button class="btn btn-primary" id="add-item-button" type="button">Add Item</button>
                 </div>
               </div>
             </div>
@@ -354,7 +342,7 @@
             <br><h2 id="change-display" style="font-weight: bold;">Change: ₱0.00</h2>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="checkout-cancel-button">Cancel</button>
             <div class="d-grid gap-2">
               <button id="confirm-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal" disabled>
                 Confirm
@@ -445,16 +433,16 @@
               <small id="order-num">Order No.: #0000000</small>
             </div>
             <div class="col-xl-6">
-              <small>Date: <?php echo date('F j, Y'); ?></small>
+              <small id="date">Date: <?php echo date('F j, Y'); ?></small>
             </div>
           </div>
 
           <div class="row mb-3 text-center justify-content-between">
             <div class="col-xl-6">
-              <small>Staff: <?php echo htmlspecialchars($employeeFullName); ?></small>
+              <small id="staff">Staff: <?php echo htmlspecialchars($employeeFullName); ?></small>
             </div>
             <div class="col-xl-6">
-              <small>Time: 
+              <small id="time">Time: 
                 <?php date_default_timezone_set('Asia/Manila'); // Set timezone to GMT+8
                 echo date('h:i A');?>
               </small>
