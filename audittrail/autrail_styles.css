@@ -1,0 +1,1000 @@
+.button {
+  cursor: pointer;
+  height: 36px;
+  width: 120px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #FFFFFFFF;
+  /* white */
+  background: #005500FF;
+  /* primary-500 */
+  opacity: 1;
+  border: none;
+  border-radius: 12px;
+  /* border-l */
+  gap: 6px;
+  margin-bottom: 10px;
+  margin-left: 12px;
+}
+
+/* Hover */
+.button:hover {
+  color: #FFFFFFFF;
+  /* white */
+  background: #004200FF;
+  /* primary-650 */
+}
+
+/* Pressed */
+.button:hover:active {
+  color: #FFFFFFFF;
+  /* white */
+  background: #002D00FF;
+  /* primary-800 */
+}
+
+/* Disabled */
+.button:disabled {
+  opacity: 0.4;
+}
+
+.buttonOpt {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+  /* cursor: pointer; */
+  /* opacity: 1; */
+  position: absolute;
+  top: 102px;
+  left: 412px;
+  height: 36px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #FFFFFFFF;
+  background: rgb(103, 133, 146);
+  border: none;
+  border-radius: 3px;
+  gap: 6px;
+}
+
+.buttonOptEnabled {
+  cursor: pointer;
+  opacity: 1;
+  position: absolute;
+  top: 102px;
+  left: 412px;
+  height: 36px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #FFFFFFFF;
+  background: rgb(103, 133, 146);
+  border: none;
+  border-radius: 3px;
+  gap: 6px;
+}
+
+/* Hover */
+.buttonDel:hover {
+  color: #FFFFFFFF;
+  /* white */
+  background: #C12126FF;
+  /* danger-600 */
+}
+
+/* Pressed */
+.buttonDel:hover:active {
+  color: #FFFFFFFF;
+  /* white */
+  background: #AA1D22FF;
+  /* danger-650 */
+}
+
+/* Disabled */
+.buttonDel:disabled {
+  opacity: 0.4;
+}
+
+/* Textbox 58 */
+.searchbox {
+  position: absolute;
+  top: 156px;
+  right: 0.5%;
+  opacity: 1;
+}
+
+.searchbox input {
+  width: 347px;
+  height: 30px;
+  padding-left: 34px;
+  padding-right: 12px;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  background: #F3F4F6FF;
+  /* neutral-200 */
+  border-radius: 3px;
+  /* border-l */
+  border-width: 0px;
+  outline: none;
+}
+
+.searchbox svg {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 16px;
+  height: 16px;
+  fill: #171A1FFF;
+  /* neutral-900 */
+}
+
+.searchbox svg.left {
+  left: 12px;
+}
+
+/* focused */
+.searchbox input:focused {
+  color: #BDC1CAFF;
+  /* neutral-400 */
+  background: #FFFFFFFF;
+  /* white */
+}
+
+/* disabled */
+.searchbox input:disabled {
+  color: #BDC1CAFF;
+  /* neutral-400 */
+  background: #F3F4F6FF;
+  /* neutral-200 */
+}
+
+.searchbox :disabled+.icon,
+.textbox :disabled+.icon+.icon {
+  fill: #171A1FFF;
+  /* neutral-900 */
+}
+
+.usercount {
+  width: 107px;
+  height: 31px;
+  /* Body */
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #171A1FFF;
+  /* neutral-900 */
+}
+
+.highlight-row {
+  background-color: #f4f4f4;
+}
+
+.selected {
+  background-color: #cfe2ff;
+}
+
+.edit-width {
+  width: 80px;
+}
+
+.same-width {
+  width: 150px;
+}
+
+.avatar2block {
+  width: auto;
+}
+
+.avatar2 {
+  width: 30px;
+  height: 30px;
+  background: #86FF86FF;
+  opacity: 1;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.avatar2 img {
+  width: 30px;
+  height: 30px;
+}
+
+.avatar2 .badge {
+  width: 9px;
+  height: 9px;
+  border-radius: 4.5px;
+}
+
+.avatar2.active .badge {
+  background: #000000FF;
+  /* transparent */
+  opacity: 0;
+  border-width: 1.5px;
+  border-color: #FFFFFFFF;
+}
+
+.avatar2.inactive .badge {
+  background: #000000FF;
+  /* transparent */
+  opacity: 0;
+  border-width: 1.5px;
+  border-color: #FFFFFFFF;
+}
+
+.avatar2.idle .badge {
+  background: #000000FF;
+  /* transparent */
+  opacity: 0;
+  border-width: 1.5px;
+  border-color: #FFFFFFFF;
+}
+
+.avatar2.do_not_disturb .badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  line-height: 9px;
+  color: #FFFFFFFF;
+  background: #000000FF;
+  /* transparent */
+  opacity: 0;
+  border-width: 1.5px;
+  border-color: #FFFFFFFF;
+}
+
+.align-mid {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.align-left {
+  text-align: left;
+  vertical-align: middle;
+}
+
+.align-right {
+  text-align: right;
+  vertical-align: middle;
+}
+
+/* Overlay styles */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent background */
+  display: none;
+  /* Hidden by default */
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  /* High z-index value to ensure it's on top */
+}
+
+.overlay-content h3 {
+  color: rgb(0, 141, 0);
+}
+
+.overlayAD-content {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 8px;
+  width: auto;
+  position: relative;
+}
+
+.overlay-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: flex;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+}
+
+input {
+  margin-bottom: 15px;
+  padding: 8px;
+  font-size: 16px;
+}
+
+#deleteDataBtn {
+  margin-top: 10px;
+  width: 250px;
+  background-color: #af4c4c;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+#deleteDataBtn:hover {
+  background-color: #a04545;
+}
+
+#deleteDataBtn:disabled {
+  color: #d6d6d6;
+  /* Background color when disabled */
+  background-color: #a1a1a1;
+  /* Text color when disabled */
+  cursor: not-allowed;
+  /* Change cursor to indicate it’s not clickable */
+}
+
+#unarchiveUserBtn,
+#archiveUserBtn {
+  width: 250px;
+  background-color: #af844c;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#unarchiveUserBtn:hover,
+#archiveUserBtn:hover {
+  background-color: #a07545;
+}
+
+#resetPasswordBtn {
+  margin-top: 10px;
+  width: 250px;
+  background-color: #4c8baf;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#resetPasswordBtn:hover {
+  background-color: #456fa0;
+}
+
+button[type="submit"] {
+  width: 80px;
+  background-color: #4CAF50;
+  /* Green background */
+  color: white;
+  /* White text */
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  /* Optional: Rounded corners */
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+  /* Darker green on hover */
+}
+
+#cancelBtn,
+#resetEdit,
+button[type="reset"] {
+  width: 80px;
+  background-color: #af4c4c;
+  color: white;
+  /* White text */
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  /* Optional: Rounded corners */
+}
+
+#cancelBtn,
+#resetEdit:hover,
+button[type="reset"]:hover {
+  background-color: #a04545;
+}
+
+.textboxHidden {
+  display: none;
+}
+
+.textbox {
+  opacity: 1;
+}
+
+.textbox input {
+  flex: 1;
+  width: 230px;
+  height: 40px;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  background: #F3F4F6FF;
+  /* neutral-200 */
+  border-radius: 4px;
+  /* border-xl */
+  border-width: 0px;
+  outline: none;
+}
+
+.textbox select {
+  flex: 1;
+  display: block;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  width: 205px;
+  height: 24px;
+  padding: 7.6px 12px 7.6px 12px;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  background: #F3F4F6FF;
+  /* neutral-200 */
+  border-radius: 4px;
+  /* border-xl */
+  border-width: 0px;
+  outline: none;
+}
+
+.textbox .label {
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 700;
+}
+
+.textbox input:hover {
+  color: #171A1FFF;
+  /* neutral-900 */
+  background: #F3F4F6FF;
+  /* neutral-200 */
+}
+
+.textbox input:focused {
+  color: #171A1FFF;
+  /* neutral-900 */
+  background: #FFFFFFFF;
+  /* white */
+}
+
+.textbox input:disabled {
+  color: rgb(182, 182, 182);
+  /* neutral-900 */
+  background: #F3F4F6FF;
+  /* neutral-200 */
+}
+
+.textbox :disabled+.icon,
+.textbox :disabled+.icon+.icon {
+  fill: #171A1FFF;
+  /* neutral-900 */
+}
+
+.container {
+  display: flex;
+  /* Use Flexbox */
+  gap: 40px;
+  /* Space between the elements */
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  /* Distribute space between the buttons */
+}
+
+.button-container-2 {
+  display: flex;
+  justify-content: end;
+  /* Distribute space between the buttons */
+}
+
+#preview {
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
+  border: 1px solid #ddd;
+  display: block;
+  border-radius: 32px;
+}
+
+#previewEdit {
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
+  border: 1px solid #ddd;
+  display: block;
+  border-radius: 32px;
+}
+
+input[type="file"] {
+  display: block;
+}
+
+.line {
+  width: 100%;
+  height: 0px;
+  border-width: 1px;
+  border-color: rgb(131, 136, 143);
+  /* neutral-300 */
+  border-style: solid;
+  margin-bottom: 15px;
+}
+
+/* Modal content */
+.modal-content {
+  background-color: #fefefe;
+  margin: 50% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  /* Could be more or less, depending on screen size */
+}
+
+/* Close button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin: 10px 0;
+}
+
+.overlayText {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent background */
+  display: none;
+  /* Hidden by default */
+  align-items: center;
+  justify-content: center;
+}
+
+/* Style for the password cell */
+.password-cell {
+  position: relative;
+}
+
+/* Hover effect */
+.password-cell:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: 0;
+  top: 23%;
+  background-color: #fff;
+  z-index: 10;
+  white-space: nowrap;
+  display: block;
+}
+
+/* Style for Offline status */
+.status-offline {
+  color: rgb(255, 136, 136);
+}
+
+/* Style for Online status */
+.status-online {
+  color: rgb(98, 202, 107);
+}
+
+.transactionsTableSize {
+  width: 95%;
+  margin-left: 17px;
+}
+
+.permissionsBox .label {
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  /* Aligns the label and switch vertically */
+}
+
+.permissionsBox {
+  width: 230px;
+}
+
+.permissionsSelect,
+.permissionsSelectEdit {
+  color: rgb(194, 195, 199);
+  background: #F3F4F6FF;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, auto);
+  padding-top: 10px;
+  padding-left: 5px;
+  padding-right: 12px;
+  font-size: 12px;
+  font-weight: 400;
+  border-radius: 4px;
+  border-width: 0px;
+  outline: none;
+  width: 100%;
+}
+
+.permissionsSelect.enabled,
+.permissionsSelectEdit.enabled {
+  color: black;
+}
+
+.permissionsSelectEdit input[type="checkbox"],
+.permissionsSelect input[type="checkbox"] {
+  width: auto;
+  /* Ensure width is not set to a specific value */
+  height: fit-content;
+  margin-right: 3px;
+  /* Space between checkbox and label */
+  vertical-align: middle;
+  /* Align checkboxes with text */
+}
+
+#permsToggleEdit,
+#permsToggle {
+  cursor: pointer;
+  margin-left: 4px;
+  padding-bottom: 4px;
+}
+
+.textboxHidden {
+  display: none;
+}
+
+.containerAddArchive {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.archived-users {
+  margin-left: auto;
+  /* This will push it to the right */
+  cursor: pointer;
+  height: 36px;
+  width: 145px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 400;
+  color: #FFFFFFFF;
+  background: #3343ce;
+  opacity: 1;
+  border: none;
+  border-radius: 12px;
+  gap: 6px;
+  margin-bottom: 10px;
+  margin-right: 12px;
+}
+
+/* Hover */
+.archived-users:hover {
+  color: #FFFFFFFF;
+  background: #222d85;
+}
+
+/* Pressed */
+.archived-users:hover:active {
+  color: #FFFFFFFF;
+  background: #111644;
+}
+
+.button-container-2 button, .button-container button {
+  font-size: 14px;
+  height: 30px;
+  padding: 0px;
+}
+
+#listQTY {
+  width: 920px;
+  height: auto;
+  /* Allow the height to be auto */
+  max-height: 300px;
+  /* Set maximum height */
+  resize: none;
+  /* Prevent resizing */
+  overflow: auto;
+  /* Enable scrolling when content exceeds max height */
+  flex: 1;
+  padding: 12px;
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  background: #F3F4F6FF;
+  /* neutral-200 */
+  border-radius: 4px;
+  /* border-xl */
+  border-width: 0px;
+  outline: none;
+}
+
+h4 {
+  font-size: 14px;
+}
+
+.nav {
+  font-size: 14px;
+}
+
+.nav-link {
+  color: rgb(182, 182, 182);
+}
+
+.tooltip-text {
+  visibility: hidden;
+  /* Hidden by default */
+  width: 250px;
+  /* Set width */
+  background-color: #555;
+  /* Tooltip background */
+  color: #fff;
+  /* Text color */
+  text-align: center;
+  /* Centered text */
+  border-radius: 5px;
+  /* Rounded corners */
+  padding: 5px;
+  /* Padding */
+  position: absolute;
+  /* Absolute positioning */
+  z-index: 1;
+  /* Make sure it appears above other elements */
+  top: 200%;
+  /* Position above the button */
+  left: 50%;
+  /* Center the tooltip */
+  margin-left: -125px;
+  /* Adjust for tooltip width */
+  opacity: 0;
+  /* Initially hidden */
+  transition: opacity 0.3s;
+  /* Fade in/out effect */
+}
+
+/* Show the tooltip when hovering over the button */
+#deleteDataBtn:disabled:hover+.tooltip-text {
+  visibility: visible;
+  /* Show tooltip */
+  opacity: 1;
+  /* Fade in */
+}
+
+#addUser {
+  width: auto;
+}
+
+#newID {
+  cursor: not-allowed;
+}
+
+#confirmButton {
+  width: auto;
+  background-color: #4CAF50;
+  /* Green background */
+  color: white;
+  /* White text */
+  padding-left: 15px;
+  padding-right: 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  /* Optional: Rounded corners */
+}
+
+#confirmButton:hover {
+  background-color: #45a049;
+}
+
+#listTable {
+  padding: 12px;
+  margin-bottom: 20px;
+  max-width: 1030px;
+  font-size: 14px;
+}
+
+#listTableLabel {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  margin-left: -7px;
+}
+
+#poDetailsTable {
+  font-size: 15px;
+  min-width: 800px;
+  margin-bottom: 20px;
+}
+
+.editable {
+  background-color: #f9f9f9;
+}
+
+.dropdown2 {
+  display: none;
+}
+
+#listTableNew {
+  width: 100%;
+  font-size: 14px;
+}
+
+#listTableNew th,
+#listTableNew td,
+#listTableNew tr {
+  padding: 10px;
+}
+
+#listTableNew .head1 {
+  border: 1px solid #ccc;
+  text-align: left;
+  cursor: pointer;
+  /* Makes it clear that the cell is clickable */
+  width: 10px;
+  /* Set a fixed width for the cells */
+}
+
+#listTableNew .head2 {
+  border: 1px solid #ccc;
+  text-align: left;
+  cursor: pointer;
+  /* Makes it clear that the cell is clickable */
+  width: 160px;
+  /* Set a fixed width for the cells */
+}
+
+#listTableNew .head3 {
+  border: 1px solid #ccc;
+  text-align: left;
+  cursor: pointer;
+  /* Makes it clear that the cell is clickable */
+  width: 50px;
+  /* Set a fixed width for the cells */
+}
+
+.centered-td {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  /* Adjust as needed */
+}
+
+#listTableNew input {
+  border: none;
+  margin-bottom: 0px;
+  padding: 0px;
+  font-size: 14px;
+  width: 100%;
+}
+
+#productSelect {
+  width: 405px;
+}
+
+#qtySelect {
+  width: 430px;
+}
+
+#supplierSelect {
+  width: 410px;
+}
+
+button[type="submit"]:disabled {
+  width: 80px;
+  background-color: #7c8d7d;
+  /* Green background */
+  color: white;
+  /* White text */
+  border: none;
+  cursor: not-allowed;
+  border-radius: 5px;
+  /* Optional: Rounded corners */
+}
+
+button[type="submit"]:hover:disabled {
+  background-color: #7c8d7d;
+}
+
+#tableBody {
+  font-size: 15px;
+}
+
+tr:hover .remove-icon img {
+  display: block;
+  /* Show the image on hover */
+}
+
+.remove-icon img {
+  display: none;
+  /* Hide the image by default */
+}
+
+.remove-icon {
+  position: relative;
+  /* Set relative positioning for the cell */
+  width: 30px;
+  /* Set a fixed width for the column */
+  height: 30px;
+  /* Set a fixed height if necessary */
+  text-align: center;
+  /* Center the content */
+}
+
+.remove-icon img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  /* Hide the image by default */
+  transition: display 0.2s;
+  /* Optional: smooth transition */
+}
+
+tr:hover .remove-icon img {
+  display: block;
+  /* Show the image on hover */
+}
+
+#numCol {
+  width: 30.05px;
+}
+
+#itemCol {
+  width: 561.53px;
+}
+
+#qtyCol {
+  width: 369.42px;
+}
