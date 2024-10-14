@@ -481,11 +481,14 @@ document.getElementById('cancel-receipt').addEventListener('click', function() {
     }, 100);
 });
 
+let orderNum = 0;
+
 function fetchInvoiceID() {
     fetch('fetchOrderNumber.php')
         .then(response => response.json())
         .then(data => {
             const newInvoiceID = data.newInvoiceID;
+            orderNum = newInvoiceID;
             const formattedInvoiceID = newInvoiceID > 0 ? `#${newInvoiceID}` : '#0';
             document.getElementById('order-num').textContent = `Order No.: ${formattedInvoiceID}`;
         })
@@ -494,24 +497,65 @@ function fetchInvoiceID() {
 
 document.addEventListener('DOMContentLoaded', fetchInvoiceID);
 
-let accountIDFromPHP = 2;
+let userID = 0;
+
+function fetchAccountID() {
+    fetch('fetchAccountID.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.accountID) {
+                const accountID = data.accountID;
+                userID = accountID;
+                console.log('AccountID:', accountID);
+                receiptData.accountID = accountID;
+            } else {
+                console.error('Error fetching AccountID:', data.error);
+            }
+        })
+        .catch(error => console.error('Error fetching AccountID:', error));
+}
+
+document.addEventListener('DOMContentLoaded', fetchAccountID);
+
+function getCurrentDateTime() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+function getSalesDetails() {
+    const salesDetails = {};
+
+    receiptItems.forEach((item, index) => {
+        salesDetails[index + 1] = {
+            itemID: item.itemID, // Ensure itemID is available in receiptItems
+            qty: item.quantity
+        };
+    });
+
+    return salesDetails;
+}
 
 document.getElementById('print-button').addEventListener('click', function() {
     const receiptData = {
-        accountID: accountIDFromPHP, 
-        amountChange: parseFloat(document.getElementById('change').textContent.replace('₱', '')),
-        amountPaid: parseFloat(document.getElementById('payment').textContent.replace('₱', '')),
-        discount: parseFloat(document.getElementById('discount').textContent.replace('₱', '')),
-        invoiceID: document.getElementById('order-num').textContent.split('#')[1],
-        netAmount: parseFloat(document.getElementById('amount-due').textContent.replace('₱', '')),
-        paymentMethod: document.querySelector('input[name="gridRadios"]:checked').value,
-        refundAmount: parseFloat(document.getElementById('refund-amount').textContent.replace('₱', '')),
-        saleDate: document.getElementById('date-time').textContent,
-        salesDetails: JSON.stringify(receiptItems),
-        status: document.getElementById('status').textContent.split(': ')[1],
-        subtotal: parseFloat(document.getElementById('sub-total').textContent.replace('₱', '')),
-        tax: parseFloat(document.getElementById('tax').textContent.replace('₱', '')),
-        totalItems: parseInt(document.getElementById('total-items').textContent)
+        invoiceID: orderNum,
+        saleDate: getCurrentDateTime(),
+        accountID: userID,
+        salesDetails: getSalesDetails(),
+        totalItems: receiptItems.reduce((sum, item) => sum + item.quantity, 0),
+        subtotal: receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0).toFixed(2),
+        tax: (receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0) * 0.12).toFixed(2),
+        discount: 0.00,
+        amountPaid: parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g,"")),
+        paymentMethod: 'Cash',
+        status: 'Sales',
+        refundAmount: 0.00
     };
 
     fetch('saveReceipt.php', {
@@ -521,11 +565,19 @@ document.getElementById('print-button').addEventListener('click', function() {
         },
         body: JSON.stringify(receiptData),
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+    })
+    .then(text => {
+        console.log('Raw response:', text);
+        return JSON.parse(text);
+    })
     .then(data => {
         if (data.success) {
             console.log('Receipt saved successfully');
-            // You can add any additional actions here, such as clearing the basket
         } else {
             console.error('Error saving receipt:', data.error);
         }
@@ -534,96 +586,6 @@ document.getElementById('print-button').addEventListener('click', function() {
         console.error('Error:', error);
     });
 
-    // Existing print functionality can be added here
+    window.location.reload();
 });
 
-/*document.getElementById('print-button').addEventListener('click', function() {
-    // Collect all the necessary data
-    const invoiceID = parseInt(document.getElementById('order-num').textContent.match(/\d+/)[0]);
-    const saleDate = document.getElementById('date').textContent + ' ' + document.getElementById('time').textContent;
-    const accountID = parseInt(document.getElementById('staff').textContent.match(/\d+/)[0]);
-    
-    // Collect sales details
-    const salesDetails = [];
-    document.querySelectorAll('#receiptItems .row:not(:first-child)').forEach(row => {
-        const columns = row.querySelectorAll('small');
-        salesDetails.push({
-            quantity: parseInt(columns[0].textContent),
-            item_name: columns[1].textContent,
-            total_item_price: parseFloat(columns[2].textContent.replace('₱', ''))
-        });
-    });
-    
-    const totalItems = parseInt(document.getElementById('total-items').textContent);
-    const subtotal = parseFloat(document.getElementById('sub-total').textContent.replace('₱', ''));
-    const tax = parseFloat(document.getElementById('tax').textContent.replace('₱', ''));
-    const discount = parseFloat(document.getElementById('total-display').textContent.match(/Total: ₱([\d.]+)/)[1]) - subtotal - tax;
-    const netAmount = parseFloat(document.getElementById('amount-due').textContent.replace('₱', ''));
-    const amountPaid = parseFloat(document.getElementById('payment').textContent.replace('₱', ''));
-    const amountChange = parseFloat(document.getElementById('change').textContent.replace('₱', ''));
-
-    // Prepare the data object
-    const saleData = {
-        invoiceID,
-        saleDate,
-        accountID,
-        salesDetails: JSON.stringify(salesDetails),
-        totalItems,
-        subtotal,
-        tax,
-        discount,
-        netAmount,
-        amountPaid,
-        amountChange
-    };
-
-    console.log('Sale data being sent:', saleData);
-
-    // Send the data to the server
-    fetch('update_sales.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(saleData),
-    })
-    .then(response => {
-        console.log('Raw response:', response);
-        return response.text();
-    })
-    .then(text => {
-        console.log('Response text:', text);
-        try {
-            return JSON.parse(text);
-        } catch (error) {
-            console.error('Error parsing JSON:', error);
-            throw new Error('Invalid JSON response');
-        }
-    })
-    .then(data => {
-        if (data.success) {
-            console.log('Sale recorded successfully');
-            // Proceed with printing logic here
-            window.print();
-            // Clear the basket and update the UI
-            basket = [];
-            updateBasketDisplay();
-            updateCheckoutButtonState();
-            // Close the modal
-            bootstrap.Modal.getInstance(document.getElementById('verticalycentered')).hide();
-            // Show a success message
-            showToast('Sale completed and printed successfully!');
-            // Reload the page after a short delay
-            setTimeout(() => {
-                window.location.reload();
-            }, 2000);
-        } else {
-            console.error('Error recording sale:', data.error);
-            showToast('Error recording sale. Please try again.');
-        }
-    })
-    .catch((error) => {
-        console.error('Fetch error:', error);
-        showToast('An error occurred. Please try again.');
-    });
-});*/
