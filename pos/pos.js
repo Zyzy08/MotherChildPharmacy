@@ -494,7 +494,163 @@ function fetchInvoiceID() {
 
 document.addEventListener('DOMContentLoaded', fetchInvoiceID);
 
-document.getElementById('print-button').addEventListener('click', function() {
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded');
+
+    const printButton = document.getElementById('print-button');
+    console.log('Print button:', printButton);
+
+    if (printButton) {
+        printButton.addEventListener('click', function() {
+            console.log('Print button clicked');
+
+            // Helper function to safely get element content
+            function getElementContent(id, defaultValue = '0') {
+                const element = document.getElementById(id);
+                console.log(`Getting content for element with id '${id}':`, element);
+                if (!element) {
+                    console.warn(`Element with id '${id}' not found. Using default value: ${defaultValue}`);
+                    return defaultValue;
+                }
+                return (element.textContent || '').replace('₱', '') || defaultValue;
+            }
+
+            // Helper function to safely get element value
+            function getElementValue(id, defaultValue) {
+                const element = document.getElementById(id);
+                console.log(`Getting value for element with id '${id}':`, element);
+                if (!element) {
+                    console.warn(`Element with id '${id}' not found. Using default value: ${defaultValue}`);
+                    return defaultValue;
+                }
+                return element.value || defaultValue;
+            }
+
+            try {
+                console.log('Collecting sale data...');
+
+                // Collect all the necessary data
+                const orderNum = getElementContent('order-num', '0');
+                console.log('Order number:', orderNum);
+                const invoiceID = parseInt(orderNum.match(/\d+/)?.[0] || '0');
+                console.log('Invoice ID:', invoiceID);
+
+                const date = getElementContent('date', '');
+                const time = getElementContent('time', '');
+                console.log('Date:', date, 'Time:', time);
+                const saleDate = `${date} ${time}`.trim();
+                console.log('Sale date:', saleDate);
+
+                const staff = getElementContent('staff', '0');
+                console.log('Staff:', staff);
+                const accountID = parseInt(staff.match(/\d+/)?.[0] || '0');
+                console.log('Account ID:', accountID);
+                
+                // Collect sales details
+                console.log('Collecting sales details...');
+                const salesDetails = [];
+                const receiptItems = document.getElementById('receiptItems');
+                console.log('Receipt items container:', receiptItems);
+                if (receiptItems) {
+                    receiptItems.querySelectorAll('.row:not(:first-child)').forEach((row, index) => {
+                        console.log(`Processing row ${index}:`, row);
+                        const columns = row.querySelectorAll('small');
+                        console.log(`Columns in row ${index}:`, columns);
+                        if (columns.length >= 3) {
+                            salesDetails.push({
+                                quantity: parseInt(columns[0].textContent || '0'),
+                                item_name: columns[1].textContent || '',
+                                total_item_price: parseFloat((columns[2].textContent || '').replace('₱', '') || '0')
+                            });
+                        }
+                    });
+                } else {
+                    console.warn('Receipt items container not found');
+                }
+                console.log('Sales details:', salesDetails);
+
+                const totalItems = parseInt(getElementContent('total-items'));
+                const subtotal = parseFloat(getElementContent('sub-total'));
+                const tax = parseFloat(getElementContent('tax'));
+                const discount = parseFloat(getElementContent('discount'));
+                const netAmount = parseFloat(getElementContent('amount-due'));
+                const amountPaid = parseFloat(getElementContent('payment'));
+                const amountChange = parseFloat(getElementContent('change'));
+                const paymentMethod = getElementValue('payment-method', 'Cash');
+                const status = getElementValue('status', 'Sales');
+                const refundAmount = parseFloat(getElementContent('refund-amount'));
+
+                // Prepare the data object
+                const saleData = {
+                    invoiceID,
+                    saleDate,
+                    accountID,
+                    salesDetails: JSON.stringify(salesDetails),
+                    totalItems,
+                    subtotal,
+                    tax,
+                    discount,
+                    netAmount,
+                    amountPaid,
+                    amountChange,
+                    paymentMethod,
+                    status,
+                    refundAmount
+                };
+
+                console.log('Sale data being sent:', saleData);
+
+                // Send the data to the server
+                fetch('save_receipt.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(saleData),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Server response:', data);
+                    if (data.success) {
+                        console.log('Sale recorded successfully');
+                        // Proceed with printing logic here
+                        window.print();
+                        // Clear the basket and update the UI
+                        basket = [];
+                        updateBasketDisplay();
+                        updateCheckoutButtonState();
+                        // Close the modal
+                        const modal = document.getElementById('verticalycentered');
+                        if (modal) {
+                            const bootstrapModal = bootstrap.Modal.getInstance(modal);
+                            if (bootstrapModal) bootstrapModal.hide();
+                        }
+                        // Show a success message
+                        showToast('Sale completed and printed successfully!');
+                        // Reload the page after a short delay
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        console.error('Error recording sale:', data.error);
+                        showToast('Error recording sale. Please try again.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Fetch error:', error);
+                    showToast('An error occurred. Please try again.');
+                });
+            } catch (error) {
+                console.error('Error preparing sale data:', error);
+                showToast('An error occurred while preparing the sale data. Please check the console for more information.');
+            }
+        });
+    } else {
+        console.error('Print button not found');
+    }
+});
+
+/*document.getElementById('print-button').addEventListener('click', function() {
     // Collect all the necessary data
     const invoiceID = parseInt(document.getElementById('order-num').textContent.match(/\d+/)[0]);
     const saleDate = document.getElementById('date').textContent + ' ' + document.getElementById('time').textContent;
@@ -583,4 +739,5 @@ document.getElementById('print-button').addEventListener('click', function() {
         console.error('Fetch error:', error);
         showToast('An error occurred. Please try again.');
     });
-});
+});*/
+

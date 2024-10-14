@@ -2,7 +2,6 @@
 <?php include 'fetchProductData.php'; ?>
 <?php include 'fetchOrderNumber.php'; ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -330,6 +329,23 @@
               <input class="form-check-input" type="checkbox" id="promoCheckbox">
               <label class="form-check-label" for="promoCheckbox">Promotional (10%)</label>
             </div>
+
+            <div id="payment-method">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="cash" checked="">
+                <label class="form-check-label" for="gridRadios1">
+                  Cash
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="gcash">
+                <label class="form-check-label" for="gridRadios2">
+                  GCash
+                </label>
+              </div>
+            </div>
+
             <br><h2 id="total-display" style="font-weight: bold;">Total: ₱0.00</h2><br>
 
             <div class="row mb-0">
@@ -397,12 +413,30 @@
             </div>
           </div>
 
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5">
+              <small>Discount:</small>
+            </div>
+            <div class="col-xl-5">
+              <small id="discount">₱-0.00</small>
+            </div>
+          </div>
+
           <div class="row text-center justify-content-between" style="font-weight: bold;">
             <div class="col-xl-5">
               <small>Amount Due:</small>
             </div>
             <div class="col-xl-5">
               <small id="amount-due">₱0.00</small>
+            </div>
+          </div>
+
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5">
+              <small>Refund Amount:</small>
+            </div>
+            <div class="col-xl-5">
+              <small id="refund-amount">₱0.00</small>
             </div>
           </div>
 
@@ -433,7 +467,9 @@
               <small id="order-num">Order No.: #0000000</small>
             </div>
             <div class="col-xl-6">
-              <small id="date">Date: <?php echo date('F j, Y'); ?></small>
+              <small id="date-time">Date: <?php echo date('F j, Y'); ?> 
+                <?php date_default_timezone_set('Asia/Manila'); echo date('h:i A');?>
+              </small>
             </div>
           </div>
 
@@ -442,10 +478,7 @@
               <small id="staff">Staff: <?php echo htmlspecialchars($employeeFullName); ?></small>
             </div>
             <div class="col-xl-6">
-              <small id="time">Time: 
-                <?php date_default_timezone_set('Asia/Manila'); // Set timezone to GMT+8
-                echo date('h:i A');?>
-              </small>
+              <small id="status">Status: Sales</small>
             </div>
           </div>
 
@@ -454,7 +487,7 @@
             <button id="cancel-receipt" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
 
             <div class="d-grid gap-2">
-              <button id="print-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">
+              <button id="print-button" type="button" class="btn btn-primary" data-bs-dismiss="modal">
                 Print
               </button>
             </div>
