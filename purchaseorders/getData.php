@@ -14,10 +14,25 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Function to log actions
+function logAction($conn, $userId, $action, $description, $status)
+{
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address, status) VALUES (?, ?, ?, ?, ?)";
+    $logStmt = $conn->prepare($logSql);
+    $logStmt->bind_param("ssssi", $userId, $action, $description, $ipAddress, $status);
+    $logStmt->execute();
+    $logStmt->close();
+}
+
+// Get the current user's AccountID from the session or other source
+session_start();
+$sessionAccountID = $_SESSION['AccountID'] ?? null;
+
 // Check if 'InvoiceID' is set in the query string
 if (isset($_GET['InvoiceID'])) {
     $InvoiceID = $conn->real_escape_string($_GET['InvoiceID']);
-    
+
     // Updated SQL query with JOIN
     $sql = "
     SELECT 
@@ -41,19 +56,19 @@ if (isset($_GET['InvoiceID'])) {
         po.PurchaseOrderID = '$InvoiceID';
     ";
     $result = $conn->query($sql);
-    
+
     if ($result->num_rows > 0) {
         $data = $result->fetch_assoc();
-        
+
         // Parse OrderDetails JSON
         $salesDetails = json_decode($data['OrderDetails'], true);
         $listItems = [];
-    
+
         // Loop through sales details to get item names
         foreach ($salesDetails as $detail) {
             $itemID = $detail['itemID'];
             $qty = $detail['qty'];
-    
+
             // Fetch the item details from the inventory
             $sqlItem = "SELECT GenericName, BrandName, Mass, UnitOfMeasure FROM inventory WHERE ItemID = '$itemID'";
             $itemResult = $conn->query($sqlItem);
@@ -77,9 +92,16 @@ if (isset($_GET['InvoiceID'])) {
     } else {
         $data = null;
     }
-    
+
+    $updatedetails = "(OrderID: PO-0" . $InvoiceID . ")";
+    //Log if Success
+    $description = "User viewed a purchase order's details $updatedetails.";
+    logAction($conn, $sessionAccountID, 'View Order', $description, 1);
     echo json_encode($data);
 } else {
+    // Log failure
+    $description = "User failed to view a purchase order. Error: " . $stmt->error;
+    logAction($conn, $sessionAccountID, 'View Order', $description, 0);
     echo json_encode(null);
 }
 

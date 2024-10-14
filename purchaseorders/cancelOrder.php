@@ -16,6 +16,21 @@ if ($conn->connect_error) {
     exit;
 }
 
+// Function to log actions
+function logAction($conn, $userId, $action, $description, $status)
+{
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address, status) VALUES (?, ?, ?, ?, ?)";
+    $logStmt = $conn->prepare($logSql);
+    $logStmt->bind_param("ssssi", $userId, $action, $description, $ipAddress, $status);
+    $logStmt->execute();
+    $logStmt->close();
+}
+
+// Get the current user's AccountID from the session or other source
+session_start();
+$sessionAccountID = $_SESSION['AccountID'] ?? null;
+
 // Get the accountName from the POST request
 $data = json_decode(file_get_contents('php://input'), true);
 $selectedID = $data['selectedID'] ?? '';
@@ -56,11 +71,18 @@ foreach ($orderDetailsArray as $detail) {
 // Prepare and bind the update statement to cancel the order
 $stmtCancel = $conn->prepare("UPDATE purchaseorders SET status = 'Cancelled' WHERE PurchaseOrderID = ?");
 $stmtCancel->bind_param("s", $selectedID);
+$updatedetails = "(OrderID: PO-0" . $selectedID . ")";
 
 // Execute the cancel query
 if ($stmtCancel->execute()) {
+    //Log if Success
+    $description = "User successfully cancelled an order $updatedetails.";
+    logAction($conn, $sessionAccountID, 'Cancel Order', $description, 1);
     echo json_encode(['success' => true, 'message' => 'Order cancelled successfully and inventory updated.']);
 } else {
+    // Log failure
+    $description = "User failed to cancel an order $updatedetails. Error: " . $stmt->error;
+    logAction($conn, $sessionAccountID, 'Cancel Order', $description, 0);
     echo json_encode(['success' => false, 'message' => 'Error cancelling order: ' . $stmtCancel->error]);
 }
 

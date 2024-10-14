@@ -107,7 +107,7 @@ function setDataTables() {
             "columnDefs": [
                 {
                     "targets": 0, // Audit ID
-                    "width": "15.4%"
+                    "width": "19.4%"
                 },
                 {
                     "targets": 1, // Actions
@@ -123,7 +123,7 @@ function setDataTables() {
                 },
                 {
                     "targets": 4, // Status
-                    "width": "16.6%"
+                    "width": "12.6%"
                 },
                 {
                     "targets": 5, // Actions

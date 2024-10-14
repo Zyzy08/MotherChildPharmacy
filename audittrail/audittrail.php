@@ -296,7 +296,7 @@
                         <tr>
                             <th scope="col">Audit ID</th>
                             <th scope="col">Action</th>
-                            <th scope="col">User</th>
+                            <th scope="col">Performed By</th>
                             <th scope="col">Date (Time)</th>
                             <th scope="col">Status</th>
                         </tr>

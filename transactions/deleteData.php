@@ -16,6 +16,19 @@ if ($conn->connect_error) {
     exit;
 }
 
+// Function to log actions
+function logAction($conn, $userId, $action, $description, $status)
+{
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address, status) VALUES (?, ?, ?, ?, ?)";
+    $logStmt = $conn->prepare($logSql);
+    $logStmt->bind_param("ssssi", $userId, $action, $description, $ipAddress, $status);
+    $logStmt->execute();
+    $logStmt->close();
+}
+session_start(); // Start the session to access user data
+$sessionAccountID = $_SESSION['AccountID'] ?? null;
+
 $data = json_decode(file_get_contents('php://input'), true);
 $selectedID = $data['selectedID'] ?? '';
 
@@ -58,8 +71,15 @@ $stmt->bind_param("s", $selectedID);
 
 // Execute the delete query
 if ($stmt->execute()) {
+    $updatedetails = "(Invoice ID: IN-0" . $selectedID . ")";
+    //Log if Success
+    $description = "User voided a transaction $updatedetails.";
+    logAction($conn, $sessionAccountID, 'Void Transaction', $description, 1);
     echo json_encode(['success' => true, 'message' => 'Data deleted successfully.']);
 } else {
+    //Log if Fail
+    $description = "User failed to void a transaction. Error: " . $stmt->error;
+    logAction($conn, $sessionAccountID, 'Void Transaction', $description, 0);
     echo json_encode(['success' => false, 'message' => 'Error deleting data: ' . $stmt->error]);
 }
 

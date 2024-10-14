@@ -14,10 +14,23 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Function to log actions
+function logAction($conn, $userId, $action, $description, $status)
+{
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address, status) VALUES (?, ?, ?, ?, ?)";
+    $logStmt = $conn->prepare($logSql);
+    $logStmt->bind_param("ssssi", $userId, $action, $description, $ipAddress, $status);
+    $logStmt->execute();
+    $logStmt->close();
+}
+session_start(); // Start the session to access user data
+$sessionAccountID = $_SESSION['AccountID'] ?? null;
+
 // Check if 'InvoiceID' is set in the query string
 if (isset($_GET['InvoiceID'])) {
     $InvoiceID = $conn->real_escape_string($_GET['InvoiceID']);
-    
+
     // Updated SQL query with JOIN
     $sql = "
         SELECT 
@@ -43,19 +56,19 @@ if (isset($_GET['InvoiceID'])) {
             s.InvoiceID = '$InvoiceID'
     ";
     $result = $conn->query($sql);
-    
+
     if ($result->num_rows > 0) {
         $data = $result->fetch_assoc();
-        
+
         // Parse SalesDetails JSON
         $salesDetails = json_decode($data['SalesDetails'], true);
         $listItems = [];
-    
+
         // Loop through sales details to get item names
         foreach ($salesDetails as $detail) {
             $itemID = $detail['itemID'];
             $qty = $detail['qty'];
-    
+
             // Fetch the item details from the inventory
             $sqlItem = "SELECT GenericName, BrandName, PricePerUnit FROM inventory WHERE ItemID = '$itemID'";
             $itemResult = $conn->query($sqlItem);
@@ -64,20 +77,28 @@ if (isset($_GET['InvoiceID'])) {
                 $genericName = $itemData['GenericName'];
                 $brandName = $itemData['BrandName'];
                 $pricePerUnit = $itemData['PricePerUnit'];
-                
+
                 // Format the item string
                 $listItems[] = "$qty  @  $pricePerUnit\t| $genericName $brandName";
             }
         }
-    
+
         // Join all items into a single string with new lines
         $data['listQTY'] = implode("\n", $listItems);
     } else {
         $data = null;
     }
-    
+
+    $updatedetails = "(Invoice ID: IN-0" . $InvoiceID . ")";
+    //Log if Success
+    $description = "User viewed a transaction's details $updatedetails.";
+    logAction($conn, $sessionAccountID, 'View Invoice', $description, 1);
+
     echo json_encode($data);
 } else {
+    //Log if Fail
+    $description = "User failed to view a transaction's details. Error: " . $stmt->error;
+    logAction($conn, $sessionAccountID, 'View Invoice', $description, 0);
     echo json_encode(null);
 }
 

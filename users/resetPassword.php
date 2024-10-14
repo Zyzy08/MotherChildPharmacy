@@ -1,4 +1,5 @@
 <?php
+session_start(); // Start the session to use session variables
 header('Content-Type: application/json');
 
 // Database configuration
@@ -53,6 +54,10 @@ $stmt->bind_param("ss", $newPassword, $accountName);
 
 // Execute the query
 if ($stmt->execute()) {
+    // Log the password reset action using session AccountID
+    $sessionAccountID = $_SESSION['AccountID'] ?? null; // Get the AccountID from the session
+    logAction($conn, $sessionAccountID, 'Password Reset', 'Password reset successfully for account: ' . $accountName);
+
     echo json_encode(['success' => true, 'message' => 'Password reset successfully.']);
 } else {
     echo json_encode(['success' => false, 'message' => 'Error resetting password: ' . $stmt->error]);
@@ -61,4 +66,31 @@ if ($stmt->execute()) {
 // Close the statement and connection
 $stmt->close();
 $conn->close();
+
+// Function to log actions
+function logAction($conn, $userId, $action, $description)
+{
+    // Prepare the SQL statement
+    $sql2 = "INSERT INTO audittrail (AccountID, action, description, ip_address) VALUES (?, ?, ?, ?)";
+
+    // Create a prepared statement
+    $stmt2 = $conn->prepare($sql2);
+
+    // Check if the statement was prepared correctly
+    if ($stmt2 === false) {
+        die('Error preparing the statement: ' . $conn->error);
+    }
+
+    // Bind the parameters
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $stmt2->bind_param("isss", $userId, $action, $description, $ipAddress);
+
+    // Execute the statement
+    if (!$stmt2->execute()) {
+        die('Error executing the statement: ' . $stmt2->error);
+    }
+
+    // Close the statement
+    $stmt2->close();
+}
 ?>

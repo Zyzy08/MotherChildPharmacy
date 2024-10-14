@@ -15,6 +15,18 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Function to log actions
+function logAction($conn, $userId, $action, $description, $status)
+{
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address, status) VALUES (?, ?, ?, ?, ?)";
+    $logStmt = $conn->prepare($logSql);
+    $logStmt->bind_param("ssssi", $userId, $action, $description, $ipAddress, $status);
+    $logStmt->execute();
+    $logStmt->close();
+}
+
+
 // Initialize error variable
 $error = "";
 
@@ -33,12 +45,16 @@ if ($result->num_rows > 0) {
     if ($user) {
         // Password matches, proceed to login
         $_SESSION['AccountID'] = $user['AccountID']; // Store AccountID in session
+
+        // Log the successful login action
+        logAction($conn, $_SESSION['AccountID'], 'Login', 'User logged in successfully.');
+
         // Set Status to Online
         $updateSql = "UPDATE users SET connected = 1 WHERE AccountID = ?";
         $updateStmt = $conn->prepare($updateSql);
         $updateStmt->bind_param("i", $_SESSION['AccountID']);
         $updateStmt->execute();
-        
+
         header("Location: dashboard/dashboard.php");
         exit();
     } else {

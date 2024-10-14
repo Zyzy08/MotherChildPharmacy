@@ -29,12 +29,12 @@ passForm.addEventListener('submit', function (event) {
             }else{
                 const confirmationModalFront = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
                 modalVerifyTitleFront.textContent = 'Error';
-                modalVerifyTextFront.textContent = 'Your password was not updated due to an error.';
+                modalVerifyTextFront.textContent = 'Your password was not updated due to an error. \nMake sure that the new password is not the same as the old one.';
                 console.log(data.message);
                 confirmationModalFront.show();
                 setTimeout(() => {
                     location.reload(); // Redirect on success
-                }, 1000);
+                }, 2000);
             }
         })
         .catch(error => {

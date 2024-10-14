@@ -1,6 +1,35 @@
 <?php
 header('Content-Type: application/json');
 
+// Function to log actions
+function logAction($conn, $userId, $action, $description) {
+    // Prepare the SQL statement
+    $sql2 = "INSERT INTO audittrail (AccountID, action, description, ip_address) VALUES (?, ?, ?, ?)";
+    
+    // Create a prepared statement
+    $stmt2 = $conn->prepare($sql2);
+    
+    // Check if the statement was prepared correctly
+    if ($stmt2 === false) {
+        die('Error preparing the statement: ' . $conn->error);
+    }
+    
+    // Bind the parameters
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $stmt2->bind_param("isss", $userId, $action, $description, $ipAddress);
+    
+    // Execute the statement
+    if (!$stmt2->execute()) {
+        die('Error executing the statement: ' . $stmt2->error);
+    }
+
+    // Close the statement
+    $stmt2->close();
+}
+
+// Start the session to access session variables
+session_start();
+
 // Database configuration
 $servername = "localhost";
 $username = "root";
@@ -31,6 +60,10 @@ $stmt->bind_param("s", $accountName);
 
 // Execute the query
 if ($stmt->execute()) {
+    // Log the action of archiving the user
+    $sessionAccountID = $_SESSION['AccountID'] ?? null; // Get the AccountID from the session
+    logAction($conn, $sessionAccountID, 'Archive User', 'Archived user account: ' . $accountName);
+
     echo json_encode(['success' => true, 'message' => 'User archived successfully.']);
 } else {
     echo json_encode(['success' => false, 'message' => 'Error archiving user: ' . $stmt->error]);

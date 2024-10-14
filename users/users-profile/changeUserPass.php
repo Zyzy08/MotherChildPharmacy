@@ -17,6 +17,17 @@ if ($conn->connect_error) {
     exit;
 }
 
+// Function to log actions
+function logAction($conn, $userId, $action, $description, $status)
+{
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address, status) VALUES (?, ?, ?, ?, ?)";
+    $logStmt = $conn->prepare($logSql);
+    $logStmt->bind_param("ssssi", $userId, $action, $description, $ipAddress, $status);
+    $logStmt->execute();
+    $logStmt->close();
+}
+
 // Check if form data is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $currentPassword = $_POST['password'] ?? '';
@@ -43,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Get the logged-in user's account ID (assuming you store it in session)
     $accountID = $_SESSION['AccountID'];
+    $sessionAccountID = $_SESSION['AccountID'] ?? null;
 
     // Fetch the current password from the database
     $stmt = $conn->prepare("SELECT password FROM users WHERE AccountID = ?");
@@ -56,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $user = $result->fetch_assoc();
-    
+
     // Verify current password
     if ($currentPassword !== $user['password']) {
         echo json_encode(['success' => false, 'message' => 'Incorrect current password.']);
@@ -65,6 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Check if the new password is the same as the old password
     if ($newPassword === $user['password']) {
+        // Log failure
+        $description = "User failed to change their own password. Error: New password must not be the same as the old password.";
+        logAction($conn, $sessionAccountID, 'Change Password', $description, 0);
         echo json_encode(['success' => false, 'message' => 'New password must not be the same as the old password.']);
         exit;
     }
@@ -74,8 +89,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updateStmt->bind_param("ss", $newPassword, $accountID);
 
     if ($updateStmt->execute()) {
+        $description = "User successfully changed their own password.";
+        logAction($conn, $sessionAccountID, 'Change Password', $description, 1);
         echo json_encode(['success' => true, 'message' => 'Password changed successfully.']);
     } else {
+        // Log failure
+        $description = "User failed to change their own password. Error: " . $stmt->error;
+        logAction($conn, $sessionAccountID, 'Change Password', $description, 0);
         echo json_encode(['success' => false, 'message' => 'Error changing password: ' . $updateStmt->error]);
     }
 
