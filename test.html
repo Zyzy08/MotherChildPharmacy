@@ -1,94 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editable Table Cell with Dropdown</title>
+    <title>POS Receipt</title>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
+        .receipt {
+            width: 58mm;
+            font-family: monospace;
+            text-align: center;
         }
-
-        th,
-        td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-            cursor: pointer;
-            /* Makes it clear that the cell is clickable */
+        .receipt h1 {
+            font-size: 18px;
+            margin: 5px 0;
         }
-
-        .editable {
-            background-color: #f9f9f9;
+        .receipt p {
+            font-size: 12px;
+            margin: 2px 0;
         }
-
-        .dropdown {
-            display: none;
-            /* Initially hide dropdown */
+        .line {
+            border-top: 1px dashed #000;
+            margin: 5px 0;
         }
     </style>
 </head>
-
 <body>
-
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Age</th>
-        </tr>
-        <tr>
-            <td class="editable" onclick="editCell(this)">John Doe</td>
-            <td class="editable" onclick="editCell(this)">30</td>
-        </tr>
-        <tr>
-            <td class="editable" onclick="editCell(this)">Jane Smith</td>
-            <td class="editable" onclick="editCell(this)">25</td>
-        </tr>
-    </table>
+    <div class="receipt" id="receiptContent">
+        <h1>Store Name</h1>
+        <p>Address Line 1</p>
+        <p>Address Line 2</p>
+        <div class="line"></div>
+        <p><strong>Date:</strong> <span id="date"></span></p>
+        <p><strong>Order ID:</strong> PO-00123</p>
+        <div class="line"></div>
+        <p>Item 1 - $10.00</p>
+        <p>Item 2 - $15.00</p>
+        <div class="line"></div>
+        <p><strong>Total:</strong> $25.00</p>
+    </div>
+    <button onclick="printReceipt()">Print Receipt</button>
 
     <script>
-        function editCell(cell) {
-            // Check if a dropdown is already present
-            if (cell.querySelector('select')) return;
+        // Set date dynamically
+        document.getElementById('date').innerText = new Date().toLocaleString();
 
-            const currentValue = cell.textContent.trim();
-
-            // Create a dropdown
-            const dropdown = document.createElement('select');
-
-            // Sample options (you can customize these)
-            const options = ['25', '30', '35', '40'];
-            options.forEach(option => {
-                const opt = document.createElement('option');
-                opt.value = option;
-                opt.textContent = option;
-                if (option === currentValue) {
-                    opt.selected = true; // Select current value
-                }
-                dropdown.appendChild(opt);
-            });
-
-            // Replace cell content with dropdown
-            cell.innerHTML = ''; // Clear cell content
-            cell.appendChild(dropdown); // Add dropdown to cell
-
-            // Focus the dropdown
-            dropdown.focus();
-
-            // Handle dropdown losing focus
-            dropdown.onblur = function () {
-                cell.textContent = dropdown.value; // Update cell with selected value
-            };
-
-            // Handle selection change
-            dropdown.onchange = function () {
-                cell.textContent = dropdown.value; // Update cell with selected value
-            };
+        function printReceipt() {
+            const content = document.getElementById('receiptContent').innerHTML;
+            const printWindow = window.open('', '', 'width=300,height=600');
+            printWindow.document.write('<html><head><title>Print</title></head><body>');
+            printWindow.document.write(content);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
         }
     </script>
-
 </body>
-
 </html>

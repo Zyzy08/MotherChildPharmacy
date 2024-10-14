@@ -16,12 +16,12 @@ if ($conn->connect_error) {
 }
 
 // Function to log actions
-function logAction($conn, $userId, $action, $description, $status)
+function logAction($conn, $userId, $action, $description)
 {
     $ipAddress = $_SERVER['REMOTE_ADDR'];
-    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address, status) VALUES (?, ?, ?, ?, ?)";
+    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address) VALUES (?, ?, ?, ?)";
     $logStmt = $conn->prepare($logSql);
-    $logStmt->bind_param("ssssi", $userId, $action, $description, $ipAddress, $status);
+    $logStmt->bind_param("ssss", $userId, $action, $description, $ipAddress);
     $logStmt->execute();
     $logStmt->close();
 }
