@@ -1,0 +1,18 @@
+/* Modal content */
+.modal-content {
+    background-color: #fefefe;
+    margin: 20% auto;
+    padding: 10px;
+    border: 1px solid #888;
+    width: 80%;
+    /* Could be more or less, depending on screen size */
+  }
+
+  .modal {
+    --bs-modal-width: 80%
+  }
+
+  .shortermodal {
+    --bs-modal-width: 40%;
+    margin: 10% auto;
+  }

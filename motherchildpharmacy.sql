@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 14, 2024 at 02:00 PM
+-- Generation Time: Oct 15, 2024 at 06:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -70,7 +70,13 @@ INSERT INTO `audittrail` (`auditID`, `AccountID`, `action`, `description`, `crea
 (26, 5, 'Logout', 'User logged out successfully.', '2024-10-14 10:59:49', '::1', '1'),
 (27, 3, 'Login', 'User logged in successfully.', '2024-10-14 10:59:57', '::1', '1'),
 (28, 3, 'View Order', 'User viewed a purchase order\'s details (OrderID: PO-01).', '2024-10-14 11:19:13', '::1', '1'),
-(29, 3, 'View Order', 'User viewed a purchase order\'s details (OrderID: PO-01).', '2024-10-14 11:19:31', '::1', '1');
+(29, 3, 'View Order', 'User viewed a purchase order\'s details (OrderID: PO-01).', '2024-10-14 11:19:31', '::1', '1'),
+(30, 3, 'Logout', 'User logged out successfully.', '2024-10-14 12:02:17', '::1', '1'),
+(31, 3, 'Login', 'User logged in successfully.', '2024-10-15 01:41:19', '::1', '1'),
+(32, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-10-15 03:42:25', '::1', '1'),
+(33, 3, 'Logout', 'User logged out successfully.', '2024-10-15 03:57:03', '::1', '1'),
+(34, 3, 'Login', 'User logged in successfully.', '2024-10-15 03:59:42', '::1', '1'),
+(35, 3, 'Logout', 'User logged out successfully.', '2024-10-15 04:00:13', '::1', '1');
 
 -- --------------------------------------------------------
 
@@ -263,7 +269,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`AccountID`, `employeeName`, `employeeLName`, `role`, `accountName`, `password`, `picture`, `dateCreated`, `status`, `connected`, `SuppliersPerms`, `TransactionsPerms`, `InventoryPerms`, `POSPerms`, `REPerms`, `POPerms`, `UsersPerms`) VALUES
 (2, 'Sayra', 'Jackson', 'Admin', 'E002_sjackson', 'jackson-e002', 'Chichi.jpg', '2024-09-22 21:27:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
-(3, 'Lance', 'Tiangco', 'Admin', 'E003_ltiangco', 'lancetiangco26!!', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '1', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
+(3, 'Lance', 'Tiangco', 'Admin', 'E003_ltiangco', 'lancetiangco26!!', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
 (4, 'Aileen', 'Castro', 'Admin', 'E004_acastro', 'castro-e004', 'owner.png', '2024-10-14 14:44:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
 (5, 'c', 'test', 'Pharmacy Assistant', 'E005_ctest', 'test-e005', 'Shrek.png', '2024-10-14 18:59:03', 'Active', '0', 'off', 'on', 'off', 'on', 'on', 'off', 'off');
 
@@ -341,7 +347,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `audittrail`
 --
 ALTER TABLE `audittrail`
-  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `goodsissue`
