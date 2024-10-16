@@ -252,7 +252,7 @@
                                     <tr class="highlight-row">
                                         <th>Audit ID</th>
                                         <th>Action</th>
-                                        <th>User</th>
+                                        <th>Performed by</th>
                                         <th>Date (Time)</th>
                                         <th>Status</th>
                                         <th>More Details</th>

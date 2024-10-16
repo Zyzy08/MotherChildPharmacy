@@ -22,6 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $supplierName = $_POST["supplierSelect"];
     $orderDetails = $_POST["orderDetails"];
     $totalItems = $_POST["totalItems"];
+    $newOrderID = $_POST["newOrderID"];
 
     if (isset($_POST['orderDetails'])) {
         $orderDetails = json_decode($orderDetails, true); // Decode JSON to associative array
@@ -62,7 +63,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmtUpdate->execute([$quantity, $itemID]);
         }
 
-        $updatedetails = "(OrderID: PO-0" . $selectedID . ")";
+        
+
+        $updatedetails = "(OrderID: " . $newOrderID . ")";
 
         $description = "Created purchase order $updatedetails.";
         // Log success

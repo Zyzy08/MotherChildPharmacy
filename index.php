@@ -179,26 +179,6 @@ if (is_dir($backupDir)) {
   <!-- Template Main JS File -->
   <script src="main.js"></script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      // Check if the backup exists
-      const backupExists = <?php echo json_encode($backupExists); ?>;
-
-      // If no backup exists, call the autobk.php script
-      if (!backupExists) {
-        fetch('backuprestore/autobk.php')
-          .then(response => response.text())
-          .then(data => {
-            // You can process the response if needed
-            console.log('Backup script executed:', data);
-          })
-          .catch(error => {
-            console.error('Error executing backup script:', error);
-          });
-      }
-    });
-  </script>
-
 </body>
 
 </html>

@@ -1,5 +1,6 @@
 const newID = document.getElementById('newID');
 const sendButton = document.getElementById('sendButton');
+let newPO_ID = '';
 
 function getNextIncrementID() {
     fetch(`getNextIncrementID.php`)
@@ -10,7 +11,8 @@ function getNextIncrementID() {
 
             } else {
                 const nextAutoIncrement = data.nextAutoIncrement;
-                newID.value = "PO-0" + parseInt(nextAutoIncrement).toString();
+                newPO_ID = parseInt(nextAutoIncrement).toString()
+                newID.value = "PO-0" + newPO_ID;
             }
         })
         .catch(error => console.error('Error fetching next increment ID:', error));
@@ -228,6 +230,7 @@ userForm.addEventListener('submit', function (event) {
         formData.append('orderDetails', JSON.stringify(orderDetails)); // Ensure this is correctly stringified
         console.log(JSON.stringify(orderDetails));
         formData.append('totalItems', totalItems);
+        formData.append('newOrderID', newPO_ID);
 
         // Submit the form via Fetch API
         return fetch('sendPOForm.php', {

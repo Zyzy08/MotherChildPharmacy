@@ -17,27 +17,20 @@ if ($conn->connect_error) {
 
 function logAction($conn, $userId, $action, $description)
 {
-    // Prepare the SQL statement
     $sql2 = "INSERT INTO audittrail (AccountID, action, description, ip_address) VALUES (?, ?, ?, ?)";
-
-    // Create a prepared statement
     $stmt2 = $conn->prepare($sql2);
 
-    // Check if the statement was prepared correctly
     if ($stmt2 === false) {
         die('Error preparing the statement: ' . $conn->error);
     }
 
-    // Bind the parameters
     $ipAddress = $_SERVER['REMOTE_ADDR'];
     $stmt2->bind_param("isss", $userId, $action, $description, $ipAddress);
 
-    // Execute the statement
     if (!$stmt2->execute()) {
         die('Error executing the statement: ' . $stmt2->error);
     }
 
-    // Close the statement
     $stmt2->close();
 }
 
@@ -50,11 +43,37 @@ if (isset($_SESSION['AccountID'])) {
     $updateStmt = $conn->prepare($updateSql);
     $updateStmt->bind_param("i", $accountID);
 
-    // Log the successful logout action
-    logAction($conn, $_SESSION['AccountID'], 'Logout', 'User logged out successfully.');
-    
+    logAction($conn, $accountID, 'Logout', 'User logged out successfully.');
+
     if ($updateStmt->execute()) {
-        // Clear the session
+        // Check if all users are offline (connected = 0)
+        $checkSql = "SELECT COUNT(*) AS online_users FROM users WHERE connected = 1";
+        $result = $conn->query($checkSql);
+        $row = $result->fetch_assoc();
+
+        if ($row['online_users'] == 0) {
+            // Backup logic if all users are offline
+            $host = 'localhost';
+            $user = 'root';
+            $password = '';
+            $dbname = 'motherchildpharmacy';
+
+            // Path to store the backup file
+            $backup_file = __DIR__ . "\\backuprestore\\bks\\{$dbname}_" . date("Y-m-d_H-i-s") . ".sql";
+            $command = "\"C:/xampp/mysql/bin/mysqldump\" --user={$user} --password={$password} --host={$host} {$dbname} > \"{$backup_file}\"";
+
+            // Execute the backup command
+            exec($command, $output, $return);
+
+            // Log backup status
+            if ($return === 0) {
+                logAction($conn, $accountID, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.');
+            } else {
+                logAction($conn, $accountID, 'Backup Failed', 'Automatic database backup failed.');
+            }
+        }
+
+        // Clear session and destroy
         session_unset();
         session_destroy();
 
@@ -65,7 +84,6 @@ if (isset($_SESSION['AccountID'])) {
             'message' => 'User signed out successfully'
         ]);
     } else {
-        // Respond with error if update failed
         header('Content-Type: application/json');
         echo json_encode([
             'success' => false,
