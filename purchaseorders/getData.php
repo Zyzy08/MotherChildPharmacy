@@ -93,15 +93,15 @@ if (isset($_GET['InvoiceID'])) {
         $data = null;
     }
 
-    $updatedetails = "(OrderID: PO-0" . $InvoiceID . ")";
+    // $updatedetails = "(OrderID: PO-0" . $InvoiceID . ")";
     //Log if Success
-    $description = "User viewed a purchase order's details $updatedetails.";
-    logAction($conn, $sessionAccountID, 'View Order', $description, 1);
+    // $description = "User viewed a purchase order's details $updatedetails.";
+    // logAction($conn, $sessionAccountID, 'View Order', $description, 1);
     echo json_encode($data);
 } else {
     // Log failure
-    $description = "User failed to view a purchase order. Error: " . $stmt->error;
-    logAction($conn, $sessionAccountID, 'View Order', $description, 0);
+    // $description = "User failed to view a purchase order. Error: " . $stmt->error;
+    // logAction($conn, $sessionAccountID, 'View Order', $description, 0);
     echo json_encode(null);
 }
 

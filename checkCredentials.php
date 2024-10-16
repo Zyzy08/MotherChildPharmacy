@@ -16,12 +16,12 @@ if ($conn->connect_error) {
 }
 
 // Function to log actions
-function logAction($conn, $userId, $action, $description)
+function logAction($conn, $userId, $action, $description, $Status)
 {
     $ipAddress = $_SERVER['REMOTE_ADDR'];
-    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address) VALUES (?, ?, ?, ?)";
+    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address, Status) VALUES (?, ?, ?, ?, ?)";
     $logStmt = $conn->prepare($logSql);
-    $logStmt->bind_param("ssss", $userId, $action, $description, $ipAddress);
+    $logStmt->bind_param("ssssi", $userId, $action, $description, $ipAddress, $Status);
     $logStmt->execute();
     $logStmt->close();
 }
@@ -40,6 +40,11 @@ $sql->bind_param("ss", $inputUsername, $inputPassword);
 $sql->execute();
 $result = $sql->get_result();
 
+$sql2 = $conn->prepare("SELECT AccountID FROM users WHERE accountName = ?");
+$sql2->bind_param("s", $inputUsername);
+$sql2->execute();
+$result2 = $sql2->get_result();
+
 if ($result->num_rows > 0) {
     $user = $result->fetch_assoc();
     if ($user) {
@@ -47,7 +52,7 @@ if ($result->num_rows > 0) {
         $_SESSION['AccountID'] = $user['AccountID']; // Store AccountID in session
 
         // Log the successful login action
-        logAction($conn, $_SESSION['AccountID'], 'Login', 'User logged in successfully.');
+        logAction($conn, $_SESSION['AccountID'], 'Login', 'User logged in successfully.', 1);
 
         // Set Status to Online
         $updateSql = "UPDATE users SET connected = 1 WHERE AccountID = ?";
@@ -59,6 +64,12 @@ if ($result->num_rows > 0) {
         exit();
     } else {
         $error = "Invalid password.";
+    }
+} else if ($result2->num_rows > 0) {
+    $user2 = $result2->fetch_assoc();
+    if ($user2) {
+        logAction($conn, $user2['AccountID'], 'Login', 'User failed to login (Incorrect password).', 0);
+        $error = "Incorrect password.";
     }
 } else {
     $error = "Invalid username or password.";
