@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 15, 2024 at 06:00 AM
+-- Generation Time: Oct 16, 2024 at 06:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -76,7 +76,60 @@ INSERT INTO `audittrail` (`auditID`, `AccountID`, `action`, `description`, `crea
 (32, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-10-15 03:42:25', '::1', '1'),
 (33, 3, 'Logout', 'User logged out successfully.', '2024-10-15 03:57:03', '::1', '1'),
 (34, 3, 'Login', 'User logged in successfully.', '2024-10-15 03:59:42', '::1', '1'),
-(35, 3, 'Logout', 'User logged out successfully.', '2024-10-15 04:00:13', '::1', '1');
+(35, 3, 'Logout', 'User logged out successfully.', '2024-10-15 04:00:13', '::1', '1'),
+(36, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-10-16 02:44:57', '::1', '1'),
+(37, 3, 'Create Order', 'Created purchase order (OrderID: 2).', '2024-10-16 02:45:15', '::1', '1'),
+(38, 3, 'View Order', 'User viewed a purchase order\'s details (OrderID: PO-02).', '2024-10-16 02:45:18', '::1', '1'),
+(39, 3, 'View Order', 'User viewed a purchase order\'s details (OrderID: PO-02).', '2024-10-16 02:45:21', '::1', '1'),
+(40, 3, 'Logout', 'User logged out successfully.', '2024-10-16 03:23:09', '::1', '1'),
+(41, 3, 'Auto Backup Failed', 'Automatic database backup failed.', '2024-10-16 03:23:09', '::1', '1'),
+(42, 3, 'Login', 'User logged in successfully.', '2024-10-16 03:26:54', '::1', '1'),
+(43, 3, 'Logout', 'User logged out successfully.', '2024-10-16 03:27:16', '::1', '1'),
+(44, 3, 'Auto Backup Failed', 'Automatic database backup failed.', '2024-10-16 03:27:16', '::1', '1'),
+(45, 3, 'Login', 'User logged in successfully.', '2024-10-16 03:30:46', '::1', '1'),
+(46, 3, 'Logout', 'User logged out successfully.', '2024-10-16 03:30:48', '::1', '1'),
+(47, 3, 'Backup Failed', 'Database backup failed.', '2024-10-16 03:30:48', '::1', '1'),
+(48, 3, 'Login', 'User logged in successfully.', '2024-10-16 03:34:52', '::1', '1'),
+(49, 3, 'Logout', 'User logged out successfully.', '2024-10-16 03:34:58', '::1', '1'),
+(50, 3, 'Backup', 'Database backup created successfully.', '2024-10-16 03:34:58', '::1', '1'),
+(51, 3, 'Login', 'User logged in successfully.', '2024-10-16 03:39:27', '::1', '1'),
+(52, 3, 'Logout', 'User logged out successfully.', '2024-10-16 03:40:00', '::1', '1'),
+(53, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-10-16 03:40:00', '::1', '1'),
+(54, 3, 'Login', 'User logged in successfully.', '2024-10-16 03:42:06', '::1', '1'),
+(55, 3, 'Logout', 'User logged out successfully.', '2024-10-16 03:44:11', '::1', '1'),
+(56, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-10-16 03:44:12', '::1', '1'),
+(57, 3, 'Login', 'User failed to login (Incorrect password).', '2024-10-16 03:50:35', '::1', ''),
+(58, 3, 'Login', 'User logged in successfully.', '2024-10-16 03:52:39', '::1', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `deliveries`
+--
+
+CREATE TABLE `deliveries` (
+  `DeliveryID` int(11) NOT NULL,
+  `PurchaseOrderID` int(11) NOT NULL,
+  `SupplierID` int(11) NOT NULL,
+  `DeliveryDate` datetime DEFAULT current_timestamp(),
+  `ReceivedBy` int(10) UNSIGNED NOT NULL,
+  `TotalDeliveredItems` int(11) NOT NULL,
+  `DeliveryStatus` enum('Pending','Partial','Completed','Returned') DEFAULT 'Pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `delivery_items`
+--
+
+CREATE TABLE `delivery_items` (
+  `ItemID` int(11) NOT NULL,
+  `DeliveryID` int(11) NOT NULL,
+  `LotNumber` varchar(50) NOT NULL,
+  `ExpiryDate` date NOT NULL,
+  `QuantityDelivered` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -135,7 +188,7 @@ CREATE TABLE `inventory` (
 --
 
 INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `Discount`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`) VALUES
-(2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Milligrams', 5, 0, NULL, 200.00, NULL, 1, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
+(2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Milligrams', 5, 100, NULL, 200.00, NULL, 1, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
 (3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Milligrams', 3, 0, NULL, 300.00, NULL, 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg'),
 (4, 'Ibuprofen', 'Advil', 'Medicine', '200', 'Milligrams', 0, 0, NULL, 299.00, NULL, 1, '', 'Active', 'products-icon/Advil.png', 'AdvilIbuprofen200mg'),
 (5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Milligrams', 0, 0, NULL, 499.00, NULL, 2, '', 'Active', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg'),
@@ -181,7 +234,8 @@ CREATE TABLE `purchaseorders` (
 --
 
 INSERT INTO `purchaseorders` (`PurchaseOrderID`, `OrderDate`, `SupplierID`, `AccountID`, `OrderDetails`, `TotalItems`, `NetAmount`, `Status`) VALUES
-(1, '2024-10-10 10:09:03', 2, 3, '{\"1\":{\"itemID\":\"3\",\"qty\":100},\"2\":{\"itemID\":\"5\",\"qty\":200}}', 300, NULL, 'Cancelled');
+(1, '2024-10-10 10:09:03', 2, 3, '{\"1\":{\"itemID\":\"3\",\"qty\":100},\"2\":{\"itemID\":\"5\",\"qty\":200}}', 300, NULL, 'Cancelled'),
+(2, '2024-10-16 10:45:15', 1, 3, '{\"1\":{\"itemID\":\"2\",\"qty\":100}}', 100, NULL, 'Pending');
 
 -- --------------------------------------------------------
 
@@ -269,7 +323,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`AccountID`, `employeeName`, `employeeLName`, `role`, `accountName`, `password`, `picture`, `dateCreated`, `status`, `connected`, `SuppliersPerms`, `TransactionsPerms`, `InventoryPerms`, `POSPerms`, `REPerms`, `POPerms`, `UsersPerms`) VALUES
 (2, 'Sayra', 'Jackson', 'Admin', 'E002_sjackson', 'jackson-e002', 'Chichi.jpg', '2024-09-22 21:27:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
-(3, 'Lance', 'Tiangco', 'Admin', 'E003_ltiangco', 'lancetiangco26!!', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
+(3, 'Lance', 'Tiangco', 'Admin', 'E003_ltiangco', 'lancetiangco26!!', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '1', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
 (4, 'Aileen', 'Castro', 'Admin', 'E004_acastro', 'castro-e004', 'owner.png', '2024-10-14 14:44:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
 (5, 'c', 'test', 'Pharmacy Assistant', 'E005_ctest', 'test-e005', 'Shrek.png', '2024-10-14 18:59:03', 'Active', '0', 'off', 'on', 'off', 'on', 'on', 'off', 'off');
 
@@ -283,6 +337,22 @@ INSERT INTO `users` (`AccountID`, `employeeName`, `employeeLName`, `role`, `acco
 ALTER TABLE `audittrail`
   ADD PRIMARY KEY (`auditID`),
   ADD KEY `AT_ForeignKey_ItemID` (`AccountID`);
+
+--
+-- Indexes for table `deliveries`
+--
+ALTER TABLE `deliveries`
+  ADD PRIMARY KEY (`DeliveryID`),
+  ADD KEY `FK_PurchaseOrderID` (`PurchaseOrderID`),
+  ADD KEY `FK_SupplierID` (`SupplierID`),
+  ADD KEY `FK_ReceivedBy` (`ReceivedBy`);
+
+--
+-- Indexes for table `delivery_items`
+--
+ALTER TABLE `delivery_items`
+  ADD PRIMARY KEY (`ItemID`,`DeliveryID`,`LotNumber`),
+  ADD KEY `FK_DeliveryID` (`DeliveryID`);
 
 --
 -- Indexes for table `goodsissue`
@@ -347,7 +417,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `audittrail`
 --
 ALTER TABLE `audittrail`
-  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+
+--
+-- AUTO_INCREMENT for table `deliveries`
+--
+ALTER TABLE `deliveries`
+  MODIFY `DeliveryID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `goodsissue`
@@ -365,7 +441,7 @@ ALTER TABLE `inventory`
 -- AUTO_INCREMENT for table `purchaseorders`
 --
 ALTER TABLE `purchaseorders`
-  MODIFY `PurchaseOrderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `PurchaseOrderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `sales`
@@ -394,6 +470,20 @@ ALTER TABLE `users`
 --
 ALTER TABLE `audittrail`
   ADD CONSTRAINT `AT_ForeignKey_ItemID` FOREIGN KEY (`AccountID`) REFERENCES `users` (`AccountID`);
+
+--
+-- Constraints for table `deliveries`
+--
+ALTER TABLE `deliveries`
+  ADD CONSTRAINT `FK_PurchaseOrderID` FOREIGN KEY (`PurchaseOrderID`) REFERENCES `purchaseorders` (`PurchaseOrderID`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_ReceivedBy` FOREIGN KEY (`ReceivedBy`) REFERENCES `users` (`AccountID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_SupplierID` FOREIGN KEY (`SupplierID`) REFERENCES `suppliers` (`SupplierID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `delivery_items`
+--
+ALTER TABLE `delivery_items`
+  ADD CONSTRAINT `FK_DeliveryID` FOREIGN KEY (`DeliveryID`) REFERENCES `deliveries` (`DeliveryID`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `goodsissue`

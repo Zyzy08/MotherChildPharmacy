@@ -242,10 +242,11 @@
                             <table id="example" class="display">
                                 <thead>
                                     <tr class="highlight-row">
+                                        <th>Delivery ID</th>
                                         <th>Order ID</th>
-                                        <th>Date (Time)</th>
                                         <th>Supplier</th>
-                                        <th>No. of Items</th>
+                                        <th>Delivery Date</th>
+                                        <th>Total Items</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
