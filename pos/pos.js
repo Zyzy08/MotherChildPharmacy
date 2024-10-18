@@ -40,47 +40,50 @@ function formatUnitOfMeasure(unit) {
 async function loadProducts() {
     const products = await fetchProducts(searchQuery);
     const productContainer = document.getElementById('product-list');
-    
-    // Clear existing products
     productContainer.innerHTML = '';
 
     document.querySelectorAll('.clickable-card').forEach(card => card.classList.remove('active'));
     localStorage.removeItem('selectedCardId');
 
-    const startIndex = (currentPage - 1) * 8; // 8 items per page (4 per row, 2 rows)
-    const paginatedProducts = products.slice(startIndex, startIndex + 8);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedProducts = products.slice(startIndex, startIndex + itemsPerPage);
 
-    // Separate products into low-stock and in-stock, excluding out-of-stock
-    const lowStockProducts = paginatedProducts.filter(product => product.InStock > 0 && product.InStock < 50);
-    const inStockProducts = paginatedProducts.filter(product => product.InStock >= 50);
+    paginatedProducts.forEach(product => {
+        const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
+        let stockBadge = '';
+        let cardClass = 'clickable-card';
 
-    // Create low-stock row
-    if (lowStockProducts.length > 0) {
-        const lowStockRow = document.createElement('div');
-        lowStockRow.className = 'row align-items-top mb-4';
-        lowStockRow.innerHTML = '<h4 class="col-12 mb-3">Low Stock Items</h4>';
-        
-        lowStockProducts.forEach(product => {
-            const productHTML = createProductHTML(product);
-            lowStockRow.insertAdjacentHTML('beforeend', productHTML);
-        });
-        
-        productContainer.appendChild(lowStockRow);
-    }
+        if (product.InStock == 0) {
+            stockBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
+            cardClass = 'non-clickable-card';
+        } else if (product.InStock < 50) {
+            stockBadge = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
+        } else {
+            stockBadge = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
+        }
 
-    // Create in-stock row
-    if (inStockProducts.length > 0) {
-        const inStockRow = document.createElement('div');
-        inStockRow.className = 'row align-items-top';
-        inStockRow.innerHTML = '<h4 class="col-12 mb-3">In Stock Items</h4>';
-        
-        inStockProducts.forEach(product => {
-            const productHTML = createProductHTML(product);
-            inStockRow.insertAdjacentHTML('beforeend', productHTML);
-        });
-        
-        productContainer.appendChild(inStockRow);
-    }
+        const productHTML = `
+            <div class="col-lg-3">
+                <div class="card ${cardClass}" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-product='${JSON.stringify(product)}'>
+                    ${stockBadge}
+                    <img src="../inventory/${product.ProductIcon}" class="card-img-top" style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
+                    <div class="card-body">
+                        <div class="row align-items-top">
+                            <div class="col-lg-4">
+                                <span class="badge rounded-pill bg-light text-dark">${product.Mass}${formattedUnit}</span>
+                            </div>
+                            <div class="col-lg-3 mx-3">
+                                <span class="badge bg-success">₱${product.PricePerUnit}</span>
+                            </div>
+                        </div>
+                        <h5 class="card-title">${product.BrandName}</h5>
+                        <p class="card-text">${product.GenericName}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        productContainer.insertAdjacentHTML('beforeend', productHTML);
+    });
 
     attachCardListeners();
     updatePaginationControls();
@@ -91,35 +94,6 @@ async function loadProducts() {
             highlightCard(firstCard);
         }
     }
-}
-
-function createProductHTML(product) {
-    const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
-    let stockBadge = '';
-    let cardClass = 'clickable-card';
-
-    if (product.InStock < 50) {
-        stockBadge = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
-    } else {
-        stockBadge = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
-    }
-
-    return `
-        <div class="col-3">
-            <div class="card ${cardClass}" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-product='${JSON.stringify(product)}'>
-                ${stockBadge}
-                <img src="../inventory/${product.ProductIcon}" class="card-img-top" style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="badge rounded-pill bg-light text-dark">${product.Mass}${formattedUnit}</span>
-                        <span class="badge bg-success">₱${product.PricePerUnit}</span>
-                    </div>
-                    <h5 class="card-title">${product.BrandName}</h5>
-                    <p class="card-text">${product.GenericName}</p>
-                </div>
-            </div>
-        </div>
-    `;
 }
 
 function updatePaginationControls() {
