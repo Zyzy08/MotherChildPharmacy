@@ -260,8 +260,16 @@
                 
                 <div class="card-body">
 
-                  <div class="row align-items-top" id="product-list">
-                    <!-- Product items will be inserted here dynamically -->
+                  <div id="product-list">
+
+                    <div class="row align-items-top" id="low-stock-list">
+                      <!-- First row of products -->
+                    </div>
+
+                    <div class="row align-items-top" id="in-stock-list">
+                      <!-- Second row of products -->
+                    </div>
+
                   </div>
 
                 </div><!-- End Card Body -->
