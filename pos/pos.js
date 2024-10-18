@@ -1,7 +1,7 @@
 window.onload = loadProducts;
 
 let currentPage = 1;
-const itemsPerPage = 8;
+const itemsPerPage = 4;
 let totalItems = 0;
 let totalPages = 0;
 let searchQuery = '';
@@ -49,40 +49,40 @@ async function loadProducts() {
     const paginatedProducts = products.slice(startIndex, startIndex + itemsPerPage);
 
     paginatedProducts.forEach(product => {
-        // Only process products with stock greater than 0
-        if (product.InStock > 0) {
-            const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
-            let stockBadge = '';
-            let cardClass = 'clickable-card';
-    
-            if (product.InStock < 50) {
-                stockBadge = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
-            } else {
-                stockBadge = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
-            }
-    
-            const productHTML = `
-                <div class="col-lg-3">
-                    <div class="card ${cardClass}" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-product='${JSON.stringify(product)}'>
-                        ${stockBadge}
-                        <img src="../inventory/${product.ProductIcon}" class="card-img-top" style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
-                        <div class="card-body">
-                            <div class="row align-items-top">
-                                <div class="col-lg-4">
-                                    <span class="badge rounded-pill bg-light text-dark">${product.Mass}${formattedUnit}</span>
-                                </div>
-                                <div class="col-lg-3 mx-3">
-                                    <span class="badge bg-success">₱${product.PricePerUnit}</span>
-                                </div>
+        const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
+        let stockBadge = '';
+        let cardClass = 'clickable-card';
+
+        if (product.InStock == 0) {
+            stockBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
+            cardClass = 'non-clickable-card';
+        } else if (product.InStock < 50) {
+            stockBadge = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
+        } else {
+            stockBadge = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
+        }
+
+        const productHTML = `
+            <div class="col-lg-3">
+                <div class="card ${cardClass}" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-product='${JSON.stringify(product)}'>
+                    ${stockBadge}
+                    <img src="../inventory/${product.ProductIcon}" class="card-img-top" style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
+                    <div class="card-body">
+                        <div class="row align-items-top">
+                            <div class="col-lg-4">
+                                <span class="badge rounded-pill bg-light text-dark">${product.Mass}${formattedUnit}</span>
                             </div>
-                            <h5 class="card-title">${product.BrandName}</h5>
-                            <p class="card-text">${product.GenericName}</p>
+                            <div class="col-lg-3 mx-3">
+                                <span class="badge bg-success">₱${product.PricePerUnit}</span>
+                            </div>
                         </div>
+                        <h5 class="card-title">${product.BrandName}</h5>
+                        <p class="card-text">${product.GenericName}</p>
                     </div>
                 </div>
-            `;
-            productContainer.insertAdjacentHTML('beforeend', productHTML);
-        }
+            </div>
+        `;
+        productContainer.insertAdjacentHTML('beforeend', productHTML);
     });
 
     attachCardListeners();
@@ -154,6 +154,15 @@ function attachCardListeners() {
         });
     });
 }
+
+document.head.insertAdjacentHTML('beforeend', `
+    <style>
+        .non-clickable-card {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
+`);
 
 const searchInput = document.querySelector('input[name="query"]');
 searchInput.addEventListener('input', function() {
