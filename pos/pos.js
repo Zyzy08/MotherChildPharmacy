@@ -39,8 +39,11 @@ function formatUnitOfMeasure(unit) {
 
 async function loadProducts() {
     const products = await fetchProducts(searchQuery);
-    const productContainer = document.getElementById('product-list');
-    productContainer.innerHTML = '';
+    const lowStockContainer = document.getElementById('product-list-low-stock');
+    const inStockContainer = document.getElementById('in-stock-list-in-stock');
+    
+    lowStockContainer.innerHTML = '';
+    inStockContainer.innerHTML = '';
 
     document.querySelectorAll('.clickable-card').forEach(card => card.classList.remove('active'));
     localStorage.removeItem('selectedCardId');
@@ -49,17 +52,22 @@ async function loadProducts() {
     const paginatedProducts = products.slice(startIndex, startIndex + itemsPerPage);
 
     paginatedProducts.forEach(product => {
+        if (product.InStock === 0) {
+            // Skip out-of-stock items
+            return;
+        }
+
         const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
         let stockBadge = '';
         let cardClass = 'clickable-card';
+        let targetContainer;
 
-        if (product.InStock == 0) {
-            stockBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
-            cardClass = 'non-clickable-card';
-        } else if (product.InStock < 50) {
+        if (product.InStock < 50) {
             stockBadge = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
+            targetContainer = lowStockContainer;
         } else {
             stockBadge = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
+            targetContainer = inStockContainer;
         }
 
         const productHTML = `
@@ -82,13 +90,13 @@ async function loadProducts() {
                 </div>
             </div>
         `;
-        productContainer.insertAdjacentHTML('beforeend', productHTML);
+        targetContainer.insertAdjacentHTML('beforeend', productHTML);
     });
 
     attachCardListeners();
     updatePaginationControls();
 
-    if (searchQuery && paginatedProducts.length > 0) {
+    if (searchQuery && (lowStockContainer.children.length > 0 || inStockContainer.children.length > 0)) {
         const firstCard = document.querySelector('.clickable-card');
         if (firstCard) {
             highlightCard(firstCard);

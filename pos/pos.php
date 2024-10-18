@@ -260,16 +260,12 @@
                 
                 <div class="card-body">
 
-                  <div id="product-list">
-
-                    <div class="row align-items-top" id="low-stock-list">
+                  <div class="row align-items-top" id="product-list-low-stock">
                       <!-- First row of products -->
-                    </div>
+                  </div>
 
-                    <div class="row align-items-top" id="in-stock-list">
+                  <div class="row align-items-top" id="in-stock-list-in-stock">
                       <!-- Second row of products -->
-                    </div>
-
                   </div>
 
                 </div><!-- End Card Body -->
