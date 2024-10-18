@@ -1,7 +1,7 @@
 window.onload = loadProducts;
 
 let currentPage = 1;
-const itemsPerPage = 4;
+const itemsPerPage = 8;
 let totalItems = 0;
 let totalPages = 0;
 let searchQuery = '';
@@ -17,9 +17,10 @@ async function fetchProducts(query = '') {
         const text = await response.text();
         const jsonMatch = text.match(/<!-- (.*?) -->/);
         const data = jsonMatch ? JSON.parse(jsonMatch[1]) : [];
-        totalItems = data.length;
+        const inStockProducts = data.filter(product => product.InStock > 0);
+        totalItems = inStockProducts.length;
         totalPages = Math.ceil(totalItems / itemsPerPage);
-        return data;
+        return inStockProducts;
     } catch (error) {
         console.error('Error fetching products:', error);
         return [];
@@ -39,32 +40,38 @@ function formatUnitOfMeasure(unit) {
 
 async function loadProducts() {
     const products = await fetchProducts(searchQuery);
-    const productContainer = document.getElementById('product-list');
-    productContainer.innerHTML = '';
+    const lowStockContainer = document.getElementById('product-list');
+    const inStockContainer = document.getElementById('in-stock-list');
+    
+    lowStockContainer.innerHTML = '';
+    inStockContainer.innerHTML = '';
 
     document.querySelectorAll('.clickable-card').forEach(card => card.classList.remove('active'));
     localStorage.removeItem('selectedCardId');
 
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const paginatedProducts = products.slice(startIndex, startIndex + itemsPerPage);
+    // Sort products by stock level (ascending order)
+    const sortedProducts = products.sort((a, b) => a.InStock - b.InStock);
 
-    paginatedProducts.forEach(product => {
+    // Calculate start and end indices for the current page
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    // Slice the sorted products array to get only the products for the current page
+    const currentPageProducts = sortedProducts.slice(startIndex, endIndex);
+
+    function createProductHTML(product) {
         const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
         let stockBadge = '';
-        let cardClass = 'clickable-card';
 
-        if (product.InStock == 0) {
-            stockBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
-            cardClass = 'non-clickable-card';
-        } else if (product.InStock < 50) {
+        if (product.InStock < 50) {
             stockBadge = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
         } else {
             stockBadge = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
         }
 
-        const productHTML = `
-            <div class="col-lg-3">
-                <div class="card ${cardClass}" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-product='${JSON.stringify(product)}'>
+        return `
+            <div class="col-lg-3 mb-3">
+                <div class="card clickable-card" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-product='${JSON.stringify(product)}'>
                     ${stockBadge}
                     <img src="../inventory/${product.ProductIcon}" class="card-img-top" style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
                     <div class="card-body">
@@ -82,13 +89,26 @@ async function loadProducts() {
                 </div>
             </div>
         `;
-        productContainer.insertAdjacentHTML('beforeend', productHTML);
+    }
+
+    // Separate low-stock and in-stock products
+    const lowStockProducts = currentPageProducts.filter(product => product.InStock < 50);
+    const inStockProducts = currentPageProducts.filter(product => product.InStock >= 50);
+
+    // Add low-stock products to the first row
+    lowStockProducts.forEach(product => {
+        lowStockContainer.insertAdjacentHTML('beforeend', createProductHTML(product));
+    });
+
+    // Add in-stock products to the second row
+    inStockProducts.forEach(product => {
+        inStockContainer.insertAdjacentHTML('beforeend', createProductHTML(product));
     });
 
     attachCardListeners();
     updatePaginationControls();
 
-    if (searchQuery && paginatedProducts.length > 0) {
+    if (searchQuery && (lowStockContainer.children.length > 0 || inStockContainer.children.length > 0)) {
         const firstCard = document.querySelector('.clickable-card');
         if (firstCard) {
             highlightCard(firstCard);
@@ -100,49 +120,52 @@ function updatePaginationControls() {
     const paginationList = document.querySelector('.pagination');
     paginationList.innerHTML = '';
 
-    paginationList.insertAdjacentHTML('beforeend', `
-        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}" id="prev-page">
-            <a class="page-link" href="#">Previous</a>
-        </li>
-    `);
-
-    for (let i = 1; i <= totalPages; i++) {
+    // Only show pagination if there are products
+    if (totalItems > 0) {
         paginationList.insertAdjacentHTML('beforeend', `
-            <li class="page-item ${i === currentPage ? 'active' : ''}" id="page-${i}">
-                <a class="page-link" href="#">${i}</a>
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}" id="prev-page">
+                <a class="page-link" href="#">Previous</a>
             </li>
         `);
-    }
 
-    paginationList.insertAdjacentHTML('beforeend', `
-        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}" id="next-page">
-            <a class="page-link" href="#">Next</a>
-        </li>
-    `);
+        for (let i = 1; i <= totalPages; i++) {
+            paginationList.insertAdjacentHTML('beforeend', `
+                <li class="page-item ${i === currentPage ? 'active' : ''}" id="page-${i}">
+                    <a class="page-link" href="#">${i}</a>
+                </li>
+            `);
+        }
 
-    for (let i = 1; i <= totalPages; i++) {
-        document.getElementById(`page-${i}`)?.addEventListener('click', (e) => {
+        paginationList.insertAdjacentHTML('beforeend', `
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}" id="next-page">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        `);
+
+        for (let i = 1; i <= totalPages; i++) {
+            document.getElementById(`page-${i}`)?.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentPage = i;
+                loadProducts();
+            });
+        }
+
+        document.getElementById('prev-page').addEventListener('click', function(e) {
             e.preventDefault();
-            currentPage = i;
-            loadProducts();
+            if (currentPage > 1) {
+                currentPage--;
+                loadProducts();
+            }
+        });
+
+        document.getElementById('next-page').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (currentPage < totalPages) {
+                currentPage++;
+                loadProducts();
+            }
         });
     }
-
-    document.getElementById('prev-page').addEventListener('click', function(e) {
-        e.preventDefault();
-        if (currentPage > 1) {
-            currentPage--;
-            loadProducts();
-        }
-    });
-
-    document.getElementById('next-page').addEventListener('click', function(e) {
-        e.preventDefault();
-        if (currentPage < totalPages) {
-            currentPage++;
-            loadProducts();
-        }
-    });
 }
 
 function attachCardListeners() {
