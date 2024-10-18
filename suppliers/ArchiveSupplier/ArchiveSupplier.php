@@ -40,9 +40,7 @@
     <!-- Template Main CSS File -->
     <link href="../../style.css" rel="stylesheet">
 
-    <link href="../invent_style.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="ArchiveProd.css">
+    <link rel="stylesheet" href="ArchiveSuppliers.css">
 
 </head>
 
@@ -114,7 +112,7 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../../../dashboard/dashboard.php">
+                <a class="nav-link collapsed" href="../../dashboard/dashboard.php">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
@@ -123,7 +121,7 @@
             <li class="nav-heading"></li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../../suppliers/suppliers.php">
+                <a class="nav-link" href="#">
                     <i class="bi bi-truck"></i>
                     <span>Suppliers</span>
                 </a>
@@ -143,6 +141,7 @@
           </a>
         </li><!-- End Purchase Order Page Nav -->
 
+
         <li class="nav-item">
             <a class="nav-link collapsed" href="../../delivery/delivery.php">
                 <i class="bi bi-truck"></i>
@@ -151,18 +150,19 @@
         </li><!-- End Delivery Page Nav -->
 
 
-            <li class="nav-item"></li>
-            <a class="nav-link" href="../../inventory/inventory.php">
+        <li class="nav-item"></li>
+            <a class="nav-link collapsed" href="../../inventory/inventory.php">
                 <i class="bi bi-box-seam"></i>
                 <span>Inventory</span>
             </a>
             </li><!-- End Inventory Page Nav -->
 
 
+
             <li class="nav-heading"></li>
 
             <li class="nav-item"></li>
-            <a class="nav-link collapsed" href="../../../pos/pos.php">
+            <a class="nav-link collapsed" href="../../pos/pos.php">
                 <i class="bi bi-printer"></i>
                 <span>POS</span>
             </a>
@@ -175,17 +175,18 @@
             </a>
             </li><!-- End Return & Exchange Page Nav -->
 
+
             <li class="nav-heading"></li>
 
             <li class="nav-item">
-            <a class="nav-link collapsed" href="../../../users/users.php">
+            <a class="nav-link collapsed" href="../../users/users.php">
                 <i class="bi bi-person"></i>
                 <span>Users</span>
             </a>
             </li><!-- End Users Page Nav -->
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../../../audittrail/audittrail.php">
+                <a class="nav-link collapsed" href="../../audittrail/audittrail.php">
                     <i class="bi bi-clipboard-data"></i>
                     <span>Audit Trail</span>
                 </a>
@@ -206,12 +207,12 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Inventory</h1>
+            <h1>Suppliers</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="../../dashboard/dashboard.php">Home</a></li>
-                    <li class="breadcrumb-item"><a href="../users.php">Inventory</a></li>
-                    <li class="breadcrumb-item active">Archived Products</li>
+                    <li class="breadcrumb-item"><a href="../users.php">Suplliers</a></li>
+                    <li class="breadcrumb-item active">Archived Suppliers</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
@@ -219,29 +220,28 @@
         <section class="section users">
             <div class="row">
                 <div class="containerAddArchive">
-                    <div class="archived-users" id="toInventory">
-                        <img src="../../resources/img/left-arrow-3.png" alt="Users Button">Back to Inventory
+            
+                    <div class="archived-users" id="toSuppliers">
+                        Back to Suppliers<img src="../../resources/img/left-arrow-3.png" alt="Archive Button">
                     </div>
                 </div>
                 <br>
+                <!-- <div id="usersNum" class="usercount">
+                    0 users
+                </div> -->
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body profile-card usersTableSize flex-column align-items-center">
                             <table id="example" class="display">
                                 <thead>
                                     <tr class="highlight-row">
-                                    <th style="text-align: center;">Item ID</th>
-                                    <th style="text-align: center;">Picture</th>
-                                    <th style="text-align: center;">Generic Name</th>
-                                    <th style="text-align: center;">Brand Name</th>
-                                    <th style="text-align: center;">Item Type</th>
-                                    <th style="text-align: center;">Measurement</th>
-                                    <th style="text-align: center;">Price</th>
-                                    <!--<th style="text-align: center;">Status</th>-->
-                                    <th style="text-align: center;">InStock</th>
-                                    <th style="text-align: center;">Ordered</th>
-                                    <th style="text-align: center;">ReorderLevel</th>
-                                    <th style="text-align: center;">Actions</th>
+                                        <th style="text-align: center;">Supplier ID</th>
+                                        <th style="text-align: center;">Company Name</th>
+                                        <th style="text-align: center;">Agent Name</th>
+                                        <th style="text-align: center;">Contact No.</th>
+                                        <th style="text-align: center;">Email</th>
+                                        <th style="text-align: center;">Notes</th>
+                                        <th style="text-align: center;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
@@ -302,7 +302,7 @@
 
     <!-- Template Main JS File -->
     <script src="../../main.js"></script>
-    <script src="ArchiveProd.js"></script>
+    <script src="ArchiveSupplier.js"></script>
 
 
     <!-- Vendor JS Files -->

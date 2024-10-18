@@ -255,7 +255,7 @@ function updateTable(items) {
                 <td class="text-center text-truncate">${item.BrandName}</td>
                 <td class="text-center text-truncate">${item.ItemType}</td>
                 <td class="text-center text-truncate">${item.Mass} ${item.UnitOfMeasure}</td>
-                <td class="text-center text-truncate">${item.PricePerUnit}</td>
+                <td class="text-center text-truncate">₱ ${item.PricePerUnit}</td>
                 <td class="text-center text-truncate">${item.InStock}</td>
                 <td class="text-center text-truncate">${item.Ordered}</td>
                 <td class="text-center text-truncate">${item.ReorderLevel}</td>
@@ -336,7 +336,7 @@ function showDeleteOptions(ItemID) {
 archiveUserBtn.addEventListener('click', function () {
     modalVerifyTextAD.textContent = 'Are you sure you want to archive this product?';
     modalStatus = 'archive';  // Set the modal status to 'archive'
-    document.getElementById('disablebackdrop-AD').style.display = 'block'; // Show the modal for confirmation
+    
 });
 
 // Event listener for 'Yes' button in the modal
@@ -348,7 +348,7 @@ modalYes.addEventListener('click', function () {
         }
 
         // Sending the archive request via fetch API
-        fetch('../inventory/ArchiveProduct/getArchiveProd.php', {
+        fetch('ArchivingProd.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -357,7 +357,13 @@ modalYes.addEventListener('click', function () {
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
+                if (response.status === 404) {
+                    throw new Error('Product not found.');
+                } else if (response.status === 500) {
+                    throw new Error('Server error. Please try again later.');
+                } else {
+                    throw new Error('Error: ' + response.statusText);
+                }
             }
             return response.json();
         })
@@ -379,6 +385,7 @@ modalYes.addEventListener('click', function () {
     }
 });
 
+
 // Event listener for close button (x) inside the modal
 closeBtnAD.addEventListener('click', function () {
     overlayAD.style.display = 'none'; // Hide the overlay when the close button is clicked
@@ -399,3 +406,41 @@ toArchivedUsers.addEventListener('click', function () {
     window.location.href = 'ArchiveProduct/ArchiveProd.php';
 });
 
+// End of Archive
+
+
+function addPesoSign() {
+    const priceInput = document.getElementById('pricePerUnit');
+    // If the input is empty, set the value to "₱" when it gets focused
+    if (priceInput.value === '') {
+        priceInput.value = '₱';
+    }
+}
+
+function updatePrice() {
+    const priceInput = document.getElementById('pricePerUnit');
+    // Remove the peso sign for submission
+    const valueWithoutPeso = priceInput.value.replace('₱', '').trim();
+    
+    // Update the value in the input field (removing the peso sign)
+    priceInput.value = '₱ ' + valueWithoutPeso; // Maintain the display with peso sign
+}
+
+// When the form is submitted, ensure to handle the value correctly
+document.getElementById('PurchaseForm').addEventListener('submit', function(event) {
+    // Prevent default form submission
+    event.preventDefault();
+
+    // Get the price without the peso sign for submission
+    const pricePerUnit = document.getElementById('pricePerUnit').value.replace('₱ ', '').trim();
+
+    // Now you can use pricePerUnit for your submission logic
+    console.log(pricePerUnit); // For debugging
+
+    // Example of how you might submit this value
+    const formData = new FormData(this);
+    formData.set('pricePerUnit', pricePerUnit); // Set the processed value
+
+    // Perform your fetch request or other submission logic here
+    // ...
+});

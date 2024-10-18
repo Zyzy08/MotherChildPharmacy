@@ -30,8 +30,9 @@ const searchInput = document.getElementById('searchInput');
 // const popupText = document.getElementById('popupText');
 var modal = document.getElementById("myModal");
 var span = document.getElementsByClassName("close")[0];
+
 let currentlySelectedRow = null;
-let selectedUser = null;
+
 
 function showOverlay() {
     document.getElementById('userForm').reset();
@@ -42,9 +43,7 @@ function showEditOverlay() {
     overlayEdit.style.display = 'flex';
 }
 
-function closeEditOverlay() {
-    overlayEdit.style.display = 'none';
-}
+
 
 function hideOverlay() {
     overlay.style.display = 'none';
@@ -62,128 +61,161 @@ function closeOverlay() {
         hideOverlay();
     }
 }
+// Close the edit overlay
+function closeEditOverlay() {
+    document.getElementById('userFormEdit').reset(); // Resetting the form
+    document.getElementById('overlayEdit').style.display = "none";
+}
+
 
 addUserBtn.addEventListener('click', showOverlay);
 closeBtn.addEventListener('click', closeOverlay);
 closeBtnEdit.addEventListener('click', closeEditOverlay);
 
 
+// Function to close the overlay
+function closeOverlay() {
+    document.getElementById('overlay').style.display = 'none'; // Close add overlay
+    document.getElementById('overlayEdit1').style.display = 'none'; // Close edit overlay
+}
+
+
+
+// Function to close the Add overlay
+function closeAddOverlay() {
+    document.getElementById('overlay').style.display = 'none'; // Close the add overlay
+}
+
+// Function to close the Edit overlay
+function closeEditOverlay() {
+    document.getElementById('overlayEdit1').style.display = 'none'; // Close the edit overlay
+}
+
+// Example function to show the Add overlay (if needed)
+function showAddOverlay() {
+    document.getElementById('overlay').style.display = 'flex'; // Show the add overlay
+}
+
+// Example function to show the Edit overlay (if needed)
+function showEditOverlay() {
+    document.getElementById('overlayEdit1').style.display = 'flex'; // Show the edit overlay
+}
+
+
 // Get reference to the form element
 const form = document.getElementById('userForm');
 
 // Function to clear the form and preview when submitted
-function handleFormSubmit() {
-    // document.getElementById('userForm').reset();
-    hideOverlay();
+function handleFormSubmit1() {
+    // Hide overlay and reset the form
+    closeOverlayEdit1();
 }
 
-//Fetch data
-document.addEventListener('DOMContentLoaded', () => {
-    fetch('getAllData.php')
-        .then(response => response.json())
-        .then(data => updateTable(data))
-        .catch(error => alert('Error fetching users data:', error));
-    setDataTables();
+// Function to close the overlay for editing supplier
+function closeOverlayEdit1() {
+    const overlayEdit1 = document.getElementById('overlayEdit1');
+    if (overlayEdit1) {
+        overlayEdit1.style.display = "none"; // Hides the overlay
+    }
+    // Reset form fields to their initial values
+    document.getElementById('userFormEdit').reset(); // Reset form fields
+}
+
+// Function to close the general overlay
+function closeOverlay() {
+    const overlay = document.getElementById('overlay');
+    if (overlay) {
+        overlay.style.display = "none"; // Hides the overlay
+    }
+}
+
+// Add event listener to the Cancel button
+document.getElementById('cancelBtn').addEventListener('click', closeOverlayEdit1);
+
+// Handle DOMContentLoaded event to set up close button for editing
+document.addEventListener("DOMContentLoaded", function () {
+    const closeBtnEdit = document.getElementById('closeBtnEdit');
+    if (closeBtnEdit) {
+        closeBtnEdit.addEventListener('click', closeOverlayEdit1); // Call the function to close the overlay
+    }
 });
 
-function updateTable(data) {
-    let counter = 0;
-    const table = $('#example').DataTable();
+document.getElementById('userFormEdit').addEventListener('submit', handleFormSubmit1);
 
-    // Clear existing data
-    table.clear();
+//Handles Updating the forms
 
-    data.forEach(row => {
-        table.row.add([
-            row.SupplierName,
-            row.AgentName,
-            row.Phone,
-            row.Email,
-            `<img src="../resources/img/d-edit.png" alt="View" style="cursor:pointer;margin-left:10px;"/> 
-            <img src="../resources/img/s-remove.png" alt="Delete" style="cursor:pointer;margin-left:10px;"/>`
-        ]);
+function handleUpdate(supplierID) {
+    console.log('Updating Supplier ID:', supplierID);
 
-        counter++;
-    });
-
-    // Draw the updated table
-    table.draw();
-
-}
-
-
-function fetchUserDetails(accountName) {
-    fetch(`getUserData.php?accountName=${encodeURIComponent(accountName)}`)
+    fetch(`getSupplierData.php?supplierID=${supplierID}`)
         .then(response => response.json())
         .then(data => {
-            if (data) {
-                // Populate the overlay form with user details
-                currentEmployeeID.value = data.AccountID;
-                employeeNameEdit.value = data.employeeName;
-                employeeLNameEdit.value = data.employeeLName;
-                roleEdit.value = data.role;
-                accountNameEdit.value = data.accountName;
-                passwordEdit.value = data.password;
-                AccountID.value = data.AccountID;
+            console.log('Fetched Data:', data);
+            if (data.success) {
+                // Populate the form fields with the fetched data
+                document.getElementById('edit_newID').value = data.supplier.SupplierID; // Populate Supplier ID
+                document.getElementById('edit_companyName').value = data.supplier.SupplierName; // Populate Company Name
+                document.getElementById('edit_agentName').value = data.supplier.AgentName; // Populate Agent Name
+                document.getElementById('edit_ContactNo').value = data.supplier.Phone; // Populate Contact No
+                document.getElementById('edit_Email').value = data.supplier.Email; // Populate Email
+                document.getElementById('edit_Notes').value = data.supplier.Notes; // Populate Notes
 
-                // Update checkboxes based on the permissions data
-                SuppliersPermsEdit.checked = data.SuppliersPerms === 'on';
-                TransactionsPermsEdit.checked = data.TransactionsPerms === 'on';
-                InventoryPermsEdit.checked = data.InventoryPerms === 'on';
-                POSPermsEdit.checked = data.POSPerms === 'on';
-                REPermsEdit.checked = data.REPerms === 'on';
-                POPermsEdit.checked = data.POPerms === 'on';
-                UsersPermsEdit.checked = data.UsersPerms === 'on';
-
-
-                // Show the overlay
-                overlayEdit.style.display = 'flex';
+                // Show the overlay for editing
+                document.getElementById('overlayEdit1').style.display = 'block';
             } else {
-                console.error('No data found for the given account name.');
+                console.error('Error fetching supplier data:', data.message);
+                alert('Error fetching supplier data: ' + data.message);
             }
         })
         .catch(error => {
-            console.error('Error fetching user details:', error);
+            console.error('An error occurred:', error);
+            alert('An error occurred while fetching supplier data.');
         });
 }
 
 
-deleteUserBtn.addEventListener('click', function () {
-    let confirmationUser = confirm("Are you sure you want to delete this user?");
-    if (confirmationUser === true) {
-        // if(){
+// Updating THE FORM ////////////////////////////////////////////////////////////////////////////////////
 
-        // }
-        if (!selectedUser || selectedUser.trim() === '') {
-            alert('No user selected.');
-            return;
+
+// Updating the form for supplier update
+
+function handleFormSubmit1(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const formData = new FormData(document.getElementById('userFormEdit'));
+
+    fetch('updateSupplier.php', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            setTimeout(() => {
+                window.location.href = 'suppliers.php'; // Redirect on success
+            }, 1000);
+
+        } else {
+            alert(data.message);
         }
-
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'deleteUser.php', true);
-        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-
-        // Handle the response
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                const response = JSON.parse(xhr.responseText);
-                document.getElementById('modalMessage').textContent = response.message;
-            } else {
-                alert('Error: ' + xhr.status);
-            }
-        };
+    })
+    .catch(error => console.error('Error:', error));
+}
 
 
-        xhr.send(JSON.stringify({ accountName: selectedUser }));
-        alert("User deleted successfully!");
-        setTimeout(() => {
-            window.location.href = 'users.php'; // Redirect on success
-        }, 100);
-    } else {
+// END OF UPDATE
 
-    }
-});
 
+// Attaching the event listener for the edit form submission
+
+// Function to close the overlay (if needed)
+function closeEditOverlay() {
+    overlayEdit.style.display = 'none'; // Hide the overlay
+}
+
+
+//Adding New Supplier
 document.getElementById('userForm').addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent default form submission
 
@@ -208,75 +240,86 @@ document.getElementById('userForm').addEventListener('submit', function (event) 
         });
 });
 
-document.getElementById('userFormEdit').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent default form submission
 
-    const formData2 = new FormData(this);
 
-    const checkboxesEdit = document.querySelectorAll('.permissionsSelectEdit input[type="checkbox"]');
-    checkboxesEdit.forEach(checkbox => {
-        if (checkbox.checked) {
-            formData2.append(checkbox.id, checkbox.value || 'on'); // Append only checked checkboxes
-        } else {
-            formData2.append(checkbox.id, 'off'); // Indicate unchecked state if needed
-        }
+// Example error display function
+function showError(message) {
+    alert(message); // Simple alert for demonstration
+}
+
+
+// Load the data
+function updateTable(data) {
+    const table = $('#example').DataTable();
+    table.clear();
+
+    data.forEach(row => {
+        table.row.add([
+            `SP-0${row.SupplierID}`,
+            `${row.SupplierName.slice(0, 15)}...`, // Truncate Company Name
+            `${row.AgentName.slice(0, 10)}...`, // Truncate Agent Name
+            `${row.Phone}`,
+            `${row.Email.slice(0, 15)}...`, // Truncate Email
+            `<div style="text-align: center;">
+                <img src="../resources/img/d-edit.png" alt="Edit" style="cursor:pointer; margin-left:10px;" onclick="handleUpdate('${row.SupplierID}')" />
+                <img src="../resources/img/s-remove.png" alt="Delete" style="cursor:pointer; margin-left:10px;" onclick="showDeleteOptions('${row.SupplierID}')" />
+            </div>`
+        ]);
     });
 
-    fetch('updateUser.php', {
-        method: 'POST',
-        body: formData2
-    })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
+    table.draw();
+}
 
-            if (data.success) {
-                setTimeout(() => {
-                    window.location.href = 'users.php'; // Redirect on success
-                }, 100);
-            }
-        })
-        .catch(error => {
 
-            alert('An error occurred: ' + error.message);
+function setDataTables() {
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "order": [], // Disable initial sorting
+            "columnDefs": [
+                {
+                    "targets": 0, // Supplier ID
+                    "width": "10.6%"
+                },
+                {
+                    "targets": 1, // Company Name
+                    "width": "20.6%"
+                },
+                {
+                    "targets": 2, // Agent Name
+                    "width": "16.6%"
+                },
+                {
+                    "targets": 3, // Contact No.
+                    "width": "16.6%"
+                },
+                {
+                    "targets": 4, // Email
+                    "width": "12.6%"
+                },
+                {
+                    "targets": 5, // Actions
+                    "width": "10.6%",
+                    "orderable": false // Disable sorting for Actions column
+                }
+            ]
         });
+    });
+}
+
+
+//Fetch data on DATABASE
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('getAllData.php')
+        .then(response => response.json())
+        .then(data => updateTable(data))
+        .catch(error => alert('Error fetching users data:', error));
+    setDataTables();
 });
 
 
-function fetchData(query) {
-    fetch('searchUser.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            searchQuery: query
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                updateTable(data.results);
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            alert('Error:', error);
-            alert("There was an error with your request.");
-        });
-}
-
-function showDeleteOptions(accountName) {
-    selectedUser = accountName;
-    overlayAD.style.display = 'flex';
-};
-function closeADOverlay() {
-    overlayAD.style.display = 'none';
-}
-closeBtnAD.addEventListener('click', closeADOverlay);
 
 
+//Auto increment
 let VnewID = 0;
 const newID = document.getElementById('newID');
 addUserBtn.addEventListener('click', function (event) {
@@ -297,68 +340,93 @@ addUserBtn.addEventListener('click', function (event) {
 
 
 
-function setDataTables() {
-    $(document).ready(function () {
-        $('#example').DataTable({
-            "order": [], // Disable initial sorting
-            "columnDefs": [
-                {
-                    "targets": 0, // Employee Name
-                    "width": "20%"
-                },
-                {
-                    "targets": 1, // Role
-                    "width": "20%"
-                },
-                {
-                    "targets": 2, // Account Name
-                    "width": "20%"
-                },
-                {
-                    "targets": 3, // Date
-                    "width": "20%"
-                },
-                {
-                    "targets": 4, // Actions
-                    "width": "20%"
-                },
-                {
-                    "targets": 4, // Index of the column to disable sorting
-                    "orderable": false // Disable sorting for column 5 - Actions
-                }
-            ]
-        });
-    });
+//////////////////////////Archive//////////////////////////////////
+
+const archiveUserBtn = document.getElementById('archiveUserBtn');
+const modalYes = document.getElementById('modalYes');
+const modalVerifyTextAD = document.getElementById('modalVerifyText-AD');
+const modalFooterAD = document.getElementById('modal-footer-AD');
+const modalCloseAD = document.getElementById('modalClose-AD');
+
+
+let modalStatus = '';  // To store the status of the modal action
+let selectedSupplierID = null;
+
+// Function to show the overlayAD modal
+function showDeleteOptions(SupplierID) {
+    selectedSupplierID = SupplierID;  // Store the selected item ID
+    overlayAD.style.display = 'flex';  // Show the overlay
 }
 
-
-// Archiving Accounts
-const archiveUserBtn = document.getElementById('archiveUserBtn');
+// Event listener for archive button click
 archiveUserBtn.addEventListener('click', function () {
-    let confirmationUser = confirm("Are you sure you want to archive this user?");
-    if (confirmationUser === true) {
-        if (!selectedUser || selectedUser.trim() === '') {
-            alert('No user selected.');
+    modalVerifyTextAD.textContent = 'Are you sure you want to archive this supplier?';
+    modalStatus = 'archive';  // Set the modal status to 'archive'
+    
+});
+
+// Event listener for 'Yes' button in the modal
+modalYes.addEventListener('click', function () {
+    if (modalStatus === 'archive') {
+        if (!selectedSupplierID || selectedSupplierID.trim() === '') {
+            alert('No supplier selected.');
             return;
         }
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'archiveUser.php', true);
-        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 
-        // Handle the response
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                const response = JSON.parse(xhr.responseText);
-                document.getElementById('modalMessage').textContent = response.message;
-            } else {
-                alert('Error: ' + xhr.status);
+        // Sending the archive request via fetch API
+        fetch('ArchivingSuppliers.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ SupplierID: selectedSupplierID }) // Sending itemID
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Supplier not found.');
+                } else if (response.status === 500) {
+                    throw new Error('Server error. Please try again later.');
+                } else {
+                    throw new Error('Error: ' + response.statusText);
+                }
             }
-        };
+            return response.json();
+        })
+        .then(data => {
+            modalVerifyTextAD.textContent = data.message; // Display the response message
+            modalFooterAD.style.display = 'none';
+            modalCloseAD.style.display = 'none';
+            modalVerifyTextAD.textContent = 'Supplier has been archived successfully!';
+            document.getElementById('modalVerifyTitle-AD').textContent = 'Success';
 
-        xhr.send(JSON.stringify({ accountName: selectedUser }));
-        alert("User archived successfully!");
-        setTimeout(() => {
-            window.location.href = 'users.php';
-        }, 100);
+            // Redirect after a short delay
+            setTimeout(() => {
+                window.location.href = 'suppliers.php'; // Adjust URL if necessary
+            }, 1000);
+        })
+        .catch(error => {
+            alert('Error: ' + error.message);
+        });
     }
+});
+
+// Event listener for close button (x) inside the modal
+closeBtnAD.addEventListener('click', function () {
+    overlayAD.style.display = 'none'; // Hide the overlay when the close button is clicked
+    document.getElementById('disablebackdrop-AD').style.display = 'none'; // Hide the modal
+});
+
+// Optional: Click anywhere outside the modal to close it
+window.addEventListener('click', function (event) {
+    if (event.target === overlayAD) {
+        overlayAD.style.display = 'none'; // Hide the modal if clicked outside of it
+        document.getElementById('disablebackdrop-AD').style.display = 'none'; // Hide the modal
+    }
+});
+
+// Redirect to archived users page
+const toArchivedUsers = document.getElementById('toArchivedUsers');
+toArchivedUsers.addEventListener('click', function () {
+    window.location.href = 'ArchiveSupplier/ArchiveSupplier.php';
 });

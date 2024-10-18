@@ -39,9 +39,7 @@
   <!-- Template Main CSS File -->
   <link href="../style.css" rel="stylesheet">
   <link href="../inventory/invent_style.css" rel="stylesheet">
-
-
-
+  
 </head>
 
 <body>
@@ -132,25 +130,27 @@
       </li><!-- End Transactions Page Nav -->
 
       <li class="nav-item"></li>
+          <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
+              <i class="bi bi-mailbox"></i>
+              <span>Purchase Orders</span>
+          </a>
+      </li><!-- End Purchase Order Page Nav -->
+
+      <li class="nav-item">
+            <a class="nav-link collapsed" href="../delivery/delivery.php">
+                <i class="bi bi-truck"></i>
+                <span>Delivery</span>
+            </a>
+        </li><!-- End Delivery Page Nav -->
+
+
+      <li class="nav-item"></li>
       <a class="nav-link" href="../inventory/inventory.php">
         <i class="bi bi-box-seam"></i>
         <span>Inventory</span>
       </a>
       </li><!-- End Inventory Page Nav -->
 
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../returnexchange/return.html">
-        <i class="bi bi-cart-dash"></i>
-        <span>Return & Exchange</span>
-      </a>
-      </li><!-- End Return & Exchange Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="../users/users.php">
-          <i class="bi bi-person"></i>
-          <span>Users</span>
-        </a>
-      </li><!-- End Users Page Nav -->
 
       <li class="nav-heading"></li>
 
@@ -160,6 +160,38 @@
         <span>POS</span>
       </a>
       </li><!-- End POS Page Nav -->
+
+      <li class="nav-item"></li>
+      <a class="nav-link collapsed" href="../returnexchange/return.html">
+        <i class="bi bi-cart-dash"></i>
+        <span>Return & Exchange</span>
+      </a>
+      </li><!-- End Return & Exchange Page Nav -->
+
+      <li class="nav-heading"></li>
+
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="../users/users.php">
+          <i class="bi bi-person"></i>
+          <span>Users</span>
+        </a>
+      </li><!-- End Users Page Nav -->
+
+      <li class="nav-item">
+            <a class="nav-link collapsed" href="../audittrail/audittrail.php">
+                <i class="bi bi-clipboard-data"></i>
+                <span>Audit Trail</span>
+            </a>
+        </li><!-- End Audit Trail Page Nav -->
+
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
+                <i class="bi bi-cloud-check"></i>
+                <span>Backup & Restore</span>
+            </a>
+        </li><!-- End B&R Page Nav -->
+
 
     </ul>
 
@@ -223,7 +255,8 @@
               <option value="Cosmetics">Cosmetics</option>
             </select>
             
-            <input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱" onfocus="addPesoSign()" oninput="addPesoSign()" />
+            <!--<input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱" onfocus="addPesoSign()" oninput="addPesoSign()" /> -->
+            <input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱ " onfocus="addPesoSign()" oninput="updatePrice()" />
           </div>
 
           <div class="textbox">
@@ -362,39 +395,33 @@
 
   <!-- Archive Modal (overlayAD) -->
   <div id="overlayAD" class="overlay" style="display: none;"> <!-- Initially hidden -->
-      <div class="overlayAD-content">
-          <span id="closeBtnAD" class="close-btn">&times;</span>
-          <h2>Other Options</h2>
-          <hr>
-          <button id="archiveUserBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD">
-              <img src="../resources/img/box-archive.png"> Archive Product
-          </button>
-          <br>
-          <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
-              <div class="modal-dialog">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="modalVerifyTitle-AD">Confirmation</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalClose-AD"></button>
-                      </div>
-                      <div class="modal-body" id="modalVerifyText-AD">
-                          Are you sure you want to do this?
-                      </div>
-                      <div class="modal-footer" id="modal-footer-AD">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                          <button type="button" class="btn btn-primary" id="modalYes">Yes</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-
-
-
-
-
-
+    <div class="overlayAD-content">
+        <span id="closeBtnAD" class="close-btn">&times;</span>
+        <h2>Other Options</h2>
+        <hr>
+        <button id="archiveUserBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD">
+            <img src="../resources/img/box-archive.png"> Archive Product
+        </button>
+        <br>
+        <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalVerifyTitle-AD">Confirmation</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalClose-AD"></button>
+                    </div>
+                    <div class="modal-body" id="modalVerifyText-AD">
+                        Are you sure you want to do this?
+                    </div>
+                    <div class="modal-footer" id="modal-footer-AD">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-primary" id="modalYes">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
   </main><!-- End #main -->
 

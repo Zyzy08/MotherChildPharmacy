@@ -1,5 +1,4 @@
 <?php
-
 header('Content-Type: application/json');
 
 // Database configuration
@@ -16,10 +15,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// SQL query to fetch products with status 'Archived'
-$sql = "SELECT ItemID, GenericName, BrandName, ItemType, Mass, UnitOfMeasure, InStock, Ordered, ReorderLevel, PricePerUnit, SupplierID, Notes, ProductIcon, ProductCode, Discount 
-        FROM inventory 
-        WHERE Status = 'Archived'";
+// SQL query to fetch suppliers with status 'Archived'
+$sql = "SELECT SupplierID, SupplierName, AgentName, Phone, Email, Notes FROM suppliers WHERE status = 'Archived'";
 $result = $conn->query($sql);
 
 // Check if query execution was successful
@@ -31,8 +28,6 @@ $data = array();
 
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        // Format the ProductIcon path
-        $row['ProductIcon'] = '../products-icon/' . $row['ProductIcon']; // Adjust path as necessary
         $data[] = $row;
     }
 }

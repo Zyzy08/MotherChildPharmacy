@@ -138,19 +138,20 @@
             </a>
             </li><!-- End Purchase Order Page Nav -->
 
+
+            <li class="nav-item">
+            <a class="nav-link collapsed" href="../delivery/delivery.php">
+                <i class="bi bi-truck"></i>
+                <span>Delivery</span>
+            </a>
+            </li><!-- End Delivery Page Nav -->
+
             <li class="nav-item"></li>
             <a class="nav-link collapsed" href="../inventory/inventory.php">
                 <i class="bi bi-box-seam"></i>
                 <span>Inventory</span>
             </a>
             </li><!-- End Inventory Page Nav -->
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="../users/users.php">
-                    <i class="bi bi-person"></i>
-                    <span>Users</span>
-                </a>
-            </li><!-- End Users Page Nav -->
 
             <li class="nav-heading"></li>
 
@@ -167,6 +168,33 @@
                 <span>Return & Exchange</span>
             </a>
             </li><!-- End Return & Exchange Page Nav -->
+
+
+
+            <li class="nav-heading"></li>
+
+            <li class="nav-item">
+            <a class="nav-link collapsed" href="../users/users.php">
+                <i class="bi bi-person"></i>
+                <span>Users</span>
+            </a>
+            </li><!-- End Users Page Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="../audittrail/audittrail.php">
+                    <i class="bi bi-clipboard-data"></i>
+                    <span>Audit Trail</span>
+                </a>
+            </li><!-- End Audit Trail Page Nav -->
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
+                    <i class="bi bi-cloud-check"></i>
+                    <span>Backup & Restore</span>
+                </a>
+  </li><!-- End B&R Page Nav -->
+
 
         </ul>
 
@@ -204,11 +232,13 @@
                             <table id="example" class="display">
                                 <thead>
                                     <tr class="highlight-row">
-                                        <th>Company Name</th>
-                                        <th>Agent Name</th>
-                                        <th>Contact No.</th>
-                                        <th>Email</th>
-                                        <th>Actions</th>
+                                        <th style="text-align: center;">Supplier ID</th>
+                                        <th style="text-align: center;">Company Name</th>
+                                        <th style="text-align: center;">Agent Name</th>
+                                        <th style="text-align: center;">Contact No.</th>
+                                        <th style="text-align: center;">Email</th>
+                                        
+                                        <th style="text-align: center;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
@@ -237,6 +267,36 @@
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
+
+      <!-- Archive Modal (overlayAD) -->
+        <div id="overlayAD" class="overlay" style="display: none;"> <!-- Initially hidden -->
+            <div class="overlayAD-content">
+                <span id="closeBtnAD" class="close-btn">&times;</span>
+                <h2>Other Options</h2>
+                <hr>
+                <button id="archiveUserBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD">
+                    <img src="../resources/img/box-archive.png"> Archive Product
+                </button>
+                <br>
+                <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalVerifyTitle-AD">Confirmation</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalClose-AD"></button>
+                            </div>
+                            <div class="modal-body" id="modalVerifyText-AD">
+                                Are you sure you want to do this?
+                            </div>
+                            <div class="modal-footer" id="modal-footer-AD">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                <button type="button" class="btn btn-primary" id="modalYes">Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <div id="overlay" class="overlay">
         <div class="overlay-content">
@@ -268,9 +328,9 @@
                     </div> -->
                     <div class="textbox">
                         <div class="label">
-                            <label for="agentName">Agent Name</label><br>
+                            <label for="agentName" >Agent Name</label><br>
                         </div>
-                        <input type="text" id="agentName" name="agentName" required>
+                        <input type="text" id="agentName" name="agentName" required> 
                     </div>
                 </div>
                 <div class="container">
@@ -307,105 +367,86 @@
     </div>
     <!-- End of Overlay for Add -->
 
+
+    <!-- Update FORM -->
+
+
+    <div id="overlayEdit1" class="overlay">
+    <div class="overlay-content">
+        <span id="closeBtnEdit" class="close-btn">&times;</span>
+        <h2>Update Supplier</h2>
+        <hr>
+        <form id="userFormEdit" action="updateSupplier.php" method="post" enctype="multipart/form-data"
+              onsubmit="handleFormSubmit1(event)">
+            <div class="container">
+                <div class="textbox">
+                    <div class="label">
+                        <label for="newID">Supplier ID</label><br>
+                    </div>
+                    <!--<input type="hidden" id="edit_newID" name="newID">  Changed to hidden -->
+                    <input type="hidden" id="edit_newID" name="supplierID" />
+                </div>
+            </div>
+            <div class="container">
+                <div class="textbox">
+                    <div class="label">
+                        <label for="companyName">Company Name</label><br>
+                    </div>
+                    <input type="text" id="edit_companyName" name="companyName">
+                </div>
+                <div class="textbox">
+                    <div class="label">
+                        <label for="agentName">Agent Name</label><br>
+                    </div>
+                    <input type="text" id="edit_agentName" name="agentName">
+                </div>
+            </div>
+            <div class="container">
+                <div class="textbox">
+                    <div class="label">
+                        <label for="ContactNo">Contact No.</label><br>
+                    </div>
+                    <input type="text" id="edit_ContactNo" name="ContactNo">
+                </div>
+                <div class="textbox">
+                    <div class="label">
+                        <label for="Email">Email</label><br>
+                    </div>
+                    <input type="email" id="edit_Email" name="Email">
+                </div>
+            </div>
+            <div class="container">
+                <div class="textbox">
+                    <div class="label">
+                        <label for="Notes">Notes</label><br>
+                    </div>
+                    <input type="text" id="edit_Notes" name="Notes">
+                </div>
+            </div>
+            <br>
+            <div class="line"></div>
+
+
+            <!-- Button of update -->
+            <div class="button-container">
+                <button id="cancelBtn" type="button" onclick="closeEditOverlay()">Cancel</button>
+                <button type="submit">Update</button> <!-- Changed type to submit -->
+            </div>
+        </form>
+    </div>
+</div>
+
+
+    <!-- End of update -->
+
+
+
     <div id="overlayEdit" class="overlay">
         <div class="overlay-content">
             <span id="closeBtnEdit" class="close-btn">&times;</span>
             <h2>Edit User</h2>
             <hr>
-            <form id="userFormEdit" action="updateAccount.php" method="post" enctype="multipart/form-data"
-                onsubmit="handleFormSubmit()">
-                <div class="container">
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="currentEmployeeID">Employee ID</label><br>
-                        </div>
-                        <input type="text" id="currentEmployeeID" name="currentEmployeeID" disabled>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="employeeNameEdit">Employee First Name</label><br>
-                        </div>
-                        <input type="text" id="employeeNameEdit" name="employeeNameEdit" required>
-                    </div>
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="employeeLName">Employee Last Name</label><br>
-                        </div>
-                        <input type="text" id="employeeLNameEdit" name="employeeLNameEdit" required>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="accountNameEdit">Account Name</label><br>
-                        </div>
-                        <input type="text" id="accountNameEdit" name="accountNameEdit" required disabled>
-                    </div>
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="passwordEdit">Password</label><br>
-                        </div>
-                        <input type="password" id="passwordEdit" name="passwordEdit" required disabled>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="profilePictureEdit">Profile Picture</label><br>
-                        </div>
-                        <input type="file" id="profilePictureEdit" name="profilePictureEdit" accept="image/*">
-                    </div>
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="previewEdit">Image Preview</label><br>
-                        </div>
-                        <img id="previewEdit" src="" alt="Image Preview" style="display: none;">
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="roleEdit">Role</label><br>
-                        </div>
-                        <select name="roleEdit" id="roleEdit">
-                            <option value="Pharmacy Assistant">Pharmacy Assistant</option>
-                            <option value="Purchaser">Purchaser</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                    </div>
-                    <!-- Modify Permissions -->
-                    <div class="permissionsBox">
-                        <div class="label">
-                            <label for="permsSelectEdit">Permissions</label>
-                            <img src="../resources/img/toggle-off.png" id="permsToggleEdit">
-                            <br>
-                        </div>
-                        <div class="permissionsSelectEdit">
-                            <input type="checkbox" id="SuppliersPermsEdit" disabled> Suppliers
-                            <input type="checkbox" id="TransactionsPermsEdit" disabled> Sales
-                            <input type="checkbox" id="InventoryPermsEdit" disabled> Inventory
-                            <input type="checkbox" id="POSPermsEdit" disabled> POS
-                            <input type="checkbox" id="REPermsEdit" disabled> Return & Exchange
-                            <input type="checkbox" id="POPermsEdit" disabled> Purchase Orders
-                            <input type="checkbox" id="UsersPermsEdit" disabled> Users
-                        </div>
-                    </div>
-                </div>
-                <div class="textboxHidden">
-                    <div class="label">
-                        <label for="AccountID">AccountID</label><br>
-                    </div>
-                    <input type="text" id="AccountID" name="AccountID" required>
-                </div>
-                <br>
-                <div class="line"></div>
-                <div class="button-container">
-                    <button id="cancelBtn" type="button" onclick="closeEditOverlay()">Cancel</button>
-                    <button type="submit">Update</button>
-                </div>
-            </form>
+            
         </div>
     </div>
     <!-- End of Overlay for Edit -->
@@ -426,6 +467,32 @@
             </form>
         </div>
     </div>
+
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeSuccessModal()">&times;</span>
+            <h2>Success!</h2>
+            <p id="successMessage"></p>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- End of Overlay for Archive/Delete -->
 
 

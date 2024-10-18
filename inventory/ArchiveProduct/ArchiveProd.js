@@ -2,8 +2,6 @@
 const addUserBtn = document.getElementById('addUser');
 const overlayAD = document.getElementById('overlayAD');
 const closeBtnAD = document.getElementById('closeBtnAD');
-const AccountID = document.getElementById('AccountID');
-// etc
 const tableBody = document.getElementById('tableBody');
 const optUserBtn = document.getElementById('optionsUser');
 var modal = document.getElementById("myModal");
@@ -11,7 +9,6 @@ var span = document.getElementsByClassName("close")[0];
 
 // Placeholders
 let currentlySelectedRow = null;
-let selectedUser = null;
 let selectedItemID = null; // Variable to store the selected item's ID for unarchiving
 
 // Redirect to inventory page
@@ -20,10 +17,51 @@ toInventory.addEventListener('click', function () {
     window.location.href = '../inventory.php';
 });
 
-// Show delete options
-function showDeleteOptions(accountName) {
-    selectedUser = accountName;
-    overlayAD.style.display = 'flex';
+// Fetch data
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('getArchiveProd.php')
+        .then(response => response.json())
+        .then(data => updateTable(data))
+        .catch(error => alert('Error fetching data: ' + error));
+    
+    setDataTables();
+});
+
+// Update the DataTable with the fetched data
+function updateTable(data) {
+    const table = $('#example').DataTable(); // Assuming your table has an ID of 'example'
+
+    // Clear existing data
+    table.clear();
+
+    data.forEach(item => {
+        if (!item.ProductIcon || !item.ItemID) {
+            console.warn('Missing item properties:', item);
+            return; // Skip this item if essential properties are missing
+        }
+        table.row.add([
+            `<span class="text-truncate">${item.ItemID}</span>`, // Item ID with truncation
+            `<img src="${item.ProductIcon}" alt="Icon" style="width: 50px; height: auto;" />`, // Product Icon
+            `<span class="text-truncate">${item.GenericName}</span>`, // Generic Name with truncation
+            `<span class="text-truncate">${item.BrandName}</span>`, // Brand Name with truncation
+            `<span class="text-truncate">${item.ItemType}</span>`, // Item Type with truncation
+            `<span class="text-truncate">${item.Mass} ${item.UnitOfMeasure}</span>`, // Mass with Unit of Measure
+            `<span class="text-truncate">${item.PricePerUnit}</span>`, // Price Per Unit with truncation
+            `<span class="text-truncate">${item.InStock}</span>`, // In Stock with truncation
+            `<span class="text-truncate">${item.Ordered}</span>`, // Ordered with truncation
+            `<span class="text-truncate">${item.ReorderLevel}</span>`, // Reorder Level with truncation
+            `<img src="../../resources/img/s-remove.png" alt="Unarchive" style="cursor:pointer;margin-left:10px;" onclick="showDeleteOptions('${item.ItemID}')" />` // Action buttons
+        ]);
+    });
+
+    // Draw the updated table
+    table.draw();
+}
+
+// Show delete options for unarchiving
+function showDeleteOptions(itemID) {
+    selectedItemID = itemID; // Set the selected Item ID
+    overlayAD.style.display = 'flex'; // Show the overlay
 }
 
 // Close overlay
@@ -31,83 +69,6 @@ function closeADOverlay() {
     overlayAD.style.display = 'none';
 }
 closeBtnAD.addEventListener('click', closeADOverlay);
-
-// Archiving Accounts
-const unarchiveUserBtn = document.getElementById('unarchiveUserBtn');
-const modalYes = document.getElementById('modalYes');
-const modalVerifyTextAD = document.getElementById('modalVerifyText-AD');
-const modalVerifyTitleAD = document.getElementById('modalVerifyTitle-AD');
-const modalFooterAD = document.getElementById('modal-footer-AD');
-const modalCloseAD = document.getElementById('modalClose-AD');
-let modalStatus = '';
-
-// Handle unarchiving action
-unarchiveUserBtn.addEventListener('click', function (event) {
-    // Get the ID of the product to unarchive from the clicked button
-    selectedItemID = event.target.dataset.id; // Assuming the button has a data-id attribute
-    modalVerifyTextAD.textContent = 'Are you sure you want to unarchive this product?';
-    modalStatus = 'unarchive'; // Update modal status for unarchiving
-});
-
-// Event listener for 'Yes' button in the modal
-modalYes.addEventListener('click', function () {
-    if (modalStatus === 'unarchive') {
-        if (!selectedItemID || selectedItemID.trim() === '') {
-            alert('No product selected.');
-            return;
-        }
-
-        // Sending the unarchive request via XMLHttpRequest
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', '../inventory/ArchiveProduct/unarchiveProduct.php', true); // Adjust the URL to your unarchive script
-        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-
-        // Handling the response from the server
-        xhr.onload = function () {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                const response = JSON.parse(xhr.responseText);
-                modalVerifyTextAD.textContent = response.message; // Display the response message
-
-                // Hide modal controls
-                modalFooterAD.style.display = 'none';
-                modalCloseAD.style.display = 'none';
-
-                // If the unarchive is successful, load the archived products
-                if (response.success) {
-                    setTimeout(() => {
-                        window.location.href = '../inventory/ArchiveProduct/ArchiveProd.php'; // Redirect to the archived products page
-                    }, 1000); // Optional delay for user feedback
-                }
-            } else {
-                alert('Error: ' + xhr.status);
-            }
-        };
-
-        // Sending product ID to unarchive
-        xhr.send(JSON.stringify({ itemID: selectedItemID })); // Sending itemID
-    }
-});
-
-// Load item data into the form for editing
-function loadFormForEdit(item) {
-    isEditMode = true;
-    currentItemId = item.ItemID;
-
-    document.getElementById('itemID').value = item.ItemID; // Set ItemID field as read-only
-    document.getElementById('genericName').value = item.GenericName;
-    document.getElementById('brandName').value = item.BrandName;
-    document.getElementById('itemType').value = item.ItemType;
-    document.getElementById('mass').value = item.Mass;
-    document.getElementById('unitOfMeasure').value = item.UnitOfMeasure;
-    document.getElementById('Discount').value = item.Discount;
-    document.getElementById('pricePerUnit').value = item.PricePerUnit;
-    document.getElementById('Notes').value = item.Notes || ''; // Handle missing Notes
-
-    // Set the icon preview
-    document.getElementById('iconPreview').src = item.ProductIcon || '../resources/img/add_icon.png'; // Use default if no icon
-
-    modal.style.display = "block";
-}
 
 // Initialize or reinitialize DataTables
 function setDataTables() {
@@ -119,8 +80,8 @@ function setDataTables() {
     $('#example').DataTable({
         "order": [], // Disable initial sorting
         "columnDefs": [
-            { "targets": 0, "width": "8%" }, // Item ID
-            { "targets": 1, "width": "10%", "orderable": false }, // Icon 
+            { "targets": 0, "width": "10%", "orderable": false }, // Item ID 
+            { "targets": 1, "width": "8%" }, // Icon
             { "targets": 2, "width": "10%" }, // Generic Name
             { "targets": 3, "width": "10%" }, // Brand Name
             { "targets": 4, "width": "10%" }, // Item Type
@@ -132,52 +93,86 @@ function setDataTables() {
             { "targets": 10, "width": "12%", "orderable": false } // Actions
         ]
     });
-
-    // Adjust column widths dynamically
-    const adjustColumns = () => $dataTable.DataTable().columns.adjust().draw();
-    $(window).resize(adjustColumns);
-    
-    // Sidebar toggle event
-    $('#bi bi-list toggle-sidebar-btn').on('click', () => {
-        setTimeout(adjustColumns, 300);
-    });
 }
 
-// Update the table with new data
-function updateTable(items) {
-    tableBody.innerHTML = ''; // Clear existing rows
+// Unarchiving Products
+const unarchiveUserBtn = document.getElementById('unarchiveUserBtn');
+const modalYes = document.getElementById('modalYes');
+const modalVerifyTextAD = document.getElementById('modalVerifyText-AD');
+const modalVerifyTitleAD = document.getElementById('modalVerifyTitle-AD');
+const modalFooterAD = document.getElementById('modal-footer-AD');
+const modalCloseAD = document.getElementById('modalClose-AD');
+let modalStatus = '';
 
-    items.forEach(item => {
-        var row = document.createElement('tr');
-        row.setAttribute('data-id', item.ItemID); // Set data-id attribute
+// Event listener for the unarchive button
+unarchiveUserBtn.addEventListener('click', function () {
+    modalVerifyTextAD.textContent = 'Are you sure you want to unarchive this product?';
+    modalStatus = 'archive';
+});
 
-        row.innerHTML = `
-            <td class="text-center text-truncate">${item.ItemID}</td>
-            <td class="text-center"><img src="${item.ProductIcon}" alt="Icon" style="width: 50px; height: auto;"></td>
-            <td class="text-center text-truncate">${item.GenericName}</td>
-            <td class="text-center text-truncate">${item.BrandName}</td>
-            <td class="text-center text-truncate">${item.ItemType}</td>
-            <td class="text-center text-truncate">${item.Mass} ${item.UnitOfMeasure}</td>
-            <td class="text-center text-truncate">${item.PricePerUnit}</td>
-            <td class="text-center text-truncate">${item.InStock}</td>
-            <td class="text-center text-truncate">${item.Ordered}</td>
-            <td class="text-center text-truncate">${item.ReorderLevel}</td>
-            <td class="text-center">
-                <img src="../resources/img/d-edit.png" alt="Edit" style="cursor:pointer;" onclick="handleUpdate('${item.ItemID}')" />
-                <img src="../resources/img/s-remove2.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="handleDelete('${item.ItemID}')" />
-                <img src="../resources/img/unarchive.png" alt="Unarchive" style="cursor:pointer;margin-left:10px;" onclick="showUnarchiveModal('${item.ItemID}')" /> <!-- Unarchive button -->
-            </td>
-        `;
+// Confirm unarchive action
+modalYes.addEventListener('click', function () {
+    if (modalStatus === 'archive') {
+        if (!selectedItemID || selectedItemID.trim() === '') {
+            alert('No product selected.');
+            return;
+        }
 
-        tableBody.appendChild(row);
-    });
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'UnarchiveProd.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 
-    setDataTables(); // Reinitialize DataTables
-}
+        // Handle the response
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                const response = JSON.parse(xhr.responseText);
+                
+                // Update modal with response message
+                modalVerifyTextAD.textContent = response.message;
 
-// Function to show unarchive modal and set selectedItemID
-function showUnarchiveModal(itemID) {
-    selectedItemID = itemID; // Set the selected item ID for unarchiving
-    modalVerifyTextAD.textContent = 'Are you sure you want to unarchive this product?'; // Update modal text
-    modal.style.display = 'block'; // Show modal
-}
+                // Hide modal controls
+                modalFooterAD.style.display = 'none'; // Hide footer
+                modalCloseAD.style.display = 'none'; // Hide close button
+
+                // If the unarchive is successful
+                if (response.success) {
+                    modalVerifyTextAD.textContent = 'Product has been unarchived and status is now active!';
+                    modalVerifyTitleAD.textContent = 'Success';
+
+                    // Remove the corresponding row from the DataTable
+                    const table = $('#example').DataTable();
+                    const row = table.rows().nodes().toArray().find(row => {
+                        const rowData = table.row(row).data();
+                        return rowData[1].includes(selectedItemID); // Match against ItemID
+                    });
+                    if (row) {
+                        table.row(row).remove().draw(); // Remove and redraw the table
+                    }
+
+                    // Redirect after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'ArchiveProd.php'; // Adjust URL if necessary
+                    }, 1000); // Optional delay for user feedback
+                }
+            } else {
+                alert('Error: ' + xhr.status);
+            }
+        };
+
+        // Send the request with the itemID
+        xhr.send(JSON.stringify({ itemID: selectedItemID }));
+
+        // Extra feedback (these lines might be redundant)
+        modalFooterAD.style.display = 'none'; // Hide footer
+        modalCloseAD.style.display = 'none'; // Hide close button
+        modalVerifyTextAD.textContent = 'The product has been unarchived and status is now active!';
+        modalVerifyTitleAD.textContent = 'Success';
+        
+        // Optional: You could also include a timeout for redirection here
+        setTimeout(() => {
+            window.location.href = 'ArchiveProd.php';
+        }, 1000);
+    }
+});
+
+// Additional functions can be added here...
