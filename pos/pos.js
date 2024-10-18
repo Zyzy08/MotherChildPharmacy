@@ -45,25 +45,41 @@ async function loadProducts() {
     document.querySelectorAll('.clickable-card').forEach(card => card.classList.remove('active'));
     localStorage.removeItem('selectedCardId');
 
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const paginatedProducts = products.slice(startIndex, startIndex + itemsPerPage);
+    // Sort products: Low Stock first, then In Stock
+    const sortedProducts = products.sort((a, b) => {
+        if (a.InStock === 0) return 1; // Move Out of Stock to the end
+        if (b.InStock === 0) return -1;
+        if (a.InStock < 50 && b.InStock >= 50) return -1; // Low Stock first
+        if (b.InStock < 50 && a.InStock >= 50) return 1;
+        return 0;
+    });
 
-    paginatedProducts.forEach(product => {
+    const lowStockProducts = sortedProducts.filter(p => p.InStock > 0 && p.InStock < 50);
+    const inStockProducts = sortedProducts.filter(p => p.InStock >= 50);
+
+    // Create rows for Low Stock and In Stock products
+    const lowStockRow = document.createElement('div');
+    lowStockRow.className = 'row mb-4';
+    lowStockRow.innerHTML = '<h4>Low Stock Products</h4>';
+
+    const inStockRow = document.createElement('div');
+    inStockRow.className = 'row';
+    inStockRow.innerHTML = '<h4>In Stock Products</h4>';
+
+    // Function to create product card
+    function createProductCard(product) {
         const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
         let stockBadge = '';
         let cardClass = 'clickable-card';
 
-        if (product.InStock == 0) {
-            stockBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
-            cardClass = 'non-clickable-card';
-        } else if (product.InStock < 50) {
+        if (product.InStock < 50) {
             stockBadge = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
         } else {
             stockBadge = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
         }
 
-        const productHTML = `
-            <div class="col-lg-3">
+        return `
+            <div class="col-lg-3 mb-3">
                 <div class="card ${cardClass}" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-product='${JSON.stringify(product)}'>
                     ${stockBadge}
                     <img src="../inventory/${product.ProductIcon}" class="card-img-top" style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
@@ -82,13 +98,25 @@ async function loadProducts() {
                 </div>
             </div>
         `;
-        productContainer.insertAdjacentHTML('beforeend', productHTML);
+    }
+
+    // Add Low Stock products
+    lowStockProducts.forEach(product => {
+        lowStockRow.insertAdjacentHTML('beforeend', createProductCard(product));
     });
 
-    attachCardListeners();
-    updatePaginationControls();
+    // Add In Stock products
+    inStockProducts.forEach(product => {
+        inStockRow.insertAdjacentHTML('beforeend', createProductCard(product));
+    });
 
-    if (searchQuery && paginatedProducts.length > 0) {
+    // Append rows to product container
+    productContainer.appendChild(lowStockRow);
+    productContainer.appendChild(inStockRow);
+
+    attachCardListeners();
+
+    if (searchQuery && (lowStockProducts.length > 0 || inStockProducts.length > 0)) {
         const firstCard = document.querySelector('.clickable-card');
         if (firstCard) {
             highlightCard(firstCard);
