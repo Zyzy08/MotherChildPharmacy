@@ -1,7 +1,7 @@
 window.onload = loadProducts;
 
 let currentPage = 1;
-const itemsPerPage = 8;
+const itemsPerPage = 12;
 let totalItems = 0;
 let totalPages = 0;
 let searchQuery = '';
@@ -40,30 +40,31 @@ function formatUnitOfMeasure(unit) {
 
 async function loadProducts() {
     const products = await fetchProducts(searchQuery);
-    const lowStockContainer = document.getElementById('product-list');
     const inStockContainer = document.getElementById('in-stock-list');
+    const lowStockContainer = document.getElementById('low-stock-list');
+    const outOfStockContainer = document.getElementById('out-of-stock-list');
     
-    lowStockContainer.innerHTML = '';
     inStockContainer.innerHTML = '';
+    lowStockContainer.innerHTML = '';
+    outOfStockContainer.innerHTML = '';
 
     document.querySelectorAll('.clickable-card').forEach(card => card.classList.remove('active'));
     localStorage.removeItem('selectedCardId');
-
-    // Sort products by stock level (ascending order)
-    const sortedProducts = products.sort((a, b) => a.InStock - b.InStock);
 
     // Calculate start and end indices for the current page
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
-    // Slice the sorted products array to get only the products for the current page
-    const currentPageProducts = sortedProducts.slice(startIndex, endIndex);
+    // Slice the products array to get only the products for the current page
+    const currentPageProducts = products.slice(startIndex, endIndex);
 
     function createProductHTML(product) {
         const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
         let stockBadge = '';
 
-        if (product.InStock < 50) {
+        if (product.InStock == 0) {
+            stockBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
+        } else if (product.InStock < 50 && product.InStock > 0) {
             stockBadge = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
         } else {
             stockBadge = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
@@ -91,24 +92,30 @@ async function loadProducts() {
         `;
     }
 
-    // Separate low-stock and in-stock products
-    const lowStockProducts = currentPageProducts.filter(product => product.InStock < 50);
+    // Separate stock level products
     const inStockProducts = currentPageProducts.filter(product => product.InStock >= 50);
+    const lowStockProducts = currentPageProducts.filter(product => product.InStock < 50 && product.InStock > 0);
+    const outOfStockProducts = currentPageProducts.filter(product => product.InStock == 0);
 
-    // Add low-stock products to the first row
+    // Add in-stock products to the first row
+    inStockProducts.forEach(product => {
+        inStockContainer.insertAdjacentHTML('beforeend', createProductHTML(product));
+    });
+
+    // Add low-stock products to the second row
     lowStockProducts.forEach(product => {
         lowStockContainer.insertAdjacentHTML('beforeend', createProductHTML(product));
     });
 
-    // Add in-stock products to the second row
-    inStockProducts.forEach(product => {
-        inStockContainer.insertAdjacentHTML('beforeend', createProductHTML(product));
+    // Add out-of-stock products to the third row
+    outOfStockProducts.forEach(product => {
+        outOfStockContainer.insertAdjacentHTML('beforeend', createProductHTML(product));
     });
 
     attachCardListeners();
     updatePaginationControls();
 
-    if (searchQuery && (lowStockContainer.children.length > 0 || inStockContainer.children.length > 0)) {
+    if (searchQuery && (inStockContainer.children.length > 0 || lowStockContainer.children.length > 0 || outOfStockContainer.children.length > 0)) {
         const firstCard = document.querySelector('.clickable-card');
         if (firstCard) {
             highlightCard(firstCard);

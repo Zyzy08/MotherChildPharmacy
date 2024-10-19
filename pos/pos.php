@@ -260,12 +260,16 @@
                 
                 <div class="card-body">
 
-                  <div class="row align-items-top" id="product-list">
+                  <div class="row align-items-top" id="in-stock-list">
                       <!-- First row of products -->
                   </div>
 
-                  <div class="row align-items-top" id="in-stock-list">
+                  <div class="row align-items-top" id="low-stock-list">
                       <!-- Second row of products -->
+                  </div>
+
+                  <div class="row align-items-top" id="out-of-stock-list">
+                      <!-- Third row of products -->
                   </div>
 
                 </div><!-- End Card Body -->
@@ -278,15 +282,31 @@
                     <div class="col-lg-6">
                       <nav aria-label="Page navigation">
                         <ul class="pagination">
+
+                          <li class="page-item">
+                            <a class="page-link" href="#" aria-label="First">
+                              <span aria-hidden="true">«</span>
+                            </a>
+                          </li>
+
                           <li class="page-item" id="prev-page">
                             <a class="page-link" href="#">Previous</a>
                           </li>
+
                           <li class="page-item active" id="page-1">
                             <a class="page-link" href="#">1</a>
                           </li>
+
                           <li class="page-item" id="next-page">
                             <a class="page-link" href="#">Next</a>
                           </li>
+
+                          <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Last">
+                              <span aria-hidden="true">»</span>
+                            </a>
+                          </li>
+
                         </ul>
                       </nav>
                     </div><!-- End Pagination -->
@@ -372,11 +392,7 @@
               <input class="form-check-input" type="checkbox" id="seniorCitizenCheckbox">
               <label class="form-check-label" for="seniorCitizenCheckbox">Senior Citizen / PWD (20%)</label>
             </div>
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="promoCheckbox">
-              <label class="form-check-label" for="promoCheckbox">Promotional (10%)</label>
-            </div>
-
+            <br>
             <div id="payment-method">
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="cash" checked="">
@@ -571,7 +587,7 @@
   <script src="../main.js"></script>
   
   <!-- Template POS JS File -->
-  <script src="pos.js"></script>
+  <script src="pos copy.js"></script>
 
 </body>
 

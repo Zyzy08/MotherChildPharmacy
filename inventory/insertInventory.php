@@ -21,21 +21,35 @@ if ($conn->connect_error) {
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Retrieve form data
-    $productCode = $_POST['ProductCode'] ?? '';
-    $itemType = $_POST['itemType'] ?? '';
-    $brandName = $_POST['brandName'] ?? '';
-    $genericName = $_POST['genericName'] ?? '';
-    $unitOfMeasure = $_POST['unitOfMeasure'] ?? '';
-    $mass = $_POST['mass'] ?? '';
-    $pricePerUnit = $_POST['pricePerUnit'] ?? '';
-    $Discount = $_POST['Discount'] ?? '';
-    $InStock = $_POST['InStock'] ?? '';
-    $notes = $_POST['notes'] ?? '';
-    $status = $_POST['status'] ?? '';
+    $productCode = $conn->real_escape_string($_POST['ProductCode'] ?? '');
+    $itemType = $conn->real_escape_string($_POST['itemType'] ?? '');
+    $brandName = $conn->real_escape_string($_POST['brandName'] ?? '');
+    $genericName = $conn->real_escape_string($_POST['genericName'] ?? '');
+    $unitOfMeasure = $conn->real_escape_string($_POST['unitOfMeasure'] ?? '');
+    $mass = $conn->real_escape_string($_POST['mass'] ?? '');
+    $pricePerUnit = $conn->real_escape_string($_POST['pricePerUnit'] ?? '');
+    $Discount = $conn->real_escape_string($_POST['Discount'] ?? ''); // Keep as string for validation
+    $InStock = $conn->real_escape_string($_POST['InStock'] ?? ''); // Initialize InStock
+    $notes = $conn->real_escape_string($_POST['notes'] ?? '');
+    $VAT_exempted = $conn->real_escape_string($_POST['VAT_exempted'] ?? ''); // New field for VAT exemption
 
-    // Validate required fields
-    if (empty($productCode) || empty($itemType) || empty($brandName) || empty($genericName) || empty($unitOfMeasure) || empty($mass) || empty($pricePerUnit) || empty($Discount)) {
+    // Validate required fields (excluding InStock)
+    if (empty($productCode) || empty($itemType) || empty($brandName) || empty($genericName) || empty($unitOfMeasure) || empty($mass) || empty($pricePerUnit) || $Discount === '') {
         echo json_encode(['success' => false, 'message' => 'Missing required fields']);
+        exit;
+    }
+
+    // Validate numeric fields
+    if (!is_numeric($mass) || !is_numeric($pricePerUnit)) {
+        echo json_encode(['success' => false, 'message' => 'Mass and PricePerUnit must be numeric']);
+        exit;
+    }
+
+    // Set InStock to 0 if empty (default value)
+    if (empty($InStock)) {
+        $InStock = 0; // Default value if InStock is not provided
+    } elseif (!is_numeric($InStock)) {
+        echo json_encode(['success' => false, 'message' => 'InStock must be numeric']);
         exit;
     }
 
@@ -67,22 +81,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit;
         }
     }
-    if($iconPath === "" )
-    {
+
+    // Set default icon if none was uploaded
+    if (empty($iconPath)) {
         $iconPath = "../resources/img/default_Icon.png";
     }
 
+    // Calculate ReorderLevel as 50% of InStock
+    $ReorderLevel = $InStock * 0.5;
 
-
-    // Prepare SQL statement to insert data
-    $stmt = $conn->prepare("INSERT INTO inventory (ProductCode, ItemType, BrandName, GenericName, UnitOfMeasure, Mass, PricePerUnit, Discount, InStock, Notes, Status, ProductIcon) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?)");
+    // Prepare SQL statement to insert data, including the VAT_exempted field
+    $stmt = $conn->prepare("INSERT INTO inventory (ProductCode, ItemType, BrandName, GenericName, UnitOfMeasure, Mass, PricePerUnit, Discount, InStock, Notes, ReorderLevel, ProductIcon, VAT_exempted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {
         echo json_encode(['success' => false, 'message' => 'Prepare failed: ' . $conn->error]);
         exit;
     }
 
-    // Bind the parameters
-    $stmt->bind_param("ssssssisssss", $productCode, $itemType, $brandName, $genericName, $unitOfMeasure, $mass, $pricePerUnit, $Discount, $InStock, $notes, $status, $iconPath);
+    // Bind the parameters, including VAT_exempted
+    $stmt->bind_param("ssssssiisssss", $productCode, $itemType, $brandName, $genericName, $unitOfMeasure, $mass, $pricePerUnit, $Discount, $InStock, $notes, $ReorderLevel, $iconPath, $VAT_exempted);
 
     // Execute the statement and check for success
     if ($stmt->execute()) {

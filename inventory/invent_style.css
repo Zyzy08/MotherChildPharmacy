@@ -31,21 +31,20 @@
 .modal {
   display: none; /* Hidden by default */
   position: fixed;
-  z-index: 1; /* Sit on top */
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%; /* Full width */
   height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
+  margin: 7% auto; /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+  width: 70%; /* Could be more or less, depending on screen size */
 
 }
 /* Overlay styles */
@@ -124,6 +123,34 @@
   margin-bottom: 10px;
   margin-left: 12px;
 }
+
+#checkLowStockButton {
+  cursor: pointer;
+  height: 36px;
+  width: 100px; /* Adjust width if needed */
+  padding: 0 12px;
+  display: flex;
+  align-items: center; /* Center align vertically */
+  justify-content: flex-start; /* Align items to the start (left) */
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #FFFFFFFF; /* white */
+  background: rgb(13, 172, 215); /* primary-500 */
+  opacity: 1;
+  border: none;
+  border-radius: 12px;
+  gap: 6px; /* Space between the icon and text */
+  margin-bottom: 10px;
+  margin-left: 12px;
+}
+
+#checkLowStockButton img {
+  width: 20px; /* Set the size of the image */
+  height: auto; /* Keep the aspect ratio */
+  margin-right: 6px; /* Space between the image and text */
+}
+
 
 .deleteProduct {
 
@@ -208,7 +235,7 @@
 /*FORM MODAL*/
 
 .h2 {
-  color: #4154f1;
+  color: #888;
 }
 
 
@@ -233,7 +260,7 @@
   font-size: 20px;
   line-height: 30px;
   font-weight: 600;
-  color: #4154f1;
+  color: #2a2929;
   /* primary-500 */
 }
 
@@ -252,7 +279,6 @@
   font-weight: 400;
   color: #FFFFFFFF;
   /* white */
-  background: #005500FF;
   /* primary-500 */
   opacity: 1;
   border: none;
@@ -262,13 +288,17 @@
 }
 
 .form-button #Clear {
-  background-color: #f44336;
+  background-color: #af4c4c;
   /*margin-right: auto; /* Align Clear button to the left */
 }
 
 .form-button #saveBtn {
   background-color: #4CAF50;
   /*margin-left: auto; /* Align Save button to the right */
+}
+.form-button #saveBtn :hover
+{
+  background-color: #45a049;
 }
 
 .form-button {
@@ -307,6 +337,30 @@
 .textbox input {
   width: 200px;
   height: 30px;
+  flex: 1;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 14px;
+  background: #F3F4F6FF;
+  border-radius: 4px;
+  border-width: 0px;
+  outline: none;  outline: none;
+}
+
+.textbox select {
+  width: 220px;
+  height: 30px;
+  flex: 1;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  background: #F3F4F6FF;
+  border-radius: 4px;
+  border-width: 0px;
+  outline: none;
 }
 
 
@@ -316,7 +370,6 @@
   font-weight: 700;
 }
 
-/* hover */
 .textbox input:hover {
   color: #171A1FFF;
   /* neutral-900 */
@@ -324,7 +377,6 @@
   /* neutral-200 */
 }
 
-/* focused */
 .textbox input:focused {
   color: #171A1FFF;
   /* neutral-900 */
@@ -332,7 +384,6 @@
   /* white */
 }
 
-/* disabled */
 .textbox input:disabled {
   color: #171A1FFF;
   /* neutral-900 */
@@ -346,10 +397,7 @@
   /* neutral-900 */
 }
 
-.textbox select {
-  width: 200px;
-  height: 30px;
-}
+
 
 /* hover */
 .select input:hover {
@@ -437,7 +485,7 @@
 
 /* Close button for notification */
 #closeNotification {
-  background-color: rgb(0, 75, 0);
+  background-color: #4CAF50;
   /* Gray */
   border: none;
   color: white;
@@ -452,7 +500,7 @@
 }
 
 #closeNotification:hover {
-  background-color: rgb(0, 59, 0);
+  background-color: #45a049;;
 }
 
 
@@ -487,16 +535,6 @@
   font-size: 24px;
   cursor: pointer;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -787,24 +825,33 @@ td {
   background-color: #a07545;
 }
 
+/*LOW STOCK MODAL*/
 
-.small-notification {
-  display: none; /* Hidden by default */
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background-color: #4CAF50; /* Green */
-  color: white;
-  padding: 10px 15px; /* Reduced padding */
-  border-radius: 5px;
-  z-index: 1000;
-  transition: opacity 0.5s, transform 0.5s;
-  opacity: 0;
-  transform: translateY(10px);
+
+/* Close Button */
+/* Close Button */
+.closeAlert {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
 }
 
-.small-notification.show {
-  display: block;
-  opacity: 1;
-  transform: translateY(0); /* Slide in effect */
+.closeAlert:hover,
+.closeAlert:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Low Stock Message */
+.low-stock-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+/* Close Button Container */
+.closeAlertContainer {
+  display: flex; /* Use flexbox */
+  justify-content: flex-end; /* Align to the right */
 }

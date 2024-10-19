@@ -20,12 +20,19 @@ toInventory.addEventListener('click', function () {
 // Fetch data
 document.addEventListener('DOMContentLoaded', () => {
     fetch('getArchiveProd.php')
-        .then(response => response.json())
-        .then(data => updateTable(data))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('No data available');
+            }
+            return response.json();
+        })
+        .then(data => {
+            updateTable(data);
+            setDataTables(); // Move this inside to ensure table is updated first
+        })
         .catch(error => alert('Error fetching data: ' + error));
-    
-    setDataTables();
 });
+
 
 // Update the DataTable with the fetched data
 function updateTable(data) {
@@ -39,9 +46,13 @@ function updateTable(data) {
             console.warn('Missing item properties:', item);
             return; // Skip this item if essential properties are missing
         }
+
+        // Update the path for the ProductIcon
+        const iconPath = `MotherChildPharmacy-main/inventory/products-icon/${item.ProductIcon}`;
+
         table.row.add([
             `<span class="text-truncate">${item.ItemID}</span>`, // Item ID with truncation
-            `<img src="${item.ProductIcon}" alt="Icon" style="width: 50px; height: auto;" />`, // Product Icon
+            `<img src="${iconPath}" alt="Icon" style="width: 50px; height: auto;" />`, // Product Icon
             `<span class="text-truncate">${item.GenericName}</span>`, // Generic Name with truncation
             `<span class="text-truncate">${item.BrandName}</span>`, // Brand Name with truncation
             `<span class="text-truncate">${item.ItemType}</span>`, // Item Type with truncation
@@ -49,8 +60,8 @@ function updateTable(data) {
             `<span class="text-truncate">${item.PricePerUnit}</span>`, // Price Per Unit with truncation
             `<span class="text-truncate">${item.InStock}</span>`, // In Stock with truncation
             `<span class="text-truncate">${item.Ordered}</span>`, // Ordered with truncation
-            `<span class="text-truncate">${item.ReorderLevel}</span>`, // Reorder Level with truncation
-            `<img src="../../resources/img/s-remove.png" alt="Unarchive" style="cursor:pointer;margin-left:10px;" onclick="showDeleteOptions('${item.ItemID}')" />` // Action buttons
+
+            `<img src="../../resources/img/s-remove.png" alt="Unarchive" style="cursor:pointer; display:block; margin: 0 auto;" onclick="showDeleteOptions('${item.ItemID}')" />` // Action buttons
         ]);
     });
 
@@ -70,28 +81,33 @@ function closeADOverlay() {
 }
 closeBtnAD.addEventListener('click', closeADOverlay);
 
-// Initialize or reinitialize DataTables
+// Function to initialize or reinitialize DataTables
 function setDataTables() {
-    const $dataTable = $('#example');
-    if ($.fn.dataTable.isDataTable($dataTable)) {
-        $dataTable.DataTable().destroy(); // Destroy existing instance
+    if ($.fn.dataTable.isDataTable('#example')) {
+        $('#example').DataTable().destroy(); // Destroy the existing instance before reinitializing
     }
 
-    $('#example').DataTable({
+    var table = $('#example').DataTable({
         "order": [], // Disable initial sorting
+        "autoWidth": false, // Disable automatic column width calculation
+        "responsive": true, // Enable responsiveness
         "columnDefs": [
-            { "targets": 0, "width": "10%", "orderable": false }, // Item ID 
-            { "targets": 1, "width": "8%" }, // Icon
+            { "targets": 0, "width": "5%" }, // Item ID
+            { "targets": 1, "width": "10%", "orderable": false }, // Icon 
             { "targets": 2, "width": "10%" }, // Generic Name
             { "targets": 3, "width": "10%" }, // Brand Name
             { "targets": 4, "width": "10%" }, // Item Type
-            { "targets": 5, "width": "10%" }, // Mass & Unit of Measure
+            { "targets": 5, "width": "5%" }, // Mass & Unit of Measure
             { "targets": 6, "width": "10%" }, // Price Per Unit
             { "targets": 7, "width": "10%" }, // InStock
             { "targets": 8, "width": "10%" }, // Ordered
-            { "targets": 9, "width": "10%" }, // ReOrderLevel
-            { "targets": 10, "width": "12%", "orderable": false } // Actions
+            { "targets": 9, "width": "100px", "orderable": false, "className": "text-center fixed-width" } // Actions
         ]
+    });
+
+    // Adjust table layout on sidebar toggle
+    $(window).on('resize', function() {
+        table.columns.adjust().draw(); // Redraw the DataTable to adjust the columns
     });
 }
 

@@ -66,7 +66,7 @@
                 <li class="nav-item dropdown pe-3">
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                        <img src="../uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile"
+                        <img src="../../users/uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile"
                             class="rounded-circle">
                         <span
                             class="d-none d-md-block dropdown-toggle ps-2"><?php echo htmlspecialchars($formattedName); ?></span>
@@ -82,8 +82,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center"
-                                href="../users-profile/users-profile.php">
+                            <a class="dropdown-item d-flex align-items-center" href="../../users/users-profile/users-profile.php">
                                 <i class="bi bi-person"></i>
                                 <span>My Profile</span>
                             </a>
@@ -123,11 +122,11 @@
             <li class="nav-heading"></li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../../suppliers/suppliers.php">
-                    <i class="bi bi-truck"></i>
-                    <span>Suppliers</span>
-                </a>
-            </li><!-- End Suppliers Page Nav -->
+                    <a class="nav-link collapsed" href="../../suppliers/suppliers.php">
+                        <i class="bi bi-shop"></i>
+                        <span>Suppliers</span>
+                    </a>
+                </li><!-- End Suppliers Page Nav -->
 
             <li class="nav-item"></li>
             <a class="nav-link collapsed" href="../../transactions/transactions.php">
@@ -210,7 +209,7 @@
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="../../dashboard/dashboard.php">Home</a></li>
-                    <li class="breadcrumb-item"><a href="../users.php">Inventory</a></li>
+                    <li class="breadcrumb-item"><a href="../inventory.php">Inventory</a></li>
                     <li class="breadcrumb-item active">Archived Products</li>
                 </ol>
             </nav>
@@ -229,19 +228,17 @@
                         <div class="card-body profile-card usersTableSize flex-column align-items-center">
                             <table id="example" class="display">
                                 <thead>
-                                    <tr class="highlight-row">
-                                    <th style="text-align: center;">Item ID</th>
-                                    <th style="text-align: center;">Picture</th>
-                                    <th style="text-align: center;">Generic Name</th>
-                                    <th style="text-align: center;">Brand Name</th>
-                                    <th style="text-align: center;">Item Type</th>
-                                    <th style="text-align: center;">Measurement</th>
-                                    <th style="text-align: center;">Price</th>
-                                    <!--<th style="text-align: center;">Status</th>-->
-                                    <th style="text-align: center;">InStock</th>
-                                    <th style="text-align: center;">Ordered</th>
-                                    <th style="text-align: center;">ReorderLevel</th>
-                                    <th style="text-align: center;">Actions</th>
+                                <th style="text-align: center; font-size: 12px;">Item ID</th>
+                                <th style="text-align: center; font-size: 12px;">Picture</th>
+                                <th style="text-align: center; font-size: 12px;">Generic Name</th>
+                                <th style="text-align: center; font-size: 12px;">Brand Name</th>
+                                <th style="text-align: center; font-size: 12px;">Item Type</th>
+                                <th style="text-align: center; font-size: 12px;">Measurement</th>
+                                <th style="text-align: center; font-size: 12px;">Price</th>
+                                <!--<th style="text-align: center; font-size: 12px;">Status</th>-->
+                                <th style="text-align: center; font-size: 12px;">InStock</th>
+                                <th style="text-align: center; font-size: 12px;">Ordered</th>
+                                <th style="text-align: center; font-size: 12px;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
