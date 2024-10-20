@@ -17,10 +17,9 @@ async function fetchProducts(query = '') {
         const text = await response.text();
         const jsonMatch = text.match(/<!-- (.*?) -->/);
         const data = jsonMatch ? JSON.parse(jsonMatch[1]) : [];
-        const inStockProducts = data.filter(product => product.InStock > 0);
-        totalItems = inStockProducts.length;
+        totalItems = data.length; // Count all products, including out-of-stock
         totalPages = Math.ceil(totalItems / itemsPerPage);
-        return inStockProducts;
+        return data; // Return all products, including out-of-stock
     } catch (error) {
         console.error('Error fetching products:', error);
         return [];
@@ -29,11 +28,12 @@ async function fetchProducts(query = '') {
 
 function formatUnitOfMeasure(unit) {
     const unitMap = {
+        kilograms: 'kg',
         milligrams: 'mg',
         grams: 'g',
         liters: 'L',
         milliliters: 'mL',
-        piece: 'pc'
+        pieces: 's'
     };
     return unitMap[unit.toLowerCase()] || unit;
 }
@@ -51,12 +51,18 @@ async function loadProducts() {
     document.querySelectorAll('.clickable-card').forEach(card => card.classList.remove('active'));
     localStorage.removeItem('selectedCardId');
 
-    // Calculate start and end indices for the current page
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+    const itemsPerRow = 4;
+    const rowsPerCategory = 1;
+    const itemsPerCategory = itemsPerRow * rowsPerCategory;
 
-    // Slice the products array to get only the products for the current page
-    const currentPageProducts = products.slice(startIndex, endIndex);
+    // Separate products by stock level
+    const inStockProducts = products.filter(product => product.InStock >= 50);
+    const lowStockProducts = products.filter(product => product.InStock < 50 && product.InStock > 0);
+    const outOfStockProducts = products.filter(product => product.InStock == 0);
+
+    // Calculate start index for each category
+    const startIndex = (currentPage - 1) * itemsPerCategory;
+    const endIndex = startIndex + itemsPerCategory;
 
     function createProductHTML(product) {
         const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
@@ -72,7 +78,7 @@ async function loadProducts() {
 
         return `
             <div class="col-lg-3 mb-3">
-                <div class="card clickable-card" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-product='${JSON.stringify(product)}'>
+                <div class="card clickable-card ${product.InStock == 0 ? 'non-clickable-card' : ''}" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-product='${JSON.stringify(product)}'>
                     ${stockBadge}
                     <img src="../inventory/${product.ProductIcon}" class="card-img-top" style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
                     <div class="card-body">
@@ -92,31 +98,28 @@ async function loadProducts() {
         `;
     }
 
-    // Separate stock level products
-    const inStockProducts = currentPageProducts.filter(product => product.InStock >= 50);
-    const lowStockProducts = currentPageProducts.filter(product => product.InStock < 50 && product.InStock > 0);
-    const outOfStockProducts = currentPageProducts.filter(product => product.InStock == 0);
-
-    // Add in-stock products to the first row
-    inStockProducts.forEach(product => {
+    // Display paginated products for each category
+    inStockProducts.slice(startIndex, endIndex).forEach(product => {
         inStockContainer.insertAdjacentHTML('beforeend', createProductHTML(product));
     });
 
-    // Add low-stock products to the second row
-    lowStockProducts.forEach(product => {
+    lowStockProducts.slice(startIndex, endIndex).forEach(product => {
         lowStockContainer.insertAdjacentHTML('beforeend', createProductHTML(product));
     });
 
-    // Add out-of-stock products to the third row
-    outOfStockProducts.forEach(product => {
+    outOfStockProducts.slice(startIndex, endIndex).forEach(product => {
         outOfStockContainer.insertAdjacentHTML('beforeend', createProductHTML(product));
     });
 
     attachCardListeners();
+
+    // Update pagination
+    totalItems = Math.max(inStockProducts.length, lowStockProducts.length, outOfStockProducts.length);
+    totalPages = Math.ceil(totalItems / itemsPerCategory);
     updatePaginationControls();
 
     if (searchQuery && (inStockContainer.children.length > 0 || lowStockContainer.children.length > 0 || outOfStockContainer.children.length > 0)) {
-        const firstCard = document.querySelector('.clickable-card');
+        const firstCard = document.querySelector('.clickable-card:not(.non-clickable-card)');
         if (firstCard) {
             highlightCard(firstCard);
         }
@@ -130,12 +133,21 @@ function updatePaginationControls() {
     // Only show pagination if there are products
     if (totalItems > 0) {
         paginationList.insertAdjacentHTML('beforeend', `
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}" id="first-page">
+                <a class="page-link" href="#" aria-label="First">
+                    <span aria-hidden="true">«</span>
+                </a>
+            </li>
             <li class="page-item ${currentPage === 1 ? 'disabled' : ''}" id="prev-page">
                 <a class="page-link" href="#">Previous</a>
             </li>
         `);
 
-        for (let i = 1; i <= totalPages; i++) {
+        // Add page numbers
+        const startPage = Math.max(1, currentPage - 2);
+        const endPage = Math.min(totalPages, startPage + 4);
+        
+        for (let i = startPage; i <= endPage; i++) {
             paginationList.insertAdjacentHTML('beforeend', `
                 <li class="page-item ${i === currentPage ? 'active' : ''}" id="page-${i}">
                     <a class="page-link" href="#">${i}</a>
@@ -147,30 +159,32 @@ function updatePaginationControls() {
             <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}" id="next-page">
                 <a class="page-link" href="#">Next</a>
             </li>
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}" id="last-page">
+                <a class="page-link" href="#" aria-label="Last">
+                    <span aria-hidden="true">»</span>
+                </a>
+            </li>
         `);
 
-        for (let i = 1; i <= totalPages; i++) {
-            document.getElementById(`page-${i}`)?.addEventListener('click', (e) => {
+        // Add event listeners
+        document.querySelectorAll('.pagination .page-item').forEach(item => {
+            item.addEventListener('click', function(e) {
                 e.preventDefault();
-                currentPage = i;
+                if (this.classList.contains('disabled')) return;
+                
+                if (this.id === 'first-page') {
+                    currentPage = 1;
+                } else if (this.id === 'prev-page' && currentPage > 1) {
+                    currentPage--;
+                } else if (this.id === 'next-page' && currentPage < totalPages) {
+                    currentPage++;
+                } else if (this.id === 'last-page') {
+                    currentPage = totalPages;
+                } else if (this.id.startsWith('page-')) {
+                    currentPage = parseInt(this.id.split('-')[1]);
+                }
                 loadProducts();
             });
-        }
-
-        document.getElementById('prev-page').addEventListener('click', function(e) {
-            e.preventDefault();
-            if (currentPage > 1) {
-                currentPage--;
-                loadProducts();
-            }
-        });
-
-        document.getElementById('next-page').addEventListener('click', function(e) {
-            e.preventDefault();
-            if (currentPage < totalPages) {
-                currentPage++;
-                loadProducts();
-            }
         });
     }
 }
@@ -178,9 +192,11 @@ function updatePaginationControls() {
 function attachCardListeners() {
     document.querySelectorAll('.clickable-card').forEach(card => {
         card.addEventListener('click', function() {
-            highlightCard(this);
-            const productData = JSON.parse(this.dataset.product);
-            showQuantityModal(productData);
+            if (!this.classList.contains('non-clickable-card')) {
+                highlightCard(this);
+                const productData = JSON.parse(this.dataset.product);
+                showQuantityModal(productData);
+            }
         });
     });
 }
@@ -382,7 +398,6 @@ function updateModalTotal() {
     let discountPercentage = 0;
 
     if (document.getElementById('seniorCitizenCheckbox').checked) discountPercentage += 20;
-    if (document.getElementById('promoCheckbox').checked) discountPercentage += 10;
 
     const discountAmount = subtotal * (discountPercentage / 100);
     const discountedTotal = subtotal + tax - discountAmount;
@@ -572,6 +587,38 @@ function getSalesDetails() {
     return salesDetails;
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentInput = document.getElementById('paymentInput');
+    const confirmButton = document.getElementById('confirm-button');
+    const totalDisplay = document.getElementById('total-display');
+    const changeDisplay = document.getElementById('change-display');
+
+    function updatePaymentValidation() {
+        const payment = parseFloat(paymentInput.value) || 0;
+        const totalAmount = parseFloat(totalDisplay.textContent.replace(/[^0-9.-]+/g,""));
+
+        if (payment === 0 || payment < totalAmount) {
+            paymentInput.classList.add('is-invalid');
+            paymentInput.classList.remove('is-valid');
+            confirmButton.setAttribute('disabled', 'true');
+            changeDisplay.textContent = 'Change: ₱0.00';
+        } else {
+            paymentInput.classList.remove('is-invalid');
+            paymentInput.classList.add('is-valid');
+            confirmButton.removeAttribute('disabled');
+            const change = payment - totalAmount;
+            changeDisplay.textContent = `Change: ₱${change.toFixed(2)}`;
+        }
+    }
+
+    paymentInput.addEventListener('input', updatePaymentValidation);
+
+    // Set initial state
+    paymentInput.value = '';
+    updatePaymentValidation();
+});
+
+// Print button
 document.getElementById('print-button').addEventListener('click', function() {
     const receiptData = {
         invoiceID: orderNum,
@@ -588,6 +635,7 @@ document.getElementById('print-button').addEventListener('click', function() {
         refundAmount: 0.00
     };
 
+    // Save the receipt data to the server
     fetch('saveReceipt.php', {
         method: 'POST',
         headers: {
@@ -608,14 +656,99 @@ document.getElementById('print-button').addEventListener('click', function() {
     .then(data => {
         if (data.success) {
             console.log('Receipt saved successfully');
+            // After successful save, proceed with saving as text file and printing
+            saveAsTxtAndPrint();
         } else {
             console.error('Error saving receipt:', data.error);
+            showToast('Error saving receipt. Please try again.');
         }
     })
     .catch((error) => {
         console.error('Error:', error);
+        showToast('An error occurred. Please try again.');
+    });
+});
+
+function saveAsTxtAndPrint() {
+    const receiptContent = generateReceiptContent();
+    
+    // Create a form data object to send the content to PHP
+    const formData = new FormData();
+    formData.append('content', receiptContent);
+    formData.append('orderNum', orderNum);
+
+    // Send the content to a PHP script that will create and print the file
+    fetch('printReceipt.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('Receipt printed successfully');
+            window.location.reload(); // Reload the page after successful print
+        } else {
+            console.error('Error printing receipt:', data.error);
+            showToast('Error printing receipt. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('An error occurred while printing. Please try again.');
+    });
+}
+
+function generateReceiptContent() {
+    const maxWidth = 32;
+
+    function centerText(text) {
+        const padding = Math.max(0, Math.floor((maxWidth - text.length) / 2));
+        return ' '.repeat(padding) + text;
+    }
+
+    function formatLine(left, right) {
+        const space = maxWidth - left.length - right.length - 1; // Adjusting space to account for the space between left and right
+        return left + ' '.repeat(space) + right;
+    }
+
+    let content = 
+`${centerText('Mother & Child')}
+${centerText('Pharmacy and Medical Supplies')}
+${centerText('Gen. Luna Street, Babo Sacan,')}
+${centerText('Porac, Pampanga')}
+${'-'.repeat(maxWidth)}
+\nQuantity\tItem\tPrice\n`;
+
+    // Add items to the content
+    receiptItems.forEach(item => {
+        const itemName = item.item_name.length > 20 ? item.item_name.substring(0, 17) + '...' : item.item_name;
+        content += `${item.quantity}\t${itemName}\t₱${item.total_item_price}\n`;
     });
 
-    window.location.reload();
-});
+    const totalItems = receiptItems.reduce((sum, item) => sum + item.quantity, 0);
+    const subtotal = parseFloat(receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0)).toFixed(2);
+    const tax = (subtotal * 0.12).toFixed(2);
+    const discount = 0.00; // Assuming no discount for now
+    const amountDue = (parseFloat(subtotal) + parseFloat(tax) - discount).toFixed(2);
+    const amountPaid = parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g,"")).toFixed(2);
+    const change = (amountPaid - amountDue).toFixed(2);
+
+    // Add summary information
+    content += `${'-'.repeat(maxWidth)}\n`;
+    content += formatLine(`Total Items:`, `${totalItems}\n`);
+    content += formatLine(`Subtotal:`, `₱${subtotal}\n`);
+    content += formatLine(`Tax 12%:`, `₱${tax}\n`);
+    content += formatLine(`Discount:`, `₱-${discount.toFixed(2)}\n`);
+    content += formatLine(`Amount Due:`, `₱${amountDue}\n`);
+    content += formatLine(`Refund Amount:`, `₱0.00\n`); // Assuming no refunds for now
+    content += formatLine(`Payment:`, `₱${amountPaid}\n`);
+    content += formatLine(`Change:`, `₱${change}\n`);
+    content += `${'-'.repeat(maxWidth)}\n`;
+    content += formatLine(`Order No.:`, `#${orderNum}\n`);
+    content += formatLine(`Date:`, `${getCurrentDateTime()}\n`);
+    content += formatLine(`Staff:`, `Sayra Jackson\n`); // You can replace this with the actual staff name
+    content += formatLine(`Status:`, `Sales\n`);
+
+    return content;
+}
 

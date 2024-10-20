@@ -587,7 +587,7 @@
   <script src="../main.js"></script>
   
   <!-- Template POS JS File -->
-  <script src="pos copy.js"></script>
+  <script src="pos.js"></script>
 
 </body>
 
