@@ -543,6 +543,7 @@ function fetchInvoiceID() {
 document.addEventListener('DOMContentLoaded', fetchInvoiceID);
 
 let userID = 0;
+let employeeName = '';
 
 function fetchAccountID() {
     fetch('fetchAccountID.php')
@@ -551,7 +552,9 @@ function fetchAccountID() {
             if (data.accountID) {
                 const accountID = data.accountID;
                 userID = accountID;
+                employeeName = data.employeeName || 'Unknown Staff';
                 console.log('AccountID:', accountID);
+                console.log('Employee Name:', employeeName);
                 receiptData.accountID = accountID;
             } else {
                 console.error('Error fetching AccountID:', data.error);
@@ -707,7 +710,7 @@ function generateReceiptContent() {
     }
 
     function formatLine(left, right) {
-        const space = maxWidth - left.length - right.length - 1; // Adjusting space to account for the space between left and right
+        const space = maxWidth - left.length - right.length - 1;
         return left + ' '.repeat(space) + right;
     }
 
@@ -722,13 +725,13 @@ ${'-'.repeat(maxWidth)}
     // Add items to the content
     receiptItems.forEach(item => {
         const itemName = item.item_name.length > 20 ? item.item_name.substring(0, 17) + '...' : item.item_name;
-        content += `${item.quantity}\t${itemName}\t₱${item.total_item_price}\n`;
+        content += `${item.quantity}\t${itemName}\tP${item.total_item_price}\n`;
     });
 
     const totalItems = receiptItems.reduce((sum, item) => sum + item.quantity, 0);
     const subtotal = parseFloat(receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0)).toFixed(2);
     const tax = (subtotal * 0.12).toFixed(2);
-    const discount = 0.00; // Assuming no discount for now
+    const discount = 0.00;
     const amountDue = (parseFloat(subtotal) + parseFloat(tax) - discount).toFixed(2);
     const amountPaid = parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g,"")).toFixed(2);
     const change = (amountPaid - amountDue).toFixed(2);
@@ -736,19 +739,21 @@ ${'-'.repeat(maxWidth)}
     // Add summary information
     content += `${'-'.repeat(maxWidth)}\n`;
     content += formatLine(`Total Items:`, `${totalItems}\n`);
-    content += formatLine(`Subtotal:`, `₱${subtotal}\n`);
-    content += formatLine(`Tax 12%:`, `₱${tax}\n`);
-    content += formatLine(`Discount:`, `₱-${discount.toFixed(2)}\n`);
-    content += formatLine(`Amount Due:`, `₱${amountDue}\n`);
-    content += formatLine(`Refund Amount:`, `₱0.00\n`); // Assuming no refunds for now
-    content += formatLine(`Payment:`, `₱${amountPaid}\n`);
-    content += formatLine(`Change:`, `₱${change}\n`);
+    content += formatLine(`Subtotal:`, `P${subtotal}\n`);
+    content += formatLine(`Tax 12%:`, `P${tax}\n`);
+    content += formatLine(`Discount:`, `P-${discount.toFixed(2)}\n`);
+    content += formatLine(`Amount Due:`, `P${amountDue}\n`);
+    content += formatLine(`Refund Amount:`, `P${amountDue}\n`);
+    content += formatLine(`Payment:`, `P${amountPaid}\n`);
+    content += formatLine(`Change:`, `P${change}\n`);
     content += `${'-'.repeat(maxWidth)}\n`;
     content += formatLine(`Order No.:`, `#${orderNum}\n`);
     content += formatLine(`Date:`, `${getCurrentDateTime()}\n`);
-    content += formatLine(`Staff:`, `Sayra Jackson\n`); // You can replace this with the actual staff name
+    content += formatLine(`Staff:`, `${employeeName}\n`);
     content += formatLine(`Status:`, `Sales\n`);
+    content += `\n`;
+    content += `\n${centerText('Thank you for your purchase!')}\n`; 
+    content += `\n\n`; 
 
     return content;
 }
-
