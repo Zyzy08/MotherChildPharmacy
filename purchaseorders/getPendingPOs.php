@@ -17,15 +17,18 @@ if ($conn->connect_error) {
 // Modify the SQL query to include a JOIN with the suppliers table
 $sql = "
     SELECT 
-        po.PurchaseOrderID, 
-        DATE_FORMAT(po.OrderDate, '%m/%d/%Y') AS OrderDate, 
-        po.TotalItems, 
-        po.Status, 
-        s.SupplierName
-    FROM 
-        purchaseorders po
-    JOIN 
-        suppliers s ON po.SupplierID = s.SupplierID;
+    po.PurchaseOrderID, 
+    DATE_FORMAT(po.OrderDate, '%m/%d/%y (%l:%i %p)') AS OrderDate, 
+    po.TotalItems, 
+    po.Status, 
+    s.SupplierName
+FROM 
+    purchaseorders po
+JOIN 
+    suppliers s ON po.SupplierID = s.SupplierID
+WHERE 
+    po.Status = 'Pending';
+
 ";
 
 $result = $conn->query($sql);

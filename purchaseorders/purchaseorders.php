@@ -243,7 +243,7 @@
                                 <thead>
                                     <tr class="highlight-row">
                                         <th>Order ID</th>
-                                        <th>Date (Time)</th>
+                                        <th>Date</th>
                                         <th>Supplier</th>
                                         <th>No. of Items</th>
                                         <th>Status</th>
@@ -290,7 +290,7 @@
                                 <th scope="col">Order ID</th>
                                 <th scope="col">Supplier Name</th>
                                 <th scope="col">Purchaser</th>
-                                <th scope="col">Date (Time)</th>
+                                <th scope="col">Date</th>
                                 <th scope="col">Status</th>
                             </tr>
                         </thead>
@@ -332,12 +332,7 @@
                         </tbody>
                     </table>
                 </div>
-
                 <br>
-                <div class="line"></div>
-                <div class="button-container-2">
-                    <button type="button" id="confirmButton">Receive Delivery</button>
-                </div>
             </form>
         </div>
     </div>

@@ -94,7 +94,6 @@ const amtChange = document.getElementById('amtChange');
 const supplierName = document.getElementById('supplierName');
 
 function fetchDetails(identifier) {
-    resetFields();
     fetch(`getData.php?InvoiceID=${encodeURIComponent(identifier)}`)
         .then(response => response.json())
         .then(data => {
@@ -241,19 +240,3 @@ modalYes.addEventListener('click', function () {
 function closeEditOverlay() {
     overlayEdit.style.display = 'none';
 }
-
-function resetFields() {
-    confirmButton.textContent = "Receive Delivery";
-}
-
-const confirmButton = document.getElementById('confirmButton');
-
-confirmButton.addEventListener('click', function () {
-    if (confirmButton.textContent === "Receive Delivery") {
-        confirmButton.textContent = "Complete Delivery";
-        Status.value = 'Delivered';
-        Status.style.color = 'green';
-    } else if (confirmButton.textContent === "Complete Delivery") {
-
-    }
-});

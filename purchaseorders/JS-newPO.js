@@ -327,8 +327,6 @@ async function createOrderDetails() {
     return orderDetailsJSON; // Return the JSON string
 }
 
-//Voiding transactions
-
 
 
 

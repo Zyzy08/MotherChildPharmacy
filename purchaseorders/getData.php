@@ -37,7 +37,7 @@ if (isset($_GET['InvoiceID'])) {
     $sql = "
     SELECT 
         po.PurchaseOrderID, 
-        DATE_FORMAT(po.OrderDate, '%m/%d/%y (%l:%i %p)') AS OrderDate,
+        DATE_FORMAT(po.OrderDate, '%m/%d/%Y') AS OrderDate,
         po.OrderDate AS OrderDateOrig, 
         po.TotalItems, 
         po.Status, 

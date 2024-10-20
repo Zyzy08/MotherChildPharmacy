@@ -29,7 +29,7 @@
     <link href="../resources/vendor/quill/quill.bubble.css" rel="stylesheet">
     <link href="../resources/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="../resources/vendor/simple-datatables/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="deli_styles.css">
+    <link rel="stylesheet" href="deli_receive_styles.css">
 
     <!-- DataTables Imports -->
     <link rel="stylesheet" href="../transactions/dataTablesTransactions/dataTablesT.css" />
@@ -219,22 +219,18 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Deliveries</h1>
+            <h1>Select Order to Receive</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="../dashboard/dashboard.php">Home</a></li>
-                    <li class="breadcrumb-item active">Deliveries</li>
+                    <li class="breadcrumb-item"><a href="delivery.php">Deliveries</a></li>
+                    <li class="breadcrumb-item active">Receive Delivery</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
 
         <section class="section users">
             <div class="row">
-                <div class="containerAddArchive">
-                    <div class="button" id="addUser" onclick="location.href='delivery-receive.php'">
-                        <img src="../resources/img/add.png" alt="Add New Order"> Receive Delivery
-                    </div>
-                </div>
                 <br>
                 <div class="col-xl-12">
                     <div class="card">
@@ -242,11 +238,10 @@
                             <table id="example" class="display">
                                 <thead>
                                     <tr class="highlight-row">
-                                        <th>Delivery ID</th>
                                         <th>Order ID</th>
+                                        <th>Date (Time)</th>
                                         <th>Supplier</th>
-                                        <th>Delivery Date</th>
-                                        <th>Total Items</th>
+                                        <th>No. of Items</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -281,9 +276,8 @@
     <div id="overlayEdit" class="overlay">
         <div class="overlay-content">
             <span id="closeBtnEdit" class="close-btn">&times;</span>
-            <h2>Purchase Order Details</h2>
-            <form id="userFormEdit" action="updateAccount.php" method="post" enctype="multipart/form-data"
-                onsubmit="handleFormSubmit()">
+            <h2>Delivery Details</h2>
+            <form id="userFormEdit" method="post" enctype="multipart/form-data">
                 <div class="container">
                     <table class="table table-sm" id="poDetailsTable">
                         <thead>
@@ -321,7 +315,12 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Item Description</th>
+                                <th scope="col">Lot No.</th>
+                                <th scope="col">Expiry Date</th>
                                 <th scope="col">Qty. Ordered</th>
+                                <th scope="col">Qty. Served</th>
+                                <th scope="col">Bonus</th>
+                                <th scope="col">Net Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -337,7 +336,7 @@
                 <br>
                 <div class="line"></div>
                 <div class="button-container-2">
-                    <button type="button" id="confirmButton">Receive Delivery</button>
+                    <button type="submit" id="confirmButton">Receive Delivery</button>
                 </div>
             </form>
         </div>
@@ -396,7 +395,197 @@
 
     <!-- Template Main JS File -->
     <script src="../main.js"></script>
-    <script src="JS-delivery.js"></script>
+    <script>
+        function setDataTables() {
+            $(document).ready(function () {
+                $('#example').DataTable({
+                    "order": [[1, 'desc']], // Sort by the first column (OrderID) in descending order
+                    "columnDefs": [
+                        {
+                            "targets": 0, // OrderID
+                            "width": "17.6%"
+                        },
+                        {
+                            "targets": 1, // Date
+                            "width": "20.6%"
+                        },
+                        {
+                            "targets": 2, // Supplier
+                            "width": "18.6%"
+                        },
+                        {
+                            "targets": 3, // Qty
+                            "width": "16.6%"
+                        },
+                        {
+                            "targets": 4, // Status
+                            "width": "15%"
+                        },
+                        {
+                            "targets": 5, // Actions
+                            "width": "11.6%"
+                        },
+                        {
+                            "targets": 5, // Index of the column to disable sorting
+                            "orderable": false // Disable sorting for column 5 - Actions
+                        }
+                    ]
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('../purchaseorders/getPendingPOs.php')
+                .then(response => response.json())
+                .then(data => updateTable(data))
+                .catch(error => alert('Error fetching transactions data:', error));
+            setDataTables();
+        });
+
+        function updateTable(data) {
+            const table = $('#example').DataTable();
+
+            // Clear existing data
+            table.clear();
+
+            data.forEach(row => {
+                let statusColor;
+                if (row.Status === "Pending") {
+                    statusColor = '#B8860B';
+                } else if (row.Status === "Cancelled") {
+                    statusColor = 'red';
+                } else if (row.Status === "Received") {
+                    statusColor = 'green';
+                } else {
+                    statusColor = 'black';
+                }
+
+                // Add the row to the table
+                table.row.add([
+                    "PO-0" + row.PurchaseOrderID,
+                    row.OrderDate,
+                    row.SupplierName,
+                    row.TotalItems,
+                    `<span style="color: ${statusColor};">${row.Status}</span>`, // Apply the color to the Status
+                    `<img src="../resources/img/viewfile.png" alt="View" style="cursor:pointer;margin-left:20px;" onclick="fetchDetails('${row.PurchaseOrderID}')"/>`
+                ]);
+            });
+
+
+            // Draw the updated table
+            table.draw();
+
+        }
+        const overlayEdit = document.getElementById('overlayEdit');
+        const closeBtnEdit = document.getElementById('closeBtnEdit');
+        const identifierID = document.getElementById('identifierID');
+        const cashierID = document.getElementById('cashierID');
+        const datetimeID = document.getElementById('datetimeID');
+        const Status = document.getElementById('Status');
+        const Discount = document.getElementById('Discount');
+        const NetAmount = document.getElementById('NetAmount');
+        const modePay = document.getElementById('modePay');
+        const amtPaid = document.getElementById('amtPaid');
+        const amtChange = document.getElementById('amtChange');
+        const supplierName = document.getElementById('supplierName');
+
+        function resetFields() {
+            confirmButton.textContent = "Receive Delivery";
+        }
+
+        function fetchDetails(identifier) {
+            resetFields();
+            fetch(`../purchaseorders/getData.php?InvoiceID=${encodeURIComponent(identifier)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data) {
+                        // Populate the overlay form with details
+                        identifierID.textContent = "PO-0" + data.PurchaseOrderID;
+                        supplierName.textContent = data.SupplierName;
+                        cashierID.textContent = data.employeeName + " " + data.employeeLName;
+                        datetimeID.textContent = data.OrderDate;
+                        Status.textContent = data.Status;
+
+                        if (data.Status === "Pending") {
+                            Status.style.color = '#B8860B'; // Yellow
+                        } else if (data.Status === "Cancelled") {
+                            Status.style.color = 'red'; // Red
+                        } else if (data.Status === "Received") {
+                            Status.style.color = 'green'; // Green
+                        } else {
+                            Status.style.color = 'black'; // Default
+                        }
+
+                        // Populate table rows
+                        if (data && data.listItems) {
+                            const tableBody = document.querySelector('#listTable tbody');
+                            tableBody.innerHTML = ''; // Clear existing rows
+
+                            data.listItems.forEach((item, index) => {
+                                const row = document.createElement('tr');
+                                row.innerHTML = `
+                            <th scope="row">${index + 1}</th>
+                            <td>${item.description}</td>
+                            <td class="editable" data-key="lotNo" id="lotNo">-</td>
+                            <td class="editable" data-key="expiryDate" id="expiryDate">--/--/----</td>
+                            <td>${item.quantity}</td>
+                            <td class="editable" data-key="qtyServed" id="qtyServed">-</td>
+                            <td class="editable" data-key="bonus" id="bonus">0</td>
+                            <td class="editable" data-key="netAmt" id="netAmt">₱-</td>
+                        `;
+                                tableBody.appendChild(row);
+                            });
+
+                            // Add event listener to make cells editable
+                            enableInlineEditing();
+                        }
+
+                        // Show the overlay
+                        overlayEdit.style.display = 'flex';
+                    } else {
+                        console.error('No data found for the given id.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching details:', error);
+                });
+        }
+
+        // Function to enable inline editing for specific cells
+        function enableInlineEditing() {
+            document.querySelectorAll('.editable').forEach(cell => {
+                cell.addEventListener('click', function () {
+                    if (this.querySelector('input')) return; // Prevent duplicate input
+
+                    const originalValue = this.textContent;
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = originalValue;
+                    input.style.width = '120px';
+
+                    this.textContent = ''; // Clear cell content
+                    this.appendChild(input);
+                    input.focus();
+
+                    // Save value on blur or Enter key press
+                    input.addEventListener('blur', saveValue);
+                    input.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter') saveValue();
+                    });
+
+                    function saveValue() {
+                        const newValue = input.value.trim();
+                        this.parentElement.textContent = newValue || originalValue; // Save or revert
+                    }
+                });
+            });
+        }
+
+        closeBtnEdit.addEventListener('click', function () {
+            overlayEdit.style.display = 'none';
+        })
+    </script>
+    <script src="JS-delivery-receive.js"></script>
 
     <!-- Vendor JS Files -->
     <script src="../resources/vendor/apexcharts/apexcharts.min.js"></script>

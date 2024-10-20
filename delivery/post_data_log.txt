@@ -1,0 +1,14 @@
+2024-10-20 15:38:20 - Array
+(
+    [identifierID] => PO-02
+    [totalItems] => 100
+    [orderDetails] => {"1":{"itemID":"2","qty":100,"lotNo":"GG","expiryDate":"11/11/2030","bonus":"0","netAmt":"₱500"}}
+)
+
+2024-10-20 15:51:13 - Array
+(
+    [identifierID] => PO-02
+    [totalItems] => 100
+    [orderDetails] => {"1":{"itemID":"2","qty":100,"lotNo":"1HT7359","expiryDate":"07/31/2026","bonus":"0","netAmt":500}}
+)
+
