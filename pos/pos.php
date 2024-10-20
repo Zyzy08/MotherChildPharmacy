@@ -112,69 +112,112 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
-      <li class="nav-item">
-          <a class="nav-link collapsed" href="../dashboard/dashboard.php">
-              <i class="bi bi-grid"></i>
-              <span>Dashboard</span>
-          </a>
-      </li><!-- End Dashboard Nav -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../dashboard/dashboard.php">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
 
-      <li class="nav-heading"></li>
+        <li class="nav-heading"></li>
 
-      <li class="nav-item">
-          <a class="nav-link collapsed" href="../suppliers/suppliers.php">
-              <i class="bi bi-truck"></i>
-              <span>Suppliers</span>
-          </a>
-      </li><!-- End Suppliers Page Nav -->
+        <?php if ($_SESSION['SuppliersPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../suppliers/suppliers.php">
+                <i class="bi bi-shop"></i>
+                <span>Suppliers</span>
+            </a>
+        </li><!-- End Suppliers Page Nav -->
+        <?php endif; ?>
 
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../transactions/transactions.php">
-          <i class="bi bi-cash-coin"></i>
-          <span>Transactions</span>
-      </a>
-      </li><!-- End Transactions Page Nav -->
+        <?php if ($_SESSION['TransactionsPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../transactions/transactions.php">
+                <i class="bi bi-cash-coin"></i>
+                <span>Transactions</span>
+            </a>
+        </li><!-- End Transactions Page Nav -->
+        <?php endif; ?>
 
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
-          <i class="bi bi-mailbox"></i>
-          <span>Purchase Orders</span>
-      </a>
-      </li><!-- End Purchase Order Page Nav -->
+        <?php if ($_SESSION['POPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
+                <i class="bi bi-mailbox"></i>
+                <span>Purchase Orders</span>
+            </a>
+        </li><!-- End Purchase Order Page Nav -->
+        <?php endif; ?>
 
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../inventory/inventory.php">
-          <i class="bi bi-box-seam"></i>
-          <span>Inventory</span>
-      </a>
-      </li><!-- End Inventory Page Nav -->
+        <?php if ($_SESSION['POPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../delivery/delivery.php">
+                <i class="bi bi-truck"></i>
+                <span>Delivery</span>
+            </a>
+        </li><!-- End Delivery Page Nav -->
+        <?php endif; ?>
 
-      <li class="nav-item">
-          <a class="nav-link collapsed" href="../users/users.php">
-              <i class="bi bi-person"></i>
-              <span>Users</span>
-          </a>
-      </li><!-- End Users Page Nav -->
+        <?php if ($_SESSION['InventoryPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../inventory/inventory.php">
+                <i class="bi bi-box-seam"></i>
+                <span>Inventory</span>
+            </a>
+        </li><!-- End Inventory Page Nav -->
+        <?php endif; ?>
 
-      <li class="nav-heading"></li>
+        <li class="nav-heading"></li>
 
-      <li class="nav-item"></li>
-      <a class="nav-link" href="pos.php">
-          <i class="bi bi-printer"></i>
-          <span>POS</span>
-      </a>
-      </li><!-- End POS Page Nav -->
+        <?php if ($_SESSION['POSPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link" href="../pos/pos.php">
+                <i class="bi bi-printer"></i>
+                <span>POS</span>
+            </a>
+        </li><!-- End POS Page Nav -->
+        <?php endif; ?>
 
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
-          <i class="bi bi-cart-dash"></i>
-          <span>Return & Exchange</span>
-      </a>
-      </li><!-- End Return & Exchange Page Nav -->
+        <?php if ($_SESSION['REPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
+                <i class="bi bi-cart-dash"></i>
+                <span>Return & Exchange</span>
+            </a>
+        </li><!-- End Return & Exchange Page Nav -->
+        <?php endif; ?>
+
+        <li class="nav-heading"></li>
+
+        <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../users/users.php">
+                <i class="bi bi-person"></i>
+                <span>Users</span>
+            </a>
+        </li><!-- End Users Page Nav -->
+        <?php endif; ?>
+
+        <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../audittrail/audittrail.php">
+                <i class="bi bi-clipboard-data"></i>
+                <span>Audit Trail</span>
+            </a>
+        </li><!-- End Audit Trail Page Nav -->
+        <?php endif; ?>
+
+        <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
+                <i class="bi bi-cloud-check"></i>
+                <span>Backup & Restore</span>
+            </a>
+        </li><!-- End B&R Page Nav -->
+        <?php endif; ?>
 
     </ul>
 
-  </aside><!-- End Sidebar-->
+  </aside><!-- End Sidebar -->
 
   <main id="main" class="main">
 
@@ -217,8 +260,16 @@
                 
                 <div class="card-body">
 
-                  <div class="row align-items-top" id="product-list">
-                    <!-- Product items will be inserted here dynamically -->
+                  <div class="row align-items-top" id="in-stock-list">
+                      <!-- First row of products -->
+                  </div>
+
+                  <div class="row align-items-top" id="low-stock-list">
+                      <!-- Second row of products -->
+                  </div>
+
+                  <div class="row align-items-top" id="out-of-stock-list">
+                      <!-- Third row of products -->
                   </div>
 
                 </div><!-- End Card Body -->
@@ -231,15 +282,31 @@
                     <div class="col-lg-6">
                       <nav aria-label="Page navigation">
                         <ul class="pagination">
+
+                          <li class="page-item">
+                            <a class="page-link" href="#" aria-label="First">
+                              <span aria-hidden="true">«</span>
+                            </a>
+                          </li>
+
                           <li class="page-item" id="prev-page">
                             <a class="page-link" href="#">Previous</a>
                           </li>
+
                           <li class="page-item active" id="page-1">
                             <a class="page-link" href="#">1</a>
                           </li>
+
                           <li class="page-item" id="next-page">
                             <a class="page-link" href="#">Next</a>
                           </li>
+
+                          <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Last">
+                              <span aria-hidden="true">»</span>
+                            </a>
+                          </li>
+
                         </ul>
                       </nav>
                     </div><!-- End Pagination -->
@@ -325,11 +392,7 @@
               <input class="form-check-input" type="checkbox" id="seniorCitizenCheckbox">
               <label class="form-check-label" for="seniorCitizenCheckbox">Senior Citizen / PWD (20%)</label>
             </div>
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="promoCheckbox">
-              <label class="form-check-label" for="promoCheckbox">Promotional (10%)</label>
-            </div>
-
+            <br>
             <div id="payment-method">
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="cash" checked="">
@@ -504,7 +567,7 @@
       &copy; Copyright <strong><span>Mother & Child Pharmacy and Medical Supplies</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
-      Designed by <a href="https://www.sti.edu/campuses-details.asp?campus_id=QU5H">STI College Angeles - BSIT4-A s.y 2024-2025 </a>
+      Designed by <a href="https://www.sti.edu/campuses-details.asp?campus_id=QU5H">STI College Angeles - BSIT4-A S.Y 2024-2025 </a>
     </div>
   </footer><!-- End Footer -->
 

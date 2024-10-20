@@ -25,8 +25,8 @@ try {
         // Sanitize input
         $itemID = htmlspecialchars($itemID);
 
-        // Fetch details for the specific ItemID
-        $sql = "SELECT * FROM inventory WHERE ItemID = ?";
+        // Fetch details for the specific ItemID (not archived)
+        $sql = "SELECT * FROM inventory WHERE ItemID = ? AND (status IS NULL OR status != 'Archived')";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$itemID]);
 
@@ -35,11 +35,11 @@ try {
         if ($data) {
             echo json_encode(['success' => true, 'data' => $data]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Item not found.']);
+            echo json_encode(['success' => false, 'message' => 'Item not found or is archived.']);
         }
     } else {
-        // Fetch all items if no ItemID is provided
-        $sql = "SELECT * FROM inventory";
+        // Fetch all items that are not archived if no ItemID is provided
+        $sql = "SELECT * FROM inventory WHERE status IS NULL OR status != 'Archived'";
         $stmt = $pdo->query($sql);
 
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -29,7 +29,7 @@
     <link href="../../resources/vendor/quill/quill.bubble.css" rel="stylesheet">
     <link href="../../resources/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="../../resources/vendor/simple-datatables/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="../../acc_styles.css">
+    <link rel="stylesheet" href="../../users/acc_styles.css" />
 
     <!-- DataTables Imports -->
     <link rel="stylesheet" href="../../users/dataTablesUsers/dataTables.css" />
@@ -66,7 +66,7 @@
                 <li class="nav-item dropdown pe-3">
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                        <img src="../uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile"
+                        <img src="../../users/uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile"
                             class="rounded-circle">
                         <span
                             class="d-none d-md-block dropdown-toggle ps-2"><?php echo htmlspecialchars($formattedName); ?></span>
@@ -82,8 +82,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center"
-                                href="../users-profile/users-profile.php">
+                            <a class="dropdown-item d-flex align-items-center" href="../../users/users-profile/users-profile.php">
                                 <i class="bi bi-person"></i>
                                 <span>My Profile</span>
                             </a>
@@ -114,7 +113,7 @@
         <ul class="sidebar-nav" id="sidebar-nav">
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../../dashboard/dashboard.php">
+                <a class="nav-link collapsed" href="../../../dashboard/dashboard.php">
                     <i class="bi bi-grid"></i>
                     <span>Dashboard</span>
                 </a>
@@ -123,25 +122,50 @@
             <li class="nav-heading"></li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="../../suppliers/suppliers.html">
-                    <i class="bi bi-truck"></i>
-                    <span>Suppliers</span>
-                </a>
-            </li><!-- End Suppliers Page Nav -->
+                    <a class="nav-link collapsed" href="../../suppliers/suppliers.php">
+                        <i class="bi bi-shop"></i>
+                        <span>Suppliers</span>
+                    </a>
+                </li><!-- End Suppliers Page Nav -->
 
             <li class="nav-item"></li>
-            <a class="nav-link collapsed" href="../../transactions/transactions.html">
+            <a class="nav-link collapsed" href="../../transactions/transactions.php">
                 <i class="bi bi-cash-coin"></i>
                 <span>Transactions</span>
             </a>
             </li><!-- End Transactions Page Nav -->
 
             <li class="nav-item"></li>
-            <a class="nav-link" href="../inventory/inventory.php">
+          <a class="nav-link collapsed" href="../../purchaseorders/purchaseorders.php">
+              <i class="bi bi-mailbox"></i>
+              <span>Purchase Orders</span>
+          </a>
+        </li><!-- End Purchase Order Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../../delivery/delivery.php">
+                <i class="bi bi-truck"></i>
+                <span>Delivery</span>
+            </a>
+        </li><!-- End Delivery Page Nav -->
+
+
+            <li class="nav-item"></li>
+            <a class="nav-link" href="../../inventory/inventory.php">
                 <i class="bi bi-box-seam"></i>
                 <span>Inventory</span>
             </a>
             </li><!-- End Inventory Page Nav -->
+
+
+            <li class="nav-heading"></li>
+
+            <li class="nav-item"></li>
+            <a class="nav-link collapsed" href="../../../pos/pos.php">
+                <i class="bi bi-printer"></i>
+                <span>POS</span>
+            </a>
+            </li><!-- End POS Page Nav -->
 
             <li class="nav-item"></li>
             <a class="nav-link collapsed" href="../../returnexchange/return.html">
@@ -150,21 +174,29 @@
             </a>
             </li><!-- End Return & Exchange Page Nav -->
 
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="../users/users.php">
-                <i class="bi bi-person"></i>
-                <span>Users</span>
-                </a>
-            </li><!-- End Users Page Nav -->
-
             <li class="nav-heading"></li>
 
-            <li class="nav-item"></li>
-            <a class="nav-link collapsed" href="../../pos/pos.php">
-                <i class="bi bi-printer"></i>
-                <span>POS</span>
+            <li class="nav-item">
+            <a class="nav-link collapsed" href="../../../users/users.php">
+                <i class="bi bi-person"></i>
+                <span>Users</span>
             </a>
-            </li><!-- End POS Page Nav -->
+            </li><!-- End Users Page Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="../../../audittrail/audittrail.php">
+                    <i class="bi bi-clipboard-data"></i>
+                    <span>Audit Trail</span>
+                </a>
+            </li><!-- End Audit Trail Page Nav -->
+
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="../../../backuprestore/backuprestore.php">
+                    <i class="bi bi-cloud-check"></i>
+                    <span>Backup & Restore</span>
+                </a>
+            </li><!-- End B&R Page Nav -->
 
         </ul>
 
@@ -177,7 +209,7 @@
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="../../dashboard/dashboard.php">Home</a></li>
-                    <li class="breadcrumb-item"><a href="../users.php">Inventory</a></li>
+                    <li class="breadcrumb-item"><a href="../inventory.php">Inventory</a></li>
                     <li class="breadcrumb-item active">Archived Products</li>
                 </ol>
             </nav>
@@ -196,19 +228,17 @@
                         <div class="card-body profile-card usersTableSize flex-column align-items-center">
                             <table id="example" class="display">
                                 <thead>
-                                    <tr class="highlight-row">
-                                    <th style="text-align: center;">Item ID</th>
-                                    <th style="text-align: center;">Picture</th>
-                                    <th style="text-align: center;">Generic Name</th>
-                                    <th style="text-align: center;">Brand Name</th>
-                                    <th style="text-align: center;">Item Type</th>
-                                    <th style="text-align: center;">Measurement</th>
-                                    <th style="text-align: center;">Price</th>
-                                    <!--<th style="text-align: center;">Status</th>-->
-                                    <th style="text-align: center;">InStock</th>
-                                    <th style="text-align: center;">Ordered</th>
-                                    <th style="text-align: center;">ReorderLevel</th>
-                                    <th style="text-align: center;">Actions</th>
+                                <th style="text-align: center; font-size: 12px;">Item ID</th>
+                                <th style="text-align: center; font-size: 12px;">Picture</th>
+                                <th style="text-align: center; font-size: 12px;">Generic Name</th>
+                                <th style="text-align: center; font-size: 12px;">Brand Name</th>
+                                <th style="text-align: center; font-size: 12px;">Item Type</th>
+                                <th style="text-align: center; font-size: 12px;">Measurement</th>
+                                <th style="text-align: center; font-size: 12px;">Price</th>
+                                <!--<th style="text-align: center; font-size: 12px;">Status</th>-->
+                                <th style="text-align: center; font-size: 12px;">InStock</th>
+                                <th style="text-align: center; font-size: 12px;">Ordered</th>
+                                <th style="text-align: center; font-size: 12px;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
@@ -238,13 +268,12 @@
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
 
-    <div id="overlayAD" class="overlay">
+            <div id="overlayAD" class="overlay">
         <div class="overlayAD-content">
             <span id="closeBtnAD" class="close-btn">&times;</span>
             <h2>Other Options</h2>
             <hr>
-            <button id="unarchiveUserBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD"><img src="../../resources/img/archive.png"> Unarchive User
-                Account</button>
+            <button id="unarchiveUserBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD"><img src="../../resources/img/archive.png"> Unarchive Product</button>
             <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
                 <div class="modal-dialog">
                     <div class="modal-content">

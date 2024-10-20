@@ -1,4 +1,5 @@
 <?php
+
 header('Content-Type: application/json');
 
 // Database configuration
@@ -7,36 +8,33 @@ $username = "root";
 $password = "";
 $dbname = "motherchildpharmacy";
 
-// Create a connection
+// Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
-    echo json_encode(['success' => false, 'message' => 'Connection failed: ' . $conn->connect_error]);
-    exit;
+    die(json_encode(['success' => false, 'message' => "Connection failed: " . $conn->connect_error]));
 }
 
-// Get the itemID from the POST request
+// Get JSON input from the request
 $data = json_decode(file_get_contents('php://input'), true);
-$itemID = $data['itemID'] ?? '';
+$itemID = $data['itemID'] ?? null;
 
-if (empty($itemID)) {
-    echo json_encode(['success' => false, 'message' => 'Item ID is required.']);
-    exit;
-}
+if ($itemID) {
+    // Prepare and execute SQL query to unarchive the product
+    $stmt = $conn->prepare("UPDATE inventory SET status = 'active' WHERE ItemID = ?");
+    $stmt->bind_param('s', $itemID);
+    
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Product unarchived successfully']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Failed to unarchive product']);
+    }
 
-// Prepare and bind
-$stmt = $conn->prepare("UPDATE inventory SET Status = 'Active' WHERE ItemID = ?");
-$stmt->bind_param("s", $itemID); // Assuming ItemID is a string; change "s" to "i" if it's an integer
-
-// Execute the query
-if ($stmt->execute()) {
-    echo json_encode(['success' => true, 'message' => 'Product unarchived successfully.']);
+    $stmt->close();
 } else {
-    echo json_encode(['success' => false, 'message' => 'Error unarchiving product: ' . $stmt->error]);
+    echo json_encode(['success' => false, 'message' => 'No item ID provided']);
 }
 
-// Close the statement and connection
-$stmt->close();
 $conn->close();
 ?>

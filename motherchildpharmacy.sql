@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 16, 2024 at 06:19 AM
+-- Generation Time: Oct 20, 2024 at 07:18 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,116 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `motherchildpharmacy`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `audittrail`
---
-
-CREATE TABLE `audittrail` (
-  `auditID` int(11) NOT NULL,
-  `AccountID` int(100) UNSIGNED NOT NULL,
-  `action` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `ip_address` varchar(45) NOT NULL,
-  `Status` enum('1','0') NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `audittrail`
---
-
-INSERT INTO `audittrail` (`auditID`, `AccountID`, `action`, `description`, `created_at`, `ip_address`, `Status`) VALUES
-(1, 3, 'Profile Update', 'User updated a profile with new data: Name: Sayra, Last Name: Jacksona, Role: Admin, Account Name: E002_sjacksona', '2024-10-12 09:50:51', '::1', '1'),
-(2, 3, 'Profile Update', 'User updated a profile with new data: Name: Sayra, Last Name: Jackson, Role: Admin, Account Name: E002_sjackson', '2024-10-12 09:51:35', '::1', '1'),
-(3, 3, 'Login', 'User logged in successfully.', '2024-10-14 05:58:03', '::1', '1'),
-(4, 3, 'Profile Update', 'User updated a profile with new data: Name: Sayra, Last Name: Jacksona, Role: Admin, Account Name: E002_sjacksona', '2024-10-14 05:59:41', '::1', '1'),
-(5, 3, 'Logout', 'User logged out successfully.', '2024-10-14 06:01:33', '::1', '1'),
-(6, 3, 'Login', 'User logged in successfully.', '2024-10-14 06:01:52', '::1', '1'),
-(7, 3, 'Password Reset', 'Password reset successfully for account: E002_sjacksona', '2024-10-14 06:16:30', '::1', '1'),
-(8, 3, 'Profile Update', 'User updated a profile with new data: Name: Sayra, Last Name: Jackson, Role: Admin, Account Name: E002_sjackson', '2024-10-14 06:19:02', '::1', '1'),
-(9, 3, 'Password Reset', 'Password reset successfully for account: E002_sjackson', '2024-10-14 06:19:09', '::1', '1'),
-(10, 3, 'View User Details', 'Viewed details for account: E002_sjackson', '2024-10-14 06:24:04', '::1', '1'),
-(11, 3, 'Add User', 'Added user: Aileen Castro with account name E004_acastro.', '2024-10-14 06:42:56', '::1', '1'),
-(12, 3, 'Add User', 'Added user: Aileen Castro with account name E004_acastro.', '2024-10-14 06:44:48', '::1', '1'),
-(13, 3, 'View User Details', 'Viewed details for account: E004_acastro', '2024-10-14 06:45:14', '::1', '1'),
-(14, 3, 'View User Details', 'Viewed details for account: E002_sjackson', '2024-10-14 06:45:37', '::1', '1'),
-(15, 3, 'Password Reset', 'Password reset successfully for account: E004_acastro', '2024-10-14 06:45:44', '::1', '1'),
-(16, 3, 'Archive User', 'Archived user account: E004_acastro', '2024-10-14 06:46:01', '::1', '1'),
-(17, 3, 'Unarchive User', 'Unarchived user with account name: E004_acastro.', '2024-10-14 10:27:07', '::1', '1'),
-(18, 3, 'Change Password', 'User successfully changed their own password.', '2024-10-14 10:38:26', '::1', '1'),
-(19, 3, 'Change Password', 'User failed to change their own password by entering the old password as the new password.', '2024-10-14 10:44:53', '::1', ''),
-(20, 3, 'Change Password', 'User failed to change their own password by entering the old password as the new password.', '2024-10-14 10:45:17', '::1', ''),
-(21, 3, 'Profile Update', 'User successfully updated their own profile (Picture: , Name: Lancelot Tiangco).', '2024-10-14 10:51:32', '::1', '1'),
-(22, 3, 'Profile Update', 'User successfully updated their own profile (Name: Lance Tiangco).', '2024-10-14 10:54:01', '::1', '1'),
-(23, 3, 'Add User', 'Added user: c test with account name E005_ctest.', '2024-10-14 10:59:03', '::1', '1'),
-(24, 3, 'Logout', 'User logged out successfully.', '2024-10-14 10:59:21', '::1', '1'),
-(25, 5, 'Login', 'User logged in successfully.', '2024-10-14 10:59:31', '::1', '1'),
-(26, 5, 'Logout', 'User logged out successfully.', '2024-10-14 10:59:49', '::1', '1'),
-(27, 3, 'Login', 'User logged in successfully.', '2024-10-14 10:59:57', '::1', '1'),
-(28, 3, 'View Order', 'User viewed a purchase order\'s details (OrderID: PO-01).', '2024-10-14 11:19:13', '::1', '1'),
-(29, 3, 'View Order', 'User viewed a purchase order\'s details (OrderID: PO-01).', '2024-10-14 11:19:31', '::1', '1'),
-(30, 3, 'Logout', 'User logged out successfully.', '2024-10-14 12:02:17', '::1', '1'),
-(31, 3, 'Login', 'User logged in successfully.', '2024-10-15 01:41:19', '::1', '1'),
-(32, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-10-15 03:42:25', '::1', '1'),
-(33, 3, 'Logout', 'User logged out successfully.', '2024-10-15 03:57:03', '::1', '1'),
-(34, 3, 'Login', 'User logged in successfully.', '2024-10-15 03:59:42', '::1', '1'),
-(35, 3, 'Logout', 'User logged out successfully.', '2024-10-15 04:00:13', '::1', '1'),
-(36, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-10-16 02:44:57', '::1', '1'),
-(37, 3, 'Create Order', 'Created purchase order (OrderID: 2).', '2024-10-16 02:45:15', '::1', '1'),
-(38, 3, 'View Order', 'User viewed a purchase order\'s details (OrderID: PO-02).', '2024-10-16 02:45:18', '::1', '1'),
-(39, 3, 'View Order', 'User viewed a purchase order\'s details (OrderID: PO-02).', '2024-10-16 02:45:21', '::1', '1'),
-(40, 3, 'Logout', 'User logged out successfully.', '2024-10-16 03:23:09', '::1', '1'),
-(41, 3, 'Auto Backup Failed', 'Automatic database backup failed.', '2024-10-16 03:23:09', '::1', '1'),
-(42, 3, 'Login', 'User logged in successfully.', '2024-10-16 03:26:54', '::1', '1'),
-(43, 3, 'Logout', 'User logged out successfully.', '2024-10-16 03:27:16', '::1', '1'),
-(44, 3, 'Auto Backup Failed', 'Automatic database backup failed.', '2024-10-16 03:27:16', '::1', '1'),
-(45, 3, 'Login', 'User logged in successfully.', '2024-10-16 03:30:46', '::1', '1'),
-(46, 3, 'Logout', 'User logged out successfully.', '2024-10-16 03:30:48', '::1', '1'),
-(47, 3, 'Backup Failed', 'Database backup failed.', '2024-10-16 03:30:48', '::1', '1'),
-(48, 3, 'Login', 'User logged in successfully.', '2024-10-16 03:34:52', '::1', '1'),
-(49, 3, 'Logout', 'User logged out successfully.', '2024-10-16 03:34:58', '::1', '1'),
-(50, 3, 'Backup', 'Database backup created successfully.', '2024-10-16 03:34:58', '::1', '1'),
-(51, 3, 'Login', 'User logged in successfully.', '2024-10-16 03:39:27', '::1', '1'),
-(52, 3, 'Logout', 'User logged out successfully.', '2024-10-16 03:40:00', '::1', '1'),
-(53, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-10-16 03:40:00', '::1', '1'),
-(54, 3, 'Login', 'User logged in successfully.', '2024-10-16 03:42:06', '::1', '1'),
-(55, 3, 'Logout', 'User logged out successfully.', '2024-10-16 03:44:11', '::1', '1'),
-(56, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-10-16 03:44:12', '::1', '1'),
-(57, 3, 'Login', 'User failed to login (Incorrect password).', '2024-10-16 03:50:35', '::1', ''),
-(58, 3, 'Login', 'User logged in successfully.', '2024-10-16 03:52:39', '::1', '1');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `deliveries`
---
-
-CREATE TABLE `deliveries` (
-  `DeliveryID` int(11) NOT NULL,
-  `PurchaseOrderID` int(11) NOT NULL,
-  `SupplierID` int(11) NOT NULL,
-  `DeliveryDate` datetime DEFAULT current_timestamp(),
-  `ReceivedBy` int(10) UNSIGNED NOT NULL,
-  `TotalDeliveredItems` int(11) NOT NULL,
-  `DeliveryStatus` enum('Pending','Partial','Completed','Returned') DEFAULT 'Pending'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `delivery_items`
---
-
-CREATE TABLE `delivery_items` (
-  `ItemID` int(11) NOT NULL,
-  `DeliveryID` int(11) NOT NULL,
-  `LotNumber` varchar(50) NOT NULL,
-  `ExpiryDate` date NOT NULL,
-  `QuantityDelivered` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -188,15 +78,25 @@ CREATE TABLE `inventory` (
 --
 
 INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `Discount`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`) VALUES
-(2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Milligrams', 5, 100, NULL, 200.00, NULL, 1, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
-(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Milligrams', 3, 0, NULL, 300.00, NULL, 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg'),
-(4, 'Ibuprofen', 'Advil', 'Medicine', '200', 'Milligrams', 0, 0, NULL, 299.00, NULL, 1, '', 'Active', 'products-icon/Advil.png', 'AdvilIbuprofen200mg'),
-(5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Milligrams', 0, 0, NULL, 499.00, NULL, 2, '', 'Active', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg'),
-(6, 'Loperamide', 'Diatabs', 'Medicine', '2', 'Milligrams', 0, 0, NULL, 149.00, NULL, NULL, '', '', 'products-icon/Diatabs.png', 'DiatabsLoperamide2mg'),
-(7, 'Loperamide', 'Imodium', 'Medicine', '2', 'Milligrams', 0, 0, NULL, 149.00, NULL, NULL, '', '', 'products-icon/Imodium.png', 'ImodiumLoperamide2mg'),
-(8, 'Aluminum Hydroxide Magnesium Hydroxide Simeticone', 'Kremil-S', 'Medicine', '30', 'Milligrams', 0, 0, NULL, 499.00, NULL, NULL, '', '', 'products-icon/kremilS.png', 'KremilS30mg'),
-(10, 'Bisacodyl', 'Dulcolax', 'Medicine', '5', 'Milligrams', 0, 0, NULL, 149.00, NULL, NULL, '', '', 'products-icon/dulcolax.png', 'Dulcolax5mg'),
-(11, 'Ibuprofen', 'Medicol Advance', 'Medicine', '200', 'Milligrams', 0, 0, NULL, 200.00, NULL, NULL, '', '', 'products-icon/medicol.png', 'MedicolAdvance200mg');
+(1, 'Cephalexin', 'Ascend Capsule', 'Medicine', '100', 'Milligrams', 50, 100, NULL, 52.75, 'Yes', 1, '', 'Active', 'products-icon/cephalexin.jpg', '342043143581'),
+(2, 'Paracetamol', 'Biogesic Tablet', 'Medicine', '100', 'Milligrams', 5, 100, NULL, 4.81, 'Yes', 1, '', 'Active', 'products-icon/biogesic.png', '4807788519184'),
+(3, 'Phenylephrine', 'Neozep Forte Tablet', 'Medicine', '500', 'Milligrams', 0, 0, NULL, 6.70, NULL, 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg'),
+(4, 'Ibuprofen', 'Advil Liquigel Capsule', 'Medicine', '200', 'Milligrams', 50, 0, NULL, 9.47, NULL, 1, '', 'Active', 'products-icon/Advil.png', '5012816018334'),
+(5, 'Hyoscine Paracetamol', 'Buscopan Venus Tablet', 'Medicine', '500', 'Milligrams', 10, 0, NULL, 42.52, NULL, 2, '', 'Active', 'products-icon/buscopanVenus.png', '5012816018334'),
+(6, 'Loperamide', 'Diatabs Capsule', 'Medicine', '2', 'Milligrams', 0, 0, NULL, 8.84, NULL, NULL, '', 'Active', 'products-icon/Diatabs.png', 'DiatabsLoperamide2mg'),
+(7, 'Loperamide', 'Imodium Capsule', 'Medicine', '2', 'Milligrams', 50, 0, NULL, 20.36, NULL, NULL, '', 'Active', 'products-icon/Imodium.png', '686919114252'),
+(8, 'Aluminum Hydroxide Magnesium Hydroxide Simeticone', 'Kremil-S Tablet', 'Medicine', '30', 'Milligrams', 50, 0, NULL, 9.68, NULL, NULL, '', 'Active', 'products-icon/kremilS.png', '801883381176'),
+(10, 'Bisacodyl', 'Dulcolax Supp Adult', 'Medicine', '10', 'Milligrams', 50, 0, NULL, 67.99, NULL, NULL, '', 'Active', 'products-icon/dulcolax.png', ''),
+(11, 'Ibuprofen', 'Medicol Advance Capsule', 'Medicine', '200', 'Grams', 0, 0, NULL, 7.28, NULL, NULL, '', 'Active', 'products-icon/medicol.png', 'MedicolAdvance200mg'),
+(12, 'Dark Chocolate', 'Goya', 'Milk', '30', 'Grams', 50, 0, NULL, 35.00, 'Yes', NULL, '', 'Active', 'products-icon/Goya.png', '4806517042085'),
+(13, 'Antibacterial Cream', 'Miaojia Zudaifu', 'Skincare', '15', 'Grams', 15, 0, NULL, 46.00, 'Yes', NULL, '', 'Active', 'products-icon/miaojia_zudaifu.png', '6972804743237'),
+(14, 'Multivitamins', 'Enervon Tablet', 'Vitamins', '500', 'Milligrams', 50, 0, NULL, 245.10, 'Yes', NULL, '', 'Active', 'products-icon/Enervon.jpg', '656124805511'),
+(15, 'Baby Powder', 'Johnson\'s', 'Cosmetics', '25', 'Grams', 20, 0, NULL, 15.00, 'Yes', NULL, '', 'Active', 'products-icon/Baby powder.jpg', '381371172672'),
+(16, 'Adhesive Bandage', 'Band-Aid', 'Skincare', '50', 'Pieces', 50, 0, NULL, 125.00, 'Yes', NULL, '', 'Active', 'products-icon/bandaid.jpg', '381370058496'),
+(17, 'Salbutamol Sulfate', 'Aero-Vent', 'Medicine', '1', 'Milligrams', 50, 0, NULL, 15.00, 'Yes', NULL, '', 'Active', 'products-icon/Aero.png', '9785511311548'),
+(18, 'Powdered Milk', 'Nestlé Bear Brand Swak Pack', 'Milk', '33', 'Grams', 0, 0, NULL, 11.50, 'Yes', NULL, '', 'Active', 'products-icon/bearbrand.png', 'swakpack33g'),
+(19, 'Powdered Milk', 'Nestlé Nido 3+', 'Milk', '2', 'Kilograms', 25, 0, NULL, 1245.00, 'Yes', NULL, '', 'Active', 'products-icon/Nido3+.png', '028000610302'),
+(20, 'Powdered Milk', 'Nestlé Nido 5+', 'Milk', '2', 'Kilograms', 0, 0, NULL, 1229.50, 'Yes', NULL, '', 'Active', 'products-icon/Nido.png', 'nido5+2kg');
 
 -- --------------------------------------------------------
 
@@ -265,7 +165,8 @@ CREATE TABLE `sales` (
 --
 
 INSERT INTO `sales` (`InvoiceID`, `SaleDate`, `AccountID`, `SalesDetails`, `TotalItems`, `Subtotal`, `Tax`, `Discount`, `AmountPaid`, `PaymentMethod`, `Status`, `RefundAmount`) VALUES
-(1, '2024-09-29 01:34:29', 3, '{\r\n	\"1\":{\r\n		\"itemID\":\"2\",\r\n		\"qty\":5\r\n	},\r\n	\"2\":{\r\n		\"itemID\":\"3\",\r\n		\"qty\":3\r\n	}\r\n}', 8, 1900.00, 228.00, 0.00, 2500.00, 'Cash', 'Sales', NULL);
+(1, '2024-09-29 01:34:29', 3, '{\r\n	\"1\":{\r\n		\"itemID\":\"2\",\r\n		\"qty\":5\r\n	},\r\n	\"2\":{\r\n		\"itemID\":\"3\",\r\n		\"qty\":3\r\n	}\r\n}', 8, 1900.00, 228.00, 0.00, 2500.00, 'Cash', 'Sales', NULL),
+(2, '2024-10-20 13:17:27', 2, '{\"1\":{\"qty\":1}}', 1, 9.47, 1.14, 0.00, 11.00, 'Cash', 'Sales', 0.00);
 
 -- --------------------------------------------------------
 
@@ -291,68 +192,9 @@ INSERT INTO `suppliers` (`SupplierID`, `SupplierName`, `AgentName`, `Phone`, `Em
 (1, 'Metro Drug Inc. (MDI)', 'Agent MDI', '(02) 8539 4342', 'mdi@metrodrug.com.ph', 'Active', ''),
 (2, 'Zuellig Pharma Corporation', 'Agent K', '+63 (2) 908 2222', 'zpspeakup@zuelligpharma.com', 'Active', NULL);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
-
-CREATE TABLE `users` (
-  `AccountID` int(10) UNSIGNED NOT NULL,
-  `employeeName` varchar(255) NOT NULL,
-  `employeeLName` varchar(255) NOT NULL,
-  `role` varchar(255) NOT NULL,
-  `accountName` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `picture` text NOT NULL DEFAULT 'profile_icon.png',
-  `dateCreated` datetime NOT NULL DEFAULT current_timestamp(),
-  `status` varchar(255) NOT NULL DEFAULT 'Active',
-  `connected` enum('1','0') NOT NULL DEFAULT '0',
-  `SuppliersPerms` enum('on','off') NOT NULL DEFAULT 'off',
-  `TransactionsPerms` enum('on','off') NOT NULL DEFAULT 'off',
-  `InventoryPerms` enum('on','off') NOT NULL DEFAULT 'off',
-  `POSPerms` enum('on','off') NOT NULL DEFAULT 'off',
-  `REPerms` enum('on','off') NOT NULL DEFAULT 'off',
-  `POPerms` enum('on','off') NOT NULL DEFAULT 'off',
-  `UsersPerms` enum('on','off') NOT NULL DEFAULT 'off'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`AccountID`, `employeeName`, `employeeLName`, `role`, `accountName`, `password`, `picture`, `dateCreated`, `status`, `connected`, `SuppliersPerms`, `TransactionsPerms`, `InventoryPerms`, `POSPerms`, `REPerms`, `POPerms`, `UsersPerms`) VALUES
-(2, 'Sayra', 'Jackson', 'Admin', 'E002_sjackson', 'jackson-e002', 'Chichi.jpg', '2024-09-22 21:27:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
-(3, 'Lance', 'Tiangco', 'Admin', 'E003_ltiangco', 'lancetiangco26!!', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '1', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
-(4, 'Aileen', 'Castro', 'Admin', 'E004_acastro', 'castro-e004', 'owner.png', '2024-10-14 14:44:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
-(5, 'c', 'test', 'Pharmacy Assistant', 'E005_ctest', 'test-e005', 'Shrek.png', '2024-10-14 18:59:03', 'Active', '0', 'off', 'on', 'off', 'on', 'on', 'off', 'off');
-
 --
 -- Indexes for dumped tables
 --
-
---
--- Indexes for table `audittrail`
---
-ALTER TABLE `audittrail`
-  ADD PRIMARY KEY (`auditID`),
-  ADD KEY `AT_ForeignKey_ItemID` (`AccountID`);
-
---
--- Indexes for table `deliveries`
---
-ALTER TABLE `deliveries`
-  ADD PRIMARY KEY (`DeliveryID`),
-  ADD KEY `FK_PurchaseOrderID` (`PurchaseOrderID`),
-  ADD KEY `FK_SupplierID` (`SupplierID`),
-  ADD KEY `FK_ReceivedBy` (`ReceivedBy`);
-
---
--- Indexes for table `delivery_items`
---
-ALTER TABLE `delivery_items`
-  ADD PRIMARY KEY (`ItemID`,`DeliveryID`,`LotNumber`),
-  ADD KEY `FK_DeliveryID` (`DeliveryID`);
 
 --
 -- Indexes for table `goodsissue`
@@ -403,27 +245,8 @@ ALTER TABLE `suppliers`
   ADD PRIMARY KEY (`SupplierID`);
 
 --
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`AccountID`),
-  ADD UNIQUE KEY `accountName` (`accountName`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
-
---
--- AUTO_INCREMENT for table `audittrail`
---
-ALTER TABLE `audittrail`
-  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
-
---
--- AUTO_INCREMENT for table `deliveries`
---
-ALTER TABLE `deliveries`
-  MODIFY `DeliveryID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `goodsissue`
@@ -435,7 +258,7 @@ ALTER TABLE `goodsissue`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `ItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `ItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `purchaseorders`
@@ -447,7 +270,7 @@ ALTER TABLE `purchaseorders`
 -- AUTO_INCREMENT for table `sales`
 --
 ALTER TABLE `sales`
-  MODIFY `InvoiceID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `InvoiceID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
@@ -456,34 +279,8 @@ ALTER TABLE `suppliers`
   MODIFY `SupplierID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `AccountID` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `audittrail`
---
-ALTER TABLE `audittrail`
-  ADD CONSTRAINT `AT_ForeignKey_ItemID` FOREIGN KEY (`AccountID`) REFERENCES `users` (`AccountID`);
-
---
--- Constraints for table `deliveries`
---
-ALTER TABLE `deliveries`
-  ADD CONSTRAINT `FK_PurchaseOrderID` FOREIGN KEY (`PurchaseOrderID`) REFERENCES `purchaseorders` (`PurchaseOrderID`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_ReceivedBy` FOREIGN KEY (`ReceivedBy`) REFERENCES `users` (`AccountID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_SupplierID` FOREIGN KEY (`SupplierID`) REFERENCES `suppliers` (`SupplierID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
--- Constraints for table `delivery_items`
---
-ALTER TABLE `delivery_items`
-  ADD CONSTRAINT `FK_DeliveryID` FOREIGN KEY (`DeliveryID`) REFERENCES `deliveries` (`DeliveryID`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `goodsissue`
