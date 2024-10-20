@@ -13,14 +13,12 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-function logPostData($data) {
+function logPostData($data)
+{
     $logFile = 'post_data_log.txt'; // Specify the log file name
     $logEntry = date('Y-m-d H:i:s') . " - " . print_r($data, true) . PHP_EOL; // Format the log entry with timestamp
     file_put_contents($logFile, $logEntry, FILE_APPEND); // Append the log entry to the file
 }
-
-// Log the POST data
-logPostData($_POST);
 
 // Function to extract the numeric part from "PO-01234"
 function extractPurchaseOrderID($formattedID)
@@ -62,18 +60,17 @@ $totalOrderedRow = $totalOrderedResult->fetch_assoc();
 $totalItemsOrdered = $totalOrderedRow['TotalItems'];
 
 // Determine delivery status based on comparison with total ordered
-if ($totalDeliveredItems === $totalItemsOrdered) {
+if ($totalDeliveredItems == $totalItemsOrdered) {
     $deliveryStatus = 'Completed';
     // Update purchase order status if fully delivered
     $updateOrderSQL = "
     UPDATE purchaseorders 
     SET Status = 'Received' 
-    WHERE PurchaseOrderID = ? AND 
-      JSON_LENGTH(orderDetails) = ?";
+    WHERE PurchaseOrderID = ?";
     $orderStmt = $conn->prepare($updateOrderSQL);
     $totalItemsOrdered = count($deliveryItems); // Compare with total items
 
-    $orderStmt->bind_param("ii", $purchaseOrderID, $totalItemsOrdered);
+    $orderStmt->bind_param("i", $purchaseOrderID);
     $orderStmt->execute();
 } elseif ($totalDeliveredItems > 0) {
     $deliveryStatus = 'Partial';
@@ -81,19 +78,23 @@ if ($totalDeliveredItems === $totalItemsOrdered) {
     $deliveryStatus = 'Pending';
 }
 
-// Bind parameters and execute
 $stmt->bind_param("iiiss", $purchaseOrderID, $supplierID, $receivedBy, $totalDeliveredItems, $deliveryStatus);
 $stmt->execute();
+
+
 $deliveryID = $stmt->insert_id; // Get the last inserted DeliveryID
 
+// log working to this point
+logPostData($deliveryID);
+
 // Insert each item into `delivery_items` table
-$insertItemSQL = "
-    INSERT INTO delivery_items (ItemID, DeliveryID, LotNumber, ExpiryDate, QuantityDelivered, NetAmount) 
-    VALUES (?, ?, ?, ?, ?, ?)";
+$insertItemSQL = "INSERT INTO delivery_items (ItemID, DeliveryID, LotNumber, ExpiryDate, QuantityDelivered, NetAmount) VALUES (?, ?, ?, ?, ?, ?)";
 $itemStmt = $conn->prepare($insertItemSQL);
 
+$orderDetails = json_decode($_POST['orderDetails'], true); // JSON of items delivered
+
 // Iterate over delivery items and insert them
-foreach ($deliveryItems as $item) {
+foreach ($orderDetails as $item) {
     $itemID = $item['itemID'];
     $lotNumber = $item['lotNo'];
     $expiryDate = date('Y-m-d', strtotime($item['expiryDate'])); // Convert to MySQL date format
@@ -102,7 +103,7 @@ foreach ($deliveryItems as $item) {
 
     // Ensure no empty values before inserting
     if (!empty($lotNumber) && !empty($expiryDate) && $quantityDelivered > 0) {
-        $itemStmt->bind_param("iissi", $itemID, $deliveryID, $lotNumber, $expiryDate, $quantityDelivered, $netAmt);
+        $itemStmt->bind_param("iissii", $itemID, $deliveryID, $lotNumber, $expiryDate, $quantityDelivered, $netAmt);
         $itemStmt->execute();
 
         // Update inventory stock based on quantity delivered
