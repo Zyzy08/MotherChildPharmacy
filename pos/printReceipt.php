@@ -8,7 +8,7 @@ try {
     
     // Create a temporary file name
     $filename = "receipt_" . $orderNum . ".txt";
-    $filepath = "..\\transactions\\receipt-history\\" . $filename; // Adjust this path as needed
+    $filepath = "..\\transactions\\receipt-history\\" . $filename; 
     
     // Save the content to the file
     file_put_contents($filepath, $content);
@@ -32,5 +32,3 @@ try {
         'error' => $e->getMessage()
     ]);
 }
-
-// orig
