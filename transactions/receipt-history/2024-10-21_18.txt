@@ -1,0 +1,30 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+1   Advil Liquigel Capsule P9.47
+1   Buscopan Venus Tablet P42.52
+1   Goya                  P35.00
+--------------------------------
+Total Items:                 3
+Subtotal:               P86.99
+Tax 12%:                P10.44
+Discount:               P-0.00
+Amount Due:             P97.43
+Refund Amount:          P97.43
+Payment:               P100.00
+Change:                  P2.57
+--------------------------------
+Order No.:                 #18
+Date:      2024-10-22 01:45:31
+Staff:           Unknown Staff
+Status:                  Sales
+                                
+  Thank you for your purchase!
+
+                                
+
+                                

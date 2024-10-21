@@ -500,24 +500,76 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.getElementById('paymentInput').addEventListener('input', function() {
-    const payment = parseFloat(this.value) || 0;
-    const totalAmount = parseFloat(document.getElementById('total-display').textContent.replace(/[^0-9.-]+/g,""));
-    const change = payment - totalAmount;
-    
-    const confirmButton = document.getElementById('confirm-button');
-    
-    if (payment >= totalAmount) {
-        confirmButton.removeAttribute('disabled');
-        document.getElementById('change-display').textContent = `Change: ₱${change.toFixed(2)}`;
+const seniorCitizenCheckbox = document.getElementById('seniorCitizenCheckbox');
+const confirmButton = document.getElementById('confirm-button');
+
+// Fields for Senior / PWD
+const seniorPwdFields = {
+    idNumber: document.getElementById('seniorPwdID'),
+    idType: document.getElementById('idType'),
+    fullName: document.getElementById('seniorPwdName'),
+};
+
+// Function to validate Senior / PWD fields and payment
+function validateForm() {
+    const idFilled = seniorPwdFields.idNumber.value.trim() !== '';
+    const idTypeValid = seniorPwdFields.idType.value === 'Senior Citizen ID' || seniorPwdFields.idType.value === 'PWD ID';
+    const fullNameFilled = seniorPwdFields.fullName.value.trim() !== '';
+    const paymentFilled = parseFloat(document.getElementById('paymentInput').value) > 0; // Ensure payment is greater than 0
+
+    // Set the confirm button based on all validations
+    if (seniorCitizenCheckbox.checked) {
+        if (idFilled && idTypeValid && fullNameFilled && paymentFilled) {
+            confirmButton.removeAttribute('disabled');
+        } else {
+            confirmButton.setAttribute('disabled', 'true');
+        }
     } else {
-        confirmButton.setAttribute('disabled', 'true');
-        document.getElementById('change-display').textContent = 'Change: ₱0.00';
+        // If the checkbox is not checked, just check if payment is filled
+        const totalAmount = parseFloat(document.getElementById('total-display').textContent.replace(/[^0-9.-]+/g, ""));
+        const isPaymentValid = parseFloat(document.getElementById('paymentInput').value) >= totalAmount;
+        confirmButton.disabled = !isPaymentValid;
     }
-    
-    updatePaymentDisplay();
-    updateChangeDisplay();
+
+    // Highlight Senior / PWD fields based on validity
+    Object.values(seniorPwdFields).forEach(field => {
+        if (seniorCitizenCheckbox.checked && field.value.trim() === '') {
+            field.classList.add('is-invalid'); // Add red highlight
+        } else {
+            field.classList.remove('is-invalid'); // Remove red highlight
+        }
+    });
+
+    // Highlight ID Type specifically
+    if (seniorCitizenCheckbox.checked && !idTypeValid) {
+        seniorPwdFields.idType.classList.add('is-invalid'); // Add red highlight if invalid type
+    } else {
+        seniorPwdFields.idType.classList.remove('is-invalid'); // Remove highlight if valid
+    }
+}
+
+// Toggle event for Senior Citizen / PWD checkbox
+seniorCitizenCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+        // Show the accordion
+        document.getElementById('seniorPwdAccordion').style.display = 'block';
+    } else {
+        // Hide the accordion and remove highlights
+        document.getElementById('seniorPwdAccordion').style.display = 'none';
+        Object.values(seniorPwdFields).forEach(field => {
+            field.classList.remove('is-invalid'); // Remove red highlight
+        });
+    }
+    validateForm(); // Validate on toggle change
 });
+
+// Input event listeners for Senior / PWD fields
+Object.values(seniorPwdFields).forEach(field => {
+    field.addEventListener('input', validateForm);
+});
+
+// Payment input event listener
+document.getElementById('paymentInput').addEventListener('input', validateForm);
 
 document.getElementById('cancel-receipt').addEventListener('click', function() {
     setTimeout(() => {
@@ -553,8 +605,6 @@ function fetchAccountID() {
                 const accountID = data.accountID;
                 userID = accountID;
                 employeeName = data.employeeName || 'Unknown Staff';
-                console.log('AccountID:', accountID);
-                console.log('Employee Name:', employeeName);
                 receiptData.accountID = accountID;
             } else {
                 console.error('Error fetching AccountID:', data.error);
@@ -653,12 +703,10 @@ document.getElementById('print-button').addEventListener('click', function() {
         return response.text();
     })
     .then(text => {
-        console.log('Raw response:', text);
         return JSON.parse(text);
     })
     .then(data => {
         if (data.success) {
-            console.log('Receipt saved successfully');
             // After successful save, proceed with saving as text file and printing
             saveAsTxtAndPrint();
         } else {
@@ -688,10 +736,8 @@ function saveAsTxtAndPrint() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log('Receipt printed successfully');
             window.location.reload(); // Reload the page after successful print
         } else {
-            console.error('Error printing receipt:', data.error);
             showToast('Error printing receipt. Please try again.');
         }
     })
@@ -704,6 +750,9 @@ function saveAsTxtAndPrint() {
 function generateReceiptContent() {
     const maxWidth = 32;
 
+    const employeeName = document.getElementById('staff').textContent.replace('Staff: ', '').trim();
+    const role = document.getElementById('role').textContent.replace('Role: ', '');
+
     function centerText(text) {
         const padding = Math.max(0, Math.floor((maxWidth - text.length) / 2));
         return ' '.repeat(padding) + text;
@@ -714,18 +763,31 @@ function generateReceiptContent() {
         return left + ' '.repeat(space) + right;
     }
 
+    function formatItemLine(quantity, item, price) {
+        const qtyWidth = 4;    // 4 characters for quantity
+        const priceStr = `P${price.toFixed(2)}`;  // Full price string, including "P"
+        const priceWidth = priceStr.length;       // The actual length of the price string
+        const itemWidth = maxWidth - qtyWidth - priceWidth - 1;  // Remaining width for item name
+
+        const formattedQty = String(quantity).padEnd(qtyWidth, ' ');
+        const formattedItem = item.length > itemWidth ? item.substring(0, itemWidth - 3) + '...' : item.padEnd(itemWidth, ' ');
+
+        return `${formattedQty}${formattedItem} ${priceStr}`;  // Add a single space between item and price
+    }
+
     let content = 
 `${centerText('Mother & Child')}
 ${centerText('Pharmacy and Medical Supplies')}
 ${centerText('Gen. Luna Street, Babo Sacan,')}
 ${centerText('Porac, Pampanga')}
 ${'-'.repeat(maxWidth)}
-\nQuantity\tItem\tPrice\n`;
+\nQty Item                   Price\n`;
 
     // Add items to the content
     receiptItems.forEach(item => {
-        const itemName = item.item_name.length > 20 ? item.item_name.substring(0, 17) + '...' : item.item_name;
-        content += `${item.quantity}\t${itemName}\tP${item.total_item_price}\n`;
+        const itemName = item.item_name;
+        const price = parseFloat(item.total_item_price);
+        content += formatItemLine(item.quantity, itemName, price) + '\n';
     });
 
     const totalItems = receiptItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -743,17 +805,30 @@ ${'-'.repeat(maxWidth)}
     content += formatLine(`Tax 12%:`, `P${tax}\n`);
     content += formatLine(`Discount:`, `P-${discount.toFixed(2)}\n`);
     content += formatLine(`Amount Due:`, `P${amountDue}\n`);
-    content += formatLine(`Refund Amount:`, `P${amountDue}\n`);
+    content += formatLine(`Refund Amount:`, `P0.00\n`);
     content += formatLine(`Payment:`, `P${amountPaid}\n`);
     content += formatLine(`Change:`, `P${change}\n`);
     content += `${'-'.repeat(maxWidth)}\n`;
     content += formatLine(`Order No.:`, `#${orderNum}\n`);
     content += formatLine(`Date:`, `${getCurrentDateTime()}\n`);
+    content += formatLine(`Payment Method:`, `Cash\n`);
+    content += formatLine(`Status:`, `Sales\n\n`);
     content += formatLine(`Staff:`, `${employeeName}\n`);
-    content += formatLine(`Status:`, `Sales\n`);
-    content += `\n`;
-    content += `\n${centerText('Thank you for your purchase!')}\n`; 
-    content += `\n\n`; 
+    content += formatLine(`Role:`, `${role}\n`);
+    content += `${' '.repeat(maxWidth)}\n`;
+    content += `${centerText('Thank you for your purchase!')}\n`; 
+    content += `\n${' '.repeat(maxWidth)}\n`;
+    content += `\n${' '.repeat(maxWidth)}\n`;
 
     return content;
 }
+
+document.getElementById('seniorCitizenCheckbox').addEventListener('change', function() {
+    const accordion = document.getElementById('seniorPwdAccordion');
+    if (this.checked) {
+      accordion.style.display = 'block';
+    } else {
+      accordion.style.display = 'none';
+    }
+});
+  

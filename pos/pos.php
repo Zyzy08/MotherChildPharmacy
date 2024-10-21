@@ -392,7 +392,42 @@
               <input class="form-check-input" type="checkbox" id="seniorCitizenCheckbox">
               <label class="form-check-label" for="seniorCitizenCheckbox">Senior Citizen / PWD (20%)</label>
             </div>
+
+            <!-- Hidden Accordion Form for Senior Citizen / PWD -->
+            <div class="accordion" id="seniorPwdAccordion" style="display: none;">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#seniorPwdForm" aria-expanded="true" aria-controls="seniorPwdForm">
+                    Senior Citizen / PWD Information
+                  </button>
+                </h2>
+                <div id="seniorPwdForm" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#seniorPwdAccordion">
+                  <div class="accordion-body">
+                    <div class="mb-3">
+                      <label for="seniorPwdID" class="form-label">ID Number</label>
+                      <input type="text" class="form-control" id="seniorPwdID" placeholder="Enter ID number" required>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="idType" class="form-label">ID Type</label>
+                      <select class="form-select" id="idType" required>
+                        <option value="">Select ID Type</option>
+                        <option value="senior">Senior Citizen ID</option>
+                        <option value="pwd">PWD ID</option>
+                      </select>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="seniorPwdName" class="form-label">Full Name</label>
+                      <input type="text" class="form-control" id="seniorPwdName" placeholder="Enter full name" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <br>
+
             <div id="payment-method">
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="cash" checked="">
@@ -536,9 +571,18 @@
             </div>
           </div>
 
-          <div class="row mb-3 text-center justify-content-between">
+          <div class="row text-center justify-content-between">
             <div class="col-xl-6">
               <small id="staff">Staff: <?php echo htmlspecialchars($employeeFullName); ?></small>
+            </div>
+            <div class="col-xl-6">
+              <small id="payment-method">Payment Method: Cash</small>
+            </div>
+          </div>
+
+          <div class="row mb-3 text-center justify-content-between">
+            <div class="col-xl-6">
+              <small id="role">Role: <?php echo htmlspecialchars($role); ?></small>
             </div>
             <div class="col-xl-6">
               <small id="status">Status: Sales</small>
@@ -587,10 +631,8 @@
   <script src="../main.js"></script>
   
   <!-- Template POS JS File -->
-  <script src="pos.js"></script>
+  <script src="pos copy.js"></script>
 
 </body>
 
 </html>
-
-<!--Updated-->
