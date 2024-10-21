@@ -19,7 +19,7 @@ $sql = "
     SELECT 
     d.DeliveryID, 
     d.PurchaseOrderID, 
-    DATE_FORMAT(d.DeliveryDate, '%m/%d/%y (%l:%i %p)') AS DeliveryDate, 
+    DATE_FORMAT(d.DeliveryDate, '%m/%d/%Y') AS DeliveryDate, 
     s.SupplierName, 
     u.AccountName AS ReceivedBy,
     u.employeeName, 

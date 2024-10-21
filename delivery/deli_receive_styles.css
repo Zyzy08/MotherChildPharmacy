@@ -804,6 +804,24 @@ h4 {
     background-color: #45a049;
 }
 
+#confirmButton:disabled {
+    width: auto;
+    background-color: #7c8d7d;
+    /* Green background */
+    color: white;
+    /* White text */
+    padding-left: 15px;
+    padding-right: 15px;
+    border: none;
+    cursor: not-allowed;
+    border-radius: 5px;
+    /* Optional: Rounded corners */
+}
+
+#confirmButton:disabled:hover {
+    background-color: #7c8d7d;
+}
+
 #listTable {
     padding: 12px;
     margin-bottom: 20px;
@@ -968,20 +986,25 @@ tr:hover .remove-icon img {
 
 #lotNo {
     width: 130px;
+    color: #c44545;
 }
 
 #expiryDate {
     width: 130px;
+    color: #c44545;
 }
 
 #qtyServed {
     width: 130px;
+    color: #c44545;
 }
 
 #bonus {
     width: 130px;
+    color: #c44545;
 }
 
 #netAmt {
     width: 130px;
+    color: #c44545;
 }

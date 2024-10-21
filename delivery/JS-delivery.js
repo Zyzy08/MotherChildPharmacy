@@ -60,6 +60,8 @@ function updateTable(data) {
             statusColor = '#B8860B';
         } else if (row.DeliveryStatus === "Returned") {
             statusColor = 'red';
+        } else if (row.DeliveryStatus === "Partial") {
+            statusColor = 'blue';
         } else if (row.DeliveryStatus === "Completed") {
             statusColor = 'green';
         } else {
@@ -69,7 +71,7 @@ function updateTable(data) {
         // Add the row to the table
         table.row.add([
             "DE-0" + row.DeliveryID,
-            row.PurchaseOrderID,
+            "PO-0" + row.PurchaseOrderID,
             row.SupplierName,
             row.DeliveryDate,
             row.TotalItemsDelivered,

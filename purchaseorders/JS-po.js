@@ -9,7 +9,7 @@ function setDataTables() {
                 },
                 {
                     "targets": 1, // Date
-                    "width": "20.6%"
+                    "width": "17.6%"
                 },
                 {
                     "targets": 2, // Supplier
@@ -21,7 +21,7 @@ function setDataTables() {
                 },
                 {
                     "targets": 4, // Status
-                    "width": "15%"
+                    "width": "18%"
                 },
                 {
                     "targets": 5, // Actions
@@ -54,6 +54,8 @@ function updateTable(data) {
         let statusColor;
         if (row.Status === "Pending") {
             statusColor = '#B8860B';
+        } else if (row.Status === "Partially Received") {
+            statusColor = 'blue';
         } else if (row.Status === "Cancelled") {
             statusColor = 'red';
         } else if (row.Status === "Received") {
@@ -108,6 +110,8 @@ function fetchDetails(identifier) {
                     Status.style.color = '#B8860B'; // Change text color to yellow
                 } else if (data.Status === "Cancelled") {
                     Status.style.color = 'red'; // Change text color to red
+                } else if (data.Status === "Partially Received") {
+                    Status.style.color = 'blue';
                 } else if (data.Status === "Received") {
                     Status.style.color = 'green'; // Change text color to green
                 } else {

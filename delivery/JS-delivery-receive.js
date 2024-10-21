@@ -89,7 +89,8 @@ userFormEdit.addEventListener('submit', function (event) {
         // Append necessary data to formData
         formData.append('identifierID', identifierID);
         formData.append('totalItems', totalItems);
-        formData.append('orderDetails', orderDetails); // This should already be a correctly formatted string
+        formData.append('orderDetails', JSON.stringify(orderDetails)); // Ensure this is correctly stringified
+        console.log(JSON.stringify(orderDetails));
 
         // Submit the form via Fetch API
         return fetch('receiveDelivery.php', {
@@ -105,13 +106,16 @@ userFormEdit.addEventListener('submit', function (event) {
                 modalVerifyTextFront.textContent = 'Delivery processed successfully!';
                 confirmationModal.show();
                 setTimeout(() => {
-                    window.location.href = 'deliveryConfirmation.php'; // Redirect on success
-                }, 1000);
+                    window.location.href = 'delivery.php'; // Redirect on success
+                }, 2000);
             } else {
                 const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
                 modalVerifyTitleFront.textContent = 'Error';
                 modalVerifyTextFront.textContent = 'Error processing delivery: ' + data.message;
                 confirmationModal.show();
+                setTimeout(() => {
+                    window.location.href = 'delivery.php'; // Redirect on success
+                }, 2000);
             }
         })
         .catch(error => {
@@ -120,5 +124,8 @@ userFormEdit.addEventListener('submit', function (event) {
             modalVerifyTitleFront.textContent = 'Error';
             modalVerifyTextFront.textContent = 'An unexpected error occurred. Please try again.';
             confirmationModal.show();
+            setTimeout(() => {
+                window.location.href = 'delivery.php'; // Redirect on success
+            }, 2000);
         });
 });

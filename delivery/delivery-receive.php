@@ -239,7 +239,7 @@
                                 <thead>
                                     <tr class="highlight-row">
                                         <th>Order ID</th>
-                                        <th>Date (Time)</th>
+                                        <th>Date</th>
                                         <th>Supplier</th>
                                         <th>No. of Items</th>
                                         <th>Status</th>
@@ -336,7 +336,7 @@
                 <br>
                 <div class="line"></div>
                 <div class="button-container-2">
-                    <button type="submit" id="confirmButton">Receive Delivery</button>
+                    <button type="submit" id="confirmButton" disabled>Receive Delivery</button>
                 </div>
             </form>
         </div>
@@ -407,7 +407,7 @@
                         },
                         {
                             "targets": 1, // Date
-                            "width": "20.6%"
+                            "width": "17.6%"
                         },
                         {
                             "targets": 2, // Supplier
@@ -419,7 +419,7 @@
                         },
                         {
                             "targets": 4, // Status
-                            "width": "15%"
+                            "width": "18%"
                         },
                         {
                             "targets": 5, // Actions
@@ -454,6 +454,8 @@
                     statusColor = '#B8860B';
                 } else if (row.Status === "Cancelled") {
                     statusColor = 'red';
+                } else if (row.Status === "Partially Received") {
+                    statusColor = 'blue';
                 } else if (row.Status === "Received") {
                     statusColor = 'green';
                 } else {
@@ -508,6 +510,8 @@
 
                         if (data.Status === "Pending") {
                             Status.style.color = '#B8860B'; // Yellow
+                        } else if (data.Status === "Partially Received") {
+                            Status.style.color = 'blue';
                         } else if (data.Status === "Cancelled") {
                             Status.style.color = 'red'; // Red
                         } else if (data.Status === "Received") {
@@ -526,12 +530,12 @@
                                 row.innerHTML = `
                             <th scope="row">${index + 1}</th>
                             <td>${item.description}</td>
-                            <td class="editable" data-key="lotNo" id="lotNo">-</td>
+                            <td class="editable" data-key="lotNo" id="lotNo">XXXXXX</td>
                             <td class="editable" data-key="expiryDate" id="expiryDate">--/--/----</td>
                             <td>${item.quantity}</td>
-                            <td class="editable" data-key="qtyServed" id="qtyServed">-</td>
-                            <td class="editable" data-key="bonus" id="bonus">0</td>
-                            <td class="editable" data-key="netAmt" id="netAmt">₱-</td>
+                            <td class="editable" data-key="qtyServed" id="qtyServed">XX</td>
+                            <td class="editable" data-key="bonus" id="bonus">X</td>
+                            <td class="editable" data-key="netAmt" id="netAmt">₱XXX</td>
                         `;
                                 tableBody.appendChild(row);
                             });
@@ -560,7 +564,7 @@
                     const originalValue = this.textContent;
                     const input = document.createElement('input');
                     input.type = 'text';
-                    input.value = originalValue;
+                    input.value = '';
                     input.style.width = '120px';
 
                     this.textContent = ''; // Clear cell content
