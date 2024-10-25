@@ -260,10 +260,15 @@ searchInput.addEventListener('keypress', async function(event) {
 function showQuantityModal(product) {
     const modalBody = document.getElementById('quantity-modal-body');
     const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
-    let stockBadge = product.InStock < 50 ? 
-        `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>` :
-        `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
-    
+    const productId = product.BrandName.toLowerCase().replace(/ /g, "-");
+
+    // Store the initial stock level to revert if canceled
+    const initialStock = product.InStock;
+    let itemAdded = false;  // Flag to check if item was added to the basket
+
+    // Set the initial stock badge
+    updateStockBadge(initialStock, productId);
+
     modalBody.innerHTML = `
         <div class="card mb-3">
             <div class="row g-0">
@@ -272,7 +277,12 @@ function showQuantityModal(product) {
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        ${stockBadge}
+                        <div class="stock-badge-container">
+                            ${product.InStock < 50 ? 
+                                `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>` :
+                                `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`
+                            }
+                        </div>
                         <small class="card-text">₱${product.PricePerUnit}</small>
                         <h5 class="card-title">${product.BrandName} ${product.Mass}${formattedUnit}</h5>
                         <p class="card-text">${product.GenericName}</p>
@@ -286,18 +296,56 @@ function showQuantityModal(product) {
     quantityInput.value = 1;
     quantityInput.max = product.InStock;
 
+    // Real-time stock badge update for both POS card and modal
+    quantityInput.addEventListener('input', function() {
+        const currentQuantity = parseInt(this.value) || 0;
+        const remainingStock = product.InStock - currentQuantity;
+        updateStockBadge(remainingStock, productId);
+    });
+
     const addItemButton = document.getElementById('add-item-button');
     addItemButton.onclick = () => {
         const quantity = parseInt(quantityInput.value, 10);
         if (quantity > 0 && quantity <= product.InStock) {
             addItemToBasket(product, quantity);
+            itemAdded = true;  // Set the flag to true if the item was added
             bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
         } else {
             showToast("Please enter a valid quantity.");
         }
     };
 
+    // Handle the cancel button to revert stock badge only if item was not added
+    const cancelButton = document.getElementById('quantity-cancel');
+    cancelButton.onclick = () => {
+        if (!itemAdded) {
+            // Revert the stock badge to the initial stock level
+            updateStockBadge(initialStock, productId);
+        }
+        bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
+    };
+
     new bootstrap.Modal(document.getElementById('quantity-modal')).show();
+}
+
+function updateStockBadge(remainingStock, productId) {
+    // Update POS card badge
+    const badgeContainerPOS = document.querySelector(`.clickable-card[data-id="${productId}"] .badge:first-child`);
+    
+    // Update modal badge
+    const badgeContainerModal = document.querySelector('#quantity-modal-body .stock-badge-container');
+    
+    let badgeHTML = '';
+    if (remainingStock === 0) {
+        badgeHTML = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
+    } else if (remainingStock < 50) {
+        badgeHTML = `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${remainingStock}</span></span>`;
+    } else {
+        badgeHTML = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${remainingStock}</span></span>`;
+    }
+    
+    if (badgeContainerPOS) badgeContainerPOS.innerHTML = badgeHTML;
+    if (badgeContainerModal) badgeContainerModal.innerHTML = badgeHTML;
 }
 
 document.getElementById('quantity-cancel').addEventListener('click', function() {
@@ -321,19 +369,26 @@ function showToast(message) {
 }
 
 function addItemToBasket(product, quantity) {
-    const existingItemIndex = basket.findIndex(item => item.id === product.BrandName.toLowerCase().replace(/ /g, "-"));
+    const productId = product.BrandName.toLowerCase().replace(/ /g, "-");
+    const existingItemIndex = basket.findIndex(item => item.id === productId);
+    const remainingStock = product.InStock - quantity;
+
     if (existingItemIndex > -1) {
         basket[existingItemIndex].quantity += quantity;
     } else {
         basket.push({
-            id: product.BrandName.toLowerCase().replace(/ /g, "-"),
+            id: productId,
             ItemID: product.ItemID,
             BrandName: product.BrandName,
             GenericName: product.GenericName,
             PricePerUnit: product.PricePerUnit,
-            quantity: quantity
+            quantity: quantity,
+            InStock: product.InStock // Store original stock for reference
         });
     }
+
+    // Sync badge in POS card
+    updateStockBadge(remainingStock, productId);
     updateBasketDisplay();
     updateCheckoutButtonState();
     deselectCurrentItem();
