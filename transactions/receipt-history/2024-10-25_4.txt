@@ -16,8 +16,8 @@ Refund Amount:           P0.00
 Payment:                P11.00
 Change:                  P0.16
 --------------------------------
-Order No.:                  #3
-Date:      2024-10-26 00:50:18
+Order No.:                  #4
+Date:      2024-10-26 00:53:50
 Payment Method:           Cash
 Status:                 Sales
 

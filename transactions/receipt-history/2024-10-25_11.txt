@@ -5,19 +5,19 @@
 --------------------------------
 
 Qty Item                   Price
-1   Kremil-S Tablet        P9.68
+2   Kremil-S Tablet       P19.36
 --------------------------------
-Total Items:                 1
-Subtotal:                P9.68
-Tax 12%:                 P1.16
+Total Items:                 2
+Subtotal:               P19.36
+Tax 12%:                 P2.32
 Discount:               P-0.00
-Amount Due:             P10.84
+Amount Due:             P21.68
 Refund Amount:           P0.00
-Payment:                P11.00
-Change:                  P0.16
+Payment:                P22.00
+Change:                  P0.32
 --------------------------------
-Order No.:                  #3
-Date:      2024-10-26 00:50:18
+Order No.:                 #11
+Date:      2024-10-26 01:06:17
 Payment Method:           Cash
 Status:                 Sales
 

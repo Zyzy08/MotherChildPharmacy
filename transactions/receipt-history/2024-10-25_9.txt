@@ -5,19 +5,19 @@
 --------------------------------
 
 Qty Item                   Price
-1   Kremil-S Tablet        P9.68
+1   Johnson's             P15.00
 --------------------------------
 Total Items:                 1
-Subtotal:                P9.68
-Tax 12%:                 P1.16
+Subtotal:               P15.00
+Tax 12%:                 P1.80
 Discount:               P-0.00
-Amount Due:             P10.84
+Amount Due:             P16.80
 Refund Amount:           P0.00
-Payment:                P11.00
-Change:                  P0.16
+Payment:               P111.00
+Change:                 P94.20
 --------------------------------
-Order No.:                  #3
-Date:      2024-10-26 00:50:18
+Order No.:                  #9
+Date:      2024-10-26 01:00:31
 Payment Method:           Cash
 Status:                 Sales
 

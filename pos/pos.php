@@ -631,7 +631,7 @@
   <script src="../main.js"></script>
   
   <!-- Template POS JS File -->
-  <script src="pos.js"></script>
+  <script src="test.js"></script>
 
 </body>
 
