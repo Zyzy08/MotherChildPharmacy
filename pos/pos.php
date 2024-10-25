@@ -456,7 +456,7 @@
             <br><h2 id="change-display" style="font-weight: bold;">Change: ₱0.00</h2>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="checkout-cancel-button">Cancel</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-checkout">Cancel</button>
             <div class="d-grid gap-2">
               <button id="confirm-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal" disabled>
                 Confirm
@@ -591,7 +591,7 @@
 
           <div class="modal-footer">
 
-            <button id="cancel-receipt" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button id="cancel-receipt" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#verticalycentered">Cancel</button>
 
             <div class="d-grid gap-2">
               <button id="print-button" type="button" class="btn btn-primary" data-bs-dismiss="modal">
@@ -631,7 +631,7 @@
   <script src="../main.js"></script>
   
   <!-- Template POS JS File -->
-  <script src="pos copy.js"></script>
+  <script src="pos.js"></script>
 
 </body>
 

@@ -65,9 +65,10 @@ async function loadProducts() {
     const endIndex = startIndex + itemsPerCategory;
 
     function createProductHTML(product) {
+        const encodedProduct = encodeProductData(product);
         const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
         let stockBadge = '';
-
+    
         if (product.InStock == 0) {
             stockBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
         } else if (product.InStock < 50 && product.InStock > 0) {
@@ -75,10 +76,12 @@ async function loadProducts() {
         } else {
             stockBadge = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
         }
-
+    
         return `
             <div class="col-lg-3 mb-3">
-                <div class="card clickable-card ${product.InStock == 0 ? 'non-clickable-card' : ''}" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-product='${JSON.stringify(product)}'>
+                <div class="card clickable-card ${product.InStock == 0 ? 'non-clickable-card' : ''}" 
+                    data-id="${encodedProduct.BrandName.toLowerCase().replace(/ /g, "-")}" 
+                    data-product='${JSON.stringify(encodedProduct)}'>
                     ${stockBadge}
                     <img src="../inventory/${product.ProductIcon}" class="card-img-top" style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
                     <div class="card-body">
@@ -90,8 +93,8 @@ async function loadProducts() {
                                 <span class="badge bg-success">₱${product.PricePerUnit}</span>
                             </div>
                         </div>
-                        <h5 class="card-title">${product.BrandName}</h5>
-                        <p class="card-text">${product.GenericName}</p>
+                        <h5 class="card-title">${encodedProduct.BrandName}</h5>
+                        <p class="card-text">${encodedProduct.GenericName}</p>
                     </div>
                 </div>
             </div>
@@ -194,11 +197,28 @@ function attachCardListeners() {
         card.addEventListener('click', function() {
             if (!this.classList.contains('non-clickable-card')) {
                 highlightCard(this);
-                const productData = JSON.parse(this.dataset.product);
+                const encodedProductData = JSON.parse(this.dataset.product);
+                const productData = decodeProductData(encodedProductData);
                 showQuantityModal(productData);
             }
         });
     });
+}
+
+function encodeProductData(product) {
+    return {
+        ...product,
+        BrandName: product.BrandName.replace(/"/g, '&quot;').replace(/'/g, '&#39;'),
+        GenericName: product.GenericName.replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+    };
+}
+
+function decodeProductData(product) {
+    return {
+        ...product,
+        BrandName: product.BrandName.replace(/&quot;/g, '"').replace(/&#39;/g, "'"),
+        GenericName: product.GenericName.replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    };
 }
 
 document.head.insertAdjacentHTML('beforeend', `
@@ -331,11 +351,15 @@ function updateBasketDisplay() {
         const itemTotal = item.PricePerUnit * item.quantity;
         basketTotal += itemTotal;
 
+        // Properly escape the item ID for the onclick attribute
+        const escapedId = item.id.replace(/'/g, "\\'").replace(/"/g, '\\"');
+
         basketItemsContainer.insertAdjacentHTML('beforeend', `
             <a href="#" class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">${item.BrandName}</h5>
-                    <button type="button" class="btn btn-danger btn-sm-custom" onclick="removeItemFromBasket('${item.id}')">
+                    <button type="button" class="btn btn-danger btn-sm-custom" 
+                            onclick="removeItemFromBasket(&quot;${escapedId}&quot;)">
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>
@@ -356,6 +380,7 @@ function updateBasketDisplay() {
 }
 
 function removeItemFromBasket(itemId) {
+    // Remove the item from the basket array
     basket = basket.filter(item => item.id !== itemId);
     updateBasketDisplay();
     updateCheckoutButtonState();
@@ -571,7 +596,33 @@ Object.values(seniorPwdFields).forEach(field => {
 // Payment input event listener
 document.getElementById('paymentInput').addEventListener('input', validateForm);
 
+document.getElementById('cancel-checkout').addEventListener('click', function() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('verticalycentered'));
+    if (modal) {
+        modal.hide();
+        // Remove modal backdrop and reset modal state
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+    }
+});
+
 document.getElementById('cancel-receipt').addEventListener('click', function() {
+    // First, ensure the receipt modal is properly hidden
+    const receiptModal = bootstrap.Modal.getInstance(document.getElementById('largeModal'));
+    if (receiptModal) {
+        receiptModal.hide();
+        // Remove modal backdrop and reset modal state
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+    }
+
+    // Then, show the checkout modal after a short delay
     setTimeout(() => {
         const checkoutModal = new bootstrap.Modal(document.getElementById('verticalycentered'));
         checkoutModal.show();
@@ -832,3 +883,6 @@ document.getElementById('seniorCitizenCheckbox').addEventListener('change', func
     }
 });
   
+//orig
+
+//working
