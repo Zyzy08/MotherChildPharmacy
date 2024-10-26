@@ -775,43 +775,58 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Print button
-document.getElementById('print-button').addEventListener('click', function() {
-    const receiptData = getReceiptData();
-    
-    // Save the receipt data to the server
-    fetch('saveReceipt.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(receiptData),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+document.getElementById('print-button').addEventListener('click', async function() {
+    try {
+        // Get items from the basket
+        const inventoryUpdates = receiptItems.map(item => ({
+            ItemID: item.ItemID,
+            quantity: item.quantity
+        }));
+
+        // Update inventory first
+        const inventoryResponse = await fetch('updateInventory.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                items: inventoryUpdates
+            })
+        });
+
+        const inventoryResult = await inventoryResponse.json();
+        
+        if (!inventoryResult.success) {
+            throw new Error(inventoryResult.error || 'Failed to update inventory');
         }
-        return response.text();
-    })
-    .then(text => {
-        try {
-            return JSON.parse(text);
-        } catch (e) {
-            console.error('Error parsing JSON:', text);
-            throw new Error('Invalid JSON response');
+
+        // If inventory update successful, proceed with receipt saving
+        const receiptData = getReceiptData();
+        
+        const receiptResponse = await fetch('saveReceipt.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(receiptData)
+        });
+
+        if (!receiptResponse.ok) {
+            throw new Error(`HTTP error! status: ${receiptResponse.status}`);
         }
-    })
-    .then(data => {
-        if (data.success) {
-            saveAsTxtAndPrint();
+
+        const receiptResult = await receiptResponse.json();
+        
+        if (receiptResult.success) {
+            await saveAsTxtAndPrint();
         } else {
-            console.error('Error saving receipt:', data.error);
-            showToast('Error saving receipt. Please try again.');
+            throw new Error(receiptResult.error || 'Error saving receipt');
         }
-    })
-    .catch((error) => {
+
+    } catch (error) {
         console.error('Error:', error);
         showToast('An error occurred. Please try again.');
-    });
+    }
 });
 
 function saveAsTxtAndPrint() {
@@ -942,7 +957,5 @@ document.getElementById('seniorCitizenCheckbox').addEventListener('change', func
       accordion.style.display = 'none';
     }
 });
-  
-//orig
 
 //working
