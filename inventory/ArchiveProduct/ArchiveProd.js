@@ -46,13 +46,9 @@ function updateTable(data) {
             console.warn('Missing item properties:', item);
             return; // Skip this item if essential properties are missing
         }
-
-        // Update the path for the ProductIcon
-        const iconPath = `MotherChildPharmacy-main/inventory/products-icon/${item.ProductIcon}`;
-
         table.row.add([
             `<span class="text-truncate">${item.ItemID}</span>`, // Item ID with truncation
-            `<img src="${iconPath}" alt="Icon" style="width: 50px; height: auto;" />`, // Product Icon
+            `<img src="../${item.ProductIcon}" alt="Icon" style="width: 50px; height: auto;">`, // Product Icon
             `<span class="text-truncate">${item.GenericName}</span>`, // Generic Name with truncation
             `<span class="text-truncate">${item.BrandName}</span>`, // Brand Name with truncation
             `<span class="text-truncate">${item.ItemType}</span>`, // Item Type with truncation

@@ -1,7 +1,7 @@
 {
-    "companyName": "Zuellig Pharma Corporation",
-    "agentName": "Agent MDI",
-    "ContactNo": "(02) 8539 4342",
-    "Email": "mdi@metrodrug.com.ph",
-    "Notes": ""
+    "companyName": "UniLab",
+    "agentName": "Agent Kort",
+    "ContactNo": "+63 (2) 908 2222",
+    "Email": "zpspeakup@zuelligpharma.com",
+    "selectedProducts": "[]"
 }

@@ -52,7 +52,7 @@ function updateTable(data) {
 
     data.forEach(row => {
         table.row.add([
-            row.InvoiceID,
+            'IN-0' + row.InvoiceID,
             row.SalesDate,
             row.TotalItems,
             "₱ " + row.NetAmount,
@@ -90,7 +90,7 @@ function fetchDetails(identifier) {
         .then(data => {
             if (data) {
                 // Populate the overlay form with details
-                identifierID.value = data.InvoiceID;
+                identifierID.value = 'IN-0' + data.InvoiceID;
                 cashierID.value = data.employeeName + " " + data.employeeLName;
                 datetimeID.value = data.SalesDate;
                 VATable.value = "₱ " + data.Subtotal;

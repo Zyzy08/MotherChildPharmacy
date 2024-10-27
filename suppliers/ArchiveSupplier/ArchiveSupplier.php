@@ -64,7 +64,7 @@
                 <li class="nav-item dropdown pe-3">
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                        <img src="../uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile"
+                        <img src="../../users/uploads/<?php echo htmlspecialchars($picture); ?>" alt="Profile"
                             class="rounded-circle">
                         <span
                             class="d-none d-md-block dropdown-toggle ps-2"><?php echo htmlspecialchars($formattedName); ?></span>
@@ -80,8 +80,7 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center"
-                                href="../users-profile/users-profile.php">
+                            <a class="dropdown-item d-flex align-items-center" href="../../users/users-profile/users-profile.php">
                                 <i class="bi bi-person"></i>
                                 <span>My Profile</span>
                             </a>
@@ -211,7 +210,7 @@
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="../../dashboard/dashboard.php">Home</a></li>
-                    <li class="breadcrumb-item"><a href="../users.php">Suplliers</a></li>
+                    <li class="breadcrumb-item"><a href="../suppliers.php">Suplliers</a></li>
                     <li class="breadcrumb-item active">Archived Suppliers</li>
                 </ol>
             </nav>
