@@ -126,3 +126,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // Fetch inventory data when the page loads
     fetchInventoryData();
 });
+
+//orig
