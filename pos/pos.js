@@ -17,9 +17,9 @@ async function fetchProducts(query = '') {
         const text = await response.text();
         const jsonMatch = text.match(/<!-- (.*?) -->/);
         const data = jsonMatch ? JSON.parse(jsonMatch[1]) : [];
-        totalItems = data.length; // Count all products, including out-of-stock
+        totalItems = data.length;
         totalPages = Math.ceil(totalItems / itemsPerPage);
-        return data; // Return all products, including out-of-stock
+        return data;
     } catch (error) {
         console.error('Error fetching products:', error);
         return [];
@@ -65,9 +65,10 @@ async function loadProducts() {
     const endIndex = startIndex + itemsPerCategory;
 
     function createProductHTML(product) {
+        const encodedProduct = encodeProductData(product);
         const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
         let stockBadge = '';
-
+    
         if (product.InStock == 0) {
             stockBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
         } else if (product.InStock < 50 && product.InStock > 0) {
@@ -75,10 +76,12 @@ async function loadProducts() {
         } else {
             stockBadge = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
         }
-
+    
         return `
             <div class="col-lg-3 mb-3">
-                <div class="card clickable-card ${product.InStock == 0 ? 'non-clickable-card' : ''}" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-product='${JSON.stringify(product)}'>
+                <div class="card clickable-card ${product.InStock == 0 ? 'non-clickable-card' : ''}" 
+                    data-id="${encodedProduct.BrandName.toLowerCase().replace(/ /g, "-")}" 
+                    data-product='${JSON.stringify(encodedProduct)}'>
                     ${stockBadge}
                     <img src="../inventory/${product.ProductIcon}" class="card-img-top" style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
                     <div class="card-body">
@@ -90,8 +93,9 @@ async function loadProducts() {
                                 <span class="badge bg-success">₱${product.PricePerUnit}</span>
                             </div>
                         </div>
-                        <h5 class="card-title">${product.BrandName}</h5>
-                        <p class="card-text">${product.GenericName}</p>
+                        <input type="hidden" class="item-id" value="${product.ItemID}">
+                        <h5 class="card-title">${encodedProduct.BrandName}</h5>
+                        <p class="card-text">${encodedProduct.GenericName}</p>
                     </div>
                 </div>
             </div>
@@ -194,11 +198,28 @@ function attachCardListeners() {
         card.addEventListener('click', function() {
             if (!this.classList.contains('non-clickable-card')) {
                 highlightCard(this);
-                const productData = JSON.parse(this.dataset.product);
+                const encodedProductData = JSON.parse(this.dataset.product);
+                const productData = decodeProductData(encodedProductData);
                 showQuantityModal(productData);
             }
         });
     });
+}
+
+function encodeProductData(product) {
+    return {
+        ...product,
+        BrandName: product.BrandName.replace(/"/g, '&quot;').replace(/'/g, '&#39;'),
+        GenericName: product.GenericName.replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+    };
+}
+
+function decodeProductData(product) {
+    return {
+        ...product,
+        BrandName: product.BrandName.replace(/&quot;/g, '"').replace(/&#39;/g, "'"),
+        GenericName: product.GenericName.replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    };
 }
 
 document.head.insertAdjacentHTML('beforeend', `
@@ -306,6 +327,7 @@ function addItemToBasket(product, quantity) {
     } else {
         basket.push({
             id: product.BrandName.toLowerCase().replace(/ /g, "-"),
+            ItemID: product.ItemID,
             BrandName: product.BrandName,
             GenericName: product.GenericName,
             PricePerUnit: product.PricePerUnit,
@@ -331,11 +353,15 @@ function updateBasketDisplay() {
         const itemTotal = item.PricePerUnit * item.quantity;
         basketTotal += itemTotal;
 
+        // Properly escape the item ID for the onclick attribute
+        const escapedId = item.id.replace(/'/g, "\\'").replace(/"/g, '\\"');
+
         basketItemsContainer.insertAdjacentHTML('beforeend', `
             <a href="#" class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">${item.BrandName}</h5>
-                    <button type="button" class="btn btn-danger btn-sm-custom" onclick="removeItemFromBasket('${item.id}')">
+                    <button type="button" class="btn btn-danger btn-sm-custom" 
+                            onclick="removeItemFromBasket(&quot;${escapedId}&quot;)">
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>
@@ -356,6 +382,7 @@ function updateBasketDisplay() {
 }
 
 function removeItemFromBasket(itemId) {
+    // Remove the item from the basket array
     basket = basket.filter(item => item.id !== itemId);
     updateBasketDisplay();
     updateCheckoutButtonState();
@@ -409,6 +436,7 @@ let receiptItems = [];
 
 function generateReceiptItems() {
     receiptItems = basket.map(item => ({
+        ItemID: item.ItemID,
         quantity: item.quantity,
         item_name: item.BrandName,
         total_item_price: (item.PricePerUnit * item.quantity).toFixed(2)
@@ -469,8 +497,14 @@ function displayReceiptItems() {
 }
 
 function updatePaymentDisplay() {
-    const payment = parseFloat(document.getElementById("paymentInput").value) || 0;
-    document.getElementById("payment").textContent = `₱${payment.toFixed(2)}`;
+    const paymentInput = document.getElementById('paymentInput');
+    const payment = parseFloat(paymentInput.value) || 0;
+    document.getElementById('payment').textContent = `₱${payment.toFixed(2)}`;
+    
+    // Update change display as well
+    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g,""));
+    const change = Math.max(0, payment - amountDue);
+    document.getElementById('change').textContent = `₱${change.toFixed(2)}`;
 }
 
 function updateChangeDisplay() {
@@ -500,26 +534,147 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-document.getElementById('paymentInput').addEventListener('input', function() {
-    const payment = parseFloat(this.value) || 0;
-    const totalAmount = parseFloat(document.getElementById('total-display').textContent.replace(/[^0-9.-]+/g,""));
-    const change = payment - totalAmount;
+const seniorCitizenCheckbox = document.getElementById('seniorCitizenCheckbox');
+const confirmButton = document.getElementById('confirm-button');
+
+document.getElementById('paymentInput').addEventListener('input', updatePaymentDisplay);
+
+document.getElementById('confirm-button').addEventListener('click', function() {
+    const paymentInput = document.getElementById('paymentInput');
+    const payment = parseFloat(paymentInput.value) || 0;
     
-    const confirmButton = document.getElementById('confirm-button');
+    // Update the receipt payment display
+    document.getElementById('payment').textContent = `₱${payment.toFixed(2)}`;
     
-    if (payment >= totalAmount) {
-        confirmButton.removeAttribute('disabled');
-        document.getElementById('change-display').textContent = `Change: ₱${change.toFixed(2)}`;
+    // Calculate and update change
+    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g,""));
+    const change = Math.max(0, payment - amountDue);
+    document.getElementById('change').textContent = `₱${change.toFixed(2)}`;
+    
+    // Hide checkout modal
+    const checkoutModal = bootstrap.Modal.getInstance(document.getElementById('verticalycentered'));
+    checkoutModal.hide();
+    
+    // Show receipt modal
+    const receiptModal = new bootstrap.Modal(document.getElementById('largeModal'));
+    receiptModal.show();
+    
+    // Reset payment input
+    paymentInput.value = '';
+    paymentInput.classList.remove('is-valid', 'is-invalid');
+});
+
+document.getElementById('largeModal').addEventListener('show.bs.modal', function() {
+    generateReceiptItems();
+    displayReceiptItems();
+    
+    // Get the payment value from the input before it's cleared
+    const payment = parseFloat(document.getElementById('paymentInput').value) || 0;
+    
+    // Update payment display
+    document.getElementById('payment').textContent = `₱${payment.toFixed(2)}`;
+    
+    // Calculate and update change
+    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g,""));
+    const change = Math.max(0, payment - amountDue);
+    document.getElementById('change').textContent = `₱${change.toFixed(2)}`;
+});
+
+// Fields for Senior / PWD
+const seniorPwdFields = {
+    idNumber: document.getElementById('seniorPwdID'),
+    idType: document.getElementById('idType'),
+    fullName: document.getElementById('seniorPwdName'),
+};
+
+// Function to validate Senior / PWD fields and payment
+function validateForm() {
+    const idFilled = seniorPwdFields.idNumber.value.trim() !== '';
+    const idTypeValid = seniorPwdFields.idType.value === 'Senior Citizen ID' || seniorPwdFields.idType.value === 'PWD ID';
+    const fullNameFilled = seniorPwdFields.fullName.value.trim() !== '';
+    const paymentFilled = parseFloat(document.getElementById('paymentInput').value) > 0; // Ensure payment is greater than 0
+
+    // Set the confirm button based on all validations
+    if (seniorCitizenCheckbox.checked) {
+        if (idFilled && idTypeValid && fullNameFilled && paymentFilled) {
+            confirmButton.removeAttribute('disabled');
+        } else {
+            confirmButton.setAttribute('disabled', 'true');
+        }
     } else {
-        confirmButton.setAttribute('disabled', 'true');
-        document.getElementById('change-display').textContent = 'Change: ₱0.00';
+        // If the checkbox is not checked, just check if payment is filled
+        const totalAmount = parseFloat(document.getElementById('total-display').textContent.replace(/[^0-9.-]+/g, ""));
+        const isPaymentValid = parseFloat(document.getElementById('paymentInput').value) >= totalAmount;
+        confirmButton.disabled = !isPaymentValid;
     }
-    
-    updatePaymentDisplay();
-    updateChangeDisplay();
+
+    // Highlight Senior / PWD fields based on validity
+    Object.values(seniorPwdFields).forEach(field => {
+        if (seniorCitizenCheckbox.checked && field.value.trim() === '') {
+            field.classList.add('is-invalid'); // Add red highlight
+        } else {
+            field.classList.remove('is-invalid'); // Remove red highlight
+        }
+    });
+
+    // Highlight ID Type specifically
+    if (seniorCitizenCheckbox.checked && !idTypeValid) {
+        seniorPwdFields.idType.classList.add('is-invalid'); // Add red highlight if invalid type
+    } else {
+        seniorPwdFields.idType.classList.remove('is-invalid'); // Remove highlight if valid
+    }
+}
+
+// Toggle event for Senior Citizen / PWD checkbox
+seniorCitizenCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+        // Show the accordion
+        document.getElementById('seniorPwdAccordion').style.display = 'block';
+    } else {
+        // Hide the accordion and remove highlights
+        document.getElementById('seniorPwdAccordion').style.display = 'none';
+        Object.values(seniorPwdFields).forEach(field => {
+            field.classList.remove('is-invalid'); // Remove red highlight
+        });
+    }
+    validateForm(); // Validate on toggle change
+});
+
+// Input event listeners for Senior / PWD fields
+Object.values(seniorPwdFields).forEach(field => {
+    field.addEventListener('input', validateForm);
+});
+
+// Payment input event listener
+document.getElementById('paymentInput').addEventListener('input', validateForm);
+
+document.getElementById('cancel-checkout').addEventListener('click', function() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('verticalycentered'));
+    if (modal) {
+        modal.hide();
+        // Remove modal backdrop and reset modal state
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+    }
 });
 
 document.getElementById('cancel-receipt').addEventListener('click', function() {
+    // First, ensure the receipt modal is properly hidden
+    const receiptModal = bootstrap.Modal.getInstance(document.getElementById('largeModal'));
+    if (receiptModal) {
+        receiptModal.hide();
+        // Remove modal backdrop and reset modal state
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+    }
+
+    // Then, show the checkout modal after a short delay
     setTimeout(() => {
         const checkoutModal = new bootstrap.Modal(document.getElementById('verticalycentered'));
         checkoutModal.show();
@@ -553,8 +708,6 @@ function fetchAccountID() {
                 const accountID = data.accountID;
                 userID = accountID;
                 employeeName = data.employeeName || 'Unknown Staff';
-                console.log('AccountID:', accountID);
-                console.log('Employee Name:', employeeName);
                 receiptData.accountID = accountID;
             } else {
                 console.error('Error fetching AccountID:', data.error);
@@ -579,14 +732,14 @@ function getCurrentDateTime() {
 
 function getSalesDetails() {
     const salesDetails = {};
-
+    
     receiptItems.forEach((item, index) => {
         salesDetails[index + 1] = {
-            itemID: item.itemID, // Ensure itemID is available in receiptItems
+            itemID: item.ItemID,
             qty: item.quantity
         };
     });
-
+    
     return salesDetails;
 }
 
@@ -622,54 +775,58 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Print button
-document.getElementById('print-button').addEventListener('click', function() {
-    const receiptData = {
-        invoiceID: orderNum,
-        saleDate: getCurrentDateTime(),
-        accountID: userID,
-        salesDetails: getSalesDetails(),
-        totalItems: receiptItems.reduce((sum, item) => sum + item.quantity, 0),
-        subtotal: receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0).toFixed(2),
-        tax: (receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0) * 0.12).toFixed(2),
-        discount: 0.00,
-        amountPaid: parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g,"")),
-        paymentMethod: 'Cash',
-        status: 'Sales',
-        refundAmount: 0.00
-    };
+document.getElementById('print-button').addEventListener('click', async function() {
+    try {
+        // Get items from the basket
+        const inventoryUpdates = receiptItems.map(item => ({
+            ItemID: item.ItemID,
+            quantity: item.quantity
+        }));
 
-    // Save the receipt data to the server
-    fetch('saveReceipt.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(receiptData),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        // Update inventory first
+        const inventoryResponse = await fetch('updateInventory.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                items: inventoryUpdates
+            })
+        });
+
+        const inventoryResult = await inventoryResponse.json();
+        
+        if (!inventoryResult.success) {
+            throw new Error(inventoryResult.error || 'Failed to update inventory');
         }
-        return response.text();
-    })
-    .then(text => {
-        console.log('Raw response:', text);
-        return JSON.parse(text);
-    })
-    .then(data => {
-        if (data.success) {
-            console.log('Receipt saved successfully');
-            // After successful save, proceed with saving as text file and printing
-            saveAsTxtAndPrint();
+
+        // If inventory update successful, proceed with receipt saving
+        const receiptData = getReceiptData();
+        
+        const receiptResponse = await fetch('saveReceipt.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(receiptData)
+        });
+
+        if (!receiptResponse.ok) {
+            throw new Error(`HTTP error! status: ${receiptResponse.status}`);
+        }
+
+        const receiptResult = await receiptResponse.json();
+        
+        if (receiptResult.success) {
+            await saveAsTxtAndPrint();
         } else {
-            console.error('Error saving receipt:', data.error);
-            showToast('Error saving receipt. Please try again.');
+            throw new Error(receiptResult.error || 'Error saving receipt');
         }
-    })
-    .catch((error) => {
+
+    } catch (error) {
         console.error('Error:', error);
         showToast('An error occurred. Please try again.');
-    });
+    }
 });
 
 function saveAsTxtAndPrint() {
@@ -688,10 +845,8 @@ function saveAsTxtAndPrint() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log('Receipt printed successfully');
             window.location.reload(); // Reload the page after successful print
         } else {
-            console.error('Error printing receipt:', data.error);
             showToast('Error printing receipt. Please try again.');
         }
     })
@@ -701,8 +856,28 @@ function saveAsTxtAndPrint() {
     });
 }
 
+function getReceiptData() {
+    return {
+        invoiceID: orderNum,
+        saleDate: getCurrentDateTime(),
+        accountID: userID,
+        salesDetails: getSalesDetails(),
+        totalItems: receiptItems.reduce((sum, item) => sum + item.quantity, 0),
+        subtotal: receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0).toFixed(2),
+        tax: (receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0) * 0.12).toFixed(2),
+        discount: 0.00,
+        amountPaid: parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g,"")),
+        paymentMethod: 'Cash',
+        status: 'Sales',
+        refundAmount: 0.00
+    };
+}
+
 function generateReceiptContent() {
     const maxWidth = 32;
+
+    const employeeName = document.getElementById('staff').textContent.replace('Staff: ', '').trim();
+    const role = document.getElementById('role').textContent.replace('Role: ', '');
 
     function centerText(text) {
         const padding = Math.max(0, Math.floor((maxWidth - text.length) / 2));
@@ -714,18 +889,31 @@ function generateReceiptContent() {
         return left + ' '.repeat(space) + right;
     }
 
+    function formatItemLine(quantity, item, price) {
+        const qtyWidth = 4;    // 4 characters for quantity
+        const priceStr = `P${price.toFixed(2)}`;  // Full price string, including "P"
+        const priceWidth = priceStr.length;       // The actual length of the price string
+        const itemWidth = maxWidth - qtyWidth - priceWidth - 1;  // Remaining width for item name
+
+        const formattedQty = String(quantity).padEnd(qtyWidth, ' ');
+        const formattedItem = item.length > itemWidth ? item.substring(0, itemWidth - 3) + '...' : item.padEnd(itemWidth, ' ');
+
+        return `${formattedQty}${formattedItem} ${priceStr}`;  // Add a single space between item and price
+    }
+
     let content = 
 `${centerText('Mother & Child')}
 ${centerText('Pharmacy and Medical Supplies')}
 ${centerText('Gen. Luna Street, Babo Sacan,')}
 ${centerText('Porac, Pampanga')}
 ${'-'.repeat(maxWidth)}
-\nQuantity\tItem\tPrice\n`;
+\nQty Item                   Price\n`;
 
     // Add items to the content
     receiptItems.forEach(item => {
-        const itemName = item.item_name.length > 20 ? item.item_name.substring(0, 17) + '...' : item.item_name;
-        content += `${item.quantity}\t${itemName}\tP${item.total_item_price}\n`;
+        const itemName = item.item_name;
+        const price = parseFloat(item.total_item_price);
+        content += formatItemLine(item.quantity, itemName, price) + '\n';
     });
 
     const totalItems = receiptItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -743,17 +931,31 @@ ${'-'.repeat(maxWidth)}
     content += formatLine(`Tax 12%:`, `P${tax}\n`);
     content += formatLine(`Discount:`, `P-${discount.toFixed(2)}\n`);
     content += formatLine(`Amount Due:`, `P${amountDue}\n`);
-    content += formatLine(`Refund Amount:`, `P${amountDue}\n`);
+    content += formatLine(`Refund Amount:`, `P0.00\n`);
     content += formatLine(`Payment:`, `P${amountPaid}\n`);
     content += formatLine(`Change:`, `P${change}\n`);
     content += `${'-'.repeat(maxWidth)}\n`;
     content += formatLine(`Order No.:`, `#${orderNum}\n`);
     content += formatLine(`Date:`, `${getCurrentDateTime()}\n`);
+    content += formatLine(`Payment Method:`, `Cash\n`);
+    content += formatLine(`Status:`, `Sales\n\n`);
     content += formatLine(`Staff:`, `${employeeName}\n`);
-    content += formatLine(`Status:`, `Sales\n`);
-    content += `\n`;
-    content += `\n${centerText('Thank you for your purchase!')}\n`; 
-    content += `\n\n`; 
+    content += formatLine(`Role:`, `${role}\n`);
+    content += `${' '.repeat(maxWidth)}\n`;
+    content += `${centerText('Thank you for your purchase!')}\n`; 
+    content += `\n${' '.repeat(maxWidth)}\n`;
+    content += `\n${' '.repeat(maxWidth)}\n`;
 
     return content;
 }
+
+document.getElementById('seniorCitizenCheckbox').addEventListener('change', function() {
+    const accordion = document.getElementById('seniorPwdAccordion');
+    if (this.checked) {
+      accordion.style.display = 'block';
+    } else {
+      accordion.style.display = 'none';
+    }
+});
+
+//working

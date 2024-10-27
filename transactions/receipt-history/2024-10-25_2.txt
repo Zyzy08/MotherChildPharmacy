@@ -1,0 +1,31 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+1   Buscopan Venus Tablet P42.52
+--------------------------------
+Total Items:                 1
+Subtotal:               P42.52
+Tax 12%:                 P5.10
+Discount:               P-0.00
+Amount Due:             P47.62
+Refund Amount:           P0.00
+Payment:                P50.00
+Change:                  P2.38
+--------------------------------
+Order No.:                  #2
+Date:      2024-10-25 13:16:10
+Payment Method:           Cash
+Status:                 Sales
+
+Staff:           Sayra Jackson
+Role:                    Admin
+                                
+  Thank you for your purchase!
+
+                                
+
+                                

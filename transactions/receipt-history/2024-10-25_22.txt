@@ -1,0 +1,31 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+1   Johnson's             P15.00
+--------------------------------
+Total Items:                 1
+Subtotal:               P15.00
+Tax 12%:                 P1.80
+Discount:               P-0.00
+Amount Due:             P16.80
+Refund Amount:           P0.00
+Payment:                 P0.00
+Change:                P-16.80
+--------------------------------
+Order No.:                 #22
+Date:      2024-10-25 12:06:06
+Payment Method:           Cash
+Status:                 Sales
+
+Staff:           Sayra Jackson
+Role:                    Admin
+                                
+  Thank you for your purchase!
+
+                                
+
+                                

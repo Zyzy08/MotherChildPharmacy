@@ -3,11 +3,6 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Log function
-function logError($message) {
-    error_log($message, 3, "error.log");
-}
-
 try {
     // Database connection parameters
     $servername = "localhost";
@@ -25,7 +20,6 @@ try {
 
     // Get the JSON data from the request body
     $json_data = file_get_contents('php://input');
-    logError("Received data: " . $json_data);
 
     $data = json_decode($json_data, true);
 
@@ -97,7 +91,6 @@ try {
     $conn->close();
 
 } catch (Exception $e) {
-    logError("Exception: " . $e->getMessage());
     echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
 ?>

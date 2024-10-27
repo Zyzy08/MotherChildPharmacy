@@ -1,0 +1,31 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+6   Kremil-S Tablet       P58.08
+--------------------------------
+Total Items:                 6
+Subtotal:               P58.08
+Tax 12%:                 P6.97
+Discount:               P-0.00
+Amount Due:             P65.05
+Refund Amount:           P0.00
+Payment:                P77.00
+Change:                 P11.95
+--------------------------------
+Order No.:                  #5
+Date:      2024-10-26 00:54:48
+Payment Method:           Cash
+Status:                 Sales
+
+Staff:           Sayra Jackson
+Role:                    Admin
+                                
+  Thank you for your purchase!
+
+                                
+
+                                

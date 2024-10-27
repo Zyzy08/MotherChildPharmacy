@@ -235,7 +235,8 @@
                     </div>
                     <div class="ps-3">
                       <h6 id="total-stock">0</h6>
-                      <span class="text-muted small pt-2 ps-1">Items in-stock</span>
+                      <span class="text-muted small pt-2 ps-1">In-stock</span>
+                      <span class="text-muted small pt-2 ps-1">items</span>
                     </div>
                   </div>
                 </div>

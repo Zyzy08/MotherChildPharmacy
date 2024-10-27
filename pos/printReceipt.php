@@ -6,8 +6,11 @@ try {
     $content = $_POST['content'];
     $orderNum = $_POST['orderNum'];
     
-    // Create a temporary file name
-    $filename = "receipt_" . $orderNum . ".txt";
+    // Get today's date in the format YYYY-MM-DD
+    $dateToday = date("Y-m-d");
+    
+    // Create a file name using order number and today's date
+    $filename = $dateToday . "_" . $orderNum . ".txt";
     $filepath = "..\\transactions\\receipt-history\\" . $filename; 
     
     // Save the content to the file

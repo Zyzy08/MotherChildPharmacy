@@ -1,0 +1,28 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+1   Advil Liquigel Ca...P   9.47
+--------------------------------
+Total Items:                 1
+Subtotal:                P9.47
+Tax 12%:                 P1.14
+Discount:               P-0.00
+Amount Due:             P10.61
+Refund Amount:          P10.61
+Payment:                P11.00
+Change:                  P0.39
+--------------------------------
+Order No.:                 #14
+Date:      2024-10-22 01:39:27
+Staff:           Unknown Staff
+Status:                  Sales
+                                
+  Thank you for your purchase!
+
+                                
+
+                                
