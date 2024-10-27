@@ -322,11 +322,11 @@ form {
 }
 
 label {
-  margin-bottom: 5px;
+  margin-bottom: 1px;
 }
 
 input {
-  margin-bottom: 15px;
+  margin-bottom: 5px;
   padding: 8px;
   font-size: 16px;
 }
@@ -531,7 +531,7 @@ input[type="file"] {
 .modal {
   display: none; /* Hidden by default */
   position: fixed;
-  z-index: 1; /* Sit on top */
+  z-index: 1000; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -547,6 +547,7 @@ input[type="file"] {
   padding: 20px;
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
+  z-index: 1000; /* Sit on top */
 }
 
 /* Close button */
@@ -722,4 +723,66 @@ input[type="text"]:disabled, input[type="password"]:disabled {
 
 #Notes{
   width: 500px;
+}
+
+
+/*Supplier TAble*/
+
+
+#productTable, #productTableUpdate {
+
+  max-width: 600px; /* Set a maximum width to keep it compact */
+  margin: 0 auto; /* Center the table horizontally */
+}
+
+#productTable th, 
+#productTable td, 
+#productTableUpdate th,
+#productTableUpdate td
+{
+  padding: 8px; /* Reduce padding for table cells */
+  font-size: 12px; /* Adjust font size if needed */
+  text-align: center; /* Center align text */
+}
+
+#paginationContainer {
+  margin-top: 10px;
+}
+
+/* Add this CSS to your stylesheet */
+#productTable, #productTableUpdate {
+  width: 100%; /* Set width to 100% of the container */
+}
+
+.dataTables_wrapper {
+  width: 100%; /* Ensure the wrapper takes full width */
+  overflow-x: auto; /* Allow horizontal scrolling if needed */
+}
+
+/* Custom styles for the DataTables search input */
+/* More specific selector */
+.dataTables_filter input[type="search"] {
+  width: 200px; /* Adjust width of the search input */
+  height: 35px; /* Adjust height of the search input */
+  padding: 5px; /* Padding inside the input */
+  font-size: 14px; /* Font size */
+  border: 1px solid #ccc; /* Border styling */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.dataTables_filter {
+  display: flex; /* Use flexbox for layout */
+  justify-content: flex-start; /* Align items to the start */
+  margin-bottom: 10px; /* Add some space below the filter */
+}
+
+.dataTables_filter label {
+  margin-right: 10px; /* Add space between label and input */
+}
+
+/* Optional: Focus effect for the search input */
+.dataTables_filter input:focus {
+  outline: none; /* Remove default outline */
+  border-color: #007bff; /* Change border color on focus */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add shadow on focus */
 }

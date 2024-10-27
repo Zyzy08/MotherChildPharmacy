@@ -31,9 +31,8 @@ $data = [];
 
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        // Format the ProductIcon path
-        $row['ProductIcon'] = '../products-icon/' . $row['ProductIcon'];
-        $data[] = $row;
+        // Directly use the ProductIcon as it is
+        $data[] = $row; // No need to format the path here
     }
 }
 

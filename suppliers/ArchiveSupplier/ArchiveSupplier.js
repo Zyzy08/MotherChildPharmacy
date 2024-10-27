@@ -27,6 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
     setDataTables(); // Ensure this initializes your DataTable properly
 });
 
+// Truncate function to limit string length and add ellipsis
+function truncateString(str, maxLength) {
+    if (str.length > maxLength) {
+        return str.substring(0, maxLength) + '...';
+    }
+    return str;
+}
+
+// Set the maximum length for truncation
+const maxLength = 15; // Adjust this value as needed
+
 function updateTable(data) {
     const table = $('#example').DataTable();
     table.clear(); // Clear existing data
@@ -34,11 +45,11 @@ function updateTable(data) {
     data.forEach(row => {
         table.row.add([
             `<div style="text-align: center;">${row.SupplierID}</div>`,
-            `<div style="text-align: center;">${row.SupplierName}</div>`,
-            `<div style="text-align: center;">${row.AgentName}</div>`,
-            `<div style="text-align: center;">${row.Phone}</div>`,
-            `<div style="text-align: center;">${row.Email}</div>`,
-            `<div style="text-align: center;">${row.Notes}</div>`,
+            `<div style="text-align: center;">${truncateString(row.SupplierName || 'N/A', maxLength)}</div>`,
+            `<div style="text-align: center;">${truncateString(row.AgentName || 'N/A', maxLength)}</div>`,
+            `<div style="text-align: center;">${truncateString(row.Phone || 'N/A', maxLength)}</div>`,
+            `<div style="text-align: center;">${truncateString(row.Email || 'N/A', maxLength)}</div>`,
+            `<div style="text-align: center;">${truncateString(row.Notes || 'N/A', maxLength)}</div>`,
             `
                 <div style="text-align: center;">
                     <img src="../../resources/img/s-remove.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="showDeleteOptions('${row.SupplierID}')" />
@@ -49,6 +60,7 @@ function updateTable(data) {
 
     table.draw(); // Draw the updated table
 }
+
 
 // Show delete options for unarchiving
 function showDeleteOptions(SupplierID) {

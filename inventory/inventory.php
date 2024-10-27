@@ -224,10 +224,10 @@
                     
 
 
-            <div class="button" id="checkLowStockButton">
-                <img src="../resources/img/ALERT.png" alt="Status Button">
-                Status
-            </div>
+          <div class="button" id="checkLowStockButton">
+              <img src="../resources/img/ALERT.png" alt="Status Button">
+              Status
+          </div>
 
               <div class="archived-users" id="toArchivedUsers">
                   Archived Product<img src="../resources/img/right-arrow-3.png" alt="Archive Button">
@@ -311,6 +311,7 @@
               <option value="mL">mL</option>
               <option value="mol">mol</option>
               <option value="	mmol">mmol</option>
+              <option value="	piece">pc]</option>
             </select>
 
             <select name="VAT_exempted" id="VAT_exempted" onchange="updateValue()">
@@ -448,30 +449,31 @@
                   </div>
               </div>
 
-    <!-- LOW STOCK MODAL -->
-    <div id="lowStockModal" class="modal" role="dialog" aria-modal="true">
-        <div class="modal-content">
-            <span class="closeAlert">&times;</span>
-            <h2 style="text-align: left;">Low Stock Items</h2>
-            <hr>
-            <div id="lowStockMessage" style="margin-top: 10px; overflow-y: auto; max-height: 300px;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background-color: #f2f2f2;">
-                            <th style="text-align: left; padding: 8px;">Brand Name</th>
-                            <th style="text-align: left; padding: 8px;">Generic Name</th>
-                            <th style="text-align: left; padding: 8px;">In Stock</th>
-                            <th style="text-align: left; padding: 8px;">Ordered</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lowStockItemsBody">
-                        <!-- Low stock messages will be appended here -->
-                    </tbody>
-                </table>
-            </div>
-            <hr>
-        </div>
-    </div>
+              <!-- LOW STOCK MODAL -->
+              <div id="lowStockModal" class="modal" role="dialog" aria-modal="true">
+                  <div class="modal-content">
+                      <span class="closeAlert">&times;</span>
+                      <h2 style="text-align: left;">Low Stock Items</h2>
+                      <hr>
+                      <div id="lowStockMessage" style="margin-top: 10px; overflow-y: auto; max-height: 300px;">
+                          <table style="width: 100%; border-collapse: collapse;">
+                              <thead>
+                                  <tr style="background-color: #f2f2f2;">
+                                      <th style="text-align: left; padding: 8px;">Brand Name</th>
+                                      <th style="text-align: left; padding: 8px;">Generic Name</th>
+                                      <th style="text-align: left; padding: 8px;">In Stock</th>
+                                      <th style="text-align: left; padding: 8px;">Ordered</th>
+                                      <th style="text-align: left; padding: 8px;">EOQ</th> <!-- New column for EOQ -->
+                                  </tr>
+                              </thead>
+                              <tbody id="lowStockItemsBody">
+                                  <!-- Low stock items will be appended here -->
+                              </tbody>
+                          </table>
+                      </div>
+                      <hr>
+                  </div>
+              </div>
 
 
 

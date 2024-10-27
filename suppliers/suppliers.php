@@ -32,7 +32,7 @@
     <link rel="stylesheet" href="supp_styles.css">
 
     <!-- DataTables Imports -->
-    <link rel="stylesheet" href="../users/dataTablesUsers/dataTables.css" />
+    <link rel="stylesheet" href="datatables/dataTables.css" />
     <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
 
@@ -119,10 +119,14 @@
 
             <li class="nav-item">
                 <a class="nav-link" href="#">
-                    <i class="bi bi-truck"></i>
+                    <i class="bi bi-shop"></i>
                     <span>Suppliers</span>
                 </a>
             </li><!-- End Suppliers Page Nav -->
+
+
+
+
 
             <li class="nav-item"></li>
             <a class="nav-link collapsed" href="../transactions/transactions.php">
@@ -275,7 +279,7 @@
                 <h2>Other Options</h2>
                 <hr>
                 <button id="archiveUserBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD">
-                    <img src="../resources/img/box-archive.png"> Archive Product
+                    <img src="../resources/img/box-archive.png"> Archive Supplier
                 </button>
                 <br>
                 <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
@@ -298,13 +302,15 @@
             </div>
         </div>
 
+
+    <!-- Insert Supplier -->
+    <!-- Insert Supplier -->
     <div id="overlay" class="overlay">
         <div class="overlay-content">
             <span id="closeBtn" class="close-btn">&times;</span>
             <h2>Add New Supplier</h2>
             <hr>
-            <form id="userForm" action="addData.php" method="post" enctype="multipart/form-data"
-                onsubmit="handleFormSubmit()">
+            <form id="userForm" action="addData.php" method="post" enctype="multipart/form-data" onsubmit="handleFormSubmit(event)" data-form-type="add">
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
@@ -320,15 +326,9 @@
                         </div>
                         <input type="text" id="companyName" name="companyName" required>
                     </div>
-                    <!-- <div class="textbox">
-                        <div class="label">
-                            <label for="employeeName">Employee Middle Name</label><br>
-                        </div>
-                        <input type="text" id="employeeMidName" name="employeeMidName" required>
-                    </div> -->
                     <div class="textbox">
                         <div class="label">
-                            <label for="agentName" >Agent Name</label><br>
+                            <label for="agentName">Agent Name</label><br>
                         </div>
                         <input type="text" id="agentName" name="agentName" required> 
                     </div>
@@ -347,21 +347,47 @@
                         <input type="email" id="Email" name="Email" required>
                     </div>
                 </div>
-                <div class="container">
-                    <div class="textbox">
-                        <div class="label">
-                            <label for="Notes">Notes</label><br>
-                        </div>
-                        <input type="text" id="Notes" name="Notes">
-                    </div>
+
+                <div class="label">
+                    <label for="SupplierProd" style="margin-left: 13px; margin-bottom: 10px; font-size: 14px;"><b>Supplier Products</b></label>
+          
                 </div>
                 
-                <br>
-                <div class="line"></div>
-                <div class="button-container">
-                    <button id="cancelBtn" type="button" onclick="closeOverlay()">Cancel</button>
-                    <button type="submit">Add</button>
+                <div class="container">
+                <div class="col-xl-12">
+                    <div class="card-body profile-card usersTableSize flex-column align-items-center">
+                        <!-- Product Table -->
+                        <table id="productTable" class="display">
+                            <thead>
+                                <tr class="highlight-row">
+                                    <th style="text-align: center;">Select</th>
+                                    <th style="text-align: center;">Brand Name</th>
+                                    <th style="text-align: center;">Generic Name</th>
+                                    <th style="text-align: center;">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productTableBody">
+                                <!-- Dynamic product rows will be inserted here -->
+                            </tbody>
+                        </table>
+
+                        <div id="paginationContainer" style="margin-top: 10px; text-align: center;">
+                            <!-- Pagination buttons will be inserted here -->
+                        </div>
+                    </div>
                 </div>
+                </div>
+
+
+
+            <br>
+
+            <div class="line"></div>
+            <div class="button-container">
+                <button id="cancelBtn" type="button" onclick="closeOverlay()">Cancel</button>
+                <button type="submit">Add</button>
+            </div>
+
             </form>
         </div>
     </div>
@@ -371,70 +397,93 @@
     <!-- Update FORM -->
 
 
-    <div id="overlayEdit1" class="overlay">
-    <div class="overlay-content">
-        <span id="closeBtnEdit" class="close-btn">&times;</span>
-        <h2>Update Supplier</h2>
-        <hr>
-        <form id="userFormEdit" action="updateSupplier.php" method="post" enctype="multipart/form-data"
-              onsubmit="handleFormSubmit1(event)">
-            <div class="container">
-                <div class="textbox">
-                    <div class="label">
-                        <label for="newID">Supplier ID</label><br>
+        <div id="overlayEdit1" class="overlay">
+            <div class="overlay-content">
+                <span id="closeBtnEdit" class="close-btn">&times;</span>
+                <h2>Update Supplier</h2>
+                <hr>
+                <form id="userFormEdit" action="updateSupplier.php" method="post" enctype="multipart/form-data" onsubmit="handleFormSubmit1(event)" data-form-type="update">
+                    <div class="container">
+                        <div class="textbox">
+                            <div class="label">
+                                <!--<label for="newID">Supplier ID</label><br>-->
+                            </div>
+                            <!--<input type="hidden" id="edit_newID" name="newID">  Changed to hidden -->
+                            <input type="hidden" id="edit_newID" name="supplierID" />
+                        </div>
                     </div>
-                    <!--<input type="hidden" id="edit_newID" name="newID">  Changed to hidden -->
-                    <input type="hidden" id="edit_newID" name="supplierID" />
-                </div>
-            </div>
-            <div class="container">
-                <div class="textbox">
-                    <div class="label">
-                        <label for="companyName">Company Name</label><br>
+                    <div class="container">
+                        <div class="textbox">
+                            <div class="label">
+                                <label for="companyName">Company Name</label><br>
+                            </div>
+                            <input type="text" id="edit_companyName" name="companyName">
+                        </div>
+                        <div class="textbox">
+                            <div class="label">
+                                <label for="agentName">Agent Name</label><br>
+                            </div>
+                            <input type="text" id="edit_agentName" name="agentName">
+                        </div>
                     </div>
-                    <input type="text" id="edit_companyName" name="companyName">
-                </div>
-                <div class="textbox">
-                    <div class="label">
-                        <label for="agentName">Agent Name</label><br>
+                    <div class="container">
+                        <div class="textbox">
+                            <div class="label">
+                                <label for="ContactNo">Contact No.</label><br>
+                            </div>
+                            <input type="text" id="edit_ContactNo" name="ContactNo">
+                        </div>
+                        <div class="textbox">
+                            <div class="label">
+                                <label for="Email">Email</label><br>
+                            </div>
+                            <input type="email" id="edit_Email" name="Email">
+                        </div>
                     </div>
-                    <input type="text" id="edit_agentName" name="agentName">
-                </div>
-            </div>
-            <div class="container">
-                <div class="textbox">
-                    <div class="label">
-                        <label for="ContactNo">Contact No.</label><br>
-                    </div>
-                    <input type="text" id="edit_ContactNo" name="ContactNo">
-                </div>
-                <div class="textbox">
-                    <div class="label">
-                        <label for="Email">Email</label><br>
-                    </div>
-                    <input type="email" id="edit_Email" name="Email">
-                </div>
-            </div>
-            <div class="container">
-                <div class="textbox">
-                    <div class="label">
-                        <label for="Notes">Notes</label><br>
-                    </div>
-                    <input type="text" id="edit_Notes" name="Notes">
-                </div>
-            </div>
-            <br>
-            <div class="line"></div>
 
 
-            <!-- Button of update -->
-            <div class="button-container">
-                <button id="cancelBtn" type="button" onclick="closeEditOverlay()">Cancel</button>
-                <button type="submit">Update</button> <!-- Changed type to submit -->
+                    <div class="label">
+                        <label for="SupplierProd" style="margin-left: 13px; margin-bottom: 10px; font-size: 14px;"><b>Supplier Products</b></label>
+          
+                    </div>
+                    <!-- Update Supplier Table -->
+                    <div class="col-xl-12">
+                        <div class="card-body profile-card usersTableSize flex-column align-items-center">
+                            <table id="productTableUpdate" class="display">
+                                <thead>
+                                    <tr class="highlight-row">
+                                        <th style="text-align: center;">Select</th>
+                                        <th style="text-align: center;">Brand Name</th>
+                                        <th style="text-align: center;">Generic Name</th>
+                                        <th style="text-align: center;">Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productTableUpdateBody">
+                                    <!-- Dynamic product rows will be inserted here -->
+                                </tbody>
+                            </table>
+                            <div id="paginationContainer" style="margin-top: 10px; text-align: center;">
+                                <!-- Pagination buttons will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+
+            
+
+                    <!-- Supplier Table -->
+
+
+                  
+                    <div class="line"></div>
+
+                    <!-- Button of update -->
+                    <div class="button-container">
+                        <button id="cancelBtn" type="button" onclick="closeEditOverlay()">Cancel</button>
+                        <button type="submit">Update</button> <!-- Changed type to submit -->
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
 
 
     <!-- End of update -->
@@ -478,6 +527,21 @@
         </div>
     </div>
 
+    <!-- Notif Modal -->
+
+    <div class="modal" id="disablebackdrop" tabindex="-1" data-bs-backdrop="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalVerifyTitle">Success</h5>
+                    </div>
+                    <div class="modal-body" id="modalVerifyText">
+                        Supplier data has been updated successfully.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 

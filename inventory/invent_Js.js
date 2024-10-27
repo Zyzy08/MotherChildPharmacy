@@ -564,12 +564,12 @@ toArchivedUsers.addEventListener('click', function () {
 
 
 // Function to truncate text
+// Function to truncate text to a specified length
 function truncateText(text, maxLength) {
-    if (text.length > maxLength) {
-        return text.substring(0, maxLength) + '...'; // Append ellipsis
-    }
-    return text; // Return the original text if it's short enough
+    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text; // Append ellipsis if truncated
 }
+
+// Function to check low stock items
 
 function checkLowStock() {
     $.ajax({
@@ -577,6 +577,7 @@ function checkLowStock() {
         method: 'GET',
         dataType: 'json',
         success: function(data) {
+            // Handle any server-side errors
             if (data.error) {
                 console.error("Error: " + data.error);
                 displayMessage('Error retrieving low stock items.');
@@ -584,38 +585,59 @@ function checkLowStock() {
             }
 
             const lowStockItemsBody = document.getElementById('lowStockItemsBody');
-            lowStockItemsBody.innerHTML = ''; // Clear previous messages
+            lowStockItemsBody.innerHTML = ''; // Clear previous items
 
-            // Filter to find low stock items
-            const lowStockItems = data.filter(item => {
-                const inStock = parseInt(item.InStock, 10);
-                const ordered = parseInt(item.Ordered, 10);
-                const reorderLevel = ordered * 0.5;
-                return inStock <= reorderLevel;
-            });
+            // Populate low stock items into the modal
+            if (data.length > 0) {
+                data.forEach(item => {
+                    const inStock = parseInt(item.InStock, 10);
+                    const ordered = parseInt(item.Ordered, 10);
+                    const reorderLevel = parseInt(item.ReorderLevel, 10) || (ordered * 0.5); // Use existing reorder level or set to 50% of ordered amount if not set
 
-            if (lowStockItems.length > 0) {
-                lowStockItems.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td class="table-row">${truncateText(item.BrandName, 20)}</td>
-                        <td class="table-row">${truncateText(item.GenericName, 20)}</td>
-                        <td class="table-row low-stock">${item.InStock}</td>
-                        <td class="table-row">${item.Ordered}</td>
-                    `;
-                    lowStockItemsBody.appendChild(row);
+                    // Calculate EOQ if there's enough sales data
+                    let eoq = 0;
+                    if (ordered > 0) {
+                        const demand = ordered; // This is the demand (units sold) for simplicity
+                        const orderingCost = 50; // Example ordering cost per order (you can adjust this value)
+                        const holdingCost = 2; // Example holding cost per unit per period (you can adjust this value)
+
+                        // EOQ formula: EOQ = sqrt((2 * Demand * Ordering Cost) / Holding Cost)
+                        eoq = Math.sqrt((2 * demand * orderingCost) / holdingCost).toFixed(2);
+                    }
+
+                    // Check if item is low in stock compared to reorder level
+                    if (inStock <= reorderLevel) {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="table-row">${truncateText(item.BrandName, 20)}</td>
+                            <td class="table-row">${truncateText(item.GenericName, 20)}</td>
+                            <td class="table-row low-stock">${inStock}</td>
+                            <td class="table-row">${ordered}</td>
+                            <td class="table-row">${eoq}</td> <!-- Display calculated EOQ -->
+                        `;
+                        lowStockItemsBody.appendChild(row);
+                    }
                 });
-                openModal(); // Open the modal to display the messages
+
+                // Open the modal if there are low stock items
+                if (lowStockItemsBody.children.length > 0) {
+                    openModal(); // Open the modal to display the low stock items
+                } else {
+                    displayMessage('All items are sufficiently stocked.'); // Show message if no low stock items
+                }
             } else {
-                displayMessage('All items are sufficiently stocked.');
+                displayMessage('All items are sufficiently stocked.'); // Show message if no data returned
             }
         },
         error: function(xhr, status, error) {
             console.error("AJAX Error: " + error);
-            displayMessage('Error connecting to server.');
+            displayMessage('Error connecting to server.'); // Show error message
         }
     });
 }
+
+
+
 
 // Function to open the modal
 function openModal() {
@@ -629,8 +651,8 @@ function closeModal() {
 
 // Add event listener to the button to check low stock
 document.getElementById('checkLowStockButton').addEventListener('click', function() {
-    console.log('Check Low Stock Button Clicked'); // Add this line
-    checkLowStock();
+    console.log('Check Low Stock Button Clicked'); // Log button click for debugging
+    checkLowStock(); // Call the function to check low stock
 });
 
 // Get the <span> element that closes the modal
@@ -648,3 +670,46 @@ window.onclick = function(event) {
         closeModal();
     }
 }
+
+// Function to display messages
+function displayMessage(message) {
+    alert(message); // Can be customized to show messages in a different way
+}
+
+// Modal handling functions
+function openModal() {
+    document.getElementById('lowStockModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('lowStockModal').style.display = 'none';
+}
+
+
+window.onclick = function(event) {
+    const modal = document.getElementById('lowStockModal');
+    if (event.target === modal) {
+        closeModal();
+    }
+}
+
+// Function to open the low stock modal
+function openLowStockModal() {
+    document.getElementById('lowStockModal').style.display = 'block';
+}
+
+// Function to close the low stock modal
+function closeLowStockModal() {
+    document.getElementById('lowStockModal').style.display = 'none';
+}
+
+// Event listener for closing the modal when the close button is clicked
+document.querySelector('.closeAlert').addEventListener('click', closeLowStockModal);
+
+// Event listener for closing the modal when clicking outside the modal content
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('lowStockModal');
+    if (event.target === modal) {
+        closeLowStockModal();
+    }
+});

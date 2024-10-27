@@ -61,9 +61,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sqlUpdate = "UPDATE inventory SET Ordered = Ordered + ? WHERE ItemID = ?";
             $stmtUpdate = $pdo->prepare($sqlUpdate);
             $stmtUpdate->execute([$quantity, $itemID]);
-        }
 
-        
+            // Check the current ReorderLevel for the item
+            $sqlCheckReorder = "SELECT ReorderLevel FROM inventory WHERE ItemID = ?";
+            $stmtCheckReorder = $pdo->prepare($sqlCheckReorder);
+            $stmtCheckReorder->execute([$itemID]);
+            $currentReorderLevel = $stmtCheckReorder->fetchColumn();
+
+            // If ReorderLevel is 0, update it to 50% of the quantity in the new order
+            if ($currentReorderLevel == 0) {
+                $newReorderLevel = ceil($quantity * 0.5); // Round up to the nearest whole number
+
+                $sqlUpdateReorder = "UPDATE inventory SET ReorderLevel = ? WHERE ItemID = ?";
+                $stmtUpdateReorder = $pdo->prepare($sqlUpdateReorder);
+                $stmtUpdateReorder->execute([$newReorderLevel, $itemID]);
+            }
+
+        }
 
         $updatedetails = "(OrderID: " . $newOrderID . ")";
 

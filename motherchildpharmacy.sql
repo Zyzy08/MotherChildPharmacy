@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 27, 2024 at 02:10 PM
+-- Generation Time: Oct 27, 2024 at 05:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -123,7 +123,19 @@ INSERT INTO `audittrail` (`auditID`, `AccountID`, `action`, `description`, `crea
 (79, 3, 'View Invoice', 'User viewed a transaction\'s details (Invoice ID: IN-01).', '2024-10-27 12:48:03', '::1', '1'),
 (80, 3, 'View User Details', 'Viewed details for account: E002_sjackson', '2024-10-27 13:00:31', '::1', '1'),
 (81, 3, 'View User Details', 'Viewed details for account: E004_acastro', '2024-10-27 13:02:14', '::1', '1'),
-(82, 3, 'View User Details', 'Viewed details for account: E004_acastro', '2024-10-27 13:03:16', '::1', '1');
+(82, 3, 'View User Details', 'Viewed details for account: E004_acastro', '2024-10-27 13:03:16', '::1', '1'),
+(83, 3, 'Logout', 'User logged out successfully.', '2024-10-27 13:13:32', '::1', '1'),
+(84, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-10-27 13:13:32', '::1', '1'),
+(85, 3, 'Login', 'User logged in successfully.', '2024-10-27 14:49:36', '::1', '1'),
+(86, 3, 'View Invoice', 'User viewed a transaction\'s details (Invoice ID: IN-01).', '2024-10-27 14:53:25', '::1', '1'),
+(87, 3, 'View Invoice', 'User viewed a transaction\'s details (Invoice ID: IN-01).', '2024-10-27 14:53:38', '::1', '1'),
+(88, 3, 'View Invoice', 'User viewed a transaction\'s details (Invoice ID: IN-01).', '2024-10-27 14:53:51', '::1', '1'),
+(89, 3, 'View Invoice', 'User viewed a transaction\'s details (Invoice ID: IN-01).', '2024-10-27 15:14:32', '::1', '1'),
+(90, 3, 'View Invoice', 'User viewed a transaction\'s details (Invoice ID: IN-01).', '2024-10-27 15:15:10', '::1', '1'),
+(91, 3, 'Database Backup', 'Backup initiated for database \'motherchildpharmacy\' by user.', '2024-10-27 15:16:29', '::1', '1'),
+(92, 3, 'Create Order', 'Created purchase order (OrderID: 4).', '2024-10-27 15:18:11', '::1', '1'),
+(93, 3, 'Database Backup', 'Backup initiated for database \'motherchildpharmacy\' by user.', '2024-10-27 16:08:51', '::1', '1'),
+(94, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-10-27 16:10:12', '::1', '1');
 
 -- --------------------------------------------------------
 
@@ -231,9 +243,9 @@ CREATE TABLE `inventory` (
 
 INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `Discount`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`) VALUES
 (2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Milligrams', 55, 50, 0, 200.00, 'Yes', 1, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
-(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Milligrams', 0, 100, 0, 300.00, 'Yes', 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg'),
+(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Milligrams', 0, 20, 0, 300.00, 'Yes', 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg'),
 (4, 'Ibuprofen', 'Advil', 'Medicine', '200', 'Milligrams', 0, 0, 0, 299.00, '', 1, '', 'Active', 'products-icon/Advil.png', 'AdvilIbuprofen200mg'),
-(5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Milligrams', 0, 50, 0, 499.00, '', 2, '', 'Active', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg'),
+(5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Milligrams', 0, 0, 0, 499.00, 'Yes', 2, '', 'Active', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg'),
 (6, 'Loperamide', 'Diatabs', 'Medicine', '2', 'Milligrams', 0, 0, 0, 149.00, '', NULL, '', '', 'products-icon/Diatabs.png', 'DiatabsLoperamide2mg'),
 (7, 'Loperamide', 'Imodium', 'Medicine', '2', 'Milligrams', 0, 0, 0, 149.00, '', NULL, '', '', 'products-icon/Imodium.png', 'ImodiumLoperamide2mg'),
 (8, 'Aluminum Hydroxide Magnesium Hydroxide Simeticone', 'Kremil-S', 'Medicine', '30', 'Milligrams', 0, 0, 0, 499.00, '', NULL, '', '', 'products-icon/kremilS.png', 'KremilS30mg'),
@@ -279,7 +291,8 @@ CREATE TABLE `purchaseorders` (
 INSERT INTO `purchaseorders` (`PurchaseOrderID`, `OrderDate`, `SupplierID`, `AccountID`, `OrderDetails`, `TotalItems`, `ReceivedItems`, `NetAmount`, `Status`) VALUES
 (1, '2024-10-10 10:09:03', 2, 3, '{\"1\":{\"itemID\":\"3\",\"qty\":100},\"2\":{\"itemID\":\"5\",\"qty\":200}}', 300, 0, NULL, 'Cancelled'),
 (2, '2024-10-16 10:45:15', 1, 3, '{\"1\":{\"itemID\":\"2\",\"qty\":100}}', 100, 50, NULL, 'Partially Received'),
-(3, '2024-10-21 22:31:00', 2, 3, '{\"1\":{\"itemID\":\"3\",\"qty\":100},\"2\":{\"itemID\":\"5\",\"qty\":50}}', 150, 0, NULL, 'Cancelled');
+(3, '2024-10-21 22:31:00', 2, 3, '{\"1\":{\"itemID\":\"3\",\"qty\":100},\"2\":{\"itemID\":\"5\",\"qty\":50}}', 150, 0, NULL, 'Cancelled'),
+(4, '2024-10-27 23:18:11', 2, 3, '{\"1\":{\"itemID\":\"3\",\"qty\":20}}', 20, 0, NULL, 'Pending');
 
 -- --------------------------------------------------------
 
@@ -461,7 +474,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `audittrail`
 --
 ALTER TABLE `audittrail`
-  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT for table `deliveries`
@@ -485,7 +498,7 @@ ALTER TABLE `inventory`
 -- AUTO_INCREMENT for table `purchaseorders`
 --
 ALTER TABLE `purchaseorders`
-  MODIFY `PurchaseOrderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `PurchaseOrderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `sales`
