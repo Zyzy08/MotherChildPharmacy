@@ -1297,16 +1297,6 @@
       margin-bottom: 0;
   }
 
-  input[class="form-control no-arrows"]::-webkit-outer-spin-button,
-  input[class="form-control no-arrows"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  input[type="number"] {
-    appearance: textfield;
-  }
-
   .non-clickable-card {
     opacity: 0.6;
     cursor: not-allowed;
@@ -1319,6 +1309,12 @@
   #paymentInput.is-valid {
     border-color: #198754;
     box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+  }
+
+  #paymentInput::-webkit-outer-spin-button,
+  #paymentInput::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 
   @page {

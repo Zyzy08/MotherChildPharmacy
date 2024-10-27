@@ -678,7 +678,7 @@ document.getElementById('cancel-receipt').addEventListener('click', function() {
     setTimeout(() => {
         const checkoutModal = new bootstrap.Modal(document.getElementById('verticalycentered'));
         checkoutModal.show();
-    }, 100);
+    }, 1000);
 });
 
 let orderNum = 0;
@@ -958,4 +958,36 @@ document.getElementById('seniorCitizenCheckbox').addEventListener('change', func
     }
 });
 
-//working
+function validatePayment(input) {
+  const value = parseInt(input.value);
+  const min = 1;
+  const max = 999999;
+
+  // Remove any leading zeros
+  if (input.value.startsWith('0')) {
+    input.value = parseInt(input.value, 10);
+  }
+
+  // Check if the value is within bounds
+  if (value < min || value > max || isNaN(value)) {
+    input.classList.add('is-invalid');
+    input.classList.remove('is-valid');
+    
+    // Reset to max value if exceeding max
+    if (value > max) {
+      input.value = max;
+    }
+    
+    // Reset to min value if below min
+    if (value < min && value !== 0) {
+      input.value = min;
+    }
+  } else {
+    input.classList.remove('is-invalid');
+    input.classList.add('is-valid');
+  }
+  
+  // Prevent non-numeric input
+  input.value = input.value.replace(/[^0-9]/g, '');
+}
+

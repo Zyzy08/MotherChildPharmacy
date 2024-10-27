@@ -1,0 +1,32 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+1   Advil Liquigel Capsule P9.47
+2   Kremil-S Tablet       P19.36
+--------------------------------
+Total Items:                 3
+Subtotal:               P28.83
+Tax 12%:                 P3.46
+Discount:               P-0.00
+Amount Due:             P32.29
+Refund Amount:           P0.00
+Payment:                P40.00
+Change:                  P7.71
+--------------------------------
+Order No.:                 #26
+Date:      2024-10-27 23:05:19
+Payment Method:           Cash
+Status:                 Sales
+
+Staff:           Sayra Jackson
+Role:                    Admin
+                                
+  Thank you for your purchase!
+
+                                
+
+                                

@@ -449,7 +449,10 @@
             <div class="row mb-0">
               <h2 for="paymentInput" class="col-sm-5" style="font-weight: bold;">Payment: ₱</h2>
               <div class="col-sm-6">
-                <input type="number" id="paymentInput" class="form-control no-arrows" min="1" placeholder="0">
+                <input type="number" id="paymentInput" class="form-control no-arrows" min="1" max="999999" placeholder="0" oninput="validatePayment(this)">
+                <div class="invalid-feedback">
+                  Please enter an amount between ₱1 and ₱999,999
+                </div>
               </div>
             </div>
 
