@@ -166,20 +166,24 @@ if (!$stmt->execute()) {
 $deliveryID = $stmt->insert_id; // Get the last inserted DeliveryID
 
 // Insert each item into `delivery_items` table
-$insertItemSQL = "INSERT INTO delivery_items (ItemID, DeliveryID, LotNumber, ExpiryDate, QuantityDelivered, NetAmount) VALUES (?, ?, ?, ?, ?, ?)";
+$insertItemSQL = "INSERT INTO delivery_items (ItemID, DeliveryID, LotNumber, ExpiryDate, QuantityDelivered, Bonus, NetAmount) VALUES (?, ?, ?, ?, ?, ?, ?)";
 $itemStmt = $conn->prepare($insertItemSQL);
 
 // Iterate over delivery items and insert them
 foreach ($orderDetailsArray as $detail) {
     $itemID = $detail['itemID'];
     $lotNumber = $detail['lotNo'];
-    $expiryDate = date('Y-m-d', strtotime($detail['expiryDate'])); // Convert to MySQL date format
+    if($detail['expiryDate'] != ''){
+        $expiryDate = date('Y-m-d', strtotime($detail['expiryDate'])); // Convert to MySQL date format
+    }
     $quantityDelivered = $detail['qty'];
+    $bonusAmt = $detail['bonus'];
     $netAmt = $detail['netAmt'];
+    $qtyDeliveredPlusBonus = $detail['qtyTotal'];
 
     // Ensure no empty values before inserting
     if (!empty($lotNumber) && !empty($expiryDate) && $quantityDelivered > 0) {
-        $itemStmt->bind_param("iissii", $itemID, $deliveryID, $lotNumber, $expiryDate, $quantityDelivered, $netAmt);
+        $itemStmt->bind_param("iissiii", $itemID, $deliveryID, $lotNumber, $expiryDate, $quantityDelivered, $bonusAmt, $netAmt);
 
         if (!$itemStmt->execute()) {
             $response = [
@@ -198,7 +202,7 @@ foreach ($orderDetailsArray as $detail) {
 
         // Assuming 'QuantityOrdered' exists in the item array
         $updateInventoryStmt = $conn->prepare($updateInventorySQL);
-        $updateInventoryStmt->bind_param("iii", $quantityDelivered, $quantityDelivered, $itemID);
+        $updateInventoryStmt->bind_param("iii", $qtyDeliveredPlusBonus, $quantityDelivered, $itemID);
         // Execute the statement and handle errors
         if (!$updateInventoryStmt->execute()) {
             $response = [

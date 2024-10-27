@@ -317,7 +317,7 @@
                                 <th scope="col">Item Description</th>
                                 <th scope="col">Lot No.</th>
                                 <th scope="col">Expiry Date</th>
-                                <th scope="col">Qty. Ordered</th>
+                                <th scope="col">Qty. Pending</th>
                                 <th scope="col">Qty. Served</th>
                                 <th scope="col">Bonus</th>
                                 <th scope="col">Net Amount</th>
@@ -336,7 +336,7 @@
                 <br>
                 <div class="line"></div>
                 <div class="button-container-2">
-                    <button type="submit" id="confirmButton" disabled>Receive Delivery</button>
+                    <button type="submit" id="confirmButton">Receive Delivery</button>
                 </div>
             </form>
         </div>
@@ -530,12 +530,12 @@
                                 row.innerHTML = `
                             <th scope="row">${index + 1}</th>
                             <td>${item.description}</td>
-                            <td class="editable" data-key="lotNo" id="lotNo">XXXXXX</td>
-                            <td class="editable" data-key="expiryDate" id="expiryDate">--/--/----</td>
-                            <td>${item.quantity}</td>
-                            <td class="editable" data-key="qtyServed" id="qtyServed">XX</td>
-                            <td class="editable" data-key="bonus" id="bonus">X</td>
-                            <td class="editable" data-key="netAmt" id="netAmt">₱XXX</td>
+                            <td class="editable" data-key="lotNo" id="lotNo"></td>
+                            <td class="editable" data-key="expiryDate" id="expiryDate"></td>
+                            <td>${item.pending}</td>
+                            <td class="editable" data-key="qtyServed" id="qtyServed">0</td>
+                            <td class="editable" data-key="bonus" id="bonus">0</td>
+                            <td class="editable" data-key="netAmt" id="netAmt">₱0.00</td>
                         `;
                                 tableBody.appendChild(row);
                             });
@@ -561,29 +561,82 @@
                 cell.addEventListener('click', function () {
                     if (this.querySelector('input')) return; // Prevent duplicate input
 
-                    const originalValue = this.textContent;
+                    const originalValue = this.textContent.trim();
                     const input = document.createElement('input');
                     input.type = 'text';
-                    input.value = '';
+                    input.value = originalValue;
+                    if (cell.id === 'expiryDate') {
+                        input.placeholder = 'MM/DD/YYYY';
+                    } else if (cell.id === 'lotNo') {
+                        input.placeholder = 'Ex: 1HT7359';
+                    }
                     input.style.width = '120px';
 
-                    this.textContent = ''; // Clear cell content
+                    this.textContent = ''; // Clear the cell content
                     this.appendChild(input);
                     input.focus();
 
                     // Save value on blur or Enter key press
-                    input.addEventListener('blur', saveValue);
+                    input.addEventListener('blur', () => saveValue(input, this));
                     input.addEventListener('keydown', function (e) {
-                        if (e.key === 'Enter') saveValue();
+                        if (e.key === 'Enter') saveValue(input, cell);
                     });
-
-                    function saveValue() {
-                        const newValue = input.value.trim();
-                        this.parentElement.textContent = newValue || originalValue; // Save or revert
-                    }
                 });
             });
+
+            // Helper function to save and format value
+            function saveValue(input, cell) {
+                let newValue = input.value.trim() || cell.dataset.originalValue; // Save or revert
+
+                if (cell.id === 'netAmt') {
+                    // Format net amount as currency (₱ + value)
+                    const formattedValue = formatCurrency(newValue);
+                    cell.textContent = formattedValue;
+                } else if (cell.id === 'qtyServed' || cell.id === 'bonus') {
+                    const parsedValue = parseInt(newValue, 10);
+
+                    if (!isNaN(parsedValue) && parsedValue >= 0) {
+                        newValue = parsedValue; // Save valid value
+                    } else {
+                        newValue = 0; // Revert if invalid
+                    }
+                    cell.textContent = newValue;
+                } else if (cell.id === 'expiryDate') {
+                    const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/;
+
+                    if (dateRegex.test(newValue)) {
+                        const [month, day, year] = newValue.split('/').map(Number);
+                        const inputDate = new Date(year, month - 1, day);
+                        const currentDate = new Date();
+
+                        // Check if input date is greater than today
+                        newValue = inputDate > currentDate ? newValue : '';
+                    } else {
+                        newValue = ''; // Revert if format is invalid
+                    }
+                    cell.textContent = newValue;
+                }
+                else if (cell.id === 'lotNo') {
+                    try {
+                        const lotNoRegex = /^[A-Za-z0-9]+$/;
+                        newValue = lotNoRegex.test(newValue) ? newValue.toUpperCase() : '';
+                        cell.textContent = newValue;
+                    } catch (error) {
+                        cell.textContent = '';
+                    }
+
+                } else {
+                    cell.textContent = newValue;
+                }
+            }
+
+            // Function to format value as currency (₱)
+            function formatCurrency(value) {
+                const numberValue = parseFloat(value.replace(/[^0-9.]+/g, '')); // Remove non-numeric chars
+                return isNaN(numberValue) ? '₱0.00' : `₱${numberValue.toFixed(2)}`;
+            }
         }
+
 
         closeBtnEdit.addEventListener('click', function () {
             overlayEdit.style.display = 'none';

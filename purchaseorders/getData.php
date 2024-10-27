@@ -79,10 +79,27 @@ if (isset($_GET['InvoiceID'])) {
                 $mass = $itemData['Mass'];
                 $unitOfMeasure = $itemData['UnitOfMeasure'];
 
-                // Add item to the list with Mass and Unit of Measure
+                // Fetch total quantity delivered for the item
+                $sqlDelivered = "
+                    SELECT SUM(di.QuantityDelivered) AS TotalDelivered 
+                    FROM delivery_items di 
+                    JOIN deliveries d ON di.DeliveryID = d.DeliveryID 
+                    WHERE d.PurchaseOrderID = '$InvoiceID' AND di.ItemID = '$itemID'";
+                $deliveredResult = $conn->query($sqlDelivered);
+                $deliveredQty = 0; // Default to 0 if no deliveries found
+                if ($deliveredResult->num_rows > 0) {
+                    $deliveredRow = $deliveredResult->fetch_assoc();
+                    $deliveredQty = $deliveredRow['TotalDelivered'] ?? 0; // Use NULL coalescing for safety
+                }
+
+                // Calculate pending quantity
+                $pendingQty = $qty - $deliveredQty;
+
+                // Add item to the list with Mass, Unit of Measure, and Pending quantity
                 $listItems[] = [
                     'description' => "$brandName $genericName ($mass $unitOfMeasure)",
-                    'quantity' => $qty
+                    'quantity' => $qty,
+                    'pending' => $pendingQty // Add the pending quantity here
                 ];
             }
         }

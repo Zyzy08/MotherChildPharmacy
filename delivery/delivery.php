@@ -281,27 +281,26 @@
     <div id="overlayEdit" class="overlay">
         <div class="overlay-content">
             <span id="closeBtnEdit" class="close-btn">&times;</span>
-            <h2>Purchase Order Details</h2>
-            <form id="userFormEdit" action="updateAccount.php" method="post" enctype="multipart/form-data"
-                onsubmit="handleFormSubmit()">
+            <h2>Delivery Details</h2>
+            <form id="userFormEdit" method="post" enctype="multipart/form-data">
                 <div class="container">
                     <table class="table table-sm" id="poDetailsTable">
                         <thead>
                             <tr>
-                                <th scope="col">Order ID</th>
+                                <th scope="col">Delivery ID</th>
                                 <th scope="col">Supplier Name</th>
-                                <th scope="col">Purchaser</th>
+                                <th scope="col">Received By</th>
                                 <th scope="col">Date (Time)</th>
                                 <th scope="col">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td id="identifierID">12345</td> <!-- Replace with dynamic value -->
-                                <td id="supplierName">Supplier ABC</td> <!-- Replace with dynamic value -->
-                                <td id="cashierID">John Doe</td> <!-- Replace with dynamic value -->
-                                <td id="datetimeID">10/10/2024 (12:30 PM)</td> <!-- Replace with dynamic value -->
-                                <td id="Status">Completed</td> <!-- Replace with dynamic value -->
+                                <td id="identifierID"></td>
+                                <td id="supplierName"></td>
+                                <td id="cashierID"></td>
+                                <td id="datetimeID"></td>
+                                <td id="Status"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -321,7 +320,12 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Item Description</th>
+                                <th scope="col">Lot No.</th>
+                                <th scope="col">Expiry Date</th>
                                 <th scope="col">Qty. Ordered</th>
+                                <th scope="col">Qty. Served</th>
+                                <th scope="col">Bonus</th>
+                                <th scope="col">Net Amount</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -333,12 +337,7 @@
                         </tbody>
                     </table>
                 </div>
-
                 <br>
-                <div class="line"></div>
-                <div class="button-container-2">
-                    <button type="button" id="confirmButton">Receive Delivery</button>
-                </div>
             </form>
         </div>
     </div>

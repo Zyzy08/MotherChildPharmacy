@@ -25,6 +25,7 @@ $sql = "
     u.employeeName, 
     u.employeeLName, 
     SUM(di.QuantityDelivered) AS TotalItemsDelivered, 
+    SUM(di.Bonus) AS TotalItemsBonus,
     GROUP_CONCAT(DISTINCT di.LotNumber) AS LotNumbers, 
     d.DeliveryStatus
 FROM 

@@ -71,8 +71,10 @@ function updateTable(data) {
             row.SupplierName,
             row.TotalItems,
             `<span style="color: ${statusColor};">${row.Status}</span>`, // Apply the color to the Status
-            `<img src="../resources/img/viewfile.png" alt="View" style="cursor:pointer;margin-left:10px;" onclick="fetchDetails('${row.PurchaseOrderID}')"/> 
-             <img src="../resources/img/s-remove.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="showOptions('${row.PurchaseOrderID}')"/>`
+            `<img src="../resources/img/viewfile.png" alt="View" style="cursor:pointer;margin-left: ${row.Status === 'Pending' ? '10px' : '20px'};" onclick="fetchDetails('${row.PurchaseOrderID}')"/>` +
+            (row.Status === 'Pending' ?
+                `<img src="../resources/img/s-remove.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="showOptions('${row.PurchaseOrderID}')"/>`
+                : '')
         ]);
     });
 
@@ -174,7 +176,8 @@ function showOptions(identifier) {
                 const timeDifference = currentDate - orderDate; // Time difference in milliseconds
 
                 // Enable or disable the delete button
-                if (timeDifference <= oneHourInMillis) {
+                //if (timeDifference <= oneHourInMillis) {
+                if (timeDifference > 0) {
                     deleteDataBtn.disabled = false; // Enable the button
                 } else {
                     deleteDataBtn.disabled = true; // Disable the button

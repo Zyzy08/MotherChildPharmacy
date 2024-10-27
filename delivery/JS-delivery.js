@@ -74,10 +74,9 @@ function updateTable(data) {
             "PO-0" + row.PurchaseOrderID,
             row.SupplierName,
             row.DeliveryDate,
-            row.TotalItemsDelivered,
+            parseInt(row.TotalItemsDelivered) + parseInt(row.TotalItemsBonus),
             `<span style="color: ${statusColor};">${row.DeliveryStatus}</span>`, // Apply the color to the DeliveryStatus
-            `<img src="../resources/img/viewfile.png" alt="View" style="cursor:pointer;margin-left:10px;" onclick="fetchDetails('${row.DeliveryID}')"/> 
-             <img src="../resources/img/s-remove.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="showOptions('${row.DeliveryID}')"/>`
+            `<img src="../resources/img/viewfile.png" alt="View" style="cursor:pointer;margin-left:20px;" onclick="fetchDetails('${row.DeliveryID}')"/>`
         ]);
     });
 
@@ -86,3 +85,77 @@ function updateTable(data) {
     table.draw();
 
 }
+
+const overlayEdit = document.getElementById('overlayEdit');
+const closeBtnEdit = document.getElementById('closeBtnEdit');
+const identifierID = document.getElementById('identifierID');
+const cashierID = document.getElementById('cashierID');
+const datetimeID = document.getElementById('datetimeID');
+const Status = document.getElementById('Status');
+const Discount = document.getElementById('Discount');
+const NetAmount = document.getElementById('NetAmount');
+const modePay = document.getElementById('modePay');
+const amtPaid = document.getElementById('amtPaid');
+const amtChange = document.getElementById('amtChange');
+const supplierName = document.getElementById('supplierName');
+
+function fetchDetails(identifier) {
+    fetch(`getDeliDetails.php?DeliveryID=${encodeURIComponent(identifier)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                // Populate the overlay form with details
+                identifierID.textContent = "DE-0" + data.DeliveryID;
+                supplierName.textContent = data.SupplierName;
+                cashierID.textContent = data.employeeName + " " + data.employeeLName;
+                datetimeID.textContent = data.DeliveryDate;
+                Status.textContent = data.DeliveryStatus;
+
+                if (data.DeliveryStatus === "Pending") {
+                    Status.style.color = '#B8860B'; // Yellow
+                } else if (data.DeliveryStatus === "Partial") {
+                    Status.style.color = 'blue';
+                } else if (data.DeliveryStatus === "Cancelled") {
+                    Status.style.color = 'red'; // Red
+                } else if (data.DeliveryStatus === "Received") {
+                    Status.style.color = 'green'; // Green
+                } else {
+                    Status.style.color = 'black'; // Default
+                }
+
+                // Populate table rows
+                if (data && data.listItems) {
+                    const tableBody = document.querySelector('#listTable tbody');
+                    tableBody.innerHTML = ''; // Clear existing rows
+
+                    data.listItems.forEach((item, index) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <th scope="row">${index + 1}</th>
+                            <td>${item.description}</td>
+                            <td class="editable" data-key="lotNo" id="lotNo">${item.lot_number}</td>
+                            <td class="editable" data-key="expiryDate" id="expiryDate">${item.expiry_date}</td>
+                            <td>${item.quantity_ordered}</td>
+                            <td class="editable" data-key="qtyServed" id="qtyServed">${item.quantity_delivered}</td>
+                            <td class="editable" data-key="bonus" id="bonus">${item.bonus}</td>
+                            <td class="editable" data-key="netAmt" id="netAmt">₱${item.net_amount}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                }
+
+                // Show the overlay
+                overlayEdit.style.display = 'flex';
+            } else {
+                console.error('No data found for the given id.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching details:', error);
+        });
+}
+
+
+closeBtnEdit.addEventListener('click', function () {
+    overlayEdit.style.display = 'none';
+})

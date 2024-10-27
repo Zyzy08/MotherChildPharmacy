@@ -22,13 +22,19 @@ async function createOrderDetails() {
     const rows = tableBody.querySelectorAll('tr'); // Exclude the last "Add Product" row
 
     for (const [index, row] of rows.entries()) {
-        const productDescriptionCell = row.querySelector('td:nth-child(2)'); // Get the product description cell
+
+        const productDescriptionCell = row.querySelector('td:nth-child(2)');
         const qtyInput = row.querySelector('td:nth-child(6)');
         const lotNo = row.querySelector('td:nth-child(3)');
         const expiryDate = row.querySelector('td:nth-child(4)');
-        const bonus = row.querySelector('td:nth-child(7)');
-        const netAmt = row.querySelector('td:nth-child(8)').textContent.trim(); // Get the text content and trim spaces
-        const valueAmt = parseFloat(netAmt.replace(/[^\d.-]/g, '')); // Remove non-numeric characters and convert to number
+        const bonusCell = row.querySelector('td:nth-child(7)');
+        const netAmt = row.querySelector('td:nth-child(8)').textContent.trim();
+
+        const valueAmt = parseFloat(netAmt.replace(/[^\d.-]/g, '')) || 0; // Convert to float
+        const bonus = parseInt(bonusCell.textContent.trim(), 10) || 0; // Ensure bonus is a number
+        const quantity = parseInt(qtyInput.textContent.trim(), 10) || 0; // Ensure quantity is a number
+        const qtyTotal = quantity + bonus; // Calculate total quantity
+
 
         if (productDescriptionCell && qtyInput) {
             const selectedProductText = productDescriptionCell.textContent.trim(); // Get the displayed product text
@@ -52,8 +58,9 @@ async function createOrderDetails() {
                             qty: quantity,
                             lotNo: lotNo.textContent.trim(),
                             expiryDate: expiryDate.textContent.trim(),
-                            bonus: bonus.textContent.trim(),
-                            netAmt: valueAmt
+                            bonus: bonus,
+                            netAmt: valueAmt,
+                            qtyTotal: qtyTotal
                         };
                         console.log(`Added to details: ${index + 1} -> itemID: ${itemID}, qty: ${quantity}`); // Debug log
                     }
@@ -122,7 +129,7 @@ userFormEdit.addEventListener('submit', function (event) {
             console.error('Error:', error);
             const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
             modalVerifyTitleFront.textContent = 'Error';
-            modalVerifyTextFront.textContent = 'An unexpected error occurred. Please try again.';
+            modalVerifyTextFront.textContent = 'An unexpected error occurred. Please try again. ';
             confirmationModal.show();
             setTimeout(() => {
                 window.location.href = 'delivery.php'; // Redirect on success
