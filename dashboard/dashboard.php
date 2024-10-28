@@ -247,7 +247,7 @@
             <div class="col-xxl-4 col-md-6">
               <div class="card info-card revenue-card">
                 <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <a id="filter-icon" class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                     <li class="dropdown-header text-start">
                       <h6>Filter</h6>
@@ -278,7 +278,7 @@
             <div class="col-xxl-4 col-xl-12">
               <div class="card info-card customers-card">
                 <div class="filter">
-                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <a id="filter-icon" class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                     <li class="dropdown-header text-start">
                       <h6>Filter</h6>
@@ -305,84 +305,156 @@
               </div>
             </div><!-- End Customers Card -->
 
-            <!-- Reports -->
+            <!-- Reports Card -->
             <div class="col-12">
               <div class="card">
-
                 <div class="filter">
                   <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                     <li class="dropdown-header text-start">
                       <h6>Filter</h6>
                     </li>
-
-                    <li><a class="dropdown-item" href="#">Today</a></li>
-                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                    <li><a class="dropdown-item" href="#" data-period="today">Today</a></li>
+                    <li><a class="dropdown-item" href="#" data-period="month">This Month</a></li>
+                    <li><a class="dropdown-item" href="#" data-period="year">This Year</a></li>
                   </ul>
                 </div>
 
                 <div class="card-body">
-                  <h5 class="card-title">Reports <span>/Today</span></h5>
-
-                  <!-- Line Chart -->
+                  <h5 class="card-title">Reports <span id="reports-period-text">| Today</span></h5>
                   <div id="reportsChart"></div>
-
-                  <script>
-                    document.addEventListener("DOMContentLoaded", () => {
-                      new ApexCharts(document.querySelector("#reportsChart"), {
-                        series: [{
-                          name: 'Sales',
-                          data: [11, 32, 45, 32, 34, 52, 41]
-                        }, {
-                          name: 'Customers',
-                          data: [15, 11, 32, 18, 9, 24, 11]
-                        }],
-                        chart: {
-                          height: 350,
-                          type: 'area',
-                          toolbar: {
-                            show: false
-                          },
-                        },
-                        markers: {
-                          size: 4
-                        },
-                        colors: ['#4154f1', '#ff771d'],
-                        fill: {
-                          type: "gradient",
-                          gradient: {
-                            shadeIntensity: 1,
-                            opacityFrom: 0.3,
-                            opacityTo: 0.4,
-                            stops: [0, 90, 100]
-                          }
-                        },
-                        dataLabels: {
-                          enabled: false
-                        },
-                        stroke: {
-                          curve: 'smooth',
-                          width: 2
-                        },
-                        xaxis: {
-                          type: 'datetime',
-                          categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-                        },
-                        tooltip: {
-                          x: {
-                            format: 'dd/MM/yy HH:mm'
-                          },
-                        }
-                      }).render();
-                    });
-                  </script>
-                  <!-- End Line Chart -->
-
                 </div>
-
               </div>
-            </div><!-- End Reports -->
+            </div>
+
+            <script>
+              document.addEventListener("DOMContentLoaded", () => {
+                  let reportsChart = null;
+
+                  // Function to format currency
+                  const formatCurrency = (value) => {
+                      return '₱' + parseFloat(value).toLocaleString(undefined, {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                      });
+                  };
+
+                  // Function to update reports chart
+                  const updateReportsChart = (period = 'today') => {
+                      fetch(`fetchReports.php?period=${period}`)
+                          .then(response => {
+                              if (!response.ok) {
+                                  throw new Error(`HTTP error! status: ${response.status}`);
+                              }
+                              return response.json();
+                          })
+                          .then(data => {
+                              if (data.error) {
+                                  console.error('Error:', data.error);
+                                  return;
+                              }
+
+                              // Update period text in title
+                              document.getElementById('reports-period-text').textContent = `| ${period.charAt(0).toUpperCase() + period.slice(1)}`;
+
+                              // Process chart data
+                              const chartData = data.chart_data;
+                              const categories = chartData.map(row => row.period);
+                              const salesValues = chartData.map(row => parseFloat(row.total_sales));
+                              const customerValues = chartData.map(row => parseInt(row.unique_customers));
+
+                              // Destroy existing chart if it exists
+                              if (reportsChart) {
+                                  reportsChart.destroy();
+                              }
+
+                              // Create new chart
+                              const chartOptions = {
+                                  series: [{
+                                      name: 'Sales',
+                                      data: salesValues
+                                  }, {
+                                      name: 'Customers',
+                                      data: customerValues
+                                  }],
+                                  chart: {
+                                      height: 350,
+                                      type: 'area',
+                                      toolbar: {
+                                          show: false
+                                      },
+                                  },
+                                  markers: {
+                                      size: 4
+                                  },
+                                  colors: ['#4154f1', '#ff771d'],
+                                  fill: {
+                                      type: "gradient",
+                                      gradient: {
+                                          shadeIntensity: 1,
+                                          opacityFrom: 0.3,
+                                          opacityTo: 0.4,
+                                          stops: [0, 90, 100]
+                                      }
+                                  },
+                                  dataLabels: {
+                                      enabled: false
+                                  },
+                                  stroke: {
+                                      curve: 'smooth',
+                                      width: 2
+                                  },
+                                  xaxis: {
+                                      categories: categories,
+                                      labels: {
+                                          formatter: function(value) {
+                                              switch(period) {
+                                                  case 'today':
+                                                      return `${value}:00`;
+                                                  case 'month':
+                                                      return value;
+                                                  case 'year':
+                                                      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                                      return months[value - 1];
+                                                  default:
+                                                      return value;
+                                              }
+                                          }
+                                      }
+                                  },
+                                  tooltip: {
+                                      y: {
+                                          formatter: function(value, { seriesIndex }) {
+                                              if (seriesIndex === 0) {
+                                                  return formatCurrency(value);
+                                              }
+                                              return value + ' customers';
+                                          }
+                                      }
+                                  }
+                              };
+
+                              reportsChart = new ApexCharts(document.querySelector("#reportsChart"), chartOptions);
+                              reportsChart.render();
+                          })
+                          .catch(error => {
+                              console.error('Error:', error);
+                          });
+                  };
+
+                  // Add click handlers for filter dropdowns
+                  document.querySelectorAll('.card .dropdown-item[data-period]').forEach(item => {
+                      item.addEventListener('click', (e) => {
+                          e.preventDefault();
+                          const period = e.target.dataset.period;
+                          updateReportsChart(period);
+                      });
+                  });
+
+                  // Initial load with 'today' data
+                  updateReportsChart('today');
+              });
+            </script>
 
           </div>
         </div><!-- End Left side columns -->
