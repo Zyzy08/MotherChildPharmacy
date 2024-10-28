@@ -1,0 +1,60 @@
+2024-10-28 03:57:33 - Array
+(
+    [itemID] => 12
+    [itemType] => Skincar
+    [pricePerUnit] => 100
+    [brandName] => STI College
+    [genericName] => Dark Chocolate
+    [Discount] => 1
+    [mass] => 30
+    [unitOfMeasure] => Mg
+    [VAT_exempted] => 1
+    [ProductCode] => 4806517042085
+    [InStock] => 0
+)
+
+2024-10-28 04:00:26 - Array
+(
+    [itemID] => 12
+    [itemType] => Medicine
+    [pricePerUnit] => 100
+    [brandName] => STI College
+    [genericName] => Angeles
+    [Discount] => 1
+    [mass] => 100
+    [unitOfMeasure] => Mg
+    [VAT_exempted] => 1
+    [ProductCode] => 381371172672
+    [InStock] => 0
+)
+
+2024-10-28 04:02:17 - Array
+(
+    [itemID] => 13
+    [itemType] => Cosmetic
+    [pricePerUnit] => 200
+    [brandName] => STI College
+    [genericName] => Angeles
+    [Discount] => 0
+    [mass] => 100
+    [unitOfMeasure] => kg
+    [VAT_exempted] => 0
+    [ProductCode] => 4806517042085
+    [InStock] => 0
+)
+
+2024-10-28 04:05:34 - Array
+(
+    [itemID] => 14
+    [itemType] => Cosmetic
+    [pricePerUnit] => 100
+    [brandName] => STI College
+    [genericName] => Angeles
+    [Discount] => 0
+    [mass] => 100
+    [unitOfMeasure] => Mg
+    [VAT_exempted] => 0
+    [ProductCode] => 4806517042085
+    [InStock] => 0
+)
+
