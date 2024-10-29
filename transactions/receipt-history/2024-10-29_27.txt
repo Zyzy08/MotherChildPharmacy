@@ -1,0 +1,31 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+1   Nestlé Nido 3+      P1245.00
+--------------------------------
+Total Items:                 1
+Subtotal:             P1245.00
+Tax 12%:               P149.40
+Discount:               P-0.00
+Amount Due:           P1394.40
+Refund Amount:           P0.00
+Payment:              P2222.00
+Change:                P827.60
+--------------------------------
+Order No.:                 #27
+Date:      2024-10-29 10:40:05
+Payment Method:           Cash
+Status:                 Sales
+
+Staff:           Sayra Jackson
+Role:                    Admin
+                                
+  Thank you for your purchase!
+
+                                
+
+                                

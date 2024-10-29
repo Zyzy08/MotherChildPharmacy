@@ -37,12 +37,17 @@ try {
             $groupBy = "HOUR(SaleDate)";
     }
     
-    // Get current period data
+    // Get current period data with customer count per period
     $query = "
         SELECT 
             $groupBy as period,
             SUM(NetAmount) as total_sales,
-            COUNT(DISTINCT AccountID) as unique_customers
+            COUNT(DISTINCT AccountID) as customers_per_period,
+            (
+                SELECT COUNT(DISTINCT AccountID) 
+                FROM sales 
+                WHERE $dateCondition
+            ) as total_unique_customers
         FROM sales
         WHERE $dateCondition
         GROUP BY $groupBy
@@ -68,7 +73,8 @@ try {
     
     // Calculate totals and percentage changes
     $currentTotal = array_sum(array_column($currentData, 'total_sales'));
-    $currentCustomers = array_sum(array_column($currentData, 'unique_customers'));
+    // Get total unique customers from the first row (all rows will have the same value)
+    $currentCustomers = !empty($currentData) ? $currentData[0]['total_unique_customers'] : 0;
     
     $previousTotal = $previousData['total_sales'] ?: 0;
     $previousCustomers = $previousData['unique_customers'] ?: 0;
@@ -76,8 +82,17 @@ try {
     $salesPercentage = $previousTotal > 0 ? (($currentTotal - $previousTotal) / $previousTotal) * 100 : 0;
     $customerPercentage = $previousCustomers > 0 ? (($currentCustomers - $previousCustomers) / $previousCustomers) * 100 : 0;
     
+    // Prepare chart data with both metrics
+    $chartData = array_map(function($row) {
+        return [
+            'period' => $row['period'],
+            'total_sales' => $row['total_sales'],
+            'unique_customers' => $row['customers_per_period']
+        ];
+    }, $currentData);
+    
     echo json_encode([
-        'chart_data' => $currentData,
+        'chart_data' => $chartData,
         'totals' => [
             'sales' => $currentTotal,
             'sales_change' => $salesPercentage,

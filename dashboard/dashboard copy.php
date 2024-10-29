@@ -339,38 +339,19 @@
                     });
                 };
 
-                // Function to update the customers card
-                const updateCustomersCard = (period) => {
-                    fetch(`fetchCustomersData.php?period=${period}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            document.getElementById('customer-total').textContent = data.total;
-                            document.getElementById('customer-percentage-change').textContent = `${data.percentage}%`;
-                            document.getElementById('customer-change-text').textContent = data.changeType;
-                            document.getElementById('customer-period-text').textContent = `| ${period.charAt(0).toUpperCase() + period.slice(1)}`;
-
-                            // Update percentage change color
-                            const percentageElement = document.getElementById('customer-percentage-change');
-                            percentageElement.className = data.changeType === 'increase' ? 'text-success small pt-1 fw-bold' : 'text-danger small pt-1 fw-bold';
-                        })
-                        .catch(error => console.error('Error:', error));
-                };
-
-                // Function to update the sales card
-                const updateSalesCard = (period) => {
-                    fetch(`fetchSalesData.php?period=${period}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            document.getElementById('sales-total').textContent = data.total;
-                            document.getElementById('percentage-change').textContent = `${data.percentage}%`;
-                            document.getElementById('change-text').textContent = data.changeType;
-                            document.getElementById('period-text').textContent = `| ${period.charAt(0).toUpperCase() + period.slice(1)}`;
-
-                            // Update percentage change color
-                            const percentageElement = document.getElementById('percentage-change');
-                            percentageElement.className = data.changeType === 'increase' ? 'text-success small pt-1 fw-bold' : 'text-danger small pt-1 fw-bold';
-                        })
-                        .catch(error => console.error('Error:', error));
+                // Function to format period labels
+                const formatPeriodLabel = (value, period) => {
+                    switch(period) {
+                        case 'today':
+                            return `${value.toString().padStart(2, '0')}:00`;
+                        case 'month':
+                            return `Day ${value}`;
+                        case 'year':
+                            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                            return months[value - 1];
+                        default:
+                            return value;
+                    }
                 };
 
                 // Function to update reports chart
@@ -391,31 +372,27 @@
                             // Update period text in title
                             document.getElementById('reports-period-text').textContent = `| ${period.charAt(0).toUpperCase() + period.slice(1)}`;
 
-                            // Update cards
-                            updateSalesCard(period);
-                            updateCustomersCard(period);
-
                             // Process chart data
                             const chartData = data.chart_data;
-                            const categories = chartData.map(row => row.period);
+                            const categories = chartData.map(row => formatPeriodLabel(parseInt(row.period), period));
                             const salesValues = chartData.map(row => parseFloat(row.total_sales));
-                            const customerValues = chartData.map(row => parseInt(row.unique_customers));
+                            const transactionValues = chartData.map(row => parseInt(row.total_transactions));
 
                             // Destroy existing chart if it exists
                             if (reportsChart) {
                                 reportsChart.destroy();
                             }
 
-                            // Create new chart with dual axes
+                            // Create new chart
                             const chartOptions = {
                                 series: [{
                                     name: 'Sales',
-                                    type: 'line',
-                                    data: salesValues
+                                    data: salesValues,
+                                    type: 'line'
                                 }, {
-                                    name: 'Customers',
-                                    type: 'line',
-                                    data: customerValues
+                                    name: 'Transactions',
+                                    data: transactionValues,
+                                    type: 'bar'
                                 }],
                                 chart: {
                                     height: 350,
@@ -426,102 +403,76 @@
                                     stacked: false
                                 },
                                 stroke: {
-                                    width: [2, 2],
+                                    width: [3, 1],
                                     curve: 'smooth'
                                 },
-                                colors: ['#2eca6a', '#ff771d'],
-                                fill: {
-                                    type: ['gradient', 'gradient'],
-                                    gradient: {
-                                        shade: 'light',
-                                        type: "vertical",
-                                        shadeIntensity: 0.3,
-                                        opacityFrom: 0.5,
-                                        opacityTo: 0.3,
-                                        stops: [0, 90, 100]
+                                plotOptions: {
+                                    bar: {
+                                        columnWidth: '50%'
                                     }
                                 },
                                 markers: {
-                                    size: 4,
-                                    hover: {
-                                        size: 6
-                                    }
+                                    size: [4, 0],
+                                    strokeWidth: 2
+                                },
+                                colors: ['#4154f1', '#2eca6a'],
+                                fill: {
+                                    opacity: [0.2, 0.7]
+                                },
+                                dataLabels: {
+                                    enabled: false
                                 },
                                 xaxis: {
-                                    categories: categories,
-                                    labels: {
-                                        formatter: function(value) {
-                                            switch(period) {
-                                                case 'today':
-                                                    return `${value}:00`;
-                                                case 'month':
-                                                    return value;
-                                                case 'year':
-                                                    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-                                                    return months[value - 1];
-                                                default:
-                                                    return value;
-                                            }
-                                        }
-                                    }
+                                    categories: categories
                                 },
-                                yaxis: [{
-                                    title: {
-                                        text: 'Sales (₱)',
-                                        style: {
-                                            color: '#2eca6a'
-                                        }
-                                    },
-                                    labels: {
-                                        formatter: function(value) {
-                                            return formatCurrency(value);
+                                yaxis: [
+                                    {
+                                        title: {
+                                            text: 'Sales Amount',
                                         },
-                                        style: {
-                                            colors: '#2eca6a'
-                                        }
-                                    }
-                                }, {
-                                    opposite: true,
-                                    title: {
-                                        text: 'Customers',
-                                        style: {
-                                            color: '#ff771d'
-                                        }
-                                    },
-                                    labels: {
-                                        formatter: function(value) {
-                                            return Math.round(value);
-                                        },
-                                        style: {
-                                            colors: '#ff771d'
-                                        }
-                                    }
-                                }],
-                                tooltip: {
-                                    shared: true,
-                                    intersect: false,
-                                    y: {
-                                        formatter: function(value, { seriesIndex }) {
-                                            if (seriesIndex === 0) {
+                                        labels: {
+                                            formatter: function(value) {
                                                 return formatCurrency(value);
                                             }
-                                            return value + ' customers';
+                                        }
+                                    },
+                                    {
+                                        title: {
+                                            text: 'Transactions',
+                                        },
+                                        opposite: true,
+                                        labels: {
+                                            formatter: function(value) {
+                                                return Math.round(value);
+                                            }
                                         }
                                     }
+                                ],
+                                tooltip: {
+                                    y: [{
+                                        formatter: function(value) {
+                                            return formatCurrency(value);
+                                        }
+                                    }, {
+                                        formatter: function(value) {
+                                            return value + ' transactions';
+                                        }
+                                    }]
                                 },
                                 legend: {
                                     position: 'top',
-                                    horizontalAlign: 'right',
-                                    markers: {
-                                        width: 8,
-                                        height: 8,
-                                        radius: 4
-                                    }
+                                    horizontalAlign: 'right'
                                 }
                             };
 
                             reportsChart = new ApexCharts(document.querySelector("#reportsChart"), chartOptions);
                             reportsChart.render();
+
+                            // Update any other elements that show totals or changes
+                            if (data.totals) {
+                                // You can add code here to update other elements on your page
+                                console.log('Totals:', data.totals);
+                            }
                         })
                         .catch(error => {
                             console.error('Error:', error);
