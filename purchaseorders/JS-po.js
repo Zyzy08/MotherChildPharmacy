@@ -37,7 +37,7 @@ function setDataTables() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('getPOs.php')
+    fetch('getPendingPOs.php')
         .then(response => response.json())
         .then(data => updateTable(data))
         .catch(error => alert('Error fetching transactions data:', error));
@@ -54,7 +54,7 @@ function updateTable(data) {
         let statusColor;
         if (row.Status === "Pending") {
             statusColor = '#B8860B';
-        } else if (row.Status === "Partially Received") {
+        } else if (row.Status === "Back Order") {
             statusColor = 'blue';
         } else if (row.Status === "Cancelled") {
             statusColor = 'red';
@@ -112,7 +112,7 @@ function fetchDetails(identifier) {
                     Status.style.color = '#B8860B'; // Change text color to yellow
                 } else if (data.Status === "Cancelled") {
                     Status.style.color = 'red'; // Change text color to red
-                } else if (data.Status === "Partially Received") {
+                } else if (data.Status === "Back Order") {
                     Status.style.color = 'blue';
                 } else if (data.Status === "Received") {
                     Status.style.color = 'green'; // Change text color to green

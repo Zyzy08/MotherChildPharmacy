@@ -454,7 +454,7 @@
                     statusColor = '#B8860B';
                 } else if (row.Status === "Cancelled") {
                     statusColor = 'red';
-                } else if (row.Status === "Partially Received") {
+                } else if (row.Status === "Back Order") {
                     statusColor = 'blue';
                 } else if (row.Status === "Received") {
                     statusColor = 'green';
@@ -491,6 +491,9 @@
         const amtChange = document.getElementById('amtChange');
         const supplierName = document.getElementById('supplierName');
 
+        const modalVerifyTitleFront = document.getElementById('modalVerifyTitle-Front');
+        const modalVerifyTextFront = document.getElementById('modalVerifyText-Front');
+
         function resetFields() {
             confirmButton.textContent = "Receive Delivery";
         }
@@ -510,7 +513,7 @@
 
                         if (data.Status === "Pending") {
                             Status.style.color = '#B8860B'; // Yellow
-                        } else if (data.Status === "Partially Received") {
+                        } else if (data.Status === "Back Order") {
                             Status.style.color = 'blue';
                         } else if (data.Status === "Cancelled") {
                             Status.style.color = 'red'; // Red
@@ -532,8 +535,8 @@
                             <td>${item.description}</td>
                             <td class="editable" data-key="lotNo" id="lotNo"></td>
                             <td class="editable" data-key="expiryDate" id="expiryDate"></td>
-                            <td>${item.pending}</td>
-                            <td class="editable" data-key="qtyServed" id="qtyServed">0</td>
+                            <td class="pendingQty">${item.pending}</td>
+                            <td class="editable" data-key="qtyServed" id="qtyServed" data-pending="${item.pending}">0</td>
                             <td class="editable" data-key="bonus" id="bonus">0</td>
                             <td class="editable" data-key="netAmt" id="netAmt">₱0.00</td>
                         `;
@@ -592,13 +595,31 @@
                     // Format net amount as currency (₱ + value)
                     const formattedValue = formatCurrency(newValue);
                     cell.textContent = formattedValue;
-                } else if (cell.id === 'qtyServed' || cell.id === 'bonus') {
+                } else if (cell.id === 'bonus') {
                     const parsedValue = parseInt(newValue, 10);
 
                     if (!isNaN(parsedValue) && parsedValue >= 0) {
                         newValue = parsedValue; // Save valid value
                     } else {
                         newValue = 0; // Revert if invalid
+                        const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
+                        modalVerifyTitleFront.textContent = 'Warning: Invalid Input';
+                        modalVerifyTextFront.textContent = `Bonus quantity must be a whole number.`;
+                        confirmationModal.show();
+                    }
+                    cell.textContent = newValue;
+                } else if (cell.id === 'qtyServed') {
+                    const parsedValue = parseInt(newValue, 10);
+                    const pendingQty = parseInt(cell.dataset.pending, 10); // Get the pending quantity
+
+                    if (!isNaN(parsedValue) && parsedValue >= 0 && parsedValue <= pendingQty) {
+                        newValue = parsedValue; // Save valid value
+                    } else {
+                        newValue = 0; // Revert if invalid
+                        const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
+                        modalVerifyTitleFront.textContent = 'Warning: Invalid Input';
+                        modalVerifyTextFront.textContent = `Quantity served cannot exceed the pending quantity (${pendingQty}).`;
+                        confirmationModal.show();
                     }
                     cell.textContent = newValue;
                 } else if (cell.id === 'expiryDate') {
@@ -611,8 +632,21 @@
 
                         // Check if input date is greater than today
                         newValue = inputDate > currentDate ? newValue : '';
+                        if (inputDate > currentDate) {
+                            newValue = newValue;
+                        } else {
+                            newValue = '';
+                            const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
+                            modalVerifyTitleFront.textContent = 'Warning: Invalid Input';
+                            modalVerifyTextFront.textContent = `Expiry date must be greater than today.`;
+                            confirmationModal.show();
+                        }
                     } else {
                         newValue = ''; // Revert if format is invalid
+                        const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
+                        modalVerifyTitleFront.textContent = 'Warning: Invalid Input';
+                        modalVerifyTextFront.textContent = `Please insert a valid expiry date .`;
+                        confirmationModal.show();
                     }
                     cell.textContent = newValue;
                 }
@@ -633,7 +667,15 @@
             // Function to format value as currency (₱)
             function formatCurrency(value) {
                 const numberValue = parseFloat(value.replace(/[^0-9.]+/g, '')); // Remove non-numeric chars
-                return isNaN(numberValue) ? '₱0.00' : `₱${numberValue.toFixed(2)}`;
+                if (isNaN(numberValue)) {
+                    const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
+                    modalVerifyTitleFront.textContent = 'Warning: Invalid Input';
+                    modalVerifyTextFront.textContent = `Please enter a valid net amount.`;
+                    confirmationModal.show();
+                    return '₱0.00';
+                } else {
+                    return `₱${numberValue.toFixed(2)}`;
+                }
             }
         }
 

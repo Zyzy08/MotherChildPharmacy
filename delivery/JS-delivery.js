@@ -60,7 +60,7 @@ function updateTable(data) {
             statusColor = '#B8860B';
         } else if (row.DeliveryStatus === "Returned") {
             statusColor = 'red';
-        } else if (row.DeliveryStatus === "Partial") {
+        } else if (row.DeliveryStatus === "Back Order") {
             statusColor = 'blue';
         } else if (row.DeliveryStatus === "Completed") {
             statusColor = 'green';
@@ -113,7 +113,7 @@ function fetchDetails(identifier) {
 
                 if (data.DeliveryStatus === "Pending") {
                     Status.style.color = '#B8860B'; // Yellow
-                } else if (data.DeliveryStatus === "Partial") {
+                } else if (data.DeliveryStatus === "Back Order") {
                     Status.style.color = 'blue';
                 } else if (data.DeliveryStatus === "Cancelled") {
                     Status.style.color = 'red'; // Red

@@ -137,11 +137,11 @@ if ($newReceivedItems == $totalItemsOrdered || $newReceivedItems > $totalItemsOr
     $orderStmt->bind_param("i", $purchaseOrderID);
     $orderStmt->execute();
 } elseif ($newReceivedItems > 0) {
-    $deliveryStatus = 'Partial';
+    $deliveryStatus = 'Back Order';
     // Update purchase order status if partially delivered
     $updateOrderSQL = "
         UPDATE purchaseorders 
-        SET Status = 'Partially Received' 
+        SET Status = 'Back Order' 
         WHERE PurchaseOrderID = ?";
     $orderStmt = $conn->prepare($updateOrderSQL);
     $totalItemsOrdered = count($orderDetailsArray); // Compare with total items
@@ -149,7 +149,7 @@ if ($newReceivedItems == $totalItemsOrdered || $newReceivedItems > $totalItemsOr
     $orderStmt->bind_param("i", $purchaseOrderID);
     $orderStmt->execute();
 } else {
-    $deliveryStatus = 'Pending';
+    $deliveryStatus = 'Back Order';
 }
 
 $stmt->bind_param("iiiss", $purchaseOrderID, $supplierID, $receivedBy, $totalDeliveredItems, $deliveryStatus);
@@ -173,7 +173,7 @@ $itemStmt = $conn->prepare($insertItemSQL);
 foreach ($orderDetailsArray as $detail) {
     $itemID = $detail['itemID'];
     $lotNumber = $detail['lotNo'];
-    if($detail['expiryDate'] != ''){
+    if ($detail['expiryDate'] != '') {
         $expiryDate = date('Y-m-d', strtotime($detail['expiryDate'])); // Convert to MySQL date format
     }
     $quantityDelivered = $detail['qty'];
@@ -182,7 +182,7 @@ foreach ($orderDetailsArray as $detail) {
     $qtyDeliveredPlusBonus = $detail['qtyTotal'];
 
     // Ensure no empty values before inserting
-    if (!empty($lotNumber) && !empty($expiryDate) && $quantityDelivered > 0) {
+    if (!empty($lotNumber) && !empty($expiryDate) && !empty($quantityDelivered) && !empty($netAmt)) {
         $itemStmt->bind_param("iissiii", $itemID, $deliveryID, $lotNumber, $expiryDate, $quantityDelivered, $bonusAmt, $netAmt);
 
         if (!$itemStmt->execute()) {
@@ -212,6 +212,24 @@ foreach ($orderDetailsArray as $detail) {
             sendResponse($response);
         }
         $updateInventoryStmt->close();
+
+        // Calculate the PricePerUnit with a 5% markup, rounded to 2 decimal places
+        $basePricePerUnit = $netAmt / $quantityDelivered;
+        $pricePerUnitWithMarkup = round($basePricePerUnit * 1.05, 2); // Apply 5% markup and round to 2 decimal places
+
+        // Update PricePerUnit in the inventory table
+        $updatePriceSQL = "UPDATE inventory SET PricePerUnit = ? WHERE ItemID = ?";
+        $updatePriceStmt = $conn->prepare($updatePriceSQL);
+        $updatePriceStmt->bind_param("di", $pricePerUnitWithMarkup, $itemID);
+
+        if (!$updatePriceStmt->execute()) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Failed to update PricePerUnit: ' . $updatePriceStmt->error
+            ];
+            sendResponse($response);
+        }
+        $updatePriceStmt->close();
     }
 }
 

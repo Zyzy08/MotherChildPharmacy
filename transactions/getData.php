@@ -92,7 +92,7 @@ if (isset($_GET['InvoiceID'])) {
     $updatedetails = "(Invoice ID: IN-0" . $InvoiceID . ")";
     //Log if Success
     $description = "User viewed a transaction's details $updatedetails.";
-    logAction($conn, $sessionAccountID, 'View Invoice', $description, 1);
+    //logAction($conn, $sessionAccountID, 'View Invoice', $description, 1);
 
     echo json_encode($data);
 } else {

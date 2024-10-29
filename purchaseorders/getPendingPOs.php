@@ -15,7 +15,8 @@ if ($conn->connect_error) {
 }
 
 // Modify the SQL query to include a JOIN with the suppliers table
-$sql = "SELECT 
+$sql = "
+    SELECT 
     po.PurchaseOrderID, 
     DATE_FORMAT(po.OrderDate, '%m/%d/%Y') AS OrderDate, 
     po.TotalItems, 
@@ -25,7 +26,7 @@ $sql = "SELECT
     purchaseorders po
     JOIN 
     suppliers s ON po.SupplierID = s.SupplierID WHERE 
-    po.Status IN ('Pending', 'Partially Received');";
+    po.Status IN ('Pending', 'Partially Received', 'Back Order');";
 
 $result = $conn->query($sql);
 
