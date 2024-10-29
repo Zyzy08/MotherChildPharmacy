@@ -166,7 +166,7 @@ if (!$stmt->execute()) {
 $deliveryID = $stmt->insert_id; // Get the last inserted DeliveryID
 
 // Insert each item into `delivery_items` table
-$insertItemSQL = "INSERT INTO delivery_items (ItemID, DeliveryID, LotNumber, ExpiryDate, QuantityDelivered, Bonus, NetAmount) VALUES (?, ?, ?, ?, ?, ?, ?)";
+$insertItemSQL = "INSERT INTO delivery_items (ItemID, DeliveryID, LotNumber, ExpiryDate, QuantityDelivered, Bonus, QuantityRemaining, NetAmount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 $itemStmt = $conn->prepare($insertItemSQL);
 
 // Iterate over delivery items and insert them
@@ -183,7 +183,7 @@ foreach ($orderDetailsArray as $detail) {
 
     // Ensure no empty values before inserting
     if (!empty($lotNumber) && !empty($expiryDate) && !empty($quantityDelivered) && !empty($netAmt)) {
-        $itemStmt->bind_param("iissiii", $itemID, $deliveryID, $lotNumber, $expiryDate, $quantityDelivered, $bonusAmt, $netAmt);
+        $itemStmt->bind_param("iissiiii", $itemID, $deliveryID, $lotNumber, $expiryDate, $quantityDelivered, $bonusAmt, $quantityDelivered, $netAmt);
 
         if (!$itemStmt->execute()) {
             $response = [
