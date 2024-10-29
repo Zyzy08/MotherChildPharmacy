@@ -33,8 +33,8 @@
   <!-- DataTables Imports -->
   <link rel="stylesheet" href="../users/dataTablesUsers/dataTables.css" />
   <!--<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css" /-->
-  <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
-  <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+  <script type="text/javascript" language="javascript" src="../users/dataTablesUsers/jquery-3.7.1.js"></script>
+  <script src="../users/dataTablesUsers/dataTables.js"></script>
 
   <!-- Template Main CSS File -->
   <link href="../style.css" rel="stylesheet">
@@ -269,7 +269,7 @@
             </select>
             
             <!--<input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱" onfocus="addPesoSign()" oninput="addPesoSign()" /> -->
-            <input type="number" id="pricePerUnit" name="pricePerUnit" placeholder="₱ " onfocus="addPesoSign()" oninput="updatePrice()" />
+            <input type="number" id="pricePerUnit" name="pricePerUnit" placeholder="₱ " oninput="updatePrice()" />
           </div>
 
           <div class="textbox">
@@ -311,7 +311,7 @@
               <option value="mL">mL</option>
               <option value="mol">mol</option>
               <option value="	mmol">mmol</option>
-              <option value="	piece">pc]</option>
+              <option value="	piece">pc</option>
             </select>
 
             <select name="VAT_exempted" id="VAT_exempted" onchange="updateValue()">
