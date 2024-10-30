@@ -104,9 +104,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     const totalStock = document.getElementById('total-stock');
+    const stockLabel = document.querySelector('.text-muted.small.pt-2.ps-1');
+    let currentFilter = 'instock'; // Default filter
 
-    function fetchInventoryData() {
-        fetch('fetchInventoryData.php')
+    // Add click event listeners to filter options
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const period = this.getAttribute('data-period');
+            
+            // Update current filter based on selection
+            switch(period) {
+                case 'today':
+                    currentFilter = 'instock';
+                    break;
+                case 'month':
+                    currentFilter = 'lowstock';
+                    break;
+                case 'year':
+                    currentFilter = 'outofstock';
+                    break;
+            }
+            
+            fetchInventoryData(currentFilter);
+        });
+    });
+
+    function fetchInventoryData(filter = 'instock') {
+        fetch(`fetchInventoryData.php?filter=${filter}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -115,7 +140,20 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(data => {
                 console.log('Received inventory data:', data);
-                totalStock.textContent = data.totalStock;
+                totalStock.textContent = data.count;
+                
+                // Update the label based on filter
+                switch(filter) {
+                    case 'instock':
+                        stockLabel.textContent = 'In-stock';
+                        break;
+                    case 'lowstock':
+                        stockLabel.textContent = 'Low-stock';
+                        break;
+                    case 'outofstock':
+                        stockLabel.textContent = 'Out-of-stock';
+                        break;
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -123,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // Fetch inventory data when the page loads
+    // Initial fetch with default filter
     fetchInventoryData();
 });
 

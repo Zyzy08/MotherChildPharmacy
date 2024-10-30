@@ -90,7 +90,7 @@ async function loadProducts() {
                                 <span class="badge rounded-pill bg-light text-dark">${product.Mass}${formattedUnit}</span>
                             </div>
                             <div class="col-lg-3 mx-3">
-                                <span class="badge bg-success">₱${product.PricePerUnit}</span>
+                                <span class="badge bg-success">₱${formatPrice(product.PricePerUnit)}</span>
                             </div>
                         </div>
                         <input type="hidden" class="item-id" value="${product.ItemID}">
@@ -273,7 +273,7 @@ function showQuantityModal(product) {
                 <div class="col-md-8">
                     <div class="card-body">
                         ${stockBadge}
-                        <small class="card-text">₱${product.PricePerUnit}</small>
+                        <small class="card-text">₱${formatPrice(product.PricePerUnit)}</small>
                         <h5 class="card-title">${product.BrandName} ${product.Mass}${formattedUnit}</h5>
                         <p class="card-text">${product.GenericName}</p>
                     </div>
@@ -353,7 +353,6 @@ function updateBasketDisplay() {
         const itemTotal = item.PricePerUnit * item.quantity;
         basketTotal += itemTotal;
 
-        // Properly escape the item ID for the onclick attribute
         const escapedId = item.id.replace(/'/g, "\\'").replace(/"/g, '\\"');
 
         basketItemsContainer.insertAdjacentHTML('beforeend', `
@@ -367,7 +366,7 @@ function updateBasketDisplay() {
                 </div>
                 <p class="mb-1">${item.GenericName}</p>
                 <div class="d-flex w-100 justify-content-between">
-                    <small>₱${itemTotal.toFixed(2)}</small>
+                    <small>₱${formatPrice(itemTotal)}</small>
                     <small>x${item.quantity}</small>
                 </div>
             </a>
@@ -376,8 +375,8 @@ function updateBasketDisplay() {
 
     const tax = (basketTotal * 0.12).toFixed(2);
     const totalAmount = (basketTotal + parseFloat(tax)).toFixed(2);
-    document.getElementById('basket-total').textContent = `₱${totalAmount}`;
-    document.getElementById('basket-tax').textContent = `₱${tax}`;
+    document.getElementById('basket-total').textContent = `₱${formatPrice(totalAmount)}`;
+    document.getElementById('basket-tax').textContent = `₱${formatPrice(tax)}`;
     updateCheckoutButtonState();
 }
 
@@ -429,7 +428,7 @@ function updateModalTotal() {
     const discountAmount = subtotal * (discountPercentage / 100);
     const discountedTotal = subtotal + tax - discountAmount;
 
-    document.getElementById('total-display').textContent = `Total: ₱${discountedTotal.toFixed(2)}`;
+    document.getElementById('total-display').textContent = `Total: ₱${formatCurrency(subtotal)}`;
 }
 
 let receiptItems = [];
@@ -489,7 +488,7 @@ function displayReceiptItems() {
             <div class="row text-center">
                 <div class="col-4"><small>${item.quantity}</small></div>
                 <div class="col-4"><small>${item.item_name}</small></div>
-                <div class="col-3"><small>₱${item.total_item_price}</small></div>
+                <div class="col-3"><small>₱${formatPrice(item.total_item_price)}</small></div>
             </div>
         `;
         receiptContainer.insertAdjacentHTML('beforeend', itemHTML);
@@ -499,12 +498,11 @@ function displayReceiptItems() {
 function updatePaymentDisplay() {
     const paymentInput = document.getElementById('paymentInput');
     const payment = parseFloat(paymentInput.value) || 0;
-    document.getElementById('payment').textContent = `₱${payment.toFixed(2)}`;
+    document.getElementById('payment').textContent = `₱${formatCurrency(payment)}`;
     
-    // Update change display as well
     const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g,""));
     const change = Math.max(0, payment - amountDue);
-    document.getElementById('change').textContent = `₱${change.toFixed(2)}`;
+    document.getElementById('change').textContent = `₱${formatPrice(change)}`;
 }
 
 function updateChangeDisplay() {
@@ -927,13 +925,13 @@ ${'-'.repeat(maxWidth)}
     // Add summary information
     content += `${'-'.repeat(maxWidth)}\n`;
     content += formatLine(`Total Items:`, `${totalItems}\n`);
-    content += formatLine(`Subtotal:`, `P${subtotal}\n`);
-    content += formatLine(`Tax 12%:`, `P${tax}\n`);
-    content += formatLine(`Discount:`, `P-${discount.toFixed(2)}\n`);
-    content += formatLine(`Amount Due:`, `P${amountDue}\n`);
+    content += formatLine(`Subtotal:`, `P${formatPrice(subtotal)}\n`);
+    content += formatLine(`Tax 12%:`, `P${formatPrice(tax)}\n`);
+    content += formatLine(`Discount:`, `P-${formatPrice(discount)}\n`);
+    content += formatLine(`Amount Due:`, `P${formatPrice(amountDue)}\n`);
     content += formatLine(`Refund Amount:`, `P0.00\n`);
-    content += formatLine(`Payment:`, `P${amountPaid}\n`);
-    content += formatLine(`Change:`, `P${change}\n`);
+    content += formatLine(`Payment:`, `P${formatPrice(amountPaid)}\n`);
+    content += formatLine(`Change:`, `P${formatPrice(change)}\n`);
     content += `${'-'.repeat(maxWidth)}\n`;
     content += formatLine(`Order No.:`, `#${orderNum}\n`);
     content += formatLine(`Date:`, `${getCurrentDateTime()}\n`);
@@ -991,3 +989,15 @@ function validatePayment(input) {
   input.value = input.value.replace(/[^0-9]/g, '');
 }
 
+function formatPrice(price) {
+    return parseFloat(price).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function formatCurrency(number) {
+    return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+}
+
+//latest

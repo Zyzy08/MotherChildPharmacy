@@ -13,8 +13,26 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Query to get the total stock
-$query = "SELECT SUM(InStock) AS TotalStock FROM `inventory`";
+// Get the filter parameter
+$filter = isset($_GET['filter']) ? $_GET['filter'] : 'instock';
+
+// Define the low stock threshold
+$lowStockThreshold = 49; // Adjust this value based on your needs
+
+// Prepare the query based on the filter
+switch($filter) {
+    case 'instock':
+        $query = "SELECT COUNT(*) as count FROM `inventory` WHERE InStock > $lowStockThreshold";
+        break;
+    case 'lowstock':
+        $query = "SELECT COUNT(*) as count FROM `inventory` WHERE InStock > 0 AND InStock <= $lowStockThreshold";
+        break;
+    case 'outofstock':
+        $query = "SELECT COUNT(*) as count FROM `inventory` WHERE InStock = 0";
+        break;
+    default:
+        $query = "SELECT COUNT(*) as count FROM `inventory` WHERE InStock > 0";
+}
 
 $result = $conn->query($query);
 
@@ -24,15 +42,14 @@ if (!$result) {
 
 $data = $result->fetch_assoc();
 
-$totalStock = $data['TotalStock'] ?? 0;
-
-// Format the total stock
-$formattedTotalStock = number_format($totalStock);
+// Format the count
+$count = number_format($data['count']);
 
 // Return the result as JSON
 header('Content-Type: application/json');
 echo json_encode([
-    'totalStock' => $formattedTotalStock
+    'count' => $count,
+    'filter' => $filter
 ]);
 
 // Close connection
