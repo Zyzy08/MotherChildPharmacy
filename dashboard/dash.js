@@ -103,35 +103,50 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const totalStock = document.getElementById('total-stock');
-    const stockLabel = document.querySelector('.text-muted.small.pt-2.ps-1');
-    let currentFilter = 'instock'; // Default filter
+    const inventoryCount = document.getElementById('inventory-count');
+    const statusText = document.getElementById('status-text');
+    const statusIcon = document.getElementById('status-icon');
+    const statusDescription = document.getElementById('status-description');
+    let currentStatus = 'in-stock';
 
-    // Add click event listeners to filter options
-    document.querySelectorAll('.dropdown-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const period = this.getAttribute('data-period');
-            
-            // Update current filter based on selection
-            switch(period) {
-                case 'today':
-                    currentFilter = 'instock';
-                    break;
-                case 'month':
-                    currentFilter = 'lowstock';
-                    break;
-                case 'year':
-                    currentFilter = 'outofstock';
-                    break;
-            }
-            
-            fetchInventoryData(currentFilter);
-        });
-    });
+    const statusConfigs = {
+        'in-stock': {
+            icon: 'bi-box-seam',
+            iconClass: 'text-primary',
+            bgClass: 'bg-primary-light',
+            textClass: 'text-primary',
+            description: 'In-Stock Items'
+        },
+        'low-stock': {
+            icon: 'bi-exclamation-triangle',
+            iconClass: 'text-warning',
+            bgClass: 'bg-warning-light',
+            textClass: 'text-warning',
+            description: 'Low-Stock Items'
+        },
+        'out-of-stock': {
+            icon: 'bi-x-circle',
+            iconClass: 'text-danger',
+            bgClass: 'bg-danger-light',
+            textClass: 'text-danger',
+            description: 'Out-of-Stock Items'
+        }
+    };
 
-    function fetchInventoryData(filter = 'instock') {
-        fetch(`fetchInventoryData.php?filter=${filter}`)
+    function updateCardAppearance(status) {
+        const config = statusConfigs[status];
+        
+        // Update icon
+        statusIcon.className = `card-icon rounded-circle d-flex align-items-center justify-content-center ${config.bgClass}`;
+        statusIcon.innerHTML = `<i class="bi ${config.icon} ${config.iconClass}"></i>`;
+        
+        // Update text
+        statusDescription.className = `${config.textClass} small pt-1 fw-bold`;
+        statusDescription.textContent = config.description;
+    }
+
+    function fetchInventoryData(status = 'in-stock') {
+        fetch(`fetchInventoryData.php?status=${status}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -139,30 +154,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
-                console.log('Received inventory data:', data);
-                totalStock.textContent = data.count;
-                
-                // Update the label based on filter
-                switch(filter) {
-                    case 'instock':
-                        stockLabel.textContent = 'In-stock';
-                        break;
-                    case 'lowstock':
-                        stockLabel.textContent = 'Low-stock';
-                        break;
-                    case 'outofstock':
-                        stockLabel.textContent = 'Out-of-stock';
-                        break;
-                }
+                console.log('Received inventory stats:', data);
+                inventoryCount.textContent = data.count;
+                updateCardAppearance(data.status);
             })
             .catch(error => {
                 console.error('Error:', error);
-                totalStock.textContent = 'Error loading data';
+                inventoryCount.textContent = 'Error';
             });
     }
 
-    // Initial fetch with default filter
-    fetchInventoryData();
+    // Add click event listeners to filter dropdown items
+    document.querySelectorAll('.dropdown-item-inv').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const status = this.dataset.status;
+            currentStatus = status;
+            fetchInventoryData(status);
+        });
+    });
+
+    // Initial fetch of inventory stats
+    fetchInventoryData(currentStatus);
+
+    // Optional: Refresh data periodically (every 5 minutes)
+    setInterval(() => fetchInventoryData(currentStatus), 300000);
 });
 
 //orig
