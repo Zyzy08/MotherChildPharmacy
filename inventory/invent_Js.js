@@ -94,13 +94,7 @@ function validateForm() {
 // Add event listener for form submission
 // Add event listener for "New Product" button
 // Disable the InStock field when the New Product button is clicked
-document.getElementById('addProductButton').addEventListener('click', function() {
-    // Disable the InStock field
-    document.getElementById('inStockInput').disabled = true; // Change 'inStockInput' to the correct ID of your InStock input field
-    
-    // Optional: Reset the InStock input value if needed
-    document.getElementById('inStockInput').value = ''; // This will clear the field, uncomment if needed
-});
+
 
 
 const modalVerifyTextFront = document.getElementById('modalVerifyText-Front');
@@ -138,7 +132,7 @@ document.getElementById('PurchaseForm').addEventListener('submit', function(even
     // Get values from input fields for validation
     const mass = parseFloat(document.getElementById('mass').value);
     const pricePerUnit = parseFloat(document.getElementById('pricePerUnit').value.replace('₱ ', '').trim());
-    const inStock = parseInt(formData.get('InStock'), 10); // Get the value of InStock from formData
+    //const inStock = parseInt(formData.get('InStock'), 10); // Get the value of InStock from formData
     const discount = parseInt(document.querySelector('select[name="Discount"]').value, 10); // Ensure correct fetching of discount
     const vatExempted = parseInt(document.getElementById('VAT_exempted').value, 10); // Get VAT exempted value
 
@@ -151,10 +145,10 @@ document.getElementById('PurchaseForm').addEventListener('submit', function(even
         showError('Price per unit cannot be negative.');
         return;
     }
-    if (isNaN(inStock) || inStock < 0) {
-        showError('In Stock must be a non-negative number.');
-        return;
-    }
+    //if (isNaN(inStock) || inStock < 0) {
+   //     showError('In Stock must be a non-negative number.');
+   //     return;
+   // }
 
     // Update discount validation to allow value 0 (Unavailable)
     if (isNaN(discount)) { // Check if discount is not a number (i.e., no option selected)
@@ -214,11 +208,11 @@ function loadFormForEdit(item) {
     document.getElementById('pricePerUnit').value = item.PricePerUnit;
     document.getElementById('Discount').value = item.Discount;
     document.getElementById('VAT_exempted').value = item.VAT_exempted; // Set VAT_exempted field
-    document.getElementById('inStockInput').value = item.InStock; // Use the correct ID for InStock input
+    //document.getElementById('inStockInput').value = item.InStock; // Use the correct ID for InStock input
 
 
     // Enable the In Stock field for editing
-    document.getElementById('inStockInput').disabled = false; 
+    //document.getElementById('inStockInput').disabled = false; 
 
     // Set the icon preview
     document.getElementById('iconPreview').src = item.ProductIcon || '../resources/img/add_icon.png'; // Use default if no icon
@@ -278,7 +272,7 @@ document.getElementById('iconFile').addEventListener('change', previewImage);
 document.getElementById('closeBtn').addEventListener('click', function(event) {
     console.log('Close button clicked'); // Check if this logs
     event.preventDefault(); // Prevent any default behavior
-    document.getElementById('myForm').style.display = 'none'; // Hide the form/modal
+    document.getElementById('PurchaseForm').style.display = 'none'; // Hide the form/modal
 });
 
 // Stop form submission if the close button is clicked
@@ -713,3 +707,352 @@ window.addEventListener('click', function(event) {
         closeLowStockModal();
     }
 });
+
+
+
+////////////////////////////////////////
+// GOODS ISSUE PART///
+
+
+
+    // Show the overlay when the Goods Issue button is clicked
+    document.getElementById("GoodsIssueBtn").addEventListener("click", function () {
+        document.getElementById("overlayEdit1").style.display = "flex";
+    });
+
+    // Close the overlay when the close button is clicked
+    document.getElementById("GIcloseBtn").addEventListener("click", function () {
+        closeEditOverlay();
+    });
+
+// Function to close the overlay and reset the form
+function closeEditOverlay() {
+    const form = document.getElementById('userFormEdit'); // Use the actual ID of your form
+    if (form) {
+        form.reset(); // Reset all form fields
+    }
+
+    const overlay = document.getElementById('overlayEdit1'); // Use the actual ID of your overlay
+    if (overlay) {
+        overlay.style.display = 'none'; // Hide the overlay
+    }
+}
+
+
+
+function filterOptions() {
+    const input = document.getElementById('selectProd');
+    const filter = input.value.toLowerCase();
+    const dropdown = document.getElementById('productSelect');
+    dropdown.innerHTML = ''; // Clear previous options
+    dropdown.style.display = 'none'; // Initially hide the dropdown
+
+    // Clear Ordered and QuantityRemaining fields if the input is empty
+    if (filter === '') {
+        resetOrderedField(); // Only reset the Ordered field
+        return; // Stop function if input is empty
+    }
+
+    // AJAX request to fetch matching products
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `goodIssueGetData.php?query=${encodeURIComponent(filter)}`, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                const products = JSON.parse(xhr.responseText);
+                const MAX_LENGTH = 50;
+
+                if (products.length > 0) {
+                    const defaultOption = document.createElement('div');
+                    defaultOption.classList.add('option');
+                    defaultOption.textContent = 'Select a product';
+                    defaultOption.onclick = () => {
+                        input.value = ''; // Clear input if default is clicked
+                        dropdown.style.display = 'none';
+                    };
+                    dropdown.appendChild(defaultOption);
+
+                    products.forEach(product => {
+                        const option = document.createElement('div');
+                        option.classList.add('option');
+                        option.dataset.value = product.ItemID; // Store the ItemID
+                        const displayText = `${product.GenericName} ${product.BrandName} (${product.Mass} ${product.UnitOfMeasure})`;
+                        option.textContent = displayText.length > MAX_LENGTH 
+                            ? displayText.substring(0, MAX_LENGTH - 3) + '...' 
+                            : displayText;
+                        option.onclick = function() {
+                            selectProduct(option);
+                        };
+                        dropdown.appendChild(option);
+                    });
+                    dropdown.style.display = 'block'; // Show dropdown if results found
+                }
+            } else {
+                console.error('Error fetching product data:', xhr.statusText);
+            }
+        }
+    };
+    xhr.send();
+}
+
+function selectProduct(option) {
+    const input = document.getElementById('selectProd');
+    input.value = option.textContent;
+    currentSelectedItemID = option.dataset.value; // Store the selected ItemID
+    document.getElementById('productSelect').style.display = 'none';
+
+    // Fetch product data and update Ordered field
+    fetchProductData(currentSelectedItemID);
+}
+
+// LOT 
+
+function filterLotOptions() {
+    const input = document.getElementById('selectLot');
+    const filter = input.value.toLowerCase();
+    const dropdown = document.getElementById('lotSelect');
+
+    // Ensure dropdown exists and clear its content
+    if (dropdown) {
+        dropdown.innerHTML = '';
+        dropdown.style.display = 'none';
+    }
+
+    if (filter === '') {
+        resetQuantityRemainingField(); // Only clear QuantityRemaining when input is empty
+        return; // Exit function
+    }
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `goodIssueGetData.php?lotQuery=${encodeURIComponent(filter)}`, true);
+    
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                const lots = JSON.parse(xhr.responseText);
+                const MAX_LENGTH = 50;
+
+                if (lots.length > 0) {
+                    const defaultOption = document.createElement('div');
+                    defaultOption.classList.add('option');
+                    defaultOption.textContent = 'Select a Lot Number';
+                    defaultOption.onclick = () => {
+                        input.value = '';
+                        dropdown.style.display = 'none';
+                        resetQuantityRemainingField(); // Clear QuantityRemaining when default is clicked
+                    };
+                    dropdown.appendChild(defaultOption);
+
+                    lots.forEach(lot => {
+                        const option = document.createElement('div');
+                        option.classList.add('option');
+                        option.dataset.value = lot.LotNumber;
+                        option.dataset.quantity = lot.QuantityRemaining; // Store QuantityRemaining in data attribute
+
+                        option.textContent = lot.LotNumber.length > MAX_LENGTH 
+                            ? lot.LotNumber.substring(0, MAX_LENGTH - 3) + '...' 
+                            : lot.LotNumber;
+
+                        option.onclick = function() {
+                            selectLot(option);
+                        };
+                        dropdown.appendChild(option);
+                    });
+                    dropdown.style.display = 'block';
+                } else {
+                    const noResultsOption = document.createElement('div');
+                    noResultsOption.classList.add('option');
+                    noResultsOption.textContent = 'No results found';
+                    dropdown.appendChild(noResultsOption);
+                    dropdown.style.display = 'block';
+                }
+            } else {
+                console.error("Error fetching lots:", xhr.statusText);
+            }
+        }
+    };
+    
+    xhr.send();
+}
+
+
+function selectLot(option) {
+    const input = document.getElementById('selectLot');
+    input.value = option.dataset.value; // Set the input value to the selected lot number
+    document.getElementById('lotSelect').style.display = 'none'; // Hide the dropdown
+
+    // Display QuantityRemaining in the appropriate field
+    const quantityRemaining = option.dataset.quantity; // Get the quantity remaining from the data attribute
+    document.getElementById('QuantityRemaining').value = quantityRemaining || 0; // Set QuantityRemaining to the input field
+
+    // Set the currentLotNumber variable to the selected LotNumber
+    currentLotNumber = option.dataset.value; // Store the selected LotNumber
+    console.log(`Lot selected: ${currentLotNumber}, Quantity Remaining: ${quantityRemaining || 0}`);
+
+    // Optionally, fetch product data using the selected LotNumber if needed
+    // fetchProductData(currentLotNumber); // Uncomment if necessary
+}
+
+// Function to reset the QuantityRemaining field (not defined in your provided code)
+function resetQuantityRemainingField() {
+    document.getElementById('QuantityRemaining').value = ''; // Clear QuantityRemaining field
+}
+
+function fetchProductData(itemID) {
+    if (itemID) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', `goodIssueGetData.php?itemID=${itemID}`, true);
+        
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    const productData = JSON.parse(xhr.responseText);
+                    console.log(productData); // Debugging log
+
+                    if (productData) {
+                        // Update Ordered only, do not clear QuantityRemaining
+                        document.getElementById('Ordered').value = productData.Ordered || 0; // Update Ordered only
+                    } else {
+                        document.getElementById('Ordered').value = 0; // Set Ordered to 0 if no data found
+                    }
+                } else {
+                    console.error('Error fetching product data:', xhr.statusText);
+                    document.getElementById('Ordered').value = 0; // Reset Ordered on error
+                }
+            }
+        };
+        xhr.send();
+    }
+}
+
+// Separate function to reset the Ordered field
+function resetOrderedField() {
+    document.getElementById('Ordered').value = ''; // Clear Ordered
+}
+
+// Separate function to reset the QuantityRemaining field
+function resetQuantityRemainingField() {
+    document.getElementById('QuantityRemaining').value = ''; // Clear QuantityRemaining
+}
+//Inserting Goods Issue
+
+let isAddMode = true; // Default mode is Add
+let currentSelectedItemID; // Declare a variable to hold the selected ItemID
+let currentLotNumber; // Store the selected LotNumber
+
+// Event listener for the Add button
+document.getElementById('ToggleAdd').addEventListener('click', function() {
+    isAddMode = true;
+    this.style.backgroundColor = 'green'; 
+    this.style.boxShadow = '0 0 10px green'; 
+    document.getElementById('ToggleSub').style.backgroundColor = ''; 
+    document.getElementById('ToggleSub').style.boxShadow = ''; 
+});
+
+
+// Event listener for the Subtract button
+document.getElementById('ToggleSub').addEventListener('click', function() {
+    isAddMode = false;
+    this.style.backgroundColor = 'red'; 
+    this.style.boxShadow = '0 0 10px red'; 
+    document.getElementById('ToggleAdd').style.backgroundColor = ''; 
+    document.getElementById('ToggleAdd').style.boxShadow = ''; 
+});
+
+
+// Get references to the input fields
+const quantityInput = document.getElementById('Quantity');
+
+// Add event listener to the Confirm button
+document.getElementById('ConfirmAction').addEventListener('click', function() {
+    const quantityInput = document.getElementById('Quantity');
+    const quantity = parseInt(quantityInput.value, 10);
+    const reason = document.getElementById('Reason').value;
+
+    // Validate if fields are empty
+    if (!quantityInput.value.trim() || !reason.trim()) {
+        showNotification('Please fill in all required fields.'); // Show notification for empty fields
+        console.error("One or more required fields are empty."); // Log error
+        return;
+    }
+
+    // Validate quantity input
+    if (isNaN(quantity) || quantity <= 0) {
+        showNotification('Please enter a valid quantity.'); // Show error message using notification
+        console.error("Invalid quantity entered."); // Log error
+        return;
+    }
+
+    // Determine action based on isAddMode
+    const action = isAddMode ? 'add' : 'subtract';
+
+    // Prepare the data to send to the server
+    const data = {
+        itemID: currentSelectedItemID, // Ensure this is set before confirming
+        lotNumber: currentLotNumber,     // Ensure this is set before confirming
+        Quantity: quantity,
+        reason: reason,                   // Use the actual reason input
+        timestamp: new Date().toISOString(), // Use current timestamp
+        action: action
+    };
+
+    // Send the data to the PHP script using fetch
+    fetch('insertGoodIssue.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log(result.message);
+        
+        // Display the response message in the modal
+        modalVerifyTextAD.textContent = result.message; // Display the response message
+        modalFooterAD.style.display = 'none';
+        modalCloseAD.style.display = 'none';
+        document.getElementById('modalVerifyTitle-AD').textContent = 'Success';
+
+        // Show the success modal
+        const successModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+        successModal.show();
+
+        // Redirect after a short delay
+        setTimeout(() => {
+            window.location.href = 'inventory.php'; // Redirect to inventory.php
+        }, 1000);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Error: ' + error.message); // Show error message using notification
+    });
+});
+
+
+
+
+// Function to show notification messages
+function showNotification(message) {
+    const notification = document.getElementById('notification');
+    const notificationMessage = document.getElementById('notificationMessage');
+    const closeNotification = document.getElementById('closeNotification');
+
+    // Set the notification message
+    notificationMessage.textContent = message;
+
+    // Show the notification
+    notification.style.display = 'block';
+
+    // Close notification when the close button is clicked
+    closeNotification.onclick = function() {
+        notification.style.display = 'none';
+    };
+
+    // Automatically hide the notification after 3 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+}
+
+
