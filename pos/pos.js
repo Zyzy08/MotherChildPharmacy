@@ -257,7 +257,7 @@ searchInput.addEventListener('keypress', async function(event) {
     }
 });
 
-function showQuantityModal(product) {
+/*function showQuantityModal(product) {
     const modalBody = document.getElementById('quantity-modal-body');
     const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
     let stockBadge = product.InStock < 50 ? 
@@ -298,7 +298,62 @@ function showQuantityModal(product) {
     };
 
     new bootstrap.Modal(document.getElementById('quantity-modal')).show();
+}*/
+
+function showQuantityModal(product) {
+    const modalBody = document.getElementById('quantity-modal-body');
+    const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
+    let stockBadge = product.InStock < 50 ? 
+        `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>` :
+        `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
+    
+    modalBody.innerHTML = `
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="../inventory/${product.ProductIcon}" class="img-fluid rounded-start" alt="Product Icon">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        ${stockBadge}
+                        <small class="card-text">₱${formatPrice(product.PricePerUnit)}</small>
+                        <h5 class="card-title">${product.BrandName} ${product.Mass}${formattedUnit}</h5>
+                        <p class="card-text">${product.GenericName}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const quantityInput = document.getElementById('quantity-input');
+    quantityInput.value = 1;
+    quantityInput.max = product.InStock;
+
+    const addItemButton = document.getElementById('add-item-button');
+    addItemButton.onclick = () => {
+        const quantityToAdd = parseInt(quantityInput.value, 10);
+
+        // Check current item quantity in the basket
+        const basketItem = basket.find(item => item.ItemID === product.ItemID);
+        const currentBasketQuantity = basketItem ? basketItem.quantity : 0;
+
+        // Calculate the combined quantity (existing + new) and check if it exceeds stock
+        const totalQuantity = currentBasketQuantity + quantityToAdd;
+
+        if (quantityToAdd > 0 && totalQuantity <= product.InStock) {
+            // Add item if total does not exceed stock
+            addItemToBasket(product, quantityToAdd);
+            bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
+        } else {
+            // Show message if adding would exceed available stock
+            showToast(`Cannot add more than ${product.InStock} of this item.`);
+        }
+    };
+
+    new bootstrap.Modal(document.getElementById('quantity-modal')).show();
 }
+
+//------------------------------------------------------------------------------------------------
 
 document.getElementById('quantity-cancel').addEventListener('click', function() {
     document.querySelectorAll('.clickable-card').forEach(card => card.classList.remove('active'));
@@ -999,5 +1054,3 @@ function formatPrice(price) {
 function formatCurrency(number) {
     return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
-
-//latest
