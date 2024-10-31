@@ -1,5 +1,4 @@
 <?php
-// Database connection parameters
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -13,26 +12,16 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get the filter parameter
-$filter = isset($_GET['filter']) ? $_GET['filter'] : 'instock';
+// Get the status from the request
+$status = $_GET['status'] ?? 'in-stock';
 
-// Define the low stock threshold
-$lowStockThreshold = 49; // Adjust this value based on your needs
-
-// Prepare the query based on the filter
-switch($filter) {
-    case 'instock':
-        $query = "SELECT COUNT(*) as count FROM `inventory` WHERE InStock > $lowStockThreshold";
-        break;
-    case 'lowstock':
-        $query = "SELECT COUNT(*) as count FROM `inventory` WHERE InStock > 0 AND InStock <= $lowStockThreshold";
-        break;
-    case 'outofstock':
-        $query = "SELECT COUNT(*) as count FROM `inventory` WHERE InStock = 0";
-        break;
-    default:
-        $query = "SELECT COUNT(*) as count FROM `inventory` WHERE InStock > 0";
-}
+// Query based on status
+$query = match($status) {
+    'in-stock' => "SELECT COUNT(*) as count FROM inventory WHERE InStock >= 50",
+    'low-stock' => "SELECT COUNT(*) as count FROM inventory WHERE InStock BETWEEN 1 AND 49",
+    'out-of-stock' => "SELECT COUNT(*) as count FROM inventory WHERE InStock = 0",
+    default => "SELECT COUNT(*) as count FROM inventory WHERE InStock >= 50"
+};
 
 $result = $conn->query($query);
 
@@ -43,14 +32,14 @@ if (!$result) {
 $data = $result->fetch_assoc();
 
 // Format the count
-$count = number_format($data['count']);
+$response = [
+    'count' => number_format($data['count'] ?? 0),
+    'status' => $status
+];
 
 // Return the result as JSON
 header('Content-Type: application/json');
-echo json_encode([
-    'count' => $count,
-    'filter' => $filter
-]);
+echo json_encode($response);
 
 // Close connection
 $conn->close();

@@ -30,6 +30,7 @@
 
   <!-- Template Main CSS File -->
   <link href="../style.css" rel="stylesheet">
+  <link href="dash_style.css" rel="stylesheet">
 
 </head>
 
@@ -226,34 +227,33 @@
 
             <!-- Inventory Card -->
             <div class="col-xxl-4 col-md-6">
-              <div class="card info-card sales-card">
-                <div class="filter">
-                  <a id="filter-inv" class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <li class="dropdown-header text-start">
-                      <h6>Filter</h6>
-                    </li>
-                    <li><a class="dropdown-item" href="#" data-period="today">In-Stock</a></li>
-                    <li><a class="dropdown-item" href="#" data-period="month">Low-Stock</a></li>
-                    <li><a class="dropdown-item" href="#" data-period="year">Out-of-Stock</a></li>
-                  </ul>
-                </div>
+                <div class="card info-card sales-card">
+                    <div class="filter">
+                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                                <h6>Filter</h6>
+                            </li>
+                            <li><a class="dropdown-item-inv" href="#" data-status="in-stock">In Stock</a></li>
+                            <li><a class="dropdown-item-inv" href="#" data-status="low-stock">Low Stock</a></li>
+                            <li><a class="dropdown-item-inv" href="#" data-status="out-of-stock">Out of Stock</a></li>
+                        </ul>
+                    </div>
 
-                <div class="card-body">
-                  <h5 class="card-title">Inventory</h5>
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-box-seam"></i>
+                    <div class="card-body">
+                        <h5 class="card-title">Inventory</h5>
+                        <div class="d-flex align-items-center">
+                            <div id="status-icon" class="card-icon rounded-circle d-flex align-items-center justify-content-center bg-success-light">
+                                <i class="bi bi-box-seam text-success"></i>
+                            </div>
+                            <div class="ps-3">
+                                <h6 id="inventory-count">0</h6>
+                                <span id="status-description" class="text-success small pt-1 fw-bold">Available Items</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="ps-3">
-                      <h6 id="total-stock">0</h6>
-                      <span class="text-muted small pt-2 ps-1">In-stock</span>
-                      <span class="text-muted small pt-2 ps-1">items</span>
-                    </div>
-                  </div>
                 </div>
-              </div>
-            </div><!-- End Inventory Card -->
+            </div>
 
             <!-- Sales Card -->
             <div class="col-xxl-4 col-md-6">
@@ -279,7 +279,7 @@
                     <div class="ps-3">
                       <h6 id="sales-total">₱0.00</h6>
                       <span id="percentage-change" class="text-success small pt-1 fw-bold">0%</span> 
-                      <span id="change-text" class="text-muted small pt-2 ps-1">increase</span>
+                      <br><span id="change-text" class="text-muted small pt-2 ps-1">increase</span>
                     </div>
                   </div>
                 </div>
@@ -310,7 +310,7 @@
                     <div class="ps-3">
                       <h6 id="customer-total">0</h6>
                       <span id="customer-percentage-change" class="text-success small pt-1 fw-bold">0%</span> 
-                      <span id="customer-change-text" class="text-muted small pt-2 ps-1">increase</span>
+                      <br><span id="customer-change-text" class="text-muted small pt-2 ps-1">increase</span>
                     </div>
                   </div>
                 </div>
@@ -726,7 +726,7 @@
 
   <!-- Template Main JS File -->
   <script src="../main.js"></script>
-  <script src="dash copy.js"></script>
+  <script src="dash.js"></script>
 
 </body>
 

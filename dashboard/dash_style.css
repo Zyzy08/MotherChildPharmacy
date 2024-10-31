@@ -1,0 +1,97 @@
+.dropdown-menu .dropdown-item-inv {
+    font-size: 14px;
+    padding: 10px 15px;
+    transition: 0.3s;
+}
+
+.dropdown-menu .dropdown-item-inv i {
+    margin-right: 10px;
+    font-size: 18px;
+    line-height: 0;
+}
+  
+.dropdown-menu .dropdown-item-inv:hover {
+    background-color: #f6f9ff;
+}
+
+.dashboard .filter .dropdown-item-inv {
+    padding: 8px 15px;
+}
+
+.header-nav .profile .dropdown-item-inv {
+  font-size: 14px;
+  padding: 10px 15px;
+  transition: 0.3s;
+}
+
+.header-nav .profile .dropdown-item-inv i {
+  margin-right: 10px;
+  font-size: 18px;
+  line-height: 0;
+}
+
+.header-nav .profile .dropdown-item-inv:hover {
+  background-color: #f6f9ff;
+}
+
+.dropdown-item-inv {
+    display: block;
+    width: 100%;
+    padding: var(--bs-dropdown-item-padding-y) var(--bs-dropdown-item-padding-x);
+    clear: both;
+    font-weight: 400;
+    color: var(--bs-dropdown-link-color);
+    text-align: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    border-radius: var(--bs-dropdown-item-border-radius, 0);
+}
+
+.bg-primary-light {
+    background-color: rgba(65, 84, 214, 0.1);
+}
+
+.bg-warning-light {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+.bg-danger-light {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.filter {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.filter .icon {
+    color: #aab7cf;
+    padding-right: 20px;
+    padding-bottom: 5px;
+    transition: 0.3s;
+    font-size: 16px;
+}
+
+.filter .icon:hover {
+    color: #4154f1;
+}
+
+.dropdown-menu {
+    min-width: 130px;
+    padding: 10px 0;
+}
+
+.dropdown-header {
+    padding: 10px 15px;
+}
+
+.dropdown-header h6 {
+    margin: 0;
+}
+
+.dropdown-item-inv {
+    padding: 8px 15px;
+}
