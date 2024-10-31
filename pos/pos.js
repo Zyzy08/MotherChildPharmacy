@@ -353,7 +353,7 @@ function showQuantityModal(product) {
     new bootstrap.Modal(document.getElementById('quantity-modal')).show();
 }
 
-//------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------
 
 document.getElementById('quantity-cancel').addEventListener('click', function() {
     document.querySelectorAll('.clickable-card').forEach(card => card.classList.remove('active'));
