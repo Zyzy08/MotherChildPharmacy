@@ -369,7 +369,7 @@
 
                 <div class="container">
                     <div class="col-xl-12">
-                        <div class="card-body profile-card usersTableSize flex-column align-items-center">
+                        <div class="card-body profile-card usersTableSize flex-column align-items-center" id="supplierProducts">
                             <!-- Product Table -->
                             <table id="productTable" class="display">
                                 <thead>
@@ -465,7 +465,7 @@
                 </div>
                 <!-- Update Supplier Table -->
                 <div class="col-xl-12">
-                    <div class="card-body profile-card usersTableSize flex-column align-items-center">
+                    <div class="card-body profile-card usersTableSize flex-column align-items-center" id="supplierProducts">
                         <table id="productTableUpdate" class="display">
                             <thead>
                                 <tr class="highlight-row">

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 29, 2024 at 06:35 PM
+-- Generation Time: Oct 31, 2024 at 04:49 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -160,7 +160,15 @@ INSERT INTO `audittrail` (`auditID`, `AccountID`, `action`, `description`, `crea
 (116, 3, 'Login', 'User logged in successfully.', '2024-10-29 17:22:16', '::1', '1'),
 (117, 3, 'View Invoice', 'User viewed a transaction\'s details (Invoice ID: IN-01).', '2024-10-29 17:23:10', '::1', '1'),
 (118, 3, 'Logout', 'User logged out successfully.', '2024-10-29 17:33:27', '::1', '1'),
-(119, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-10-29 17:33:27', '::1', '1');
+(119, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-10-29 17:33:27', '::1', '1'),
+(120, 3, 'Login', 'User logged in successfully.', '2024-10-31 01:29:32', '::1', '1'),
+(121, 3, 'Goods Issue', 'User manually adjusted the stock of a product. (ItemID: 2, Quantity: 4).', '2024-10-31 01:43:51', '::1', '1'),
+(122, 3, 'Archive Product', 'User archived a product. (ItemID: 11).', '2024-10-31 02:59:27', '::1', '1'),
+(123, 3, 'Database Backup', 'Backup initiated for database \'motherchildpharmacy\' by user.', '2024-10-31 03:10:52', '::1', '1'),
+(124, 3, 'Archive Supplier', 'User archived a supplier. (SupplierID: 2).', '2024-10-31 03:11:00', '::1', '1'),
+(125, 3, 'Unarchive Supplier', 'User unarchived a supplier. (SupplierID: 2).', '2024-10-31 03:11:05', '::1', '1'),
+(126, 3, 'Logout', 'User logged out successfully.', '2024-10-31 03:47:56', '::1', '1'),
+(127, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-10-31 03:47:56', '::1', '1');
 
 -- --------------------------------------------------------
 
@@ -208,7 +216,7 @@ CREATE TABLE `delivery_items` (
 --
 
 INSERT INTO `delivery_items` (`ItemID`, `DeliveryID`, `LotNumber`, `ExpiryDate`, `QuantityDelivered`, `Bonus`, `QuantityRemaining`, `NetAmount`, `isExpired`) VALUES
-(2, 1, '1H17359', '2025-11-11', 50, 5, 0, 400, '0');
+(2, 1, '1H17359', '2025-11-11', 50, 5, 54, 400, '0');
 
 -- --------------------------------------------------------
 
@@ -223,6 +231,13 @@ CREATE TABLE `goodsissue` (
   `Reason` text NOT NULL,
   `Timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `goodsissue`
+--
+
+INSERT INTO `goodsissue` (`IssueID`, `ItemID`, `Quantity`, `Reason`, `Timestamp`) VALUES
+(1, 2, 4, 'Add 4', '2024-10-30 17:43:51');
 
 -- --------------------------------------------------------
 
@@ -268,7 +283,7 @@ CREATE TABLE `inventory` (
 --
 
 INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `Discount`, `VAT_exempted`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`) VALUES
-(2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Milligrams', 55, 50, 0, 200.00, 1, 0, 1, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
+(2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Mg', 59, 50, 0, 9.00, 1, 0, 1, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
 (3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Milligrams', 0, 20, 0, 300.00, 1, 1, 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg'),
 (4, 'Ibuprofen', 'Advil', 'Medicine', '200', 'Milligrams', 0, 0, 0, 299.00, 0, 1, 1, '', 'Active', 'products-icon/Advil.png', 'AdvilIbuprofen200mg'),
 (5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Milligrams', 0, 0, 0, 499.00, 1, 1, 2, '', 'Active', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg'),
@@ -276,7 +291,7 @@ INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass
 (7, 'Loperamide', 'Imodium', 'Medicine', '2', 'Milligrams', 0, 0, 0, 149.00, 0, 1, NULL, '', '', 'products-icon/Imodium.png', 'ImodiumLoperamide2mg'),
 (8, 'Aluminum Hydroxide Magnesium Hydroxide Simeticone', 'Kremil-S', 'Medicine', '30', 'Milligrams', 0, 0, 0, 499.00, 0, 1, NULL, '', '', 'products-icon/kremilS.png', 'KremilS30mg'),
 (10, 'Bisacodyl', 'Dulcolax', 'Medicine', '5', 'Milligrams', 0, 0, 0, 149.00, 0, 1, NULL, '', '', 'products-icon/dulcolax.png', 'Dulcolax5mg'),
-(11, 'Ibuprofen', 'Medicol Advance', 'Medicine', '200', 'Milligrams', 0, 0, 0, 200.00, 0, 1, NULL, '', '', 'products-icon/medicol.png', 'MedicolAdvance200mg');
+(11, 'Ibuprofen', 'Medicol Advance', 'Medicine', '200', 'Milligrams', 0, 0, 0, 200.00, 0, 1, NULL, '', 'Archived', 'products-icon/medicol.png', 'MedicolAdvance200mg');
 
 -- --------------------------------------------------------
 
@@ -501,7 +516,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `audittrail`
 --
 ALTER TABLE `audittrail`
-  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
+  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
 
 --
 -- AUTO_INCREMENT for table `deliveries`
@@ -513,7 +528,7 @@ ALTER TABLE `deliveries`
 -- AUTO_INCREMENT for table `goodsissue`
 --
 ALTER TABLE `goodsissue`
-  MODIFY `IssueID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `IssueID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `inventory`

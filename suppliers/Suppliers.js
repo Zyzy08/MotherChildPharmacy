@@ -429,7 +429,7 @@ function initializeDataTable() {
         "responsive": true, // Enable responsiveness
         "paging": true, // Enable DataTables default pagination
         "lengthChange": false, // Disable page length changing
-        "pageLength": 4, // Set number of entries per page to 4
+        "pageLength": 3, // Set number of entries per page to 3
         "searching": true, // Enable the search bar
         "info": true, // Enable info about records
         "language": {

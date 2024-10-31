@@ -786,3 +786,7 @@ input[type="text"]:disabled, input[type="password"]:disabled {
   border-color: #007bff; /* Change border color on focus */
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add shadow on focus */
 }
+
+#supplierProducts{
+  padding:0 20px 0 20px;
+}
