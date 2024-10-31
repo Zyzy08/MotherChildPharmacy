@@ -17,15 +17,6 @@ if ($conn->connect_error) {
     echo json_encode(['success' => false, 'message' => 'Connection failed: ' . $conn->connect_error]);
     exit;
 }
-function logPostData($data)
-{
-    $logFile = 'post_data_log.txt'; // Specify the log file name
-    $logEntry = date('Y-m-d H:i:s') . " - " . print_r($data, true) . PHP_EOL; // Format the log entry with timestamp
-    file_put_contents($logFile, $logEntry, FILE_APPEND); // Append the log entry to the file
-}
-
-logPostData($_POST);
-
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

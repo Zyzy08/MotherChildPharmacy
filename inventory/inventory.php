@@ -32,14 +32,13 @@
 
   <!-- DataTables Imports -->
   <link rel="stylesheet" href="../users/dataTablesUsers/dataTables.css" />
-  <!--<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css" /-->
   <script type="text/javascript" language="javascript" src="../users/dataTablesUsers/jquery-3.7.1.js"></script>
   <script src="../users/dataTablesUsers/dataTables.js"></script>
 
   <!-- Template Main CSS File -->
   <link href="../style.css" rel="stylesheet">
   <link href="../inventory/invent_style.css" rel="stylesheet">
-  
+
 </head>
 
 <body>
@@ -115,87 +114,103 @@
 
       <li class="nav-heading"></li>
 
-      <li class="nav-item">
-                    <a class="nav-link collapsed" href="../suppliers/suppliers.php">
-                        <i class="bi bi-shop"></i>
-                        <span>Suppliers</span>
-                    </a>
-                </li><!-- End Suppliers Page Nav -->
-
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../transactions/transactions.php">
-        <i class="bi bi-cash-coin"></i>
-        <span>Transactions</span>
-      </a>
-      </li><!-- End Transactions Page Nav -->
-
-      <li class="nav-item"></li>
-          <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
-              <i class="bi bi-mailbox"></i>
-              <span>Purchase Orders</span>
-          </a>
-      </li><!-- End Purchase Order Page Nav -->
-
-      <li class="nav-item">
-            <a class="nav-link collapsed" href="../delivery/delivery.php">
-                <i class="bi bi-truck"></i>
-                <span>Delivery</span>
-            </a>
-        </li><!-- End Delivery Page Nav -->
-
-
-      <li class="nav-item"></li>
-      <a class="nav-link" href="../inventory/inventory.php">
-        <i class="bi bi-box-seam"></i>
-        <span>Inventory</span>
-      </a>
-      </li><!-- End Inventory Page Nav -->
-
-
-      <li class="nav-heading"></li>
-
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../pos/pos.php">
-        <i class="bi bi-printer"></i>
-        <span>POS</span>
-      </a>
-      </li><!-- End POS Page Nav -->
-
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../returnexchange/return.html">
-        <i class="bi bi-cart-dash"></i>
-        <span>Return & Exchange</span>
-      </a>
-      </li><!-- End Return & Exchange Page Nav -->
-
-      <li class="nav-heading"></li>
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="../users/users.php">
-          <i class="bi bi-person"></i>
-          <span>Users</span>
-        </a>
-      </li><!-- End Users Page Nav -->
-
-      <li class="nav-item">
-            <a class="nav-link collapsed" href="../audittrail/audittrail.php">
-                <i class="bi bi-clipboard-data"></i>
-                <span>Audit Trail</span>
-            </a>
-        </li><!-- End Audit Trail Page Nav -->
-
-
+      <?php if ($_SESSION['SuppliersPerms'] === 'on'): ?>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
-                <i class="bi bi-cloud-check"></i>
-                <span>Backup & Restore</span>
-            </a>
-        </li><!-- End B&R Page Nav -->
+          <a class="nav-link collapsed" href="../suppliers/suppliers.php">
+            <i class="bi bi-shop"></i>
+            <span>Suppliers</span>
+          </a>
+        </li><!-- End Suppliers Page Nav -->
+      <?php endif; ?>
 
+      <?php if ($_SESSION['TransactionsPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../transactions/transactions.php">
+            <i class="bi bi-cash-coin"></i>
+            <span>Transactions</span>
+          </a>
+        </li><!-- End Transactions Page Nav -->
+      <?php endif; ?>
+
+      <?php if ($_SESSION['POPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
+            <i class="bi bi-mailbox"></i>
+            <span>Purchase Orders</span>
+          </a>
+        </li><!-- End Purchase Order Page Nav -->
+      <?php endif; ?>
+
+      <?php if ($_SESSION['POPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../delivery/delivery.php">
+            <i class="bi bi-truck"></i>
+            <span>Deliveries</span>
+          </a>
+        </li><!-- End Delivery Page Nav -->
+      <?php endif; ?>
+
+      <?php if ($_SESSION['InventoryPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link" href="../inventory/inventory.php">
+            <i class="bi bi-box-seam"></i>
+            <span>Inventory</span>
+          </a>
+        </li><!-- End Inventory Page Nav -->
+      <?php endif; ?>
+
+      <li class="nav-heading"></li>
+
+      <?php if ($_SESSION['POSPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../pos/pos.php">
+            <i class="bi bi-printer"></i>
+            <span>POS</span>
+          </a>
+        </li><!-- End POS Page Nav -->
+      <?php endif; ?>
+
+      <?php if ($_SESSION['REPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
+            <i class="bi bi-cart-dash"></i>
+            <span>Return & Exchange</span>
+          </a>
+        </li><!-- End Return & Exchange Page Nav -->
+      <?php endif; ?>
+
+      <li class="nav-heading"></li>
+
+      <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../users/users.php">
+            <i class="bi bi-person"></i>
+            <span>Users</span>
+          </a>
+        </li><!-- End Users Page Nav -->
+      <?php endif; ?>
+
+      <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../audittrail/audittrail.php">
+            <i class="bi bi-clipboard-data"></i>
+            <span>Audit Trail</span>
+          </a>
+        </li><!-- End Audit Trail Page Nav -->
+      <?php endif; ?>
+
+      <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
+            <i class="bi bi-cloud-check"></i>
+            <span>Backup & Restore</span>
+          </a>
+        </li><!-- End B&R Page Nav -->
+      <?php endif; ?>
 
     </ul>
 
-  </aside><!-- End Sidebar-->
+  </aside><!-- End Sidebar -->
 
   <main id="main" class="main">
 
@@ -214,162 +229,165 @@
                         Archived Users<img src="../resources/img/right-arrow-3.png" alt="Archive Button">
     </div>-->
     <div class="row">
-          <div class="containerAddArchive">
+      <div class="containerAddArchive">
 
-          <div class="button" id="addUser">
-              <button class="Create_PO" id="addProductButton">
-                  <img src="../resources/img/add.png" alt="Add"> New Product
-              </button>
-          </div>
-                    
-
-
-          <div class="button" id="checkLowStockButton">
-              <img src="../resources/img/ALERT.png" alt="Status Button">
-              Status
-          </div>
-
-              <div class="archived-users" id="toArchivedUsers">
-                  Archived Product<img src="../resources/img/right-arrow-3.png" alt="Archive Button">
-              </div>
+        <div class="button" id="addUser">
+          <button class="Create_PO" id="addProductButton">
+            <img src="../resources/img/add.png" alt="Add"> New Product
+          </button>
         </div>
 
-    <!--<button class="deleteProduct">Delete Product</button>
-    <button id="updateProduct">Update Product</button>-->
-
-  
-    
-    <form id="PurchaseForm" class="modal" enctype="multipart/form-data" action="../inventory/insertInventory.php"
-      method="POST">
-      <div class="modal-content">
-
-        <div class="form-section">
-          <h3 class="h3">Product Information & Sale Information</h3>
-          
-
-          <button class="close" id="closeBtn">&times;</button>
-          <hr style="margin-top: 5px">
-          <div>
-            <label style="margin-right: 200px;" for="ItemID">Item ID</label>
-            <label style="margin-right: 180px;" for="itemType">Item Type</label>
-            
-            <label for="pricePerUnit">Price Per Unit</label>
-          </div>
-
-          <div class="textbox">
-            <input style="margin-right: 30px;" type="text" id="itemID" name="itemID" readonly>
-            <select style="margin-right: 30px;" class="itemType" id="itemType" name="itemType">
-              <option value=""></option>
-              <option value="Medicine">Medicine</option>
-              <option value="Milk">Milk</option>
-              <option value="Supplement">Supplement</option>
-              <option value="Vitamin">Vitamins</option>
-              <option value="Skincar">Skincare</option>
-              <option value="Cosmetic">Cosmetic</option>
-            </select>
-            
-            <!--<input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱" onfocus="addPesoSign()" oninput="addPesoSign()" /> -->
-            <input type="number" id="pricePerUnit" name="pricePerUnit" placeholder="₱ " oninput="updatePrice()" />
-          </div>
-
-          <div class="textbox">
-            <label style="margin-right: 160px;" for="brandName">Brand Name</label>
-            <label style="margin-right: 148px;" for="genericName">Generic Name</label>
-            <label for="Discount">Discount</label>
-          </div>
-
-          <div class="textbox">
-            <input style="margin-right: 30px;" type="text" id="brandName" name="brandName">
-            <input style="margin-right: 30px;" type="text" id="genericName" name="genericName">
-
-            <select name="Discount" id="Discount" onchange="updateValue()">
-            <option value=""></option>
-                <option value="1">Available</option>
-                <option value="0">Unavailable</option>
-                
-            </select>
-            
-          </div>
-
-          <div>
-            <label style="margin-right: 215px;" for="mass">Mass</label>
-            <label style="margin-right: 137px;" for="unitOfMeasure">Unit of Measure</label>
-            <label  for="VAT_exempted">VAT Exempted</label>
-            
-          </div>
-          <div class="textbox">
-            <input style="margin-right: 30px;" type="number" id="mass" name="mass">
-            <!--<input type="text" id="unitOfMeasure" name="unitOfMeasure">-->
-            <select style="margin-right: 35px;" class="unitOfMeasure" id="unitOfMeasure" name="unitOfMeasure">
-              <option value=""></option>
-              <option value="kg">kg</option>
-              <option value="g">g</option>
-              <option value="Mg">Mg</option>
-              <option value="mcg">mcg/µg</option>
-              <option value="ng">ng</option>
-              <option value="L">L</option>
-              <option value="mL">mL</option>
-              <option value="mol">mol</option>
-              <option value="	mmol">mmol</option>
-              <option value="	piece">pc</option>
-            </select>
-
-            <select name="VAT_exempted" id="VAT_exempted" onchange="updateValue()">
-            <option value=""></option>
-                <option value="1">Available</option>
-                <option value="0">Unavailable</option>
-                
-            </select>
-   
-         
-
-            
-          </div>
+        <div class="button" id="checkLowStockButton">
+          <img src="../resources/img/ALERT.png" alt="Status Button">
+          Status
         </div>
-        <div>
-          <label style="margin-right: 152px;" for="ProductCode">Product Code</label>
-          <label  for="InStock">Instock</label>
-        </div>
-        <div class="textbox">
-          <input style="margin-right: 30px;" type="text" id="productCode" name="ProductCode">
-          <input type="number" id="inStockInput" name="InStock" placeholder="">
-          
-          
-        </div>
-        <div class=""></div>
 
-
-        <div class="textbox">
-          <label for="iconFile">Picture</label>
-          <div class="icon-upload">
-            <label for="iconFile">
-              <img id="iconPreview" src="../resources/img/add_icon.png" alt="+" class="icon-preview"
-                style="cursor: pointer;">
-            </label>
-            <input type="file" id="iconFile" name="ProductIcon" accept="image/*" style="display: none;">
-          </div>
+        <div class="button" id="GoodsIssueBtn">
+          <img src="../resources/img/blockchain-3.png" alt="Goods Issue">
+          Goods Issue
         </div>
-        <hr style="margin-top: 15px;">
 
-        <div style="margin-top: 10px;" class="form-button">
-          <button type="button" id="Clear">Clear</button>
-          <button type="submit" id="saveBtn">Save</button>
+        <div class="archived-users" id="toArchivedUsers">
+          Archived Product<img src="../resources/img/right-arrow-3.png" alt="Archive Button">
         </div>
       </div>
-    </form>
 
-    <section class="section users">
-      <div class="row">
-        <br>
-        <!-- <div id="usersNum" class="usercount">
+      <!--<button class="deleteProduct">Delete Product</button>
+    <button id="updateProduct">Update Product</button>-->
+
+
+
+      <form id="PurchaseForm" class="modal" enctype="multipart/form-data" action="../inventory/insertInventory.php"
+        method="POST">
+        <div class="modal-content">
+
+          <div class="form-section">
+            <h3 class="h3">Product Information & Sale Information</h3>
+
+
+            <button class="close" id="closeBtn">&times;</button>
+            <hr style="margin-top: 5px">
+            <div>
+              <label style="margin-right: 200px;" for="ItemID">Item ID</label>
+              <label style="margin-right: 180px;" for="itemType">Item Type</label>
+
+              <label for="pricePerUnit">Price Per Unit</label>
+            </div>
+
+            <div class="textbox">
+              <input style="margin-right: 30px;" type="text" id="itemID" name="itemID" readonly>
+              <select style="margin-right: 30px;" class="itemType" id="itemType" name="itemType">
+                <option value=""></option>
+                <option value="Medicine">Medicine</option>
+                <option value="Milk">Milk</option>
+                <option value="Supplement">Supplement</option>
+                <option value="Vitamin">Vitamins</option>
+                <option value="Skincar">Skincare</option>
+                <option value="Cosmetic">Cosmetic</option>
+              </select>
+
+              <!--<input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱" onfocus="addPesoSign()" oninput="addPesoSign()" /> -->
+              <input type="number" id="pricePerUnit" name="pricePerUnit" placeholder="₱ " onfocus="addPesoSign()"
+                oninput="updatePrice()" />
+            </div>
+
+            <div class="textbox">
+              <label style="margin-right: 160px;" for="brandName">Brand Name</label>
+              <label style="margin-right: 148px;" for="genericName">Generic Name</label>
+              <label for="Discount">Discount</label>
+            </div>
+
+            <div class="textbox">
+              <input style="margin-right: 30px;" type="text" id="brandName" name="brandName">
+              <input style="margin-right: 30px;" type="text" id="genericName" name="genericName">
+
+              <select name="Discount" id="Discount" onchange="updateValue()">
+                <option value=""></option>
+                <option value="1">Available</option>
+                <option value="0">Unavailable</option>
+
+              </select>
+
+            </div>
+
+            <div>
+              <label style="margin-right: 215px;" for="mass">Mass</label>
+              <label style="margin-right: 137px;" for="unitOfMeasure">Unit of Measure</label>
+              <label for="VAT_exempted">VAT Exempted</label>
+
+            </div>
+            <div class="textbox">
+              <input style="margin-right: 30px;" type="number" id="mass" name="mass">
+              <!--<input type="text" id="unitOfMeasure" name="unitOfMeasure">-->
+              <select style="margin-right: 35px;" class="unitOfMeasure" id="unitOfMeasure" name="unitOfMeasure">
+                <option value=""></option>
+                <option value="kg">kg</option>
+                <option value="g">g</option>
+                <option value="Mg">Mg</option>
+                <option value="mcg">mcg/µg</option>
+                <option value="ng">ng</option>
+                <option value="L">L</option>
+                <option value="mL">mL</option>
+                <option value="mol">mol</option>
+                <option value="	mmol">mmol</option>
+                <option value="pc">pc</option>
+              </select>
+
+              <select name="VAT_exempted" id="VAT_exempted" onchange="updateValue()">
+                <option value=""></option>
+                <option value="1">Available</option>
+                <option value="0">Unavailable</option>
+
+              </select>
+
+
+
+
+            </div>
+          </div>
+          <div>
+            <label style="margin-right: 152px;" for="ProductCode">Product Code</label>
+
+          </div>
+          <div class="textbox">
+            <input style="margin-right: 30px;" type="text" id="productCode" name="ProductCode">
+
+
+          </div>
+          <div class=""></div>
+
+
+          <div class="textbox">
+            <label for="iconFile">Picture</label>
+            <div class="icon-upload">
+              <label for="iconFile">
+                <img id="iconPreview" src="../resources/img/add_icon.png" alt="+" class="icon-preview"
+                  style="cursor: pointer;">
+              </label>
+              <input type="file" id="iconFile" name="ProductIcon" accept="image/*" style="display: none;">
+            </div>
+          </div>
+          <hr style="margin-top: 15px;">
+
+          <div style="margin-top: 10px;" class="form-button">
+            <button type="button" id="Clear">Clear</button>
+            <button type="submit" id="saveBtn">Save</button>
+          </div>
+        </div>
+      </form>
+
+      <section class="section users">
+        <div class="row">
+          <br>
+          <!-- <div id="usersNum" class="usercount">
                     0 users
                 </div> -->
-        <div class="col-xl-12">
-          <div class="card">
-            <div class="card-body profile-card usersTableSize flex-column align-items-center">
-              <table id="example" class="display">
-                <thead>
-                  <tr class="highlight-row">
+          <div class="col-xl-12">
+            <div class="card">
+              <div class="card-body profile-card usersTableSize flex-column align-items-center">
+                <table id="example" class="display">
+                  <thead>
+                    <tr class="highlight-row">
                       <th style="text-align: center; font-size: 12px;">Item ID</th>
                       <th style="text-align: center; font-size: 12px;">Picture</th>
                       <th style="text-align: center; font-size: 12px;">Generic Name</th>
@@ -381,117 +399,210 @@
                       <th style="text-align: center; font-size: 12px;">InStock</th>
                       <th style="text-align: center; font-size: 12px;">Ordered</th>
                       <th style="text-align: center; font-size: 12px;">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="tableBody">
-                  <!-- Data rows will be inserted here by JavaScript -->
-                </tbody>
-              </table>
+                    </tr>
+                  </thead>
+                  <tbody id="tableBody">
+                    <!-- Data rows will be inserted here by JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Notification, Delete Modal, etc. -->
+      <!-- Notification Container -->
+      <div id="notification" class="notification">
+        <p id="notificationMessage">Double-click the row that you want to edit.</p>
+        <button id="closeNotification" class="btn btn-secondary">Close</button>
+      </div>
+
+
+      <!-- Delete Modal -->
+      <div id="deleteModal" class="deleteModal">
+        <div class="modal-content">
+          <span id="closeDeleteBtn" class="closeBtn">&times;</span>
+          <h2>Delete Confirmation</h2>
+          <p>Are you sure you want to delete this item?</p>
+          <button id="confirmDeleteBtn">Confirm</button>
+          <button id="cancelDeleteBtn">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Notification -->
+      <div id="notification" class="notification">
+        <span id="closeNotification" class="closeNotification">&times;</span>
+        <p id="notificationMessage">Notification message goes here.</p>
+      </div>
+
+
+      <!-- Archive Modal (overlayAD) -->
+      <div id="overlayAD" class="overlay" style="display: none;"> <!-- Initially hidden -->
+        <div class="overlayAD-content">
+          <span id="closeBtnAD" class="close-btn">&times;</span>
+          <h2>Other Options</h2>
+          <hr>
+          <button id="archiveUserBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD">
+            <img src="../resources/img/box-archive.png"> Archive Product
+          </button>
+          <br>
+          <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalVerifyTitle-AD">Confirmation</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    id="modalClose-AD"></button>
+                </div>
+                <div class="modal-body" id="modalVerifyText-AD">
+                  Are you sure you want to do this?
+                </div>
+                <div class="modal-footer" id="modal-footer-AD">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                  <button type="button" class="btn btn-primary" id="modalYes">Yes</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- Notification, Delete Modal, etc. -->
-    <!-- Notification Container -->
-    <div id="notification" class="notification">
-      <p id="notificationMessage">Double-click the row that you want to edit.</p>
-      <button id="closeNotification" class="btn btn-secondary">Close</button>
-    </div>
-
-
-    <!-- Delete Modal -->
-    <div id="deleteModal" class="deleteModal">
-      <div class="modal-content">
-        <span id="closeDeleteBtn" class="closeBtn">&times;</span>
-        <h2>Delete Confirmation</h2>
-        <p>Are you sure you want to delete this item?</p>
-        <button id="confirmDeleteBtn">Confirm</button>
-        <button id="cancelDeleteBtn">Cancel</button>
-      </div>
-    </div>
-
-    <!-- Notification -->
-    <div id="notification" class="notification">
-      <span id="closeNotification" class="closeNotification">&times;</span>
-      <p id="notificationMessage">Notification message goes here.</p>
-    </div>
-
-
-                <!-- Archive Modal (overlayAD) -->
-                <div id="overlayAD" class="overlay" style="display: none;"> <!-- Initially hidden -->
-                  <div class="overlayAD-content">
-                      <span id="closeBtnAD" class="close-btn">&times;</span>
-                      <h2>Other Options</h2>
-                      <hr>
-                      <button id="archiveUserBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD">
-                          <img src="../resources/img/box-archive.png"> Archive Product
-                      </button>
-                      <br>
-                      <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
-                          <div class="modal-dialog">
-                              <div class="modal-content">
-                                  <div class="modal-header">
-                                      <h5 class="modal-title" id="modalVerifyTitle-AD">Confirmation</h5>
-                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modalClose-AD"></button>
-                                  </div>
-                                  <div class="modal-body" id="modalVerifyText-AD">
-                                      Are you sure you want to do this?
-                                  </div>
-                                  <div class="modal-footer" id="modal-footer-AD">
-                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                                      <button type="button" class="btn btn-primary" id="modalYes">Yes</button>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-              <!-- LOW STOCK MODAL -->
-              <div id="lowStockModal" class="modal" role="dialog" aria-modal="true">
-                  <div class="modal-content">
-                      <span class="closeAlert">&times;</span>
-                      <h2 style="text-align: left;">Low Stock Items</h2>
-                      <hr>
-                      <div id="lowStockMessage" style="margin-top: 10px; overflow-y: auto; max-height: 300px;">
-                          <table style="width: 100%; border-collapse: collapse;">
-                              <thead>
-                                  <tr style="background-color: #f2f2f2;">
-                                      <th style="text-align: left; padding: 8px;">Brand Name</th>
-                                      <th style="text-align: left; padding: 8px;">Generic Name</th>
-                                      <th style="text-align: left; padding: 8px;">In Stock</th>
-                                      <th style="text-align: left; padding: 8px;">Ordered</th>
-                                      <th style="text-align: left; padding: 8px;">EOQ</th> <!-- New column for EOQ -->
-                                  </tr>
-                              </thead>
-                              <tbody id="lowStockItemsBody">
-                                  <!-- Low stock items will be appended here -->
-                              </tbody>
-                          </table>
-                      </div>
-                      <hr>
-                  </div>
-              </div>
-
-
-
-
-          <div class="modal" id="disablebackdrop" tabindex="-1" data-bs-backdrop="false">
-          <div class="modal-dialog">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="modalVerifyTitle">Success</h5>
-                  </div>
-                  <div class="modal-body" id="modalVerifyText">
-                      Supplier data has been updated successfully.
-                  </div>
-              </div>
+      <!-- LOW STOCK MODAL -->
+      <div id="lowStockModal" class="modal" role="dialog" aria-modal="true">
+        <div class="modal-content">
+          <span class="closeAlert">&times;</span>
+          <h2 style="text-align: left;">Low Stock Items</h2>
+          <hr>
+          <div id="lowStockMessage" style="margin-top: 10px; overflow-y: auto; max-height: 300px;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="background-color: #f2f2f2;">
+                  <th style="text-align: left; padding: 8px;">Brand Name</th>
+                  <th style="text-align: left; padding: 8px;">Generic Name</th>
+                  <th style="text-align: left; padding: 8px;">In Stock</th>
+                  <th style="text-align: left; padding: 8px;">Ordered</th>
+                  <th style="text-align: left; padding: 8px;">EOQ</th> <!-- New column for EOQ -->
+                </tr>
+              </thead>
+              <tbody id="lowStockItemsBody">
+                <!-- Low stock items will be appended here -->
+              </tbody>
+            </table>
           </div>
+          <hr>
+        </div>
       </div>
 
 
+
+      <div class="modal" id="disablebackdrop" tabindex="-1" data-bs-backdrop="false">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalVerifyTitle">Success</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalVerifyText">
+              The product quantity is successfully updated
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+      <!--Goods Issue-->
+
+      <div id="overlayEdit1" class="modal">
+        <div class="overlay-content">
+          <span id="GIcloseBtn" class="close-btn">&times;</span>
+          <h2>Goods Issue</h2>
+          <hr>
+          <form id="userFormEdit" action="goodIssue.php" method="post" enctype="multipart/form-data"
+            onsubmit="GoodIssueSubmit(event)" data-form-type="update">
+
+            <div class="textbox" style="margin-bottom: 10px;">
+              <label style="margin-right: 195px;" or="selectProd">Select Product</label>
+
+            </div>
+
+            <div class="textbox" style="margin-bottom: 10px;">
+              <div> <!-- Wrap for product selection -->
+                <input type="text" id="selectProd" name="selectProd" placeholder="Search Product..."
+                  oninput="filterOptions()" autocomplete="off"> <!-- Set desired width -->
+                <div class="custom-dropdown">
+                  <div id="productSelect" class="dropdown-content" style="display: none;">
+                    <div class="option" onclick="selectProduct(this)" data-value="">Select a product</div>
+                    <!-- Options will be dynamically populated here -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="textbox" style="margin-bottom: 10px;">
+              <label for="selectProd">Lot No.</label>
+            </div>
+
+            <div class="textbox" style="margin-bottom: 10px;">
+
+              <input type="text" id="selectLot" name="selectLot" placeholder="Search Lot Number..."
+                oninput="filterLotOptions()" autocomplete="off">
+              <div class="custom-dropdown">
+                <div id="lotSelect" class="dropdown-content" style="display: none;">
+                  <div class="option" onclick="selectLot(this)" data-value="">Select a Lot Number</div>
+                  <!-- Options will be dynamically populated here -->
+                </div>
+              </div>
+            </div>
+            <div class="textbox" style="margin-top: 10px;">
+              <label style="margin-right: 210px;" for="QuantityRemaining">Stock</label>
+              <label for="Ordered">Ordered</label>
+            </div>
+
+            <div class="textbox" style="margin-bottom: 15px;">
+
+
+              <input style="margin-right: 25px;" type="text" id="QuantityRemaining" name="QuantityRemaining" disabled
+                autocomplete="off">
+              <input type="text" id="Ordered" name="Ordered" disabled autocomplete="off">
+            </div>
+
+            <hr style="margin-bottom: 10px;">
+
+            <div class="textbox" style="margin-bottom: 10px;">
+              <label for="Quantity">Quantity: </label>
+              <input style="margin-right: 10px;" type="text" id="Quantity" name="Quantity" placeholder="Enter Quantity"
+                required>
+              <button style="margin-right: 5px;" class="add" id="ToggleAdd" type="button">+</button>
+              <button class="sub" id="ToggleSub" type="button">-</button>
+            </div>
+
+            <div class="textbox" style="margin-bottom: 10px;">
+              <label for="Reason">Reason</label>
+            </div>
+
+            <div class="textbox" style="margin-bottom: 15px;">
+              <textarea id="Reason" name="Reason"
+                style="width: 100%; box-sizing: border-box; height: 100px; resize: none; vertical-align: top;"
+                required></textarea>
+            </div>
+
+            <hr>
+
+            <!-- Button of update -->
+            <div class="button-container">
+              <button id="cancelBtn" type="button" onclick="closeEditOverlay()">Cancel</button>
+              <button class="submit" type="button" id="ConfirmAction">Confirm</button>
+
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- End of Goods Issue -->
 
 
 

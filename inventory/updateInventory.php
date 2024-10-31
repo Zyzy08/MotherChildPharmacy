@@ -83,14 +83,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Update the product details including VAT_Exempted
-    $stmt = $conn->prepare("UPDATE inventory SET ProductCode = ?, ItemType = ?, BrandName = ?, GenericName = ?, UnitOfMeasure = ?, Mass = ?, PricePerUnit = ?, Discount = ?, InStock = ?, ProductIcon = ?, VAT_Exempted = ? WHERE ItemID = ?");
+    $stmt = $conn->prepare("UPDATE inventory SET ProductCode = ?, ItemType = ?, BrandName = ?, GenericName = ?, UnitOfMeasure = ?, Mass = ?, PricePerUnit = ?, Discount = ?, ProductIcon = ?, VAT_Exempted = ? WHERE ItemID = ?");
     if ($stmt === false) {
         echo json_encode(['success' => false, 'message' => 'Prepare statement failed: ' . $conn->error]);
         exit;
     }
 
     // Bind parameters and execute the update statement
-    $stmt->bind_param("sssssiisssii", $productCode, $itemType, $brandName, $genericName, $unitOfMeasure, $mass, $pricePerUnit, $Discount, $InStock, $iconPath, $VAT_Exempted, $itemID);
+    $stmt->bind_param("sssssiissii", $productCode, $itemType, $brandName, $genericName, $unitOfMeasure, $mass, $pricePerUnit, $Discount, $iconPath, $VAT_Exempted, $itemID);
 
     // Execute the query and handle the response
     if ($stmt->execute()) {

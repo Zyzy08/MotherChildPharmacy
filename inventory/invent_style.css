@@ -45,7 +45,7 @@
   padding: 20px;
   border: 1px solid #888;
   width: 70%; /* Could be more or less, depending on screen size */
-
+  z-index: 1000;
 }
 /* Overlay styles */
 .overlay {
@@ -91,8 +91,8 @@
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  width: flex;
-  position: relative;
+  width: 35%;
+  margin: 2% auto;
 }
 
 .overlay-content h3 {
@@ -136,7 +136,7 @@
   line-height: 22px;
   font-weight: 400;
   color: #FFFFFFFF; /* white */
-  background: rgb(13, 172, 215); /* primary-500 */
+  background: #005500FF; /* primary-500 */
   opacity: 1;
   border: none;
   border-radius: 12px;
@@ -151,6 +151,34 @@
   margin-right: 6px; /* Space between the image and text */
 }
 
+#GoodsIssueBtn
+{
+  cursor: pointer;
+  height: 36px;
+  width: 130px; /* Adjust width if needed */
+  padding: 0 12px;
+  display: flex;
+  align-items: center; /* Center align vertically */
+  justify-content: flex-start; /* Align items to the start (left) */
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #FFFFFFFF; /* white */
+  background: #005500FF; /* primary-500 */
+  opacity: 1;
+  border: none;
+  border-radius: 12px;
+  gap: 6px; /* Space between the icon and text */
+  margin-bottom: 10px;
+  margin-left: 12px;
+}
+
+#GoodsIssueBtn img
+{
+  width: 20px; /* Set the size of the image */
+  height: auto; /* Keep the aspect ratio */
+  margin-right: 6px; /* Space between the image and text */
+}
 
 .deleteProduct {
 
@@ -855,3 +883,234 @@ td {
   display: flex; /* Use flexbox */
   justify-content: flex-end; /* Align to the right */
 }
+
+/*GOODS ISSUE CSS*/
+
+/* Input styling */
+
+
+#overlayEdit1 {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%; /* Set the width you desire */
+  height: 100%;
+  border: 1px solid #ddd;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
+  overflow: hidden; /* Prevent scrolling */
+}
+
+#selectProd {
+  width: 450px; /* Full width */
+  flex: 1; /* Flexibility for responsiveness */
+  -moz-box-sizing: content-box; /* For Firefox */
+  -webkit-box-sizing: content-box; /* For Safari */
+  box-sizing: content-box; /* Default box-sizing */
+  padding-left: 12px; /* Left padding */
+  padding-right: 12px; /* Right padding */
+  font-size: 14px; /* Font size */
+  background: #F3F4F6FF; /* Light background color */
+  border-radius: 4px; /* Rounded corners */
+  border-width: 0px; /* No border */
+  outline: none; /* No outline on focus */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+  text-align: left; /* Align text to the left */
+}
+
+#productSelect {
+  display: none; /* Hidden by default */
+  flex: 1; /* Flexibility for responsiveness */
+  -moz-box-sizing: content-box; /* For Firefox */
+  -webkit-box-sizing: content-box; /* For Safari */
+  box-sizing: content-box; /* Default box-sizing */
+  padding-left: 12px; /* Left padding */
+  padding-right: 12px; /* Right padding */
+  font-size: 14px; /* Font size */
+  background: #F3F4F6FF; /* Light background color */
+  border-radius: 4px; /* Rounded corners */
+  border-width: 0px; /* No border */
+  outline: none; /* No outline on focus */
+  position: absolute; /* Positioning below the input */
+  z-index: 999; /* Ensure it appears above other elements */
+  width: 81.5%; /* Full width */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+  text-align: left; /* Align text to the left */
+}
+
+#selectLot {
+  flex: 1; /* Flexibility for responsiveness */
+  -moz-box-sizing: content-box; /* For Firefox */
+  -webkit-box-sizing: content-box; /* For Safari */
+  box-sizing: content-box; /* Default box-sizing */
+  padding-left: 12px; /* Left padding */
+  padding-right: 12px; /* Right padding */
+  font-size: 14px; /* Font size */
+  background: #F3F4F6FF; /* Light background color */
+  border-radius: 4px; /* Rounded corners */
+  border-width: 0px; /* No border */
+  outline: none; /* No outline on focus */
+  width: 450px; /* Full width */
+  height: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+  text-align: left; /* Align text to the left */
+}
+
+#lotSelect {
+  display: none; /* Hidden by default */
+  flex: 1; /* Flexibility for responsiveness */
+  -moz-box-sizing: content-box; /* For Firefox */
+  -webkit-box-sizing: content-box; /* For Safari */
+  box-sizing: content-box; /* Default box-sizing */
+  padding-left: 12px; /* Left padding */
+  padding-right: 12px; /* Right padding */
+  font-size: 14px; /* Font size */
+  background: #F3F4F6FF; /* Light background color */
+  border-radius: 4px; /* Rounded corners */
+  border-width: 0px; /* No border */
+  outline: none; /* No outline on focus */
+  position: absolute; /* Positioning below the input */
+  z-index: 999; /* Ensure it appears above other elements */
+  width: 81.5%; /* Full width */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+  text-align: left; /* Align text to the left */
+}
+
+textarea {
+  padding: 10px; /* Add padding for better spacing */
+  font-size: 16px; /* Set a readable font size */
+  line-height: 1.5; /* Improve line spacing */
+  flex: 1; /* Flexibility for responsiveness */
+  -moz-box-sizing: content-box; /* For Firefox */
+  -webkit-box-sizing: content-box; /* For Safari */
+  box-sizing: content-box; /* Default box-sizing */
+  padding-left: 12px; /* Left padding */
+  padding-right: 12px; /* Right padding */
+  font-size: 14px; /* Font size */
+  background: #F3F4F6FF; /* Light background color */
+  border-radius: 4px; /* Rounded corners */
+  border-width: 0px; /* No border */
+  outline: none; /* No outline on focus */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+  text-align: left; /* Align text to the left */
+}
+
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-content {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    z-index: 1;
+    width: 100%;
+    max-height: 200px; /* Limit height for scrolling */
+    overflow-y: auto; /* Enable scrolling if too many options */
+    display: none; /* Initially hidden */
+}
+
+.option {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background-color: #f1f1f1; /* Highlight on hover */
+}
+
+.textbox input:disabled {
+  color: #171A1FFF;
+    background: #F3F4F6FF; /* neutral-200 */
+}
+
+/* Hover effect for options */
+#productSelect option:hover {
+  background-color: #e5e7eb; /* Slightly darker gray on hover */
+}
+
+/* Style for the options */
+#productSelect option {
+  padding: 10px; /* Inner spacing for options */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+
+#Quantity {
+  width: 200px; /* Change this value to your desired width */
+}
+
+.add, .sub
+{
+  width: 30px;
+  height: 32px;
+  padding: 0 12px; /* Horizontal padding */
+  border: none; /* Remove default border */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 14px; /* Font size */
+  font-weight: 500; /* Bold text */
+  border-radius: 5px; /* Rounded corners */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+}
+.add
+{
+  background-color: #5d7e5e; /* Green color for confirm button */
+  color: #fff; /* White text color */
+}
+.sub
+{
+  background-color: #816666; /* Red color for cancel button */
+  color: #fff; /* White text color */
+}
+
+#Reason
+{
+  width: 450px;
+  height: 100px;
+}
+
+/*Button*/
+
+/* Button Container */
+.button-container {
+  margin-bottom: 10px; /* Space below the button container */
+  display: flex; /* Align buttons in a row */
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 10px; /* Space between buttons */
+}
+
+/* Button Styling */
+.button-container button {
+  width: 100px; /* Fixed width for buttons */
+  height: 36px; /* Height for better touch targets */
+  padding: 0 12px; /* Horizontal padding */
+  border: none; /* Remove default border */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 14px; /* Font size */
+  font-weight: 500; /* Bold text */
+  border-radius: 4px; /* Rounded corners */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+}
+
+/* Cancel Button Styling */
+#cancelBtn {
+  background-color: #af4c4c; /* Red color for cancel button */
+  color: #fff; /* White text color */
+}
+
+#cancelBtn:hover {
+  background-color: #a03e3e; /* Darker red on hover */
+}
+
+/* Confirm Button Styling */
+.submit {
+  background-color: #4CAF50; /* Green color for confirm button */
+  color: #fff; /* White text color */
+}
+
+.submit:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
