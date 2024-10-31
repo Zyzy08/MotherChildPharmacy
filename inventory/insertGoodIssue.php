@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 logAction($conn, $sessionAccountID, 'Goods Issue', $description, 1);
                 echo json_encode(['message' => "Data logged and quantities updated successfully."]);
             } else {
-                //Log if Success
+                //Log if Fail
                 $description = "User failed to manually adjusted the stock of a product. $updatedetails.";
                 logAction($conn, $sessionAccountID, 'Goods Issue', $description, 0);
                 echo json_encode(['message' => "Error updating inventory InStock: " . $conn->error]);

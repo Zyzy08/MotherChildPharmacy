@@ -6,6 +6,16 @@ error_reporting(E_ALL);
 
 $response = ['success' => false, 'message' => ''];
 
+function logAction($pdo, $userId, $action, $description, $status)
+{
+    $sql2 = "INSERT INTO audittrail (AccountID, action, description, ip_address, status) VALUES (?, ?, ?, ?, ?)";
+    $stmt2 = $pdo->prepare($sql2);
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $stmt2->execute([$userId, $action, $description, $ipAddress, $status]);
+}
+session_start(); // Start the session
+$sessionAccountID = $_SESSION['AccountID'] ?? null;
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Capture form data
     $companyName = trim($_POST["companyName"] ?? '');
@@ -75,15 +85,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         // Return success response
+        $updatedetails = "(SupplierID: " . $supplierId . ")";
+
+        $description = "User added a new supplier $updatedetails.";
+        // Log success
+        logAction($pdo, $sessionAccountID, 'Add Supplier', $description, 1);
+
         $response['success'] = true;
         $response['message'] = 'Supplier has been added and products updated successfully.';
     } catch (PDOException $e) {
         // Log the error
         error_log('Database query failed: ' . $e->getMessage());
+        // Log failure
+        $description = "Failed to add new supplier. Error: " . $e->getMessage();
+        logAction($pdo, $sessionAccountID, 'Add Supplier', $description, 0);
         $response['message'] = 'Data was not added due to an error.';
     } catch (Exception $e) {
         // Log the unexpected error
         error_log('Unexpected error: ' . $e->getMessage());
+        // Log failure
+        $description = "Failed to add new supplier. Error: " . $e->getMessage();
+        logAction($pdo, $sessionAccountID, 'Add Supplier', $description, 0);
         $response['message'] = 'An unexpected error occurred.';
     }
 } else {

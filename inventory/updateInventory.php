@@ -4,6 +4,10 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 header('Content-Type: application/json');
 
+// Get the current user's AccountID from the session or other source
+session_start();
+$sessionAccountID = $_SESSION['AccountID'] ?? null;
+
 // Database connection settings
 $servername = "localhost";
 $username = "root";
@@ -11,6 +15,16 @@ $password = "";
 $dbname = "motherchildpharmacy";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
+
+function logAction($conn, $userId, $action, $description, $status)
+{
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address, status) VALUES (?, ?, ?, ?, ?)";
+    $logStmt = $conn->prepare($logSql);
+    $logStmt->bind_param("ssssi", $userId, $action, $description, $ipAddress, $status);
+    $logStmt->execute();
+    $logStmt->close();
+}
 
 // Check database connection
 if ($conn->connect_error) {
@@ -67,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $iconPath = $uploadDir . basename($icon['name']);
-        
+
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
         // Check for valid file type
         if (!in_array($icon['type'], $allowedTypes)) {
@@ -92,10 +106,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Bind parameters and execute the update statement
     $stmt->bind_param("sssssiissii", $productCode, $itemType, $brandName, $genericName, $unitOfMeasure, $mass, $pricePerUnit, $Discount, $iconPath, $VAT_Exempted, $itemID);
 
+    $updatedetails = "(ItemID: " . $itemID . ")";
+
     // Execute the query and handle the response
     if ($stmt->execute()) {
+        //Log if Success
+        $description = "User updated the details of a product. $updatedetails.";
+        logAction($conn, $sessionAccountID, 'Product Update', $description, 1);
         echo json_encode(['success' => true, 'message' => 'Product updated successfully']);
     } else {
+        //Log if Fail
+        $description = "User failed to update the details of a product. $updatedetails.";
+        logAction($conn, $sessionAccountID, 'Product Update', $description, 0);
         echo json_encode(['success' => false, 'message' => 'Error updating product: ' . $stmt->error]);
     }
 

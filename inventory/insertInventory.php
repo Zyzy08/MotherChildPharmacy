@@ -12,6 +12,20 @@ $dbname = "motherchildpharmacy";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
+function logAction($conn, $userId, $action, $description, $status)
+{
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address, status) VALUES (?, ?, ?, ?, ?)";
+    $logStmt = $conn->prepare($logSql);
+    $logStmt->bind_param("ssssi", $userId, $action, $description, $ipAddress, $status);
+    $logStmt->execute();
+    $logStmt->close();
+}
+
+// Get the current user's AccountID from the session or other source
+session_start();
+$sessionAccountID = $_SESSION['AccountID'] ?? null;
+
 // Check connection
 if ($conn->connect_error) {
     echo json_encode(['success' => false, 'message' => 'Connection failed: ' . $conn->connect_error]);
@@ -102,8 +116,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Execute the statement and check for success
     if ($stmt->execute()) {
+        $itemID = $stmt->insert_id; // Get the last inserted DeliveryID
+        $updatedetails = "(ItemID: " . $itemID . ")";
+        //Log if Success
+        $description = "User added a new product. $updatedetails.";
+        logAction($conn, $sessionAccountID, 'Add Product', $description, 1);
         echo json_encode(['success' => true, 'message' => 'Product saved successfully']);
     } else {
+        $updatedetails = "(Item Name: " . $brandName . " " . $genericName . ")";
+        //Log if Fail
+        $description = "User failed to add a new product. $updatedetails.";
+        logAction($conn, $sessionAccountID, 'Add Product', $description, 0);
         echo json_encode(['success' => false, 'message' => 'Error saving product: ' . $stmt->error]);
     }
 
