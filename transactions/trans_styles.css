@@ -313,7 +313,7 @@
 .close-btn {
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 20px;
   font-size: 24px;
   cursor: pointer;
 }
@@ -482,8 +482,9 @@ button[type="reset"]:hover {
   /* white */
 }
 
-textarea, .textbox input:disabled {
-  color:rgb(182, 182, 182);
+textarea,
+.textbox input:disabled {
+  color: rgb(182, 182, 182);
   /* neutral-900 */
   background: #F3F4F6FF;
   /* neutral-200 */
@@ -545,7 +546,7 @@ input[type="file"] {
   display: none;
   /* Hidden by default */
   position: fixed;
-  z-index: 1;
+  z-index:997;
   /* Sit on top */
   left: 0;
   top: 0;
@@ -562,11 +563,11 @@ input[type="file"] {
 /* Modal content */
 .modal-content {
   background-color: #fefefe;
-  margin: 15% auto;
+  margin: auto;
   /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 450px;
   /* Could be more or less, depending on screen size */
 }
 
@@ -778,4 +779,60 @@ h4 {
 
 #tableBody {
   font-size: 15px;
+}
+
+/* RECEIPT */
+.row.text-center.justify-content-between {
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+small{
+  font-size: 11px;
+}
+
+.col-xl-6 {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+.h6, h6{
+  font-size: 0.8rem;
+  margin-bottom: 0px;
+}
+
+.h5, h5{
+  font-size: 0.9rem;
+}
+
+.col-2 {
+  flex: 0 0 auto;
+  width: 14%;
+  padding-right: 0;
+}
+
+.col-5 {
+  flex: 0 0 auto;
+  width: 57%;
+}
+
+.col-3 {
+  flex: 0 0 auto;
+  width: 29%;
+}
+
+.modal-body {
+  padding-left: 100px;
+  padding-right: 100px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.row.text-center.mb-2 {
+margin-bottom: 0px !important;
+}
+
+.col-xl-5 {
+  flex: 0 0 auto;
+  width: 45.66666667%;
 }

@@ -63,6 +63,32 @@ foreach ($salesDetails as $detail) {
     $updateStmt->bind_param("is", $qty, $itemID);
     $updateStmt->execute();
     $updateStmt->close();
+
+    // Get the latest DeliveryID for the given ItemID
+    $latestDeliveryStmt = $conn->prepare("
+        SELECT DeliveryID 
+        FROM delivery_items 
+        WHERE ItemID = ? 
+        ORDER BY DeliveryID DESC 
+        LIMIT 1
+    ");
+    $latestDeliveryStmt->bind_param("i", $itemID);
+    $latestDeliveryStmt->execute();
+    $latestDeliveryStmt->bind_result($latestDeliveryID);
+    $latestDeliveryStmt->fetch();
+    $latestDeliveryStmt->close();
+
+    if ($latestDeliveryID) {
+        // Update the QuantityRemaining in the latest DeliveryID record
+        $updateDeliveryStmt = $conn->prepare("
+            UPDATE delivery_items 
+            SET QuantityDelivered = QuantityDelivered + ? 
+            WHERE DeliveryID = ? AND ItemID = ?
+        ");
+        $updateDeliveryStmt->bind_param("iii", $qty, $latestDeliveryID, $itemID);
+        $updateDeliveryStmt->execute();
+        $updateDeliveryStmt->close();
+    }
 }
 
 // Now delete the sales entry

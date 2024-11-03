@@ -412,6 +412,131 @@
     </div>
     <!-- End of Overlay for Options -->
 
+    <!-- Receipt Modal -->
+    <div class="modal" id="largeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog modal-lg">
+            <div class="modal-content">
+                <span id="closeBtnReceipt" class="close-btn">&times;</span>
+                <br>
+                <h5 style="font-weight: bold; text-align: center;">Mother & Child Pharmacy and Medical Supplies</h5>
+                <h6 style="text-align: center;">Gen. Luna Street, Babo Sacan, Porac, Pampanga</h6>
+                <h6 style="text-align: center;">
+                    ----------------------------------------------------
+                </h6>
+                <div class="modal-body">
+                    <div id="receiptItems"></div> <!-- Container for receipt items -->
+                </div>
+                <h6 style="text-align: center;">
+                    ----------------------------------------------------
+                </h6>
+                <div class="row text-center justify-content-between">
+                    <div class="col-xl-5" style="text-align: left;">
+                        <small>Total Items:</small>
+                    </div>
+                    <div class="col-xl-5" style="text-align: right;">
+                        <small id="total-items">0</small>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-between">
+                    <div class="col-xl-5" style="text-align: left;">
+                        <small>Subtotal:</small>
+                    </div>
+                    <div class="col-xl-5" style="text-align: right;">
+                        <small id="sub-total">₱0.00</small>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-between">
+                    <div class="col-xl-5" style="text-align: left;">
+                        <small>VAT:</small>
+                    </div>
+                    <div class="col-xl-5" style="text-align: right;">
+                        <small id="tax">₱0.00</small>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-between" id="receiptDiscountRow">
+                    <div class="col-xl-5" style="text-align: left;">
+                        <small>Discount:</small>
+                    </div>
+                    <div class="col-xl-5" style="text-align: right;">
+                        <small id="discount">₱-0.00</small>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-between" style="font-weight: bold;">
+                    <div class="col-xl-5" style="text-align: left;">
+                        <small>Amount Due:</small>
+                    </div>
+                    <div class="col-xl-5" style="text-align: right;">
+                        <small id="amount-due">₱0.00</small>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-between" id="receiptRefundRow">
+                    <div class="col-xl-5" style="text-align: left;">
+                        <small>Refund:</small>
+                    </div>
+                    <div class="col-xl-5" style="text-align: right;">
+                        <small id="refund-amount">₱0.00</small>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-between" id="paymentMethodRow">
+                    <div class="col-xl-5" style="text-align: left;">
+                        <small>Payment Mode:</small>
+                    </div>
+                    <div class="col-xl-5" style="text-align: right;">
+                        <small id="payment-method"></small>
+                    </div>
+                </div>
+
+
+
+                <div class="row text-center justify-content-between">
+                    <div class="col-xl-5" style="text-align: left;">
+                        <small>Payment:</small>
+                    </div>
+                    <div class="col-xl-5" style="text-align: right;">
+                        <small id="payment">₱0.00</small>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-between">
+                    <div class="col-xl-5" style="text-align: left;">
+                        <small>Change:</small>
+                    </div>
+                    <div class="col-xl-5" style="text-align: right;">
+                        <small id="change">₱0.00</small>
+                    </div>
+                </div>
+
+                <h6 style="text-align: center;">
+                    ----------------------------------------------------
+                </h6>
+
+                <div class="row text-center justify-content-between">
+                    <div class="col-xl-6" style="text-align: left;">
+                        <small id="order-num">Invoice No.:</small>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-between">
+                    <div class="col-xl-6" style="text-align: left;">
+                        <small id="date-time">Date:</small>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-between">
+                    <div class="col-xl-6" style="text-align: left; margin-bottom: 10px;">
+                        <small id="staff">Staff:</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Template Main JS File -->
     <script src="../main.js"></script>
@@ -569,30 +694,61 @@
         const amtChange = document.getElementById('amtChange');
         const transactionType = document.getElementById('transactionType');
 
+        // Receipt Elements
+        const largeModal = document.getElementById('largeModal');
+        const closeBtnReceipt = document.getElementById('closeBtnReceipt');
+        const change = document.getElementById('change');
+        const payment = document.getElementById('payment');
+        const refundamount = document.getElementById('refund-amount');
+        const amountdue = document.getElementById('amount-due');
+        const discount = document.getElementById('discount');
+        const tax = document.getElementById('tax');
+        const subtotal = document.getElementById('sub-total');
+        const totalitems = document.getElementById('total-items');
+        const paymentmethod = document.getElementById('payment-method');
+        const staff = document.getElementById('staff');
+        const datetime = document.getElementById('date-time');
+        const ordernum = document.getElementById('order-num');
 
         function fetchDetails(identifier) {
             fetch(`getData.php?InvoiceID=${encodeURIComponent(identifier)}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data) {
-                        // Populate the overlay form with details
-                        identifierID.value = 'IN-0' + data.InvoiceID;
-                        cashierID.value = data.employeeName + " " + data.employeeLName;
-                        datetimeID.value = data.SalesDate;
-                        VATable.value = "₱ " + data.Subtotal;
-                        VATAmount.value = "₱ " + data.Tax;
-                        Discount.value = "₱ " + data.Discount;
-                        NetAmount.value = "₱ " + data.NetAmount;
-                        modePay.value = data.PaymentMethod;
-                        amtPaid.value = "₱ " + data.AmountPaid;
-                        amtChange.value = "₱ " + data.AmountChange;
-                        transactionType.value = data.Status;
+                        displayReceiptItems(data.listItems);
+                        totalitems.textContent = data.TotalItems;
+                        subtotal.textContent = '₱' + data.Subtotal;
+                        tax.textContent = '₱' + data.Tax;
+                        discount.textContent = '₱' + data.Discount;
+                        amountdue.textContent = '₱' + data.NetAmount;
+                        refundamount.textContent = '₱' + data.RefundAmount;
+                        paymentmethod.textContent = data.PaymentMethod;
+                        payment.textContent = '₱' + data.AmountPaid;
+                        change.textContent = '₱' + data.AmountChange;
+                        ordernum.textContent = 'Invoice No: IN-0' + data.InvoiceID;
+                        datetime.textContent = 'Date: ' + data.SalesDate;
+                        staff.textContent = 'Staff: ' + data.employeeName + ' ' + data.employeeLName;
 
-                        // Set listQTY input value
-                        listQTY.value = data.listQTY; // Update the listQTY input
+                        // Conditionally show or hide the Refund row
+                        const refundRow = document.getElementById('receiptRefundRow');
+                        if (parseFloat(data.RefundAmount) === 0) {
+                            refundRow.style.display = 'none';
+                        } else {
+                            refundRow.style.display = 'flex';
+                            refundamount.textContent = '₱' + data.RefundAmount;
+                        }
+
+                        // Conditionally show or hide the Discount row
+                        const discountRow = document.getElementById('receiptDiscountRow');
+                        if (parseFloat(data.Discount) === 0) {
+                            discountRow.style.display = 'none';
+                        } else {
+                            discountRow.style.display = 'flex';
+                            discount.textContent = '₱' + data.Discount;
+                        }
 
                         // Show the overlay
-                        overlayEdit.style.display = 'flex';
+                        largeModal.style.display = 'block';
                     } else {
                         console.error('No data found for the given id.');
                     }
@@ -602,6 +758,9 @@
                 });
         }
 
+        closeBtnReceipt.addEventListener('click', function () {
+            largeModal.style.display = 'none';
+        })
 
         closeBtnEdit.addEventListener('click', function () {
             overlayEdit.style.display = 'none';
@@ -656,6 +815,30 @@
 
             }
         });
+
+        function displayReceiptItems(orderDetails) {
+            const receiptContainer = document.getElementById('receiptItems');
+            receiptContainer.innerHTML = '';
+
+            const headerHTML = `
+        <div class="row text-center mb-2">
+            <div class="col-2"><small><strong>Qty</strong></small></div>
+            <div class="col-5" style="text-align: right;"><small><strong>Item Description</strong></small></div>
+            <div class="col-3" style="text-align: right;"><small><strong>Price</strong></small></div>
+        </div>`;
+            receiptContainer.insertAdjacentHTML('beforeend', headerHTML);
+
+            orderDetails.forEach(item => {
+                const itemHTML = `
+            <div class="row text-center">
+                <div class="col-2" style="text-align: right;"><small>${item.qty}</small></div>
+                <div class="col-5" style="text-align: right;"><small>${item.description}</small></div>
+                <div class="col-3" style="text-align: right;"><small>₱${parseFloat(item.price).toFixed(2)}</small></div>
+            </div>`;
+                receiptContainer.insertAdjacentHTML('beforeend', itemHTML);
+            });
+        }
+
 
         //Tabs for Types
         const tab1 = document.getElementById('1-tab');

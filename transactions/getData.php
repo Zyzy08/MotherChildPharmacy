@@ -47,7 +47,8 @@ if (isset($_GET['InvoiceID'])) {
             s.Status,
             u.employeeName, 
             u.employeeLName,
-            s.SalesDetails
+            s.SalesDetails,
+            s.RefundAmount
         FROM 
             sales s
         JOIN 
@@ -70,21 +71,28 @@ if (isset($_GET['InvoiceID'])) {
             $qty = $detail['qty'];
 
             // Fetch the item details from the inventory
-            $sqlItem = "SELECT GenericName, BrandName, PricePerUnit FROM inventory WHERE ItemID = '$itemID'";
+            $sqlItem = "SELECT * FROM inventory WHERE ItemID = '$itemID'";
             $itemResult = $conn->query($sqlItem);
             if ($itemResult->num_rows > 0) {
                 $itemData = $itemResult->fetch_assoc();
                 $genericName = $itemData['GenericName'];
                 $brandName = $itemData['BrandName'];
                 $pricePerUnit = $itemData['PricePerUnit'];
+                $mass = $itemData['Mass'];
+                $unitofmeasure = $itemData['UnitOfMeasure'];
 
-                // Format the item string
-                $listItems[] = "$qty  @  $pricePerUnit\t| $genericName $brandName";
+                // Format the item string with quantity, description, and price
+                $listItems[] = [
+                    'qty' => $qty,
+                    'description' => $brandName ? $brandName . " " . $mass . $unitofmeasure : $genericName . " " . $mass . $unitofmeasure,
+                    'price' => $pricePerUnit                    
+                ];
             }
         }
 
-        // Join all items into a single string with new lines
-        $data['listQTY'] = implode("\n", $listItems);
+        // Set the listItems in the response
+        $data['listItems'] = $listItems;  // Use 'listItems' for clarity in JavaScript
+
     } else {
         $data = null;
     }
