@@ -95,3 +95,38 @@
 .dropdown-item-inv {
     padding: 8px 15px;
 }
+
+/* Custom scrollbar styling */
+.table-responsive::-webkit-scrollbar {
+    width: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Ensure the header text stays white on sticky position */
+.table thead th {
+    background-color: #fff;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* Add some padding to prevent content from being cut off */
+.table-responsive {
+    padding-right: 6px;
+}
+
+/* Optional: Add some hover effect on table rows */
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}

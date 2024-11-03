@@ -181,4 +181,100 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(() => fetchInventoryData(currentStatus), 300000);
 });
 
-//orig
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("fetchTodaySales.php")
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.querySelector(".recent-sales tbody");
+            tableBody.innerHTML = ""; // Clear existing rows
+
+            if (data.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center">No sales found for today</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Populate the table with today's sales data
+            data.forEach((sale) => {
+                // Format the date to show only time
+                const saleTime = new Date(sale.SaleDate).toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                // Display items and quantities in separate columns
+                const row = `
+                    <tr>
+                        <th scope="row"><a href="#">#${sale.InvoiceID}</a></th>
+                        <td>${saleTime}</td>
+                        <td><a href="#" class="text-primary">${sale.Items}</a></td>
+                        <td>${sale.Quantities}</td>
+                        <td>₱${sale.NetAmount.toFixed(2)}</td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML("beforeend", row);
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching sales data:", error);
+            const tableBody = document.querySelector(".recent-sales tbody");
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="text-center">Error loading sales data</td>
+                </tr>
+            `;
+        });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("fetchDeliveries.php")
+        .then(response => response.json())
+        .then(data => {
+            const activityContent = document.getElementById("activity-content");
+            activityContent.innerHTML = ""; // Clear existing content
+
+            if (data.length > 0) {
+                data.forEach(delivery => {
+                    // Set color based on status
+                    let statusColor;
+                    switch (delivery.Status) {
+                        case 'Delivered':
+                            statusColor = "text-success"; // Green
+                            break;
+                        case 'Pending':
+                            statusColor = "text-warning"; // Yellow
+                            break;
+                        case 'Cancelled':
+                            statusColor = "text-danger"; // Red
+                            break;
+                        default:
+                            statusColor = "text-muted"; // Gray for unknown status
+                    }
+
+                    // Format OrderDate for display
+                    const orderDate = new Date(delivery.OrderDate);
+                    const timeLabel = orderDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    // Create the HTML for each delivery item
+                    const activityItem = document.createElement("div");
+                    activityItem.classList.add("activity-item", "d-flex");
+
+                    activityItem.innerHTML = `
+                        <div class="activite-label">${timeLabel}</div>
+                        <i class="bi bi-circle-fill activity-badge ${statusColor} align-self-start"></i>
+                        <div class="activity-content">
+                            Order #${delivery.PurchaseOrderID} - <span class="fw-bold">${delivery.Status}</span>
+                        </div>
+                    `;
+
+                    activityContent.appendChild(activityItem);
+                });
+            } else {
+                activityContent.innerHTML = "<p>No deliveries to display.</p>";
+            }
+        })
+        .catch(error => console.error("Error fetching deliveries data:", error));
+});

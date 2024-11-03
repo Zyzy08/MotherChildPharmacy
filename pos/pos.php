@@ -152,9 +152,9 @@
         <li class="nav-item">
             <a class="nav-link collapsed" href="../delivery/delivery.php">
                 <i class="bi bi-truck"></i>
-                <span>Delivery</span>
+                <span>Deliveries</span>
             </a>
-        </li><!-- End Delivery Page Nav -->
+        </li><!-- End Deliveries Page Nav -->
         <?php endif; ?>
 
         <?php if ($_SESSION['InventoryPerms'] === 'on'): ?>

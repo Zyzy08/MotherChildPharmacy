@@ -42,9 +42,9 @@ try {
         SELECT 
             $groupBy as period,
             SUM(NetAmount) as total_sales,
-            COUNT(DISTINCT AccountID) as customers_per_period,
+            COUNT(DISTINCT InvoiceID) as customers_per_period,
             (
-                SELECT COUNT(DISTINCT AccountID) 
+                SELECT COUNT(DISTINCT InvoiceID) 
                 FROM sales 
                 WHERE $dateCondition
             ) as total_unique_customers
@@ -62,7 +62,7 @@ try {
     $compareQuery = "
         SELECT 
             SUM(NetAmount) as total_sales,
-            COUNT(DISTINCT AccountID) as unique_customers
+            COUNT(DISTINCT InvoiceID) as unique_customers
         FROM sales
         WHERE $compareCondition
     ";
@@ -106,4 +106,6 @@ try {
 }
 
 $conn = null;
+
+//working
 ?>
