@@ -179,11 +179,11 @@ foreach ($orderDetailsArray as $detail) {
     $quantityDelivered = $detail['qty'];
     $bonusAmt = $detail['bonus'];
     $netAmt = $detail['netAmt'];
-    $qtyDeliveredPlusBonus = $detail['qtyTotal'];
+    $qtyDeliveredPlusBonus = $quantityDelivered + $bonusAmt;
 
     // Ensure no empty values before inserting
     if (!empty($lotNumber) && !empty($expiryDate) && !empty($quantityDelivered) && !empty($netAmt)) {
-        $itemStmt->bind_param("iissiiii", $itemID, $deliveryID, $lotNumber, $expiryDate, $quantityDelivered, $bonusAmt, $quantityDelivered, $netAmt);
+        $itemStmt->bind_param("iissiiii", $itemID, $deliveryID, $lotNumber, $expiryDate, $quantityDelivered, $bonusAmt, $qtyDeliveredPlusBonus, $netAmt);
 
         if (!$itemStmt->execute()) {
             $response = [
