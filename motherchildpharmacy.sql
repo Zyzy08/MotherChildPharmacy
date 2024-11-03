@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 31, 2024 at 04:49 AM
+-- Generation Time: Nov 03, 2024 at 05:26 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -168,7 +168,8 @@ INSERT INTO `audittrail` (`auditID`, `AccountID`, `action`, `description`, `crea
 (124, 3, 'Archive Supplier', 'User archived a supplier. (SupplierID: 2).', '2024-10-31 03:11:00', '::1', '1'),
 (125, 3, 'Unarchive Supplier', 'User unarchived a supplier. (SupplierID: 2).', '2024-10-31 03:11:05', '::1', '1'),
 (126, 3, 'Logout', 'User logged out successfully.', '2024-10-31 03:47:56', '::1', '1'),
-(127, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-10-31 03:47:56', '::1', '1');
+(127, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-10-31 03:47:56', '::1', '1'),
+(128, 3, 'Login', 'User logged in successfully.', '2024-11-03 09:59:35', '::1', '1');
 
 -- --------------------------------------------------------
 
@@ -284,7 +285,7 @@ CREATE TABLE `inventory` (
 
 INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `Discount`, `VAT_exempted`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`) VALUES
 (2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Mg', 59, 50, 0, 9.00, 1, 0, 1, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
-(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Milligrams', 0, 20, 0, 300.00, 1, 1, 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg'),
+(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Mg', 0, 20, 0, 300.00, 1, 1, 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg'),
 (4, 'Ibuprofen', 'Advil', 'Medicine', '200', 'Milligrams', 0, 0, 0, 299.00, 0, 1, 1, '', 'Active', 'products-icon/Advil.png', 'AdvilIbuprofen200mg'),
 (5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Milligrams', 0, 0, 0, 499.00, 1, 1, 2, '', 'Active', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg'),
 (6, 'Loperamide', 'Diatabs', 'Medicine', '2', 'Milligrams', 0, 0, 0, 149.00, 0, 1, NULL, '', '', 'products-icon/Diatabs.png', 'DiatabsLoperamide2mg'),
@@ -355,7 +356,7 @@ CREATE TABLE `sales` (
   `AmountChange` decimal(10,2) GENERATED ALWAYS AS (`AmountPaid` - `NetAmount`) STORED,
   `PaymentMethod` enum('Cash','GCash') NOT NULL,
   `Status` enum('Sales','Return','Return/Exchange') NOT NULL,
-  `RefundAmount` decimal(10,2) DEFAULT NULL
+  `RefundAmount` decimal(10,2) DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -363,7 +364,7 @@ CREATE TABLE `sales` (
 --
 
 INSERT INTO `sales` (`InvoiceID`, `SaleDate`, `AccountID`, `SalesDetails`, `TotalItems`, `Subtotal`, `Tax`, `Discount`, `AmountPaid`, `PaymentMethod`, `Status`, `RefundAmount`) VALUES
-(1, '2024-09-29 01:34:29', 3, '{\r\n	\"1\":{\r\n		\"itemID\":\"2\",\r\n		\"qty\":5\r\n	},\r\n	\"2\":{\r\n		\"itemID\":\"3\",\r\n		\"qty\":3\r\n	}\r\n}', 8, 1900.00, 228.00, 0.00, 2500.00, 'Cash', 'Sales', NULL);
+(1, '2024-09-29 01:34:29', 3, '{\n	\"1\":{\n		\"itemID\":\"2\",\n		\"qty\":5\n	},\n	\"2\":{\n		\"itemID\":\"3\",\n		\"qty\":3\n	}\n}', 8, 1900.00, 228.00, 0.00, 2500.00, 'Cash', 'Sales', 0.00);
 
 -- --------------------------------------------------------
 
@@ -421,7 +422,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`AccountID`, `employeeName`, `employeeLName`, `role`, `accountName`, `password`, `picture`, `dateCreated`, `status`, `connected`, `SuppliersPerms`, `TransactionsPerms`, `InventoryPerms`, `POSPerms`, `REPerms`, `POPerms`, `UsersPerms`) VALUES
 (2, 'Sayra', 'Jackson', 'Admin', 'E002_sjackson', 'jackson-e002', 'Chichi.jpg', '2024-09-22 21:27:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
-(3, 'Lance', 'Tiangco', 'Admin', 'E003_ltiangco', 'lancetiangco26!!', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
+(3, 'Lance', 'Tiangco', 'Admin', 'E003_ltiangco', 'lancetiangco26!!', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '1', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
 (4, 'Aileen', 'Castro', 'Admin', 'E004_acastro', 'castro-e004', 'owner.png', '2024-10-14 14:44:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
 (5, 'The', 'Shrek', 'Pharmacy Assistant', 'E005_tshrek', 'test-e005', 'Shrek.png', '2024-10-14 18:59:03', 'Inactive', '0', 'off', 'on', 'off', 'on', 'on', 'off', 'off'),
 (6, 'Cashier', 'Ashiera', 'Pharmacy Assistant', 'E006_cashiera', 'ashiera-e006', 'cashier.png', '2024-10-29 22:13:40', 'Active', '0', 'off', 'on', 'off', 'on', 'on', 'off', 'off');
@@ -516,7 +517,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `audittrail`
 --
 ALTER TABLE `audittrail`
-  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
+  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
 
 --
 -- AUTO_INCREMENT for table `deliveries`
