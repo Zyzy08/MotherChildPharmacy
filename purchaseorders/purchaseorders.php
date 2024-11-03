@@ -36,6 +36,18 @@
     <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
 
+    <!-- DataTables Buttons Extension CSS and JavaScript -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.min.css">
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
+
+    <!-- Additional Libraries for Exporting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script
+
     <!-- Template Main CSS File -->
     <link href="../style.css" rel="stylesheet">
 
@@ -118,97 +130,97 @@
             <li class="nav-heading"></li>
 
             <?php if ($_SESSION['SuppliersPerms'] === 'on'): ?>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="../suppliers/suppliers.php">
-                        <i class="bi bi-shop"></i>
-                        <span>Suppliers</span>
-                    </a>
-                </li><!-- End Suppliers Page Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="../suppliers/suppliers.php">
+                            <i class="bi bi-shop"></i>
+                            <span>Suppliers</span>
+                        </a>
+                    </li><!-- End Suppliers Page Nav -->
             <?php endif; ?>
 
             <?php if ($_SESSION['TransactionsPerms'] === 'on'): ?>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="../transactions/transactions.php">
-                        <i class="bi bi-cash-coin"></i>
-                        <span>Transactions</span>
-                    </a>
-                </li><!-- End Transactions Page Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="../transactions/transactions.php">
+                            <i class="bi bi-cash-coin"></i>
+                            <span>Transactions</span>
+                        </a>
+                    </li><!-- End Transactions Page Nav -->
             <?php endif; ?>
 
             <?php if ($_SESSION['POPerms'] === 'on'): ?>
-                <li class="nav-item">
-                    <a class="nav-link" href="../purchaseorders/purchaseorders.php">
-                        <i class="bi bi-mailbox"></i>
-                        <span>Purchase Orders</span>
-                    </a>
-                </li><!-- End Purchase Order Page Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="../purchaseorders/purchaseorders.php">
+                            <i class="bi bi-mailbox"></i>
+                            <span>Purchase Orders</span>
+                        </a>
+                    </li><!-- End Purchase Order Page Nav -->
             <?php endif; ?>
 
             <?php if ($_SESSION['POPerms'] === 'on'): ?>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="../delivery/delivery.php">
-                        <i class="bi bi-truck"></i>
-                        <span>Deliveries</span>
-                    </a>
-                </li><!-- End Delivery Page Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="../delivery/delivery.php">
+                            <i class="bi bi-truck"></i>
+                            <span>Deliveries</span>
+                        </a>
+                    </li><!-- End Delivery Page Nav -->
             <?php endif; ?>
 
             <?php if ($_SESSION['InventoryPerms'] === 'on'): ?>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="../inventory/inventory.php">
-                        <i class="bi bi-box-seam"></i>
-                        <span>Inventory</span>
-                    </a>
-                </li><!-- End Inventory Page Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="../inventory/inventory.php">
+                            <i class="bi bi-box-seam"></i>
+                            <span>Inventory</span>
+                        </a>
+                    </li><!-- End Inventory Page Nav -->
             <?php endif; ?>
 
             <li class="nav-heading"></li>
 
             <?php if ($_SESSION['POSPerms'] === 'on'): ?>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="../pos/pos.php">
-                        <i class="bi bi-printer"></i>
-                        <span>POS</span>
-                    </a>
-                </li><!-- End POS Page Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="../pos/pos.php">
+                            <i class="bi bi-printer"></i>
+                            <span>POS</span>
+                        </a>
+                    </li><!-- End POS Page Nav -->
             <?php endif; ?>
 
             <?php if ($_SESSION['REPerms'] === 'on'): ?>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
-                        <i class="bi bi-cart-dash"></i>
-                        <span>Return & Exchange</span>
-                    </a>
-                </li><!-- End Return & Exchange Page Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
+                            <i class="bi bi-cart-dash"></i>
+                            <span>Return & Exchange</span>
+                        </a>
+                    </li><!-- End Return & Exchange Page Nav -->
             <?php endif; ?>
 
             <li class="nav-heading"></li>
 
             <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="../users/users.php">
-                        <i class="bi bi-person"></i>
-                        <span>Users</span>
-                    </a>
-                </li><!-- End Users Page Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="../users/users.php">
+                            <i class="bi bi-person"></i>
+                            <span>Users</span>
+                        </a>
+                    </li><!-- End Users Page Nav -->
             <?php endif; ?>
 
             <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="../audittrail/audittrail.php">
-                        <i class="bi bi-clipboard-data"></i>
-                        <span>Audit Trail</span>
-                    </a>
-                </li><!-- End Audit Trail Page Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="../audittrail/audittrail.php">
+                            <i class="bi bi-clipboard-data"></i>
+                            <span>Audit Trail</span>
+                        </a>
+                    </li><!-- End Audit Trail Page Nav -->
             <?php endif; ?>
 
             <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
-                        <i class="bi bi-cloud-check"></i>
-                        <span>Backup & Restore</span>
-                    </a>
-                </li><!-- End B&R Page Nav -->
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
+                            <i class="bi bi-cloud-check"></i>
+                            <span>Backup & Restore</span>
+                        </a>
+                    </li><!-- End B&R Page Nav -->
             <?php endif; ?>
 
         </ul>
@@ -402,6 +414,6 @@
     <script src="../resources/vendor/tinymce/tinymce.min.js"></script>
     <script src="../resources/vendor/php-email-form/validate.js"></script>
 
-</body>
+    </body>
 
 </html>

@@ -540,7 +540,10 @@
                             <td class="editable" data-key="bonus" id="bonus">0</td>
                             <td class="editable" data-key="netAmt" id="netAmt">₱0.00</td>
                         `;
-                                tableBody.appendChild(row);
+                                if (item.pending > 0) {
+                                    tableBody.appendChild(row);
+                                }
+
                             });
 
                             // Add event listener to make cells editable

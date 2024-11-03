@@ -36,6 +36,18 @@
     <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
 
+    <!-- DataTables Buttons Extension CSS and JavaScript -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.min.css">
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
+
+    <!-- Additional Libraries for Exporting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+
     <!-- Template Main CSS File -->
     <link href="../style.css" rel="stylesheet">
 
@@ -422,6 +434,7 @@
             $(document).ready(function () {
                 $('#example').DataTable({
                     "order": [], // Disable initial sorting
+                    "pageLength": 5,
                     "columnDefs": [
                         {
                             "targets": 0, // InvoiceID
@@ -451,7 +464,53 @@
                             "targets": 5, // Index of the column to disable sorting
                             "orderable": false // Disable sorting for column 5 - Actions
                         }
-                    ]
+                    ],
+                    "layout": {
+                        "topStart": {
+                            buttons: [
+                                {
+                                    extend: 'pdfHtml5',
+                                    text: 'Export PDF',
+                                    pageSize: 'A4', // Set the page size
+                                    title: 'Sales of Mother and Child Pharmacy and Medical Supplies',
+                                    exportOptions: {
+                                        columns: ':not(:last-child)' // Exclude the last column
+                                    },
+                                    customize: function (doc) {
+                                        // Set font size for the whole document
+                                        doc.defaultStyle.fontSize = 10;
+
+                                        // Add custom margins
+                                        doc.pageMargins = [40, 60, 40, 60];
+
+                                        // Set column widths to make them equal
+                                        const columnCount = doc.content[1].table.body[0].length;
+                                        doc.content[1].table.widths = Array(columnCount).fill('*');
+
+                                        // Customize the table header
+                                        doc.styles.tableHeader = {
+                                            alignment: 'left',
+                                            fontSize: 12,
+                                        };
+
+                                        // Add additional elements such as a footer
+                                        doc['footer'] = (currentPage, pageCount) => {
+                                            return {
+                                                columns: [
+                                                    {
+                                                        text: `Page ${currentPage} of ${pageCount}`,
+                                                        alignment: 'right',
+                                                        fontSize: 8,
+                                                        margin: [0, 10, 40, 0],
+                                                    }
+                                                ]
+                                            };
+                                        };
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 });
             });
         }

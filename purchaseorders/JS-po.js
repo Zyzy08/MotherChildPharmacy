@@ -2,6 +2,7 @@ function setDataTables() {
     $(document).ready(function () {
         $('#example').DataTable({
             "order": [[1, 'desc']], // Sort by the first column (OrderID) in descending order
+            "pageLength": 5,
             "columnDefs": [
                 {
                     "targets": 0, // OrderID
@@ -31,7 +32,53 @@ function setDataTables() {
                     "targets": 5, // Index of the column to disable sorting
                     "orderable": false // Disable sorting for column 5 - Actions
                 }
-            ]
+            ],
+            "layout": {
+                "topStart": {
+                    buttons: [
+                        {
+                            extend: 'pdfHtml5',
+                            text: 'Export PDF',
+                            pageSize: 'A4', // Set the page size
+                            title: 'Purchase Orders of Mother and Child Pharmacy and Medical Supplies', // Set a custom title
+                            exportOptions: {
+                                columns: ':not(:last-child)' // Exclude the last column
+                            },
+                            customize: function (doc) {
+                                // Set font size for the whole document
+                                doc.defaultStyle.fontSize = 10;
+
+                                // Add custom margins
+                                doc.pageMargins = [40, 60, 40, 60];
+
+                                // Set column widths to make them equal
+                                const columnCount = doc.content[1].table.body[0].length;
+                                doc.content[1].table.widths = Array(columnCount).fill('*');
+
+                                // Customize the table header
+                                doc.styles.tableHeader = {
+                                    alignment: 'left',
+                                    fontSize: 12,
+                                };
+
+                                // Add additional elements such as a footer
+                                doc['footer'] = (currentPage, pageCount) => {
+                                    return {
+                                        columns: [
+                                            {
+                                                text: `Page ${currentPage} of ${pageCount}`,
+                                                alignment: 'right',
+                                                fontSize: 8,
+                                                margin: [0, 10, 40, 0],
+                                            }
+                                        ]
+                                    };
+                                };
+                            }
+                        }
+                    ]
+                }
+            }
         });
     });
 }
