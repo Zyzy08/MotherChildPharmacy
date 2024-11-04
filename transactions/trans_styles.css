@@ -349,6 +349,26 @@ input {
   background-color: #a04545;
 }
 
+.disabled-button {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Tooltip styling for disabled button */
+#deleteDataBtn[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -30px;
+  left: 10px;
+  background: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+
 #unarchiveUserBtn,
 #archiveUserBtn {
   width: 250px;
@@ -546,7 +566,7 @@ input[type="file"] {
   display: none;
   /* Hidden by default */
   position: fixed;
-  z-index:997;
+  z-index: 997;
   /* Sit on top */
   left: 0;
   top: 0;
@@ -787,7 +807,7 @@ h4 {
   padding-right: 100px;
 }
 
-small{
+small {
   font-size: 11px;
 }
 
@@ -796,12 +816,14 @@ small{
   width: 100%;
 }
 
-.h6, h6{
+.h6,
+h6 {
   font-size: 0.8rem;
   margin-bottom: 0px;
 }
 
-.h5, h5{
+.h5,
+h5 {
   font-size: 0.9rem;
 }
 
@@ -829,7 +851,7 @@ small{
 }
 
 .row.text-center.mb-2 {
-margin-bottom: 0px !important;
+  margin-bottom: 0px !important;
 }
 
 .col-xl-5 {

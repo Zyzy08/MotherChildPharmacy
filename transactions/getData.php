@@ -35,7 +35,8 @@ if (isset($_GET['InvoiceID'])) {
     $sql = "
         SELECT 
             s.InvoiceID, 
-            DATE_FORMAT(s.SaleDate, '%m/%d/%y (%l:%i %p)') AS SalesDate, 
+            DATE_FORMAT(s.SaleDate, '%m/%d/%y (%l:%i %p)') AS SalesDate,
+            s.SaleDate AS SalesDateTime, 
             s.TotalItems, 
             s.Subtotal,
             s.NetAmount, 

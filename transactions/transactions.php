@@ -775,6 +775,33 @@
         function showOptions(identifier) {
             selectedID = identifier;
             overlayADtitle.textContent = "InvoiceID " + identifier;
+
+            // Fetch invoice details (including SaleDate)
+            fetch(`getData.php?InvoiceID=${identifier}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.SalesDateTime) {
+                        const invoiceDate = new Date(data.SalesDateTime);
+                        const currentDate = new Date();
+                        const timeDiff = currentDate - invoiceDate;
+                        const oneDayInMs = 24 * 60 * 60 * 1000;
+
+                        // Enable/disable the button based on the time difference
+                        if (timeDiff < oneDayInMs) {
+                            deleteDataBtn.disabled = false;
+                            deleteDataBtn.classList.remove('disabled-button');
+                            deleteDataBtn.removeAttribute('title');  // Remove any previous tooltip
+                            deleteDataBtn.style.cursor = 'pointer';  // Set cursor to pointer
+                        } else {
+                            deleteDataBtn.disabled = true;
+                            deleteDataBtn.classList.add('disabled-button');
+                            deleteDataBtn.setAttribute('title', 'This transaction can only be voided within 24 hours.');
+                            deleteDataBtn.style.cursor = 'not-allowed';  // Set cursor to not-allowed
+                        }
+                    }
+                })
+                .catch(error => console.error('Error fetching invoice data:', error));
+
             overlayAD.style.display = 'flex';
         };
 
