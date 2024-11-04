@@ -567,15 +567,16 @@
         <!-- Right side columns -->
         <div class="col-lg-4">
 
-          <!-- Deliveries Status -->
+          <!-- Deliveries Status Card -->
           <div class="card">
-              <div class="card-body">
+              <div class="card-body deliveries-card-body">
                   <h5 class="card-title">Deliveries Status</h5>
                   <div class="activity" id="activity-content">
                       <!-- JavaScript will insert delivery status items here -->
                   </div>
               </div>
-          </div><!-- End Deliveries Status -->
+          </div>
+          <!-- End Deliveries Status -->
 
           <!-- Today's Sales Card -->
           <div class="col-12">

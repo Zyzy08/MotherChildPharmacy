@@ -18,7 +18,7 @@ $searchQuery = isset($_POST['query']) ? $_POST['query'] : '';
 
 // Prepare the SQL statement to fetch products
 if ($searchQuery) {
-    $sql = "SELECT BrandName, GenericName, Mass, UnitOfMeasure, InStock, PricePerUnit, ProductIcon, ProductCode 
+    $sql = "SELECT ItemID, BrandName, GenericName, Mass, UnitOfMeasure, InStock, PricePerUnit, ProductIcon, ProductCode 
             FROM inventory 
             WHERE BrandName LIKE ? OR GenericName LIKE ? OR ProductCode LIKE ?";
     
@@ -31,7 +31,7 @@ if ($searchQuery) {
     $stmt->execute();
     $result = $stmt->get_result();
 } else {
-    $sql = "SELECT BrandName, GenericName, Mass, UnitOfMeasure, InStock, PricePerUnit, ProductIcon, ProductCode FROM inventory";
+    $sql = "SELECT ItemID, BrandName, GenericName, Mass, UnitOfMeasure, InStock, PricePerUnit, ProductIcon, ProductCode FROM inventory";
     $result = $conn->query($sql);
 }
 

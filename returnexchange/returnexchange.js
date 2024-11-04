@@ -1,74 +1,74 @@
-let currentPage = 1;
-const itemsPerPage = 8; // Number of items per page
-let totalItems = 0; // Total number of items
-let totalPages = 0; // Total pages
-let searchQuery = ''; // Store the current search query
-let totalAmount = 0; // This should be updated with the actual total
+window.onload = loadProducts;
 
-// Function to fetch products from the server
+let currentPage = 1;
+const itemsPerPage = 12;
+let totalItems = 0;
+let totalPages = 0;
+let searchQuery = '';
+let basket = [];
+
 async function fetchProducts(query = '') {
     try {
         const response = await fetch('fetchProductData.php', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({ query })
         });
-        const text = await response.text(); // Get the response as text
-
-        // Extract JSON from the comment
+        const text = await response.text();
         const jsonMatch = text.match(/<!-- (.*?) -->/);
-        const data = jsonMatch ? JSON.parse(jsonMatch[1]) : []; // Parse JSON if found
-
-        totalItems = data.length; // Set total items based on fetched data
-        totalPages = Math.ceil(totalItems / itemsPerPage); // Calculate total pages
-
+        const data = jsonMatch ? JSON.parse(jsonMatch[1]) : [];
+        totalItems = data.length;
+        totalPages = Math.ceil(totalItems / itemsPerPage);
         return data;
     } catch (error) {
         console.error('Error fetching products:', error);
+        return [];
     }
 }
 
-//Unit of measure format
 function formatUnitOfMeasure(unit) {
-    switch (unit.toLowerCase()) {
-        case 'milligrams':
-            return 'mg';
-        case 'grams':
-            return 'g';
-        case 'liters':
-            return 'L';
-        case 'milliliters':
-            return 'mL';
-        case 'piece':
-                return 'pc';
-        default:
-            return unit; // Return the original unit if no match
-    }
+    const unitMap = {
+        kilograms: 'kg',
+        milligrams: 'mg',
+        grams: 'g',
+        liters: 'L',
+        milliliters: 'mL',
+        pieces: 's'
+    };
+    return unitMap[unit.toLowerCase()] || unit;
 }
 
 async function loadProducts() {
     const products = await fetchProducts(searchQuery);
-    const productContainer = document.getElementById('product-list');
-    productContainer.innerHTML = '';
+    const inStockContainer = document.getElementById('in-stock-list');
+    const lowStockContainer = document.getElementById('low-stock-list');
+    const outOfStockContainer = document.getElementById('out-of-stock-list');
+    
+    inStockContainer.innerHTML = '';
+    lowStockContainer.innerHTML = '';
+    outOfStockContainer.innerHTML = '';
 
-    // Clear active highlights from all cards
-    const cards = document.querySelectorAll('.clickable-card');
-    cards.forEach(card => card.classList.remove('active'));
+    document.querySelectorAll('.clickable-card').forEach(card => card.classList.remove('active'));
     localStorage.removeItem('selectedCardId');
 
-    // Calculate start and end indexes for products on the current page
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const paginatedProducts = products.slice(startIndex, endIndex);
+    const itemsPerRow = 4;
+    const rowsPerCategory = 1;
+    const itemsPerCategory = itemsPerRow * rowsPerCategory;
 
-    // Append products to the product list
-    paginatedProducts.forEach(product => {
+    // Separate products by stock level
+    const inStockProducts = products.filter(product => product.InStock >= 50);
+    const lowStockProducts = products.filter(product => product.InStock < 50 && product.InStock > 0);
+    const outOfStockProducts = products.filter(product => product.InStock == 0);
+
+    // Calculate start index for each category
+    const startIndex = (currentPage - 1) * itemsPerCategory;
+    const endIndex = startIndex + itemsPerCategory;
+
+    function createProductHTML(product) {
+        const encodedProduct = encodeProductData(product);
         const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
         let stockBadge = '';
     
-        // Check the stock level and set the appropriate badge with actual InStock value
         if (product.InStock == 0) {
             stockBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
         } else if (product.InStock < 50 && product.InStock > 0) {
@@ -77,627 +77,980 @@ async function loadProducts() {
             stockBadge = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
         }
     
-        const productHTML = `
-            <div class="col-lg-3">
-                <div class="card clickable-card" data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" data-in-stock="${product.InStock}">
+        return `
+            <div class="col-lg-3 mb-3">
+                <div class="card clickable-card ${product.InStock == 0 ? 'non-clickable-card' : ''}" 
+                    data-id="${encodedProduct.BrandName.toLowerCase().replace(/ /g, "-")}" 
+                    data-product='${JSON.stringify(encodedProduct)}'>
                     ${stockBadge}
-                    <img src="../inventory/${product.ProductIcon}" class="card-img-top"
-                        style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
+                    <img src="../inventory/${product.ProductIcon}" class="card-img-top" style="width: 100px; height: 100px; object-fit: contain; margin: 0 auto;">
                     <div class="card-body">
                         <div class="row align-items-top">
                             <div class="col-lg-4">
                                 <span class="badge rounded-pill bg-light text-dark">${product.Mass}${formattedUnit}</span>
                             </div>
                             <div class="col-lg-3 mx-3">
-                                <span class="badge bg-success">₱${product.PricePerUnit}</span>
+                                <span class="badge bg-success">₱${formatPrice(product.PricePerUnit)}</span>
                             </div>
                         </div>
-                        <h5 class="card-title">${product.BrandName}</h5>
-                        <p class="card-text generic-name">${product.GenericName}</p>
-                        <p class="card-text full-generic-name" style="display: none;">${product.GenericName}</p>
+                        <input type="hidden" class="item-id" value="${product.ItemID}">
+                        <h5 class="card-title">${encodedProduct.BrandName}</h5>
+                        <p class="card-text">${encodedProduct.GenericName}</p>
                     </div>
                 </div>
             </div>
         `;
-        productContainer.insertAdjacentHTML('beforeend', productHTML);
-    });    
+    }
+
+    // Display paginated products for each category
+    inStockProducts.slice(startIndex, endIndex).forEach(product => {
+        inStockContainer.insertAdjacentHTML('beforeend', createProductHTML(product));
+    });
+
+    lowStockProducts.slice(startIndex, endIndex).forEach(product => {
+        lowStockContainer.insertAdjacentHTML('beforeend', createProductHTML(product));
+    });
+
+    outOfStockProducts.slice(startIndex, endIndex).forEach(product => {
+        outOfStockContainer.insertAdjacentHTML('beforeend', createProductHTML(product));
+    });
 
     attachCardListeners();
-    updatePaginationControls();
-    truncateGenericNames();
 
-    if (searchQuery && paginatedProducts.length > 0) {
-        const firstCard = document.querySelector('.clickable-card');
+    // Update pagination
+    totalItems = Math.max(inStockProducts.length, lowStockProducts.length, outOfStockProducts.length);
+    totalPages = Math.ceil(totalItems / itemsPerCategory);
+    updatePaginationControls();
+
+    if (searchQuery && (inStockContainer.children.length > 0 || lowStockContainer.children.length > 0 || outOfStockContainer.children.length > 0)) {
+        const firstCard = document.querySelector('.clickable-card:not(.non-clickable-card)');
         if (firstCard) {
             highlightCard(firstCard);
         }
     }
 }
 
-// Function to truncate generic names
-function truncateGenericNames() {
-    const genericNames = document.querySelectorAll('.generic-name');
-    genericNames.forEach(name => {
-        const text = name.textContent;
-        const words = text.split(' ');
-        if (words.length > 1) {
-            name.textContent = words[0] + '...';
-        }
-    });
-}
-
 function updatePaginationControls() {
     const paginationList = document.querySelector('.pagination');
-    paginationList.innerHTML = ''; // Clear existing pagination
+    paginationList.innerHTML = '';
 
-    // Previous button
-    paginationList.insertAdjacentHTML('beforeend', `
-        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}" id="prev-page">
-            <a class="page-link" href="#">Previous</a>
-        </li>
-    `);
-
-    // Page numbers
-    for (let i = 1; i <= totalPages; i++) {
+    // Only show pagination if there are products
+    if (totalItems > 0) {
         paginationList.insertAdjacentHTML('beforeend', `
-            <li class="page-item ${i === currentPage ? 'active' : ''}" id="page-${i}">
-                <a class="page-link" href="#">${i}</a>
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}" id="first-page">
+                <a class="page-link" href="#" aria-label="First">
+                    <span aria-hidden="true">«</span>
+                </a>
+            </li>
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}" id="prev-page">
+                <a class="page-link" href="#">Previous</a>
             </li>
         `);
-    }
 
-    // Next button
-    paginationList.insertAdjacentHTML('beforeend', `
-        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}" id="next-page">
-            <a class="page-link" href="#">Next</a>
-        </li>
-    `);
+        // Add page numbers
+        const startPage = Math.max(1, currentPage - 2);
+        const endPage = Math.min(totalPages, startPage + 4);
+        
+        for (let i = startPage; i <= endPage; i++) {
+            paginationList.insertAdjacentHTML('beforeend', `
+                <li class="page-item ${i === currentPage ? 'active' : ''}" id="page-${i}">
+                    <a class="page-link" href="#">${i}</a>
+                </li>
+            `);
+        }
 
-    // Add event listeners to page numbers
-    for (let i = 1; i <= totalPages; i++) {
-        const pageItem = document.getElementById(`page-${i}`);
-        if (pageItem) {
-            pageItem.addEventListener('click', (e) => {
+        paginationList.insertAdjacentHTML('beforeend', `
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}" id="next-page">
+                <a class="page-link" href="#">Next</a>
+            </li>
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}" id="last-page">
+                <a class="page-link" href="#" aria-label="Last">
+                    <span aria-hidden="true">»</span>
+                </a>
+            </li>
+        `);
+
+        // Add event listeners
+        document.querySelectorAll('.pagination .page-item').forEach(item => {
+            item.addEventListener('click', function(e) {
                 e.preventDefault();
-                currentPage = i;
+                if (this.classList.contains('disabled')) return;
+                
+                if (this.id === 'first-page') {
+                    currentPage = 1;
+                } else if (this.id === 'prev-page' && currentPage > 1) {
+                    currentPage--;
+                } else if (this.id === 'next-page' && currentPage < totalPages) {
+                    currentPage++;
+                } else if (this.id === 'last-page') {
+                    currentPage = totalPages;
+                } else if (this.id.startsWith('page-')) {
+                    currentPage = parseInt(this.id.split('-')[1]);
+                }
                 loadProducts();
             });
-        }
+        });
     }
-
-    // Re-attach event listeners to the Previous and Next buttons
-    document.getElementById('prev-page').addEventListener('click', function(e) {
-        e.preventDefault();
-        if (currentPage > 1) {
-            currentPage--;
-            loadProducts();
-        }
-    });
-
-    document.getElementById('next-page').addEventListener('click', function(e) {
-        e.preventDefault();
-        if (currentPage < totalPages) {
-            currentPage++;
-            loadProducts();
-        }
-    });
 }
 
 function attachCardListeners() {
-    const cards = document.querySelectorAll('.clickable-card');
-    const selectedCardId = localStorage.getItem('selectedCardId');
-    if (selectedCardId) {
-        const selectedCard = document.querySelector(`.clickable-card[data-id="${selectedCardId}"]`);
-        if (selectedCard) {
-            selectedCard.classList.add('active');
-        }
-    }
-
-    cards.forEach(card => {
+    document.querySelectorAll('.clickable-card').forEach(card => {
         card.addEventListener('click', function() {
-            highlightCard(this);
+            if (!this.classList.contains('non-clickable-card')) {
+                highlightCard(this);
+                const encodedProductData = JSON.parse(this.dataset.product);
+                const productData = decodeProductData(encodedProductData);
+                showQuantityModal(productData);
+            }
         });
     });
 }
 
-function highlightCard(card) {
-    // Check if the card has the "Out-of-Stock" badge (bg-danger)
-    const outOfStockBadge = card.querySelector('.badge.bg-danger');
-    if (outOfStockBadge) {
-        return;
-    }
-
-    const selectedCardId = localStorage.getItem('selectedCardId');
-    if (card.getAttribute('data-id') === selectedCardId) {
-        card.classList.remove('active');
-        localStorage.removeItem('selectedCardId');
-        // Hide full generic name and show truncated version
-        card.querySelector('.full-generic-name').style.display = 'none';
-        card.querySelector('.generic-name').style.display = 'block';
-    } else {
-        const cards = document.querySelectorAll('.clickable-card');
-        cards.forEach(c => {
-            c.classList.remove('active');
-            c.querySelector('.full-generic-name').style.display = 'none';
-            c.querySelector('.generic-name').style.display = 'block';
-        });
-        card.classList.add('active');
-        localStorage.setItem('selectedCardId', card.getAttribute('data-id'));
-        // Show full generic name and hide truncated version
-        card.querySelector('.full-generic-name').style.display = 'block';
-        card.querySelector('.generic-name').style.display = 'none';
-    }
+function encodeProductData(product) {
+    return {
+        ...product,
+        BrandName: product.BrandName.replace(/"/g, '&quot;').replace(/'/g, '&#39;'),
+        GenericName: product.GenericName.replace(/"/g, '&quot;').replace(/'/g, '&#39;')
+    };
 }
 
-// Add event listener for the search input
+function decodeProductData(product) {
+    return {
+        ...product,
+        BrandName: product.BrandName.replace(/&quot;/g, '"').replace(/&#39;/g, "'"),
+        GenericName: product.GenericName.replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    };
+}
+
+document.head.insertAdjacentHTML('beforeend', `
+    <style>
+        .non-clickable-card {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    </style>
+`);
+
 const searchInput = document.querySelector('input[name="query"]');
 searchInput.addEventListener('input', function() {
-    searchQuery = this.value; // Update the search query
-    currentPage = 1; // Reset to the first page
-    loadProducts(); // Load products based on the new query
+    searchQuery = this.value;
+    currentPage = 1;
+    loadProducts();
 });
 
-// Add event listener for the Enter key on the search input
 searchInput.addEventListener('keypress', async function(event) {
     if (event.key === 'Enter') {
-        event.preventDefault(); // Prevent form submission if it's in a form
-        
-        // Check if the search input is empty
-        if (this.value.trim() === '') {
-            // If the search input is empty, focus on the quantity input field
-            const quantityInput = document.getElementById('quantity-input');
-            if (quantityInput) {
-                quantityInput.focus(); // Focus on the quantity input
-            }
-            return; // Exit the function to avoid further execution
-        }
-
-        const selectedCardId = localStorage.getItem('selectedCardId');
-        const firstCard = document.querySelector('.clickable-card');
-
-        if (selectedCardId && firstCard) {
-            // Check if the product is already selected (to add to quantity)
-            if (selectedCardId === firstCard.getAttribute('data-id')) {
-                // Product is already selected, increment the quantity by 1
-                const quantityInput = document.getElementById('quantity-input');
-                let currentQuantity = parseInt(quantityInput.value, 10) || 0;
-                quantityInput.value = currentQuantity + 1; // Increment quantity
-            }
+        event.preventDefault();
+        if (this.value.trim() === '') return;
+        searchQuery = this.value;
+        currentPage = 1;
+        await loadProducts();
+        const firstClickableCard = document.querySelector('.clickable-card');
+        if (firstClickableCard) {
+            highlightCard(firstClickableCard);
+            firstClickableCard.click();
         } else {
-            // If no product is selected, update the search query and load products
-            searchQuery = this.value; 
-            currentPage = 1; 
-            await loadProducts(); // Await the loadProducts function
-            // Highlight the first product and set quantity to 1
-            if (firstCard) {
-                highlightCard(firstCard);
-                const quantityInput = document.getElementById('quantity-input');
-                if (quantityInput) {
-                    quantityInput.value = 1; // Automatically set the value to 1
-                    quantityInput.focus();    // Focus on the quantity input
-                }
-            }
+            showToast("No in-stock products found for your search.");
         }
-
-        // Ensure the product is highlighted before triggering the add button
-        setTimeout(() => {
-            const addItemButton = document.getElementById('add-item-button');
-            if (addItemButton && document.querySelector('.clickable-card.active')) {
-                addItemButton.click(); // Simulate a click on the "Add Item" button
-            }
-        }, 100); // Delay the click to allow proper product selection
-
-        // Clear the search bar
-        this.value = ''; 
-        
-        // Set focus back to the search input
-        searchInput.focus(); 
+        this.value = '';
+        this.focus();
     }
 });
 
-// Load initial products and pagination
-loadProducts();
+/*function showQuantityModal(product) {
+    const modalBody = document.getElementById('quantity-modal-body');
+    const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
+    let stockBadge = product.InStock < 50 ? 
+        `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>` :
+        `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
+    
+    modalBody.innerHTML = `
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="../inventory/${product.ProductIcon}" class="img-fluid rounded-start" alt="Product Icon">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        ${stockBadge}
+                        <small class="card-text">₱${formatPrice(product.PricePerUnit)}</small>
+                        <h5 class="card-title">${product.BrandName} ${product.Mass}${formattedUnit}</h5>
+                        <p class="card-text">${product.GenericName}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
 
-let basket = [];
-let basketTotal = 0;
+    const quantityInput = document.getElementById('quantity-input');
+    quantityInput.value = 1;
+    quantityInput.max = product.InStock;
 
+    const addItemButton = document.getElementById('add-item-button');
+    addItemButton.onclick = () => {
+        const quantity = parseInt(quantityInput.value, 10);
+        if (quantity > 0 && quantity <= product.InStock) {
+            addItemToBasket(product, quantity);
+            bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
+        } else {
+            showToast("Please enter a valid quantity.");
+        }
+    };
+
+    new bootstrap.Modal(document.getElementById('quantity-modal')).show();
+}*/
+
+function showQuantityModal(product) {
+    const modalBody = document.getElementById('quantity-modal-body');
+    const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
+    let stockBadge = product.InStock < 50 ? 
+        `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>` :
+        `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
+    
+    modalBody.innerHTML = `
+        <div class="card mb-3">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="../inventory/${product.ProductIcon}" class="img-fluid rounded-start" alt="Product Icon">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        ${stockBadge}
+                        <small class="card-text">₱${formatPrice(product.PricePerUnit)}</small>
+                        <h5 class="card-title">${product.BrandName} ${product.Mass}${formattedUnit}</h5>
+                        <p class="card-text">${product.GenericName}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    const quantityInput = document.getElementById('quantity-input');
+    quantityInput.value = 1;
+    quantityInput.max = product.InStock;
+
+    const addItemButton = document.getElementById('add-item-button');
+    addItemButton.onclick = () => {
+        const quantityToAdd = parseInt(quantityInput.value, 10);
+
+        // Check current item quantity in the basket
+        const basketItem = basket.find(item => item.ItemID === product.ItemID);
+        const currentBasketQuantity = basketItem ? basketItem.quantity : 0;
+
+        // Calculate the combined quantity (existing + new) and check if it exceeds stock
+        const totalQuantity = currentBasketQuantity + quantityToAdd;
+
+        if (quantityToAdd > 0 && totalQuantity <= product.InStock) {
+            // Add item if total does not exceed stock
+            addItemToBasket(product, quantityToAdd);
+            bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
+        } else {
+            // Show message if adding would exceed available stock
+            showToast(`Cannot add more than ${product.InStock} of this item.`);
+        }
+    };
+
+    new bootstrap.Modal(document.getElementById('quantity-modal')).show();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+document.getElementById('quantity-cancel').addEventListener('click', function() {
+    document.querySelectorAll('.clickable-card').forEach(card => card.classList.remove('active'));
+    localStorage.removeItem('selectedCardId');
+});
+
+function highlightCard(card) {
+    if (card.querySelector('.badge.bg-danger')) return;
+    document.querySelectorAll('.clickable-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    localStorage.setItem('selectedCardId', card.getAttribute('data-id'));
+    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
 
 function showToast(message) {
     const toastBody = document.querySelector('#alert-toast .toast-body');
-    toastBody.textContent = message; // Set the custom message
-
+    toastBody.textContent = message;
     const toast = new bootstrap.Toast(document.getElementById('alert-toast'));
-    toast.show(); // Show the toast
+    toast.show();
 }
 
-// Function to add item to the basket
-function addItemToBasket() {
-    const selectedCard = document.querySelector('.clickable-card.active');
-    if (!selectedCard) {
-        showToast("Please select a product first.");
-        return;
-    }
-
-    const quantityInput = document.getElementById('quantity-input');
-    const quantity = parseInt(quantityInput.value, 10);
-    
-    if (quantity < 1 || isNaN(quantity)) {
-        showToast("Please enter a valid quantity.");
-        return;
-    }
-
-    const inStock = parseInt(selectedCard.getAttribute('data-in-stock'), 10);
-    
-    const existingItemIndex = basket.findIndex(item => item.id === selectedCard.getAttribute('data-id'));
-
+function addItemToBasket(product, quantity) {
+    const existingItemIndex = basket.findIndex(item => item.id === product.BrandName.toLowerCase().replace(/ /g, "-"));
     if (existingItemIndex > -1) {
-        // Check if adding the quantity would exceed in-stock amount
-        const newQuantity = basket[existingItemIndex].quantity + quantity;
-        if (newQuantity > inStock) {
-            alert(`Cannot add more. Only ${inStock} items are in stock.`);
-            return;
-        }
         basket[existingItemIndex].quantity += quantity;
     } else {
-        if (quantity > inStock) {
-            alert(`Cannot add more. Only ${inStock} items are in stock.`);
-            return;
-        }
-        const product = {
-            id: selectedCard.getAttribute('data-id'),
-            BrandName: selectedCard.querySelector('.card-title').textContent,
-            GenericName: selectedCard.querySelector('.card-text').textContent,
-            PricePerUnit: parseFloat(selectedCard.querySelector('.badge.bg-success').textContent.replace('₱', '')),
+        basket.push({
+            id: product.BrandName.toLowerCase().replace(/ /g, "-"),
+            ItemID: product.ItemID,
+            BrandName: product.BrandName,
+            GenericName: product.GenericName,
+            PricePerUnit: product.PricePerUnit,
             quantity: quantity
-        };
-        basket.push(product);
+        });
     }
-
     updateBasketDisplay();
     updateCheckoutButtonState();
-    quantityInput.value = ''; // Reset quantity input
-    searchInput.focus(); // Set focus back to the search input
+    deselectCurrentItem();
 }
 
-// Function to update the basket display
+function deselectCurrentItem() {
+    document.querySelectorAll('.clickable-card').forEach(card => card.classList.remove('active'));
+    localStorage.removeItem('selectedCardId');
+}
+
 function updateBasketDisplay() {
     const basketItemsContainer = document.getElementById('basket-items');
-    basketItemsContainer.innerHTML = ''; // Clear previous items
-    basketTotal = 0; // Reset total
+    basketItemsContainer.innerHTML = '';
+    let basketTotal = 0;
 
     basket.forEach(item => {
-        const itemTotal = item.PricePerUnit * item.quantity; // Calculate total for the item
-        basketTotal += itemTotal; // Add to the overall basket total
+        const itemTotal = item.PricePerUnit * item.quantity;
+        basketTotal += itemTotal;
 
-        const itemHTML = `
+        const escapedId = item.id.replace(/'/g, "\\'").replace(/"/g, '\\"');
+
+        basketItemsContainer.insertAdjacentHTML('beforeend', `
             <a href="#" class="list-group-item list-group-item-action">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">${item.BrandName}</h5>
-                    <button type="button" class="btn btn-danger btn-sm-custom" onclick="removeItemFromBasket('${item.id}')">
+                    <button type="button" class="btn btn-danger btn-sm-custom" 
+                            onclick="removeItemFromBasket(&quot;${escapedId}&quot;)">
                         <i class="bi bi-trash"></i>
                     </button>
                 </div>
                 <p class="mb-1">${item.GenericName}</p>
                 <div class="d-flex w-100 justify-content-between">
-                    <small>₱${itemTotal.toFixed(2)}</small>
+                    <small>₱${formatPrice(itemTotal)}</small>
                     <small>x${item.quantity}</small>
                 </div>
             </a>
-        `;
-        basketItemsContainer.insertAdjacentHTML('beforeend', itemHTML); // Add item to the display
+        `);
     });
 
-    const tax = (basketTotal * 0.12).toFixed(2); // Calculate tax
-    const totalAmount = (basketTotal + parseFloat(tax)).toFixed(2); // Calculate total with tax
-    document.getElementById('basket-total').textContent = `₱${totalAmount}`; // Update total
-    document.getElementById('basket-tax').textContent = `₱${tax}`; // Update tax display
+    const tax = (basketTotal * 0.12).toFixed(2);
+    const totalAmount = (basketTotal + parseFloat(tax)).toFixed(2);
+    document.getElementById('basket-total').textContent = `₱${formatPrice(totalAmount)}`;
+    document.getElementById('basket-tax').textContent = `₱${formatPrice(tax)}`;
     updateCheckoutButtonState();
 }
 
-// Function to remove item from the basket
 function removeItemFromBasket(itemId) {
-    basket = basket.filter(item => item.id !== itemId); // Remove item from basket
-    updateBasketDisplay(); // Update display
+    // Remove the item from the basket array
+    basket = basket.filter(item => item.id !== itemId);
+    updateBasketDisplay();
     updateCheckoutButtonState();
 }
 
-// Update Checkout button state
 function updateCheckoutButtonState() {
     const checkoutButton = document.querySelector('button[data-bs-target="#verticalycentered"]');
-    if (basket.length === 0) {
-        checkoutButton.disabled = true;
-        checkoutButton.classList.add('btn-secondary');
-        checkoutButton.classList.remove('btn-primary');
-    } else {
-        checkoutButton.disabled = false;
-        checkoutButton.classList.add('btn-primary');
-        checkoutButton.classList.remove('btn-secondary');
-    }
+    checkoutButton.disabled = basket.length === 0;
+    checkoutButton.classList.toggle('btn-secondary', basket.length === 0);
+    checkoutButton.classList.toggle('btn-primary', basket.length > 0);
 }
 
-// Call this function on page load to set initial state
 document.addEventListener('DOMContentLoaded', updateCheckoutButtonState);
 
-// Add event listener to the "Add Item" button
-document.getElementById('add-item-button').addEventListener('click', addItemToBasket);
-
-// Add event listener for the Enter key on the quantity input
-const quantityInput = document.getElementById('quantity-input');
-quantityInput.addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault(); // Prevent form submission if it's in a form
-        addItemToBasket(); // Call the function to add item to the basket
-    }
+document.getElementById('clear-search').addEventListener('click', function(event) {
+    event.preventDefault();
+    clearSearch();
 });
 
-document.getElementById('clear-search').addEventListener('click', function() {
+function clearSearch() {
     const searchInput = document.querySelector('input[name="query"]');
-    searchInput.value = ''; // Clear the input field
-    searchQuery = ''; // Reset the search query
-    currentPage = 1; // Reset to the first page
-    loadProducts(); // Load all products
-    searchInput.focus(); // Focus back on the input
-});
+    searchInput.value = '';
+    searchQuery = '';
+    currentPage = 1;
+    loadProducts();
+    searchInput.focus();
+    document.querySelectorAll('.clickable-card').forEach(card => card.classList.remove('active'));
+    localStorage.removeItem('selectedCardId');
+}
 
-// Update the modal total and set charge minimum when it's shown
-document.getElementById('verticalycentered').addEventListener('show.bs.modal', function (event) {
-    updateModalTotal();
-});
+document.getElementById('verticalycentered').addEventListener('show.bs.modal', updateModalTotal);
 
-// Update total when discounts are applied
-const discountCheckboxes = document.querySelectorAll('#verticalycentered .form-check-input');
-discountCheckboxes.forEach(checkbox => {
+document.querySelectorAll('#verticalycentered .form-check-input').forEach(checkbox => {
     checkbox.addEventListener('change', updateModalTotal);
 });
 
 function updateModalTotal() {
-    const basketTotal = parseFloat(document.getElementById('basket-total').textContent.replace('₱', ''));
+    const subtotal = basket.reduce((total, item) => total + (item.PricePerUnit * item.quantity), 0);
+    const tax = subtotal * 0.12;
     let discountPercentage = 0;
 
     if (document.getElementById('seniorCitizenCheckbox').checked) discountPercentage += 20;
-    if (document.getElementById('promoCheckbox').checked) discountPercentage += 10;
 
-    const discountAmount = basketTotal * (discountPercentage / 100);
-    const discountedTotal = basketTotal - discountAmount;
+    const discountAmount = subtotal * (discountPercentage / 100);
+    const discountedTotal = subtotal + tax - discountAmount;
 
-    document.getElementById('total-display').textContent = `Total: ₱${discountedTotal.toFixed(2)}`;
+    document.getElementById('total-display').textContent = `Total: ₱${formatCurrency(subtotal)}`;
 }
 
-// Store for receipt items
 let receiptItems = [];
 
-// Function to generate receipt items from basket and update the receipt display
 function generateReceiptItems() {
-    // Generate receipt items from the basket
     receiptItems = basket.map(item => ({
+        ItemID: item.ItemID,
         quantity: item.quantity,
         item_name: item.BrandName,
-        total_item_price: (item.PricePerUnit * item.quantity).toFixed(2) // Calculate total item price for each item
+        total_item_price: (item.PricePerUnit * item.quantity).toFixed(2)
     }));
 
-    // Update total items, subtotal, tax, and amount due display
-    updateTotalItemsDisplay(); // Update total items
-    updateSubtotalDisplay(); // Update subtotal display
-    updateTaxDisplay(); // Update tax display
-    updateAmountDueDisplay(); // Update amount due display
+    updateTotalItemsDisplay();
+    updateSubtotalDisplay();
+    updateTaxDisplay();
+    updateAmountDueDisplay();
 }
 
-// Function to update total items display
 function updateTotalItemsDisplay() {
-    const totalQuantity = receiptItems.reduce((total, item) => total + item.quantity, 0); // Calculate total quantity
-    document.getElementById('total-items').textContent = totalQuantity; // Update HTML using the ID
+    const totalQuantity = receiptItems.reduce((total, item) => total + item.quantity, 0);
+    document.getElementById('total-items').textContent = totalQuantity;
 }
 
-// Function to update subtotal display
 function updateSubtotalDisplay() {
-    const subtotal = receiptItems.reduce((total, item) => total + parseFloat(item.total_item_price), 0).toFixed(2); // Calculate subtotal
-    document.getElementById('sub-total').textContent = `₱${subtotal}`; // Update subtotal display
+    const subtotal = receiptItems.reduce((total, item) => total + parseFloat(item.total_item_price), 0).toFixed(2);
+    document.getElementById('sub-total').textContent = `₱${subtotal}`;
 }
 
-// Function to update tax display
 function updateTaxDisplay() {
-    const subtotal = receiptItems.reduce((total, item) => total + parseFloat(item.total_item_price), 0); // Calculate subtotal for tax calculation
-    const tax = (subtotal * 0.12).toFixed(2); // Calculate 12% tax
-    document.getElementById('tax').textContent = `₱${tax}`; // Update tax display
+    const subtotal = receiptItems.reduce((total, item) => total + parseFloat(item.total_item_price), 0);
+    const tax = (subtotal * 0.12).toFixed(2);
+    document.getElementById('tax').textContent = `₱${tax}`;
 }
 
-// Function to update amount due display
 function updateAmountDueDisplay() {
-    const subtotal = receiptItems.reduce((total, item) => total + parseFloat(item.total_item_price), 0); // Calculate subtotal
-    const tax = (subtotal * 0.12); // Calculate 12% tax
-    const amountDue = (parseFloat(subtotal) + parseFloat(tax)).toFixed(2); // Calculate total amount due
-    document.getElementById('amount-due').textContent = `₱${amountDue}`; // Update amount due display
+    const subtotal = receiptItems.reduce((total, item) => total + parseFloat(item.total_item_price), 0);
+    const tax = subtotal * 0.12;
+    const amountDue = (subtotal + tax).toFixed(2);
+    document.getElementById('amount-due').textContent = `₱${amountDue}`;
 }
 
-// Function to display receipt items
 function displayReceiptItems() {
     const receiptContainer = document.getElementById('receiptItems');
-    receiptContainer.innerHTML = ''; // Clear existing items
+    receiptContainer.innerHTML = '';
     
-    // Create header row
     const headerHTML = `
         <div class="row text-center mb-2">
-            <div class="col-4">
-                <small><strong>Quantity</strong></small>
-            </div>
-            <div class="col-4">
-                <small><strong>Item</strong></small>
-            </div>
-            <div class="col-3">
-                <small><strong>Price</strong></small>
-            </div>
+            <div class="col-4"><small><strong>Quantity</strong></small></div>
+            <div class="col-4"><small><strong>Item</strong></small></div>
+            <div class="col-3"><small><strong>Price</strong></small></div>
         </div>
     `;
     receiptContainer.insertAdjacentHTML('beforeend', headerHTML);
     
-    // Add each item
     receiptItems.forEach(item => {
         const itemHTML = `
             <div class="row text-center">
-                <div class="col-4">
-                    <small>${item.quantity}</small>
-                </div>
-                <div class="col-4">
-                    <small>${item.item_name}</small>
-                </div>
-                <div class="col-3">
-                    <small>₱${item.total_item_price}</small>
-                </div>
+                <div class="col-4"><small>${item.quantity}</small></div>
+                <div class="col-4"><small>${item.item_name}</small></div>
+                <div class="col-3"><small>₱${formatPrice(item.total_item_price)}</small></div>
             </div>
         `;
         receiptContainer.insertAdjacentHTML('beforeend', itemHTML);
     });
 }
 
-// Function to update payment display
 function updatePaymentDisplay() {
-    const paymentValue = document.getElementById("paymentInput").value;
-    const payment = parseFloat(paymentValue) || 0;
-    document.getElementById("payment").textContent = `₱${payment.toFixed(2)}`;
-}
-
-// Function to update change display
-function updateChangeDisplay() {
-    const paymentValue = document.getElementById("paymentInput").value;
-    const payment = parseFloat(paymentValue) || 0;
+    const paymentInput = document.getElementById('paymentInput');
+    const payment = parseFloat(paymentInput.value) || 0;
+    document.getElementById('payment').textContent = `₱${formatCurrency(payment)}`;
+    
     const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g,""));
-    const change = payment - amountDue;
-    document.getElementById("change").textContent = `₱${Math.max(0, change).toFixed(2)}`;
+    const change = Math.max(0, payment - amountDue);
+    document.getElementById('change').textContent = `₱${formatPrice(change)}`;
 }
 
-// Modify the existing checkout button event listener
-document.getElementById('checkout').addEventListener('click', function() {
-    generateReceiptItems();
-    displayReceiptItems();
-    updatePaymentDisplay();
-    updateChangeDisplay();
+function updateChangeDisplay() {
+    const payment = parseFloat(document.getElementById("paymentInput").value) || 0;
+    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g,""));
+    const change = Math.max(0, payment - amountDue);
+    document.getElementById("change").textContent = `₱${change.toFixed(2)}`;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const checkoutButton = document.getElementById('checkout');
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', function() {
+            if (basket.length === 0) {
+                showToast("Your basket is empty. Please add items before checking out.");
+                return;
+            }
+            generateReceiptItems();
+            displayReceiptItems();
+            updatePaymentDisplay();
+            updateChangeDisplay();
+            updateModalTotal();
+
+            const checkoutModal = new bootstrap.Modal(document.getElementById('verticalycentered'));
+            checkoutModal.show();
+        });
+    }
 });
 
-// Update payment input event listener
-document.getElementById('paymentInput').addEventListener('input', function() {
-    const payment = parseFloat(this.value) || 0;
-    const totalAmount = parseFloat(document.getElementById('total-display').textContent.replace(/[^0-9.-]+/g,""));
-    const change = payment - totalAmount;
+const seniorCitizenCheckbox = document.getElementById('seniorCitizenCheckbox');
+const confirmButton = document.getElementById('confirm-button');
+
+document.getElementById('paymentInput').addEventListener('input', updatePaymentDisplay);
+
+document.getElementById('confirm-button').addEventListener('click', function() {
+    const paymentInput = document.getElementById('paymentInput');
+    const payment = parseFloat(paymentInput.value) || 0;
     
-    const confirmButton = document.getElementById('confirm-button');
+    // Update the receipt payment display
+    document.getElementById('payment').textContent = `₱${payment.toFixed(2)}`;
     
-    if (payment >= totalAmount) {
-        confirmButton.removeAttribute('disabled');
-        document.getElementById('change-display').textContent = `Change: ₱${change.toFixed(2)}`;
+    // Calculate and update change
+    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g,""));
+    const change = Math.max(0, payment - amountDue);
+    document.getElementById('change').textContent = `₱${change.toFixed(2)}`;
+    
+    // Hide checkout modal
+    const checkoutModal = bootstrap.Modal.getInstance(document.getElementById('verticalycentered'));
+    checkoutModal.hide();
+    
+    // Show receipt modal
+    const receiptModal = new bootstrap.Modal(document.getElementById('largeModal'));
+    receiptModal.show();
+    
+    // Reset payment input
+    paymentInput.value = '';
+    paymentInput.classList.remove('is-valid', 'is-invalid');
+});
+
+document.getElementById('largeModal').addEventListener('show.bs.modal', function() {
+    generateReceiptItems();
+    displayReceiptItems();
+    
+    // Get the payment value from the input before it's cleared
+    const payment = parseFloat(document.getElementById('paymentInput').value) || 0;
+    
+    // Update payment display
+    document.getElementById('payment').textContent = `₱${payment.toFixed(2)}`;
+    
+    // Calculate and update change
+    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g,""));
+    const change = Math.max(0, payment - amountDue);
+    document.getElementById('change').textContent = `₱${change.toFixed(2)}`;
+});
+
+// Fields for Senior / PWD
+const seniorPwdFields = {
+    idNumber: document.getElementById('seniorPwdID'),
+    idType: document.getElementById('idType'),
+    fullName: document.getElementById('seniorPwdName'),
+};
+
+// Function to validate Senior / PWD fields and payment
+function validateForm() {
+    const idFilled = seniorPwdFields.idNumber.value.trim() !== '';
+    const idTypeValid = seniorPwdFields.idType.value === 'Senior Citizen ID' || seniorPwdFields.idType.value === 'PWD ID';
+    const fullNameFilled = seniorPwdFields.fullName.value.trim() !== '';
+    const paymentFilled = parseFloat(document.getElementById('paymentInput').value) > 0; // Ensure payment is greater than 0
+
+    // Set the confirm button based on all validations
+    if (seniorCitizenCheckbox.checked) {
+        if (idFilled && idTypeValid && fullNameFilled && paymentFilled) {
+            confirmButton.removeAttribute('disabled');
+        } else {
+            confirmButton.setAttribute('disabled', 'true');
+        }
     } else {
-        confirmButton.setAttribute('disabled', 'true');
-        document.getElementById('change-display').textContent = 'Change: ₱0.00';
+        // If the checkbox is not checked, just check if payment is filled
+        const totalAmount = parseFloat(document.getElementById('total-display').textContent.replace(/[^0-9.-]+/g, ""));
+        const isPaymentValid = parseFloat(document.getElementById('paymentInput').value) >= totalAmount;
+        confirmButton.disabled = !isPaymentValid;
     }
-    
-    // Update the receipt modal as well
-    updatePaymentDisplay();
-    updateChangeDisplay();
+
+    // Highlight Senior / PWD fields based on validity
+    Object.values(seniorPwdFields).forEach(field => {
+        if (seniorCitizenCheckbox.checked && field.value.trim() === '') {
+            field.classList.add('is-invalid'); // Add red highlight
+        } else {
+            field.classList.remove('is-invalid'); // Remove red highlight
+        }
+    });
+
+    // Highlight ID Type specifically
+    if (seniorCitizenCheckbox.checked && !idTypeValid) {
+        seniorPwdFields.idType.classList.add('is-invalid'); // Add red highlight if invalid type
+    } else {
+        seniorPwdFields.idType.classList.remove('is-invalid'); // Remove highlight if valid
+    }
+}
+
+// Toggle event for Senior Citizen / PWD checkbox
+seniorCitizenCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+        // Show the accordion
+        document.getElementById('seniorPwdAccordion').style.display = 'block';
+    } else {
+        // Hide the accordion and remove highlights
+        document.getElementById('seniorPwdAccordion').style.display = 'none';
+        Object.values(seniorPwdFields).forEach(field => {
+            field.classList.remove('is-invalid'); // Remove red highlight
+        });
+    }
+    validateForm(); // Validate on toggle change
+});
+
+// Input event listeners for Senior / PWD fields
+Object.values(seniorPwdFields).forEach(field => {
+    field.addEventListener('input', validateForm);
+});
+
+// Payment input event listener
+document.getElementById('paymentInput').addEventListener('input', validateForm);
+
+document.getElementById('cancel-checkout').addEventListener('click', function() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('verticalycentered'));
+    if (modal) {
+        modal.hide();
+        // Remove modal backdrop and reset modal state
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+    }
 });
 
 document.getElementById('cancel-receipt').addEventListener('click', function() {
-    // After dismissing the current modal, show the Checkout modal again
+    // First, ensure the receipt modal is properly hidden
+    const receiptModal = bootstrap.Modal.getInstance(document.getElementById('largeModal'));
+    if (receiptModal) {
+        receiptModal.hide();
+        // Remove modal backdrop and reset modal state
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+    }
+
+    // Then, show the checkout modal after a short delay
     setTimeout(() => {
-        const checkoutModal = new bootstrap.Modal(document.getElementById('verticalycentered')); // Select the checkout modal
-        checkoutModal.show(); // Reopen the checkout modal
-    }, 100); // Optional delay for smooth modal transition
+        const checkoutModal = new bootstrap.Modal(document.getElementById('verticalycentered'));
+        checkoutModal.show();
+    }, 1000);
 });
 
-// Fetch the last InvoiceID from the backend using AJAX
+let orderNum = 0;
+
 function fetchInvoiceID() {
-    fetch('fetchOrderNumber.php')  // Adjust the path to your PHP script
+    fetch('fetchOrderNumber.php')
         .then(response => response.json())
         .then(data => {
             const newInvoiceID = data.newInvoiceID;
-            // Format the new InvoiceID without leading zeros, but show at least #0
+            orderNum = newInvoiceID;
             const formattedInvoiceID = newInvoiceID > 0 ? `#${newInvoiceID}` : '#0';
-            // Replace the default with the new InvoiceID
             document.getElementById('order-num').textContent = `Order No.: ${formattedInvoiceID}`;
         })
         .catch(error => console.error('Error fetching InvoiceID:', error));
 }
 
-// Call the function when the page loads
 document.addEventListener('DOMContentLoaded', fetchInvoiceID);
 
-// Add this event listener for the print button
-document.getElementById('print-button').addEventListener('click', async function() {
-    /*try {
-        // Gather all required data
-        const orderNumber = document.getElementById('order-num').textContent.match(/\d+/)[0];
-        const saleDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
-        
-        // Debug log for AccountID
-        const accountIdElement = document.getElementById('account-id');
-        if (!accountIdElement) {
-            console.error('Account ID element not found');
-            return;
-        }
-        const accountID = parseInt(accountIdElement.textContent);
-        
-        // Verify we have receipt items
-        if (!receiptItems || receiptItems.length === 0) {
-            console.error('No receipt items found');
-            return;
-        }
-        
-        // Get sales details
-        const salesDetailsString = receiptItems.map(item => 
-            `${item.item_name} - Quantity: ${item.quantity}, Price: ₱${item.total_item_price}`
-        ).join('\n');
-        
-        // Get other required values with error checking
-        const totalItems = parseInt(document.getElementById('total-items').textContent) || 0;
-        const subtotal = parseFloat(document.getElementById('sub-total').textContent.replace('₱', '')) || 0;
-        const tax = parseFloat(document.getElementById('tax').textContent.replace('₱', '')) || 0;
-        const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace('₱', '')) || 0;
-        const payment = parseFloat(document.getElementById('payment').textContent.replace('₱', '')) || 0;
-        const change = parseFloat(document.getElementById('change').textContent.replace('₱', '')) || 0;
-        
-        // Calculate discount
-        let discount = 0.0;
-        if (document.getElementById('seniorCitizenCheckbox').checked) discount += 0.20;
-        if (document.getElementById('promoCheckbox').checked) discount += 0.10;
+let userID = 0;
+let employeeName = '';
 
-        const data = {
-            invoiceID: parseInt(orderNumber),
-            saleDate: saleDate,
-            accountID: accountID,
-            salesDetails: salesDetailsString,
-            totalItems: totalItems,
-            subtotal: subtotal,
-            tax: tax,
-            discount: discount,
-            netAmount: amountDue,
-            amountPaid: payment,
-            amountChange: change
+function fetchAccountID() {
+    fetch('fetchAccountID.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.accountID) {
+                const accountID = data.accountID;
+                userID = accountID;
+                employeeName = data.employeeName || 'Unknown Staff';
+                receiptData.accountID = accountID;
+            } else {
+                console.error('Error fetching AccountID:', data.error);
+            }
+        })
+        .catch(error => console.error('Error fetching AccountID:', error));
+}
+
+document.addEventListener('DOMContentLoaded', fetchAccountID);
+
+function getCurrentDateTime() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+function getSalesDetails() {
+    const salesDetails = {};
+    
+    receiptItems.forEach((item, index) => {
+        salesDetails[index + 1] = {
+            itemID: item.ItemID,
+            qty: item.quantity
         };
+    });
+    
+    return salesDetails;
+}
 
-        console.log('Sending data to server:', data);
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentInput = document.getElementById('paymentInput');
+    const confirmButton = document.getElementById('confirm-button');
+    const totalDisplay = document.getElementById('total-display');
+    const changeDisplay = document.getElementById('change-display');
 
-        const response = await fetch('update_sales.php', {
+    function updatePaymentValidation() {
+        const payment = parseFloat(paymentInput.value) || 0;
+        const totalAmount = parseFloat(totalDisplay.textContent.replace(/[^0-9.-]+/g,""));
+
+        if (payment === 0 || payment < totalAmount) {
+            paymentInput.classList.add('is-invalid');
+            paymentInput.classList.remove('is-valid');
+            confirmButton.setAttribute('disabled', 'true');
+            changeDisplay.textContent = 'Change: ₱0.00';
+        } else {
+            paymentInput.classList.remove('is-invalid');
+            paymentInput.classList.add('is-valid');
+            confirmButton.removeAttribute('disabled');
+            const change = payment - totalAmount;
+            changeDisplay.textContent = `Change: ₱${change.toFixed(2)}`;
+        }
+    }
+
+    paymentInput.addEventListener('input', updatePaymentValidation);
+
+    // Set initial state
+    paymentInput.value = '';
+    updatePaymentValidation();
+});
+
+// Print button
+document.getElementById('print-button').addEventListener('click', async function() {
+    try {
+        // Get items from the basket
+        const inventoryUpdates = receiptItems.map(item => ({
+            ItemID: item.ItemID,
+            quantity: item.quantity
+        }));
+
+        // Update inventory first
+        const inventoryResponse = await fetch('updateInventory.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify({
+                items: inventoryUpdates
+            })
         });
 
-        const result = await response.json();
-        console.log('Server response:', result);
-
-        if (result.success) {
-            console.log('Sale recorded successfully');
-            basket = [];
-            updateBasketDisplay();
-            fetchInvoiceID();
-        } else {
-            console.error('Failed to record sale:', result.error);
-            alert('Failed to save sale. Please check the console for details.');
+        const inventoryResult = await inventoryResponse.json();
+        
+        if (!inventoryResult.success) {
+            throw new Error(inventoryResult.error || 'Failed to update inventory');
         }
-    } catch (error) {
-        console.error('Error in print button handler:', error);
-        alert('An error occurred while saving the sale. Please check the console for details.');
-    }*/
 
-    window.location.reload();  // Reloads the current page
+        // If inventory update successful, proceed with receipt saving
+        const receiptData = getReceiptData();
+        
+        const receiptResponse = await fetch('saveReceipt.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(receiptData)
+        });
+
+        if (!receiptResponse.ok) {
+            throw new Error(`HTTP error! status: ${receiptResponse.status}`);
+        }
+
+        const receiptResult = await receiptResponse.json();
+        
+        if (receiptResult.success) {
+            await saveAsTxtAndPrint();
+        } else {
+            throw new Error(receiptResult.error || 'Error saving receipt');
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        showToast('An error occurred. Please try again.');
+    }
 });
+
+function saveAsTxtAndPrint() {
+    const receiptContent = generateReceiptContent();
+    
+    // Create a form data object to send the content to PHP
+    const formData = new FormData();
+    formData.append('content', receiptContent);
+    formData.append('orderNum', orderNum);
+
+    // Send the content to a PHP script that will create and print the file
+    fetch('printReceipt.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.reload(); // Reload the page after successful print
+        } else {
+            showToast('Error printing receipt. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('An error occurred while printing. Please try again.');
+    });
+}
+
+function getReceiptData() {
+    return {
+        invoiceID: orderNum,
+        saleDate: getCurrentDateTime(),
+        accountID: userID,
+        salesDetails: getSalesDetails(),
+        totalItems: receiptItems.reduce((sum, item) => sum + item.quantity, 0),
+        subtotal: receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0).toFixed(2),
+        tax: (receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0) * 0.12).toFixed(2),
+        discount: 0.00,
+        amountPaid: parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g,"")),
+        paymentMethod: 'Cash',
+        status: 'Sales',
+        refundAmount: 0.00
+    };
+}
+
+function generateReceiptContent() {
+    const maxWidth = 32;
+
+    const employeeName = document.getElementById('staff').textContent.replace('Staff: ', '').trim();
+    const role = document.getElementById('role').textContent.replace('Role: ', '');
+
+    function centerText(text) {
+        const padding = Math.max(0, Math.floor((maxWidth - text.length) / 2));
+        return ' '.repeat(padding) + text;
+    }
+
+    function formatLine(left, right) {
+        const space = maxWidth - left.length - right.length - 1;
+        return left + ' '.repeat(space) + right;
+    }
+
+    function formatItemLine(quantity, item, price) {
+        const qtyWidth = 4;    // 4 characters for quantity
+        const priceStr = `P${price.toFixed(2)}`;  // Full price string, including "P"
+        const priceWidth = priceStr.length;       // The actual length of the price string
+        const itemWidth = maxWidth - qtyWidth - priceWidth - 1;  // Remaining width for item name
+
+        const formattedQty = String(quantity).padEnd(qtyWidth, ' ');
+        const formattedItem = item.length > itemWidth ? item.substring(0, itemWidth - 3) + '...' : item.padEnd(itemWidth, ' ');
+
+        return `${formattedQty}${formattedItem} ${priceStr}`;  // Add a single space between item and price
+    }
+
+    let content = 
+`${centerText('Mother & Child')}
+${centerText('Pharmacy and Medical Supplies')}
+${centerText('Gen. Luna Street, Babo Sacan,')}
+${centerText('Porac, Pampanga')}
+${'-'.repeat(maxWidth)}
+\nQty Item                   Price\n`;
+
+    // Add items to the content
+    receiptItems.forEach(item => {
+        const itemName = item.item_name;
+        const price = parseFloat(item.total_item_price);
+        content += formatItemLine(item.quantity, itemName, price) + '\n';
+    });
+
+    const totalItems = receiptItems.reduce((sum, item) => sum + item.quantity, 0);
+    const subtotal = parseFloat(receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0)).toFixed(2);
+    const tax = (subtotal * 0.12).toFixed(2);
+    const discount = 0.00;
+    const amountDue = (parseFloat(subtotal) + parseFloat(tax) - discount).toFixed(2);
+    const amountPaid = parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g,"")).toFixed(2);
+    const change = (amountPaid - amountDue).toFixed(2);
+
+    // Add summary information
+    content += `${'-'.repeat(maxWidth)}\n`;
+    content += formatLine(`Total Items:`, `${totalItems}\n`);
+    content += formatLine(`Subtotal:`, `P${formatPrice(subtotal)}\n`);
+    content += formatLine(`Tax 12%:`, `P${formatPrice(tax)}\n`);
+    content += formatLine(`Discount:`, `P-${formatPrice(discount)}\n`);
+    content += formatLine(`Amount Due:`, `P${formatPrice(amountDue)}\n`);
+    content += formatLine(`Refund Amount:`, `P0.00\n`);
+    content += formatLine(`Payment:`, `P${formatPrice(amountPaid)}\n`);
+    content += formatLine(`Change:`, `P${formatPrice(change)}\n`);
+    content += `${'-'.repeat(maxWidth)}\n`;
+    content += formatLine(`Order No.:`, `#${orderNum}\n`);
+    content += formatLine(`Date:`, `${getCurrentDateTime()}\n`);
+    content += formatLine(`Payment Method:`, `Cash\n`);
+    content += formatLine(`Status:`, `Sales\n\n`);
+    content += formatLine(`Staff:`, `${employeeName}\n`);
+    content += formatLine(`Role:`, `${role}\n`);
+    content += `${' '.repeat(maxWidth)}\n`;
+    content += `${centerText('Thank you for your purchase!')}\n`; 
+    content += `\n${' '.repeat(maxWidth)}\n`;
+    content += `\n${' '.repeat(maxWidth)}\n`;
+
+    return content;
+}
+
+document.getElementById('seniorCitizenCheckbox').addEventListener('change', function() {
+    const accordion = document.getElementById('seniorPwdAccordion');
+    if (this.checked) {
+      accordion.style.display = 'block';
+    } else {
+      accordion.style.display = 'none';
+    }
+});
+
+function validatePayment(input) {
+  const value = parseInt(input.value);
+  const min = 1;
+  const max = 999999;
+
+  // Remove any leading zeros
+  if (input.value.startsWith('0')) {
+    input.value = parseInt(input.value, 10);
+  }
+
+  // Check if the value is within bounds
+  if (value < min || value > max || isNaN(value)) {
+    input.classList.add('is-invalid');
+    input.classList.remove('is-valid');
+    
+    // Reset to max value if exceeding max
+    if (value > max) {
+      input.value = max;
+    }
+    
+    // Reset to min value if below min
+    if (value < min && value !== 0) {
+      input.value = min;
+    }
+  } else {
+    input.classList.remove('is-invalid');
+    input.classList.add('is-valid');
+  }
+  
+  // Prevent non-numeric input
+  input.value = input.value.replace(/[^0-9]/g, '');
+}
+
+function formatPrice(price) {
+    return parseFloat(price).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function formatCurrency(number) {
+    return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+}

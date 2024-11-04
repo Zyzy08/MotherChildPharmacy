@@ -1,0 +1,34 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+1   Ascend Capsule        P52.75
+1   Advil Liquigel Capsule P9.47
+1   Imodium Capsule       P20.36
+1   Kremil-S Tablet        P9.68
+--------------------------------
+Total Items:                 4
+Subtotal:               P92.26
+Tax 12%:                P11.07
+Discount:               P-0.00
+Amount Due:            P103.33
+Refund Amount:           P0.00
+Payment:               P100.00
+Change:                 P-3.33
+--------------------------------
+Order No.:                  #2
+Date:      2024-11-04 23:23:26
+Payment Method:           Cash
+Status:                 Sales
+
+Staff:           Sayra Jackson
+Role:                    Admin
+                                
+  Thank you for your purchase!
+
+                                
+
+                                
