@@ -294,3 +294,92 @@ modalYes.addEventListener('click', function () {
 function closeEditOverlay() {
     overlayEdit.style.display = 'none';
 }
+
+
+// PO form export
+
+document.getElementById('exportPO').addEventListener('click', () => {
+    exportOverlayToPDF();
+});
+
+function exportOverlayToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Add the centered title
+    const title = "Mother & Child Pharmacy and Medical Supplies";
+    doc.setFontSize(18);
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const titleWidth = doc.getTextWidth(title);
+    const titleX = (pageWidth - titleWidth) / 2;
+    doc.text(title, titleX, 20);
+
+    // Add a horizontal rule beneath the title
+    doc.setLineWidth(0.5);
+    doc.line(10, 25, pageWidth - 10, 25);
+
+    // Move down to start main content
+    doc.setFontSize(16);
+    doc.text("Purchase Order Details", 10, 35);
+
+    // Capture Main Details Table
+    doc.setFontSize(12);
+    const mainDetails = [
+        { label: "Order ID", value: document.getElementById('identifierID').textContent },
+        { label: "Supplier Name", value: document.getElementById('supplierName').textContent },
+        { label: "Purchaser", value: document.getElementById('cashierID').textContent },
+        { label: "Date", value: document.getElementById('datetimeID').textContent },
+        { label: "Status", value: document.getElementById('Status').textContent },
+    ];
+
+    let y = 45; // Start position for main details
+    mainDetails.forEach((detail) => {
+        doc.text(`${detail.label}: ${detail.value}`, 10, y);
+        y += 10;
+    });
+
+    // List of Items Table
+    const itemTable = [];
+    document.querySelectorAll('#listTable tbody tr').forEach((row) => {
+        const columns = row.querySelectorAll('td, th');
+        itemTable.push([columns[0].textContent, columns[1].textContent, columns[2].textContent]);
+    });
+
+    doc.autoTable({
+        startY: y + 1,
+        head: [['#', 'Item Description', 'Qty. Ordered']],
+        body: itemTable,
+        theme: 'grid',
+        headStyles: {
+            fillColor: [64, 64, 64], // Dark gray color for header
+            textColor: [255, 255, 255], // White text color for contrast
+            fontStyle: 'bold'
+        },
+        styles: {
+            fontSize: 10 // Adjust font size if needed
+        }
+    });
+
+    // Footer with date and page number
+    const pageCount = doc.getNumberOfPages();
+    const currentDate = new Date().toLocaleDateString();
+
+    for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(10);
+
+        // Date on the left
+        doc.text(`Date Generated: ${currentDate}`, 10, doc.internal.pageSize.getHeight() - 10);
+
+        // Page number on the right
+        doc.text(`Page ${i} of ${pageCount}`, pageWidth - 30, doc.internal.pageSize.getHeight() - 10);
+    }
+
+    // Dynamically set the PDF file name based on identifierID
+    const identifierID = document.getElementById('identifierID').textContent;
+    const pdfFileName = `${identifierID}_Purchase_Order_Details.pdf`;
+
+    // Save the PDF with the dynamic filename
+    doc.save(pdfFileName);
+}
+
