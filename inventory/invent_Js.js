@@ -1056,3 +1056,59 @@ function showNotification(message) {
 }
 
 
+// BARCODE SCANNER
+
+
+// Function to handle the input from the barcode scanner
+function handleBarcodeInput(event) {
+    // Get the input field
+    const productCodeInput = document.getElementById('productCode');
+
+    // Check if the pressed key is Enter
+    if (event.key === 'Enter') {
+        // Prevent default form submission if needed
+        event.preventDefault();
+
+        // Log or process the scanned barcode value
+        console.log('Scanned Barcode:', productCodeInput.value);
+        // Here, you can implement any further processing, like submitting the form or fetching product data
+    } else {
+        // Append the pressed key to the input field's value
+        productCodeInput.value += event.key;
+    }
+}
+
+// Attach the event listener when the DOM is loaded
+document.addEventListener('DOMContentLoaded', function () {
+    const productCodeInput = document.getElementById('productCode');
+    productCodeInput.addEventListener('keypress', handleBarcodeInput);
+});
+
+
+
+// Function to add peso sign when the input is focused
+function addPesoSign() {
+    const priceInput = document.getElementById('pricePerUnit');
+    if (!priceInput.value.startsWith('₱ ')) {
+        priceInput.value = '₱ ' + priceInput.value;
+    }
+}
+
+// Function to update the price input value
+function updatePrice() {
+    const priceInput = document.getElementById('pricePerUnit');
+    const currentValue = priceInput.value.replace('₱ ', ''); // Remove peso sign for processing
+    const numericValue = currentValue.replace(/[^0-9.]/g, ''); // Allow only numbers and decimal points
+    
+    // Update the input value without the peso sign
+    priceInput.value = '₱ ' + numericValue; // Add peso sign back
+}
+
+// Function to clean up the input value on blur (optional)
+function cleanPriceInput() {
+    const priceInput = document.getElementById('pricePerUnit');
+    if (priceInput.value === '₱ ') {
+        priceInput.value = ''; // Clear if only peso sign is present
+    }
+}
+

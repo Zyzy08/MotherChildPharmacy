@@ -53,6 +53,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
+    $mass = preg_replace('/[^\d.]/', '', $mass); // Remove non-numeric characters except for the decimal point
+    $pricePerUnit = preg_replace('/[^\d.]/', '', $pricePerUnit); // Remove non-numeric characters except for the decimal point
+
     // Validate numeric fields
     if (!is_numeric($mass) || !is_numeric($pricePerUnit)) {
         echo json_encode(['success' => false, 'message' => 'Mass and PricePerUnit must be numeric']);
