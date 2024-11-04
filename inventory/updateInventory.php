@@ -52,6 +52,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $InStock = $_POST['InStock'] ?? '';
     $Discount = $_POST['Discount'] ?? '';
 
+    // Remove the peso sign and trim whitespace
+    $pricePerUnit = floatval(str_replace(['₱', ' '], '', $pricePerUnit)); // Ensure we convert to float
+
+    // Check if pricePerUnit is a valid number
+    if ($pricePerUnit <= 0) {
+        echo json_encode(['success' => false, 'message' => 'Price per unit must be a positive number.']);
+        exit;
+    }
+
     // Retrieve the VAT exempted status, defaulting to 0 (not exempted)
     $VAT_Exempted = isset($_POST['VAT_Exempted']) ? 1 : 0;
 

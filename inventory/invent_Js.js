@@ -1056,3 +1056,63 @@ function showNotification(message) {
 }
 
 
+// BARCODE SCANNER
+
+
+// Function to handle the input from the barcode scanner
+function handleBarcodeInput(event) {
+    const productCodeInput = document.getElementById('productCode');
+    
+    // Wait for the 'Enter' key to process the barcode scan
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent default form submission
+        
+        // Process the full scanned code
+        console.log('Scanned Barcode:', productCodeInput.value);
+        
+        // Here, add any additional processing, such as form submission or fetching product data
+    }
+}
+
+// Attach the event listener for 'input' and 'keypress' events when the DOM is loaded
+document.addEventListener('DOMContentLoaded', function () {
+    const productCodeInput = document.getElementById('productCode');
+    
+    // Only listen for the 'keypress' event to detect the 'Enter' key
+    productCodeInput.addEventListener('keypress', handleBarcodeInput);
+    
+    // Ensure manual typing works by preventing key appending for each input
+    productCodeInput.addEventListener('input', function() {
+        // Placeholder for additional logic if needed on each input update
+    });
+});
+
+
+
+
+// Function to add peso sign when the input is focused
+function addPesoSign() {
+    const priceInput = document.getElementById('pricePerUnit');
+    if (!priceInput.value.startsWith('₱ ')) {
+        priceInput.value = '₱ ' + priceInput.value;
+    }
+}
+
+// Function to update the price input value
+function updatePrice() {
+    const priceInput = document.getElementById('pricePerUnit');
+    const currentValue = priceInput.value.replace('₱ ', ''); // Remove peso sign for processing
+    const numericValue = currentValue.replace(/[^0-9.]/g, ''); // Allow only numbers and decimal points
+    
+    // Update the input value without the peso sign
+    priceInput.value = '₱ ' + numericValue; // Add peso sign back
+}
+
+// Function to clean up the input value on blur (optional)
+function cleanPriceInput() {
+    const priceInput = document.getElementById('pricePerUnit');
+    if (priceInput.value === '₱ ') {
+        priceInput.value = ''; // Clear if only peso sign is present
+    }
+}
+

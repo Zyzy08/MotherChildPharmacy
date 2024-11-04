@@ -40,6 +40,7 @@
 }
 
 .modal-content {
+  
   background-color: #fefefe;
   margin: 7% auto; /* 15% from the top and centered */
   padding: 20px;
@@ -47,6 +48,7 @@
   width: 70%; /* Could be more or less, depending on screen size */
   z-index: 1000;
 }
+
 /* Overlay styles */
 .overlay {
   position: fixed;
@@ -64,6 +66,7 @@
   /* High z-index value to ensure it's on top */
   
 }
+
 
 #overlayAD {
   position: fixed; /* Position overlay fixed to the viewport */
@@ -91,7 +94,7 @@
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  width: 35%;
+  width: 36%;
   margin: 2% auto;
 }
 
@@ -123,6 +126,16 @@
   margin-bottom: 10px;
   margin-left: 12px;
 }
+
+.closeAlert
+{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
 
 #checkLowStockButton {
   cursor: pointer;
@@ -172,13 +185,44 @@
   margin-bottom: 10px;
   margin-left: 12px;
 }
-
 #GoodsIssueBtn img
 {
   width: 20px; /* Set the size of the image */
   height: auto; /* Keep the aspect ratio */
   margin-right: 6px; /* Space between the image and text */
 }
+
+
+#FastmovingBtn
+{
+  cursor: pointer;
+  height: 36px;
+  width: 170px; /* Adjust width if needed */
+  padding: 0 12px;
+  display: flex;
+  align-items: center; /* Center align vertically */
+  justify-content: flex-start; /* Align items to the start (left) */
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #FFFFFFFF; /* white */
+  background: #005500FF; /* primary-500 */
+  opacity: 1;
+  border: none;
+  border-radius: 12px;
+  gap: 6px; /* Space between the icon and text */
+  margin-bottom: 10px;
+  margin-left: 12px;
+}
+
+#FastmovingBtn img
+{
+  width: 20px; /* Set the size of the image */
+  height: auto; /* Keep the aspect ratio */
+  margin-right: 6px; /* Space between the image and text */
+}
+
+
 
 .deleteProduct {
 
@@ -934,7 +978,7 @@ td {
   outline: none; /* No outline on focus */
   position: absolute; /* Positioning below the input */
   z-index: 999; /* Ensure it appears above other elements */
-  width: 81.5%; /* Full width */
+  width: 100%; /* Full width */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
   text-align: left; /* Align text to the left */
 }
@@ -972,7 +1016,7 @@ td {
   outline: none; /* No outline on focus */
   position: absolute; /* Positioning below the input */
   z-index: 999; /* Ensure it appears above other elements */
-  width: 81.5%; /* Full width */
+  width: 100%; /* Full width */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
   text-align: left; /* Align text to the left */
 }
@@ -1056,12 +1100,12 @@ textarea {
 }
 .add
 {
-  background-color: #5d7e5e; /* Green color for confirm button */
+  background-color: #4CAF50; /* Green color for confirm button */
   color: #fff; /* White text color */
 }
 .sub
 {
-  background-color: #816666; /* Red color for cancel button */
+  background-color: #af4c4c; /* Red color for cancel button */
   color: #fff; /* White text color */
 }
 
@@ -1112,5 +1156,26 @@ textarea {
 
 .submit:hover {
   background-color: #45a049; /* Darker green on hover */
+}
+
+
+#modalSelect {
+  width: 230px; /* Full width */
+  height: auto; /* Adjust height to auto for better fitting */
+  font-size: 25px; /* Increased font size for better visibility */
+  
+  flex: 1; /* Flexibility for responsiveness */
+  -moz-box-sizing: content-box; /* For Firefox */
+  -webkit-box-sizing: content-box; /* For Safari */
+  box-sizing: content-box; /* Default box-sizing */
+  padding-left: 12px; /* Left padding */
+  padding-right: 12px; /* Right padding */
+  background: transparent; /* Make the background transparent */
+  border-radius: 4px; /* Rounded corners */
+  border-width: 0px; /* No border */
+  outline: none; /* No outline on focus */
+
+  text-align: left; 
+  /* test */
 }
 
