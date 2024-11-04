@@ -2,7 +2,6 @@
 <?php include 'fetchProductData.php'; ?>
 <?php include 'fetchOrderNumber.php'; ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,7 +30,7 @@
   <link href="../resources/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="../resources/vendor/simple-datatables/style.css" rel="stylesheet">
 
-  <!-- Return & Exchange CSS File -->
+  <!-- Return and Exchange CSS File -->
   <link href="returnexchange.css" rel="stylesheet">
 
 </head>
@@ -113,69 +112,112 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
-      <li class="nav-item">
-          <a class="nav-link collapsed" href="../dashboard/dashboard.php">
-              <i class="bi bi-grid"></i>
-              <span>Dashboard</span>
-          </a>
-      </li><!-- End Dashboard Nav -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../dashboard/dashboard.php">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
 
-      <li class="nav-heading"></li>
+        <li class="nav-heading"></li>
 
-      <li class="nav-item">
-          <a class="nav-link collapsed" href="../suppliers/suppliers.php">
-              <i class="bi bi-truck"></i>
-              <span>Suppliers</span>
-          </a>
-      </li><!-- End Suppliers Page Nav -->
+        <?php if ($_SESSION['SuppliersPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../suppliers/suppliers.php">
+                <i class="bi bi-shop"></i>
+                <span>Suppliers</span>
+            </a>
+        </li><!-- End Suppliers Page Nav -->
+        <?php endif; ?>
 
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../transactions/transactions.php">
-          <i class="bi bi-cash-coin"></i>
-          <span>Transactions</span>
-      </a>
-      </li><!-- End Transactions Page Nav -->
+        <?php if ($_SESSION['TransactionsPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../transactions/transactions.php">
+                <i class="bi bi-cash-coin"></i>
+                <span>Transactions</span>
+            </a>
+        </li><!-- End Transactions Page Nav -->
+        <?php endif; ?>
 
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
-          <i class="bi bi-mailbox"></i>
-          <span>Purchase Orders</span>
-      </a>
-      </li><!-- End Purchase Order Page Nav -->
+        <?php if ($_SESSION['POPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
+                <i class="bi bi-mailbox"></i>
+                <span>Purchase Orders</span>
+            </a>
+        </li><!-- End Purchase Order Page Nav -->
+        <?php endif; ?>
 
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../inventory/inventory.php">
-          <i class="bi bi-box-seam"></i>
-          <span>Inventory</span>
-      </a>
-      </li><!-- End Inventory Page Nav -->
+        <?php if ($_SESSION['POPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../delivery/delivery.php">
+                <i class="bi bi-truck"></i>
+                <span>Deliveries</span>
+            </a>
+        </li><!-- End Deliveries Page Nav -->
+        <?php endif; ?>
 
-      <li class="nav-item">
-          <a class="nav-link collapsed" href="../users/users.php">
-              <i class="bi bi-person"></i>
-              <span>Users</span>
-          </a>
-      </li><!-- End Users Page Nav -->
+        <?php if ($_SESSION['InventoryPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../inventory/inventory.php">
+                <i class="bi bi-box-seam"></i>
+                <span>Inventory</span>
+            </a>
+        </li><!-- End Inventory Page Nav -->
+        <?php endif; ?>
 
-      <li class="nav-heading"></li>
+        <li class="nav-heading"></li>
 
-      <li class="nav-item"></li>
-      <a class="nav-link" href="../pos/pos.php">
-          <i class="bi bi-printer"></i>
-          <span>POS</span>
-      </a>
-      </li><!-- End POS Page Nav -->
+        <?php if ($_SESSION['POSPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../pos/pos.php">
+                <i class="bi bi-printer"></i>
+                <span>POS</span>
+            </a>
+        </li><!-- End POS Page Nav -->
+        <?php endif; ?>
 
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="returnexchange.php">
-          <i class="bi bi-cart-dash"></i>
-          <span>Return & Exchange</span>
-      </a>
-      </li><!-- End Return & Exchange Page Nav -->
+        <?php if ($_SESSION['REPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link" href="../returnexchange/returnexchange.php">
+                <i class="bi bi-cart-dash"></i>
+                <span>Return & Exchange</span>
+            </a>
+        </li><!-- End Return & Exchange Page Nav -->
+        <?php endif; ?>
+
+        <li class="nav-heading"></li>
+
+        <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../users/users.php">
+                <i class="bi bi-person"></i>
+                <span>Users</span>
+            </a>
+        </li><!-- End Users Page Nav -->
+        <?php endif; ?>
+
+        <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../audittrail/audittrail.php">
+                <i class="bi bi-clipboard-data"></i>
+                <span>Audit Trail</span>
+            </a>
+        </li><!-- End Audit Trail Page Nav -->
+        <?php endif; ?>
+
+        <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
+                <i class="bi bi-cloud-check"></i>
+                <span>Backup & Restore</span>
+            </a>
+        </li><!-- End B&R Page Nav -->
+        <?php endif; ?>
 
     </ul>
 
-  </aside><!-- End Sidebar-->
+  </aside><!-- End Sidebar -->
 
   <main id="main" class="main">
 
@@ -218,8 +260,16 @@
                 
                 <div class="card-body">
 
-                  <div class="row align-items-top" id="product-list">
-                    <!-- Product items will be inserted here dynamically -->
+                  <div class="row align-items-top" id="in-stock-list">
+                      <!-- First row of products -->
+                  </div>
+
+                  <div class="row align-items-top" id="low-stock-list">
+                      <!-- Second row of products -->
+                  </div>
+
+                  <div class="row align-items-top" id="out-of-stock-list">
+                      <!-- Third row of products -->
                   </div>
 
                 </div><!-- End Card Body -->
@@ -232,43 +282,34 @@
                     <div class="col-lg-6">
                       <nav aria-label="Page navigation">
                         <ul class="pagination">
+
+                          <li class="page-item">
+                            <a class="page-link" href="#" aria-label="First">
+                              <span aria-hidden="true">«</span>
+                            </a>
+                          </li>
+
                           <li class="page-item" id="prev-page">
                             <a class="page-link" href="#">Previous</a>
                           </li>
+
                           <li class="page-item active" id="page-1">
                             <a class="page-link" href="#">1</a>
                           </li>
-                          <li class="page-item" id="page-2">
-                            <a class="page-link" href="#">2</a>
-                          </li>
-                          <li class="page-item" id="page-3">
-                            <a class="page-link" href="#">3</a>
-                          </li>
-                          <li class="page-item" id="page-4">
-                            <a class="page-link" href="#">4</a>
-                          </li>
-                          <li class="page-item" id="page-5">
-                            <a class="page-link" href="#">5</a>
-                          </li>
+
                           <li class="page-item" id="next-page">
                             <a class="page-link" href="#">Next</a>
                           </li>
+
+                          <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Last">
+                              <span aria-hidden="true">»</span>
+                            </a>
+                          </li>
+
                         </ul>
                       </nav>
                     </div><!-- End Pagination -->
-
-                    <!-- Quantity Input -->
-                    <div class="col-lg-3">
-                        <input type="number" class="form-control" id="quantity-input" placeholder="Quantity" min="1">
-                    </div>
-
-                    <!-- Add Item Button -->
-                    <div class="col-lg-3">
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-primary" id="add-item-button" type="button">Add Item</button>
-                        </div>
-                    </div>
-
                   </div>
                 </div><!-- End Card Footer -->
               </div>
@@ -298,7 +339,7 @@
                           <p id="basket-total">₱0.00</p>
                       </div>
                       <div class="d-grid gap-2 mt-3">
-                        <button id="checkout" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered">
+                        <button id="checkout" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered" disabled>
                           Checkout
                         </button>
                       </div>
@@ -309,6 +350,35 @@
 
       </div>
     </section>
+
+    <!-- Quantity Modal -->
+    <div class="modal fade" id="quantity-modal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Quantity</h5>
+          </div>
+          <div class="modal-body" id="quantity-modal-body">
+            <!-- Dynamic content will be inserted here -->
+          </div>
+          <div class="modal-footer">
+            <div class="row align-items-top w-100">
+              <div class="col-lg-3">
+                <button id="quantity-cancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              </div>
+              <div class="col-lg-4">
+                <input type="number" class="form-control" id="quantity-input" placeholder="Quantity" min="1">
+              </div>
+              <div class="col-lg-5">
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary" id="add-item-button" type="button">Add Item</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Checkout Modal -->
     <div class="modal fade" id="verticalycentered" tabindex="-1" aria-hidden="true">
@@ -322,23 +392,74 @@
               <input class="form-check-input" type="checkbox" id="seniorCitizenCheckbox">
               <label class="form-check-label" for="seniorCitizenCheckbox">Senior Citizen / PWD (20%)</label>
             </div>
-            <div class="form-check form-switch">
-              <input class="form-check-input" type="checkbox" id="promoCheckbox">
-              <label class="form-check-label" for="promoCheckbox">Promotional (10%)</label>
+
+            <!-- Hidden Accordion Form for Senior Citizen / PWD -->
+            <div class="accordion" id="seniorPwdAccordion" style="display: none;">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#seniorPwdForm" aria-expanded="true" aria-controls="seniorPwdForm">
+                    Senior Citizen / PWD Information
+                  </button>
+                </h2>
+                <div id="seniorPwdForm" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#seniorPwdAccordion">
+                  <div class="accordion-body">
+                    <div class="mb-3">
+                      <label for="seniorPwdID" class="form-label">ID Number</label>
+                      <input type="text" class="form-control" id="seniorPwdID" placeholder="Enter ID number" required>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="idType" class="form-label">ID Type</label>
+                      <select class="form-select" id="idType" required>
+                        <option value="">Select ID Type</option>
+                        <option value="senior">Senior Citizen ID</option>
+                        <option value="pwd">PWD ID</option>
+                      </select>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="seniorPwdName" class="form-label">Full Name</label>
+                      <input type="text" class="form-control" id="seniorPwdName" placeholder="Enter full name" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+
+            <br>
+
+            <div id="payment-method">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="cash" checked="">
+                <label class="form-check-label" for="gridRadios1">
+                  Cash
+                </label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="gcash">
+                <label class="form-check-label" for="gridRadios2">
+                  GCash
+                </label>
+              </div>
+            </div>
+
             <br><h2 id="total-display" style="font-weight: bold;">Total: ₱0.00</h2><br>
 
             <div class="row mb-0">
               <h2 for="paymentInput" class="col-sm-5" style="font-weight: bold;">Payment: ₱</h2>
               <div class="col-sm-6">
-                <input type="number" id="paymentInput" class="form-control no-arrows" min="1" placeholder="0">
+                <input type="number" id="paymentInput" class="form-control no-arrows" min="1" max="999999" placeholder="0" oninput="validatePayment(this)">
+                <div class="invalid-feedback">
+                  Please enter an amount between ₱1 and ₱999,999
+                </div>
               </div>
             </div>
 
             <br><h2 id="change-display" style="font-weight: bold;">Change: ₱0.00</h2>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-checkout">Cancel</button>
             <div class="d-grid gap-2">
               <button id="confirm-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal" disabled>
                 Confirm
@@ -393,12 +514,30 @@
             </div>
           </div>
 
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5">
+              <small>Discount:</small>
+            </div>
+            <div class="col-xl-5">
+              <small id="discount">₱-0.00</small>
+            </div>
+          </div>
+
           <div class="row text-center justify-content-between" style="font-weight: bold;">
             <div class="col-xl-5">
               <small>Amount Due:</small>
             </div>
             <div class="col-xl-5">
               <small id="amount-due">₱0.00</small>
+            </div>
+          </div>
+
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5">
+              <small>Refund Amount:</small>
+            </div>
+            <div class="col-xl-5">
+              <small id="refund-amount">₱0.00</small>
             </div>
           </div>
 
@@ -429,28 +568,36 @@
               <small id="order-num">Order No.: #0000000</small>
             </div>
             <div class="col-xl-6">
-              <small>Date: <?php echo date('F j, Y'); ?></small>
+              <small id="date-time">Date: <?php echo date('F j, Y'); ?> 
+                <?php date_default_timezone_set('Asia/Manila'); echo date('h:i A');?>
+              </small>
+            </div>
+          </div>
+
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-6">
+              <small id="staff">Staff: <?php echo htmlspecialchars($employeeFullName); ?></small>
+            </div>
+            <div class="col-xl-6">
+              <small id="payment-method">Payment Method: Cash</small>
             </div>
           </div>
 
           <div class="row mb-3 text-center justify-content-between">
             <div class="col-xl-6">
-              <small>Staff: <?php echo htmlspecialchars($employeeFullName); ?></small>
+              <small id="role">Role: <?php echo htmlspecialchars($role); ?></small>
             </div>
             <div class="col-xl-6">
-              <small>Time: 
-                <?php date_default_timezone_set('Asia/Manila'); // Set timezone to GMT+8
-                echo date('h:i A');?>
-              </small>
+              <small id="status">Status: Sales</small>
             </div>
           </div>
 
           <div class="modal-footer">
 
-            <button id="cancel-receipt" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button id="cancel-receipt" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#verticalycentered">Cancel</button>
 
             <div class="d-grid gap-2">
-              <button id="print-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#basicModal">
+              <button id="print-button" type="button" class="btn btn-primary" data-bs-dismiss="modal">
                 Print
               </button>
             </div>
@@ -467,7 +614,7 @@
       &copy; Copyright <strong><span>Mother & Child Pharmacy and Medical Supplies</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
-      Designed by <a href="https://www.sti.edu/campuses-details.asp?campus_id=QU5H">STI College Angeles - BSIT4-A s.y 2024-2025 </a>
+      Designed by <a href="https://www.sti.edu/campuses-details.asp?campus_id=QU5H">STI College Angeles - BSIT4-A S.Y 2024-2025 </a>
     </div>
   </footer><!-- End Footer -->
 
@@ -486,7 +633,7 @@
   <!-- Template Main JS File -->
   <script src="../main.js"></script>
   
-  <!-- Template Return & Exchange JS File -->
+  <!-- Template Return and Exchange JS File -->
   <script src="returnexchange.js"></script>
 
 </body>
