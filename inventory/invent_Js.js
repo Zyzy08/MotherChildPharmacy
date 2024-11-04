@@ -1061,28 +1061,32 @@ function showNotification(message) {
 
 // Function to handle the input from the barcode scanner
 function handleBarcodeInput(event) {
-    // Get the input field
     const productCodeInput = document.getElementById('productCode');
-
-    // Check if the pressed key is Enter
+    
+    // Wait for the 'Enter' key to process the barcode scan
     if (event.key === 'Enter') {
-        // Prevent default form submission if needed
-        event.preventDefault();
-
-        // Log or process the scanned barcode value
+        event.preventDefault(); // Prevent default form submission
+        
+        // Process the full scanned code
         console.log('Scanned Barcode:', productCodeInput.value);
-        // Here, you can implement any further processing, like submitting the form or fetching product data
-    } else {
-        // Append the pressed key to the input field's value
-        productCodeInput.value += event.key;
+        
+        // Here, add any additional processing, such as form submission or fetching product data
     }
 }
 
-// Attach the event listener when the DOM is loaded
+// Attach the event listener for 'input' and 'keypress' events when the DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
     const productCodeInput = document.getElementById('productCode');
+    
+    // Only listen for the 'keypress' event to detect the 'Enter' key
     productCodeInput.addEventListener('keypress', handleBarcodeInput);
+    
+    // Ensure manual typing works by preventing key appending for each input
+    productCodeInput.addEventListener('input', function() {
+        // Placeholder for additional logic if needed on each input update
+    });
 });
+
 
 
 
