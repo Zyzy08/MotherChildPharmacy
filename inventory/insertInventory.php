@@ -41,32 +41,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $genericName = $conn->real_escape_string($_POST['genericName'] ?? '');
     $unitOfMeasure = $conn->real_escape_string($_POST['unitOfMeasure'] ?? '');
     $mass = $conn->real_escape_string($_POST['mass'] ?? '');
-    $pricePerUnit = $conn->real_escape_string($_POST['pricePerUnit'] ?? '');
-    $Discount = $conn->real_escape_string($_POST['Discount'] ?? ''); // Keep as string for validation
-    $InStock = $conn->real_escape_string($_POST['InStock'] ?? ''); // Initialize InStock
+    $pricePerUnit = floatval(preg_replace('/[^\d.]/', '', $_POST['pricePerUnit'] ?? '')); // Parse as float
+    $Discount = floatval($conn->real_escape_string($_POST['Discount'] ?? ''));
+    $InStock = intval($conn->real_escape_string($_POST['InStock'] ?? '0')); // Parse as integer
     $notes = $conn->real_escape_string($_POST['notes'] ?? '');
     $VAT_exempted = $conn->real_escape_string($_POST['VAT_exempted'] ?? ''); // New field for VAT exemption
 
     // Validate required fields (excluding InStock)
-    if (empty($productCode) || empty($itemType) || empty($brandName) || empty($genericName) || empty($unitOfMeasure) || empty($mass) || empty($pricePerUnit) || $Discount === '') {
-        echo json_encode(['success' => false, 'message' => 'Missing required fields']);
+    if (empty($productCode)) {
+        echo json_encode(['success' => false, 'message' => 'Product Code is required']);
         exit;
-    }
-
-    $mass = preg_replace('/[^\d.]/', '', $mass); // Remove non-numeric characters except for the decimal point
-    $pricePerUnit = preg_replace('/[^\d.]/', '', $pricePerUnit); // Remove non-numeric characters except for the decimal point
-
-    // Validate numeric fields
-    if (!is_numeric($mass) || !is_numeric($pricePerUnit)) {
-        echo json_encode(['success' => false, 'message' => 'Mass and PricePerUnit must be numeric']);
+    } elseif (empty($itemType)) {
+        echo json_encode(['success' => false, 'message' => 'Item Type is required']);
         exit;
-    }
-
-    // Set InStock to 0 if empty (default value)
-    if (empty($InStock)) {
-        $InStock = 0; // Default value if InStock is not provided
-    } elseif (!is_numeric($InStock)) {
-        echo json_encode(['success' => false, 'message' => 'InStock must be numeric']);
+    } elseif (empty($brandName)) {
+        echo json_encode(['success' => false, 'message' => 'Brand Name is required']);
+        exit;
+    } elseif (empty($genericName)) {
+        echo json_encode(['success' => false, 'message' => 'Generic Name is required']);
+        exit;
+    } elseif (empty($unitOfMeasure)) {
+        echo json_encode(['success' => false, 'message' => 'Unit of Measure is required']);
+        exit;
+    } elseif (empty($mass) || !is_numeric($mass)) {
+        echo json_encode(['success' => false, 'message' => 'Mass must be a valid numeric value']);
+        exit;
+    } elseif (empty($pricePerUnit) || !is_numeric($pricePerUnit)) {
+        echo json_encode(['success' => false, 'message' => 'Price per Unit must be a valid numeric value']);
+        exit;
+    } elseif ($Discount === '') {
+        echo json_encode(['success' => false, 'message' => 'Discount is required']);
         exit;
     }
 
@@ -115,19 +119,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Bind the parameters, including VAT_exempted
-    $stmt->bind_param("ssssssiisssss", $productCode, $itemType, $brandName, $genericName, $unitOfMeasure, $mass, $pricePerUnit, $Discount, $InStock, $notes, $ReorderLevel, $iconPath, $VAT_exempted);
+    $stmt->bind_param("ssssssdisssss", $productCode, $itemType, $brandName, $genericName, $unitOfMeasure, $mass, $pricePerUnit, $Discount, $InStock, $notes, $ReorderLevel, $iconPath, $VAT_exempted);
 
     // Execute the statement and check for success
     if ($stmt->execute()) {
         $itemID = $stmt->insert_id; // Get the last inserted DeliveryID
         $updatedetails = "(ItemID: " . $itemID . ")";
-        //Log if Success
+        // Log if Success
         $description = "User added a new product. $updatedetails.";
         logAction($conn, $sessionAccountID, 'Add Product', $description, 1);
         echo json_encode(['success' => true, 'message' => 'Product saved successfully']);
     } else {
         $updatedetails = "(Item Name: " . $brandName . " " . $genericName . ")";
-        //Log if Fail
+        // Log if Fail
         $description = "User failed to add a new product. $updatedetails.";
         logAction($conn, $sessionAccountID, 'Add Product', $description, 0);
         echo json_encode(['success' => false, 'message' => 'Error saving product: ' . $stmt->error]);

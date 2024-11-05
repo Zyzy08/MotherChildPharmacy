@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Bind parameters and execute the update statement
-    $stmt->bind_param("sssssiissii", $productCode, $itemType, $brandName, $genericName, $unitOfMeasure, $mass, $pricePerUnit, $Discount, $iconPath, $VAT_Exempted, $itemID);
+    $stmt->bind_param("sssssidssii", $productCode, $itemType, $brandName, $genericName, $unitOfMeasure, $mass, $pricePerUnit, $Discount, $iconPath, $VAT_Exempted, $itemID);
 
     $updatedetails = "(ItemID: " . $itemID . ")";
 

@@ -1,0 +1,31 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+1   Biogesic Tablet        P4.81
+--------------------------------
+Total Items:                 1
+Subtotal:                P4.81
+Tax 12%:                 P0.58
+Discount:               P-0.00
+Amount Due:              P5.39
+Refund Amount:           P0.00
+Payment:                 P5.00
+Change:                 P-0.39
+--------------------------------
+Order No.:                 #11
+Date:      2024-11-05 11:50:57
+Payment Method:           Cash
+Status:                 Sales
+
+Staff:                kort alv
+Role:                    Admin
+                                
+  Thank you for your purchase!
+
+                                
+
+                                

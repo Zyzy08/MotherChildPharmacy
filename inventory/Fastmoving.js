@@ -20,15 +20,25 @@ function loadTopSellingProducts() {
             products.forEach(product => {
                 const row = document.createElement('tr');
 
-                // Add cells with product data, including Total Sold
+                // Define maximum length for truncation
+                const maxLength = 30;
+
+                // Truncate GenericName and BrandName if they exceed maxLength
+                const truncatedGenericName = product.GenericName.length > maxLength 
+                    ? product.GenericName.substring(0, maxLength) + '...' 
+                    : product.GenericName;
+                const truncatedBrandName = product.BrandName.length > maxLength 
+                    ? product.BrandName.substring(0, maxLength) + '...' 
+                    : product.BrandName;
+
+                // Use truncated values in the table cells
                 row.innerHTML = `
-                    <td style="text-align: center; font-size: 12px;">${product.ItemID}</td>
-                    <td style="text-align: center; font-size: 12px;">${product.GenericName}</td>
-                    <td style="text-align: center; font-size: 12px;">${product.BrandName}</td>
-                    <td style="text-align: center; font-size: 12px;">${product.ItemType}</td>
+                    <td style="text-align: center; font-size: 12px;">${product.itemID}</td>
+                    <td style="text-align: center; font-size: 12px;" title="${product.GenericName}">${truncatedGenericName}</td>
+                    <td style="text-align: center; font-size: 12px;" title="${product.BrandName}">${truncatedBrandName}</td>
                     <td style="text-align: center; font-size: 12px;">${product.Measurement}</td>
-                    <td style="text-align: center; font-size: 12px;">${product.Price}</td>
-                    <td style="text-align: center; font-size: 12px;">${product.TotalSold}</td>
+                    <td style="text-align: center; font-size: 12px;">${product.PricePerUnit}</td>
+                    <td style="text-align: center; font-size: 12px;">${product.totalSold}</td>
                 `;
 
                 // Append row to table body
@@ -43,6 +53,7 @@ function loadTopSellingProducts() {
         });
 }
 
+
 // Function to initialize or reinitialize DataTables
 function setDataTables() {
     if ($.fn.dataTable.isDataTable('#example')) {
@@ -55,12 +66,11 @@ function setDataTables() {
         "responsive": true, // Enable responsiveness
         "columnDefs": [
             { "targets": 0, "width": "5%" }, // Item ID
-            { "targets": 1, "width": "10%", "orderable": false }, // Generic Name
-            { "targets": 2, "width": "10%", "orderable": false }, // Brand Name
-            { "targets": 3, "width": "10%", "orderable": false }, // Item Type
-            { "targets": 4, "width": "5%" , "orderable": false }, // Mass & Unit of Measure
-            { "targets": 5, "width": "5%" }, // Price Per Unit
-            { "targets": 6, "width": "5%" }, // Price Per Unit
+            { "targets": 1, "width": "8%", "orderable": false }, // Generic Name
+            { "targets": 2, "width": "8%", "orderable": false }, // Brand Name
+            { "targets": 3, "width": "5%", "orderable": false }, // Mass & Unit of Measure
+            { "targets": 4, "width": "5%" }, // Price Per Unit
+            { "targets": 5, "width": "5%" }, // Total Sold
         ]
     });
 
