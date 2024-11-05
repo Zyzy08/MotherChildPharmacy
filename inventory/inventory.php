@@ -259,10 +259,10 @@
           <button class="close" id="closeBtn">&times;</button>
           <hr style="margin-top: 5px">
           <div>
-            <label style="margin-right: 200px;" for="ItemID">Item ID</label>
-            <label style="margin-right: 180px;" for="itemType">Item Type</label>
+            <label class="label" style="margin-right: 205px;" for="ItemID">Item ID</label>
+            <label class="label" style="margin-right: 180px;" for="itemType">Item Type</label>
             
-            <label for="pricePerUnit">Price Per Unit</label>
+            <label class="label"for="pricePerUnit">Price Per Unit</label>
           </div>
 
           <div class="textbox">
@@ -278,14 +278,16 @@
             </select>
             
             <!--<input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱" onfocus="addPesoSign()" oninput="addPesoSign()" /> -->
-            <input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱ " onfocus="addPesoSign()" oninput="updatePrice()" onblur="cleanPriceInput()" />
+            <input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱ " onfocus="addPesoSign()" onblur="cleanPriceInput()" />
+
+            
             
           </div>
 
           <div class="textbox">
-            <label style="margin-right: 160px;" for="brandName">Brand Name</label>
-            <label style="margin-right: 148px;" for="genericName">Generic Name</label>
-            <label for="Discount">Discount</label>
+            <label class="label" style="margin-right: 165px;" for="brandName">Brand Name</label>
+            <label class="label"style="margin-right: 155px;" for="genericName">Generic Name</label>
+            <label class="label" for="Discount">Discount</label>
           </div>
 
           <div class="textbox">
@@ -302,9 +304,9 @@
           </div>
 
           <div>
-            <label style="margin-right: 215px;" for="mass">Mass</label>
-            <label style="margin-right: 137px;" for="unitOfMeasure">Unit of Measure</label>
-            <label  for="VAT_exempted">VAT Exempted</label>
+            <label class="label" style="margin-right: 218px;" for="mass">Mass</label>
+            <label class="label" style="margin-right: 143px;" for="unitOfMeasure">Unit of Measure</label>
+            <label class="label" for="VAT_exempted">VAT Exempted</label>
             
           </div>
           <div class="textbox">
@@ -338,19 +340,27 @@
           </div>
         </div>
         <div>
-          <label style="margin-right: 152px;" for="ProductCode">Product Code</label>
+          <label class="label" style="margin-right: 160px;" for="ProductCode" >Product Code</label>
+          <label class="label" style="margin-right: 205px;" for="InStock" >Instock</label>
+          <label class="label" for="Ordered" >Ordered</label>
           
         </div>
         <div class="textbox">
-          <input style="margin-right: 30px;" type="text" id="productCode" name="ProductCode">
-          
+          <input style="margin-right: 30px;" type="text" id="productCode" name="ProductCode" >
+          <input style="margin-right: 30px;" type="number" id="InStock" name="InStock" >
+          <input type="number" id="Ordered" name="Ordered" >
           
         </div>
-        <div class=""></div>
+        <div class="textbox">
+            <label class="label" for="ReorderLevel">Reorderlevel</label>
+        </div>
+        <div class="textbox">
+            <input type="number" id="ReorderLevel" name="ReorderLevel" >
+        </div>
 
 
         <div class="textbox">
-          <label for="iconFile">Picture</label>
+          <label class="label" for="iconFile">Picture</label>
           <div class="icon-upload">
             <label for="iconFile">
               <img id="iconPreview" src="../resources/img/add_icon.png" alt="+" class="icon-preview"
@@ -459,13 +469,15 @@
                   </div>
               </div>
 
+
+              <!-- LOW STOCK and NEAR EXPIRY -->
               <div id="lowStockModal" class="modal" role="dialog" aria-modal="true">
                     <div class="modal-content" style="position: relative;"> <!-- Ensure this has position: relative -->
                         <span id="BtnCloseLowStock" 
                               class="closeAlert" 
                               style="position: absolute; top: 10px; right: 0; font-size: 24px; cursor: pointer; margin-right: 20px">&times;</span> <!-- Set right to 0 -->
 
-                        <!-- Dropdown to choose between Low Stock and Near Expiry -->
+                        <!-- Dropdown to choose between Low Stock or EOQ and Near Expiry -->
                         <select id="modalSelect" onchange="updateTableView()">
                             <option value="lowStock">Low Stock Items</option>
                             <option value="nearExpiry">Near Expiry Items</option>
@@ -504,10 +516,6 @@
                   </div>
               </div>
 
-
-
-
-
       <!--Goods Issue-->
 
       <div id="overlayEdit1" class="modal">
@@ -518,7 +526,7 @@
                 <form id="userFormEdit" action="goodIssue.php" method="post" enctype="multipart/form-data" onsubmit="GoodIssueSubmit(event)" data-form-type="update">
                
                 <div class="textbox" style="margin-bottom: 10px;">
-                          <label style="margin-right: 195px;" or="selectProd">Select Product</label>
+                          <label class="label" style="margin-right: 195px;" or="selectProd">Select Product</label>
 
                 </div>
 
@@ -535,42 +543,43 @@
                 </div>
                                
                 <div class="textbox" style="margin-bottom: 10px;">
-                          <label for="selectProd">Lot No.</label>
+                          <label class="label" for="selectProd">Lot No.</label>
                 </div>
                 
                 <div class="textbox" style="margin-bottom: 10px;">
  
-                  <input type="text" id="selectLot" name="selectLot" placeholder="Search Lot Number..." oninput="filterLotOptions()" autocomplete="off">
+                <input type="text" id="selectLot" name="selectLot" placeholder="Search Lot Number..." oninput="filterLotOptions()" autocomplete="off" disabled> <!-- Initially disabled -->
                   <div class="custom-dropdown">
                       <div id="lotSelect" class="dropdown-content" style="display: none;">
                           <div class="option" onclick="selectLot(this)" data-value="">Select a Lot Number</div>
                           <!-- Options will be dynamically populated here -->
                       </div>
                   </div>
-</div>
+                </div>
+
                     <div class="textbox" style="margin-top: 10px;">
-                      <label style="margin-right: 210px;" for="QuantityRemaining">Stock</label>
-                      <label for="Ordered">Ordered</label>
+                      <label class="label" style="margin-right: 210px;" for="QuantityRemaining">Stock</label>
+                      <label class="label" for="Ordered">Ordered</label>
                     </div>
 
                     <div class="textbox" style="margin-bottom: 15px;">
 
                     
                     <input style="margin-right: 25px;" type="text" id="QuantityRemaining" name="QuantityRemaining" disabled autocomplete="off">
-                    <input type="text" id="Ordered" name="Ordered" disabled autocomplete="off">
+                    <input type="text" id="orderedAmount" name="orderedAmount" disabled autocomplete="off">
                   </div>
                   
                     <hr style="margin-bottom: 10px;">
 
                     <div class="textbox" style="margin-bottom: 10px;">
-                      <label for="Quantity">Quantity: </label>
+                      <label class="label" for="Quantity">Quantity: </label>
                       <input style="margin-right: 10px;" type="text" id="Quantity" name="Quantity" placeholder="Enter Quantity" required>
                       <button style="margin-right: 5px;" class="add" id="ToggleAdd" type="button">+</button>
                       <button class="sub" id="ToggleSub" type="button">-</button>
                     </div>
 
                     <div class="textbox" style="margin-bottom: 10px;">
-                        <label for="Reason">Reason</label>
+                        <label class="label" for="Reason">Reason</label>
                     </div>
             
                     <div class="textbox" style="margin-bottom: 15px;">

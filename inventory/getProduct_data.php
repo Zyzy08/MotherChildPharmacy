@@ -2,10 +2,10 @@
 header('Content-Type: application/json');
 
 // Database connection settings
-$host = 'localhost';  // Update with your database host
-$db = 'motherchildpharmacy';  // Update with your database name
-$user = 'root';  // Update with your database username
-$password = '';  // Update with your database password
+$host = 'localhost';
+$db = 'motherchildpharmacy';
+$user = 'root';
+$password = '';
 
 try {
     // Create a new PDO instance
@@ -14,7 +14,7 @@ try {
 
     // Check if an ItemID is provided
     if (isset($_GET['itemID'])) {
-        $itemID = $_GET['itemID']; // Get the itemID from query parameters
+        $itemID = $_GET['itemID'];
 
         // Validate that itemID is numeric
         if (!is_numeric($itemID)) {
@@ -26,7 +26,9 @@ try {
         $itemID = htmlspecialchars($itemID);
 
         // Fetch details for the specific ItemID (not archived)
-        $sql = "SELECT * FROM inventory WHERE ItemID = ? AND (status IS NULL OR status != 'Archived')";
+        $sql = "SELECT ItemID, GenericName, BrandName, ItemType, Mass, UnitOfMeasure, InStock, Ordered, ReorderLevel, PricePerUnit, Discount, VAT_exempted, SupplierID, Notes, Status, ProductIcon, ProductCode 
+                FROM inventory 
+                WHERE ItemID = ? AND (status IS NULL OR status != 'Archived')";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$itemID]);
 
@@ -39,7 +41,9 @@ try {
         }
     } else {
         // Fetch all items that are not archived if no ItemID is provided
-        $sql = "SELECT * FROM inventory WHERE status IS NULL OR status != 'Archived'";
+        $sql = "SELECT ItemID, GenericName, BrandName, ItemType, Mass, UnitOfMeasure, InStock, Ordered, ReorderLevel, PricePerUnit, Discount, VAT_exempted, SupplierID, Notes, Status, ProductIcon, ProductCode 
+                FROM inventory 
+                WHERE status IS NULL OR status != 'Archived'";
         $stmt = $pdo->query($sql);
 
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);

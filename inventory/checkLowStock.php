@@ -1,51 +1,85 @@
 <?php
+// Set the header for JSON response
+header('Content-Type: application/json');
+
 // Database connection settings
-$host = 'localhost';
-$dbname = 'motherchildpharmacy';
-$username = 'root';
-$password = '';
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "motherchildpharmacy";
 
 try {
     // Create a new PDO instance and set error mode
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Query to get the required fields from the inventory table
-    $stmt = $pdo->prepare("SELECT ItemID, BrandName, GenericName, InStock, Ordered, ReorderLevel FROM inventory");
-    $stmt->execute();
-    
-    // Fetch all items as an associative array
-    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    // Function to calculate EOQ
-    function calculateEOQ($demand, $orderCost, $holdingCost) {
-        if ($demand > 0) {
-            return sqrt((2 * $demand * $orderCost) / $holdingCost);
+    // SQL query to get sales details from the last year
+    $salesQuery = "
+        SELECT SalesDetails
+        FROM sales
+        WHERE SaleDate >= NOW() - INTERVAL 1 YEAR;
+    ";
+
+    // Execute the sales query
+    $salesResult = $pdo->query($salesQuery);
+    $fastMovingProducts = [];
+
+    // Loop through each sale to accumulate quantities
+    foreach ($salesResult as $row) {
+        $salesDetails = json_decode($row['SalesDetails'], true);
+        foreach ($salesDetails as $detail) {
+            $itemID = $detail['itemID'];
+            $qty = $detail['qty'];
+            if (isset($fastMovingProducts[$itemID])) {
+                $fastMovingProducts[$itemID]['totalSold'] += $qty;
+            } else {
+                $fastMovingProducts[$itemID] = [
+                    'totalSold' => $qty,
+                    'itemID' => $itemID
+                ];
+            }
         }
-        return 0; // Return 0 if demand is 0 or less
     }
 
-    // Filter to get only low stock items and calculate EOQ
-    $lowStockItems = array_filter($items, function($item) {
-        $inStock = isset($item['InStock']) ? (int)$item['InStock'] : 0; // Default to 0 if not set
-        $reorderLevel = isset($item['ReorderLevel']) ? (int)$item['ReorderLevel'] : PHP_INT_MAX; // Default to a large value if not set
+    // Fetch item details for accumulated fast-moving products with low stock
+    foreach ($fastMovingProducts as &$product) {
+        $itemID = $product['itemID'];
+        $itemQuery = "
+            SELECT GenericName, BrandName, PricePerUnit, Mass, UnitOfMeasure, InStock, Ordered, ReorderLevel
+            FROM inventory
+            WHERE ItemID = :itemID AND InStock <= ReorderLevel
+        ";
+        $itemStmt = $pdo->prepare($itemQuery);
+        $itemStmt->bindParam(':itemID', $itemID, PDO::PARAM_INT);
+        $itemStmt->execute();
+        $itemData = $itemStmt->fetch(PDO::FETCH_ASSOC);
 
-        // Calculate EOQ using the function
-        $ordered = isset($item['Ordered']) ? (int)$item['Ordered'] : 0; // Default to 0 if not set
-        $orderCost = 50; // Example order cost, adjust as needed
-        $holdingCost = 2; // Example holding cost per unit, adjust as needed
+        if ($itemData) {
+            // Populate product data
+            $product['GenericName'] = $itemData['GenericName'];
+            $product['BrandName'] = $itemData['BrandName'];
+            $product['PricePerUnit'] = number_format((float)$itemData['PricePerUnit'], 2, '.', '');
+            $product['Measurement'] = $itemData['Mass'] . ' ' . $itemData['UnitOfMeasure'];
+            $product['InStock'] = $itemData['InStock'];
+            $product['Ordered'] = $itemData['Ordered'];
+            
+            // Calculate EOQ if totalSold is greater than zero
+            if ($product['totalSold'] > 0) {
+                $orderingCost = 50; // Adjust based on your needs
+                $holdingCost = 2;   // Adjust based on your needs
+                $product['EOQ'] = round(sqrt((2 * $product['totalSold'] * $orderingCost) / $holdingCost), 2);
+            } else {
+                $product['EOQ'] = 0;
+            }
+        } else {
+            unset($fastMovingProducts[$itemID]); // Remove item if it doesn't meet low-stock criteria
+        }
+    }
 
-        // Add EOQ to the item array
-        $item['EOQ'] = calculateEOQ($ordered, $orderCost, $holdingCost);
+    // Convert associative array to a simple array for JSON response
+    echo json_encode(array_values($fastMovingProducts));
 
-        // Return true if inStock is below reorderLevel
-        return $inStock < $reorderLevel;
-    });
-
-    // Send the filtered low stock items as a JSON response
-    echo json_encode(array_values($lowStockItems));
 } catch (PDOException $e) {
-    // Return error message as a JSON response
     echo json_encode(["error" => "Database connection failed: " . $e->getMessage()]);
 }
 ?>

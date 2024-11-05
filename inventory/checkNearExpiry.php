@@ -11,12 +11,13 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch near expiry items
-$sql = "SELECT inv.ItemID, inv.BrandName, inv.GenericName, del.ExpiryDate 
+// Fetch near expiry items including LotNumber
+$sql = "SELECT inv.ItemID, inv.BrandName, inv.GenericName, del.ExpiryDate, del.LotNumber 
         FROM inventory inv
         JOIN delivery_items del ON inv.ItemID = del.ItemID
         WHERE del.ExpiryDate >= CURDATE() 
-        ORDER BY del.ExpiryDate ASC";
+        AND del.ExpiryDate <= DATE_ADD(CURDATE(), INTERVAL 3 MONTH)
+        ORDER BY del.ExpiryDate ASC";  // Order by expiry date
 
 $result = $conn->query($sql);
 

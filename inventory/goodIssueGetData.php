@@ -18,9 +18,9 @@ if ($conn->connect_error) {
 if (isset($_GET['itemID'])) {
     $itemID = intval($_GET['itemID']);
     $sql = "SELECT inventory.InStock, inventory.Ordered, delivery_items.QuantityRemaining 
-            FROM inventory 
-            LEFT JOIN delivery_items ON inventory.ItemID = delivery_items.ItemID 
-            WHERE inventory.ItemID = ? AND inventory.Status = 'Active'";
+    FROM inventory 
+    LEFT JOIN delivery_items ON inventory.ItemID = delivery_items.ItemID 
+    WHERE inventory.ItemID = ? AND inventory.Status = 'Active'";
     
     $stmt = $conn->prepare($sql);
     if (!$stmt) {

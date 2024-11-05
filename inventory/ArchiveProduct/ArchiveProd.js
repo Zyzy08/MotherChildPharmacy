@@ -49,13 +49,13 @@ function updateTable(data) {
         table.row.add([
             `<span class="text-truncate">${item.ItemID}</span>`, // Item ID with truncation
             `<img src="../${item.ProductIcon}" alt="Icon" style="width: 50px; height: auto;">`, // Product Icon
-            `<span class="text-truncate">${item.GenericName}</span>`, // Generic Name with truncation
-            `<span class="text-truncate">${item.BrandName}</span>`, // Brand Name with truncation
-            `<span class="text-truncate">${item.ItemType}</span>`, // Item Type with truncation
-            `<span class="text-truncate">${item.Mass} ${item.UnitOfMeasure}</span>`, // Mass with Unit of Measure
-            `<span class="text-truncate">${item.PricePerUnit}</span>`, // Price Per Unit with truncation
-            `<span class="text-truncate">${item.InStock}</span>`, // In Stock with truncation
-            `<span class="text-truncate">${item.Ordered}</span>`, // Ordered with truncation
+            `<td class="text-truncate">${item.GenericName}</span>`, // Generic Name with truncation
+            `<td class="text-truncate">${item.BrandName}</span>`, // Brand Name with truncation
+            `<td class="text-truncate">${item.ItemType}</span>`, // Item Type with truncation
+            `<td class="text-truncate">${item.Mass} ${item.UnitOfMeasure}</span>`, // Mass with Unit of Measure
+            `<td class="text-truncate">${item.PricePerUnit}</span>`, // Price Per Unit with truncation
+            `<td class="text-truncate">${item.InStock}</span>`, // In Stock with truncation
+            `<td class="text-truncate">${item.Ordered}</span>`, // Ordered with truncation
 
             `<img src="../../resources/img/s-remove.png" alt="Unarchive" style="cursor:pointer; display:block; margin: 0 auto;" onclick="showDeleteOptions('${item.ItemID}')" />` // Action buttons
         ]);

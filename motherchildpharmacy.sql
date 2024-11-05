@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 03, 2024 at 05:26 PM
+-- Generation Time: Nov 05, 2024 at 04:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -169,7 +169,43 @@ INSERT INTO `audittrail` (`auditID`, `AccountID`, `action`, `description`, `crea
 (125, 3, 'Unarchive Supplier', 'User unarchived a supplier. (SupplierID: 2).', '2024-10-31 03:11:05', '::1', '1'),
 (126, 3, 'Logout', 'User logged out successfully.', '2024-10-31 03:47:56', '::1', '1'),
 (127, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-10-31 03:47:56', '::1', '1'),
-(128, 3, 'Login', 'User logged in successfully.', '2024-11-03 09:59:35', '::1', '1');
+(128, 3, 'Login', 'User logged in successfully.', '2024-11-03 09:59:35', '::1', '1'),
+(129, 3, 'Logout', 'User logged out successfully.', '2024-11-03 16:27:16', '::1', '1'),
+(130, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-03 16:27:16', '::1', '1'),
+(131, 3, 'Login', 'User logged in successfully.', '2024-11-04 17:57:22', '::1', '1'),
+(132, 3, 'Logout', 'User logged out successfully.', '2024-11-04 19:06:11', '::1', '1'),
+(133, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-04 19:06:12', '::1', '1'),
+(134, 3, 'Login', 'User logged in successfully.', '2024-11-05 07:07:48', '::1', '1'),
+(135, 3, 'Logout', 'User logged out successfully.', '2024-11-05 07:09:33', '::1', '1'),
+(136, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-05 07:09:33', '::1', '1'),
+(137, 3, 'Login', 'User logged in successfully.', '2024-11-05 12:57:58', '::1', '1'),
+(138, 3, 'Logout', 'User logged out successfully.', '2024-11-05 12:58:21', '::1', '1'),
+(139, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-05 12:58:21', '::1', '1'),
+(140, 3, 'Login', 'User logged in successfully.', '2024-11-05 13:03:01', '::1', '1'),
+(141, 3, 'Logout', 'User logged out successfully.', '2024-11-05 13:04:56', '::1', '1'),
+(142, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-05 13:04:57', '::1', '1'),
+(143, 3, 'Login', 'User logged in successfully.', '2024-11-05 13:18:44', '::1', '1'),
+(144, 3, 'Create Order', 'Created purchase order (OrderID: 5).', '2024-11-05 13:30:15', '::1', '1'),
+(145, 3, 'View User Details', 'Viewed details for account: E002_sjackson', '2024-11-05 13:45:01', '::1', '1'),
+(146, 3, 'View User Details', 'Viewed details for account: E002_sjackson', '2024-11-05 13:45:30', '::1', '1'),
+(147, 3, 'View User Details', 'Viewed details for account: E002_sjackson', '2024-11-05 13:45:37', '::1', '1'),
+(148, 3, 'Database Backup', 'Backup initiated for database \'motherchildpharmacy\' by user.', '2024-11-05 13:49:19', '::1', '1'),
+(149, 3, 'Received Delivery', 'User successfully received delivery (Delivery ID: DE-02).', '2024-11-05 14:24:45', '::1', '1'),
+(150, 3, 'Archive Product', 'User archived a product. (ItemID: 6).', '2024-11-05 14:45:54', '::1', '1'),
+(151, 3, 'Archive Product', 'User archived a product. (ItemID: 5).', '2024-11-05 14:46:02', '::1', '1'),
+(152, 3, 'Unarchive Product', 'User unarchived a product. (ItemID: 5).', '2024-11-05 14:46:07', '::1', '1'),
+(153, 3, 'Archive Product', 'User archived a product. (ItemID: 7).', '2024-11-05 14:46:13', '::1', '1'),
+(154, 3, 'Archive Product', 'User archived a product. (ItemID: 8).', '2024-11-05 14:46:19', '::1', '1'),
+(155, 3, 'Product Update', 'User updated the details of a product. (ItemID: 10).', '2024-11-05 14:53:25', '::1', '1'),
+(156, 3, 'Product Update', 'User updated the details of a product. (ItemID: 10).', '2024-11-05 14:53:33', '::1', '1'),
+(157, 3, 'Archive Product', 'User archived a product. (ItemID: 10).', '2024-11-05 14:54:02', '::1', '1'),
+(158, 3, 'Add Product', 'User added a new product. (ItemID: 12).', '2024-11-05 14:58:27', '::1', '1'),
+(159, 3, 'Update Supplier', 'User updated a supplier (SupplierID: 2).', '2024-11-05 15:20:25', '::1', '1'),
+(160, 3, 'Update Supplier', 'User updated a supplier (SupplierID: 2).', '2024-11-05 15:20:25', '::1', '1'),
+(161, 3, 'Update Supplier', 'User updated a supplier (SupplierID: 2).', '2024-11-05 15:20:32', '::1', '1'),
+(162, 3, 'Update Supplier', 'User updated a supplier (SupplierID: 2).', '2024-11-05 15:20:32', '::1', '1'),
+(163, 3, 'Logout', 'User logged out successfully.', '2024-11-05 15:55:54', '::1', '1'),
+(164, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-05 15:55:55', '::1', '1');
 
 -- --------------------------------------------------------
 
@@ -192,7 +228,8 @@ CREATE TABLE `deliveries` (
 --
 
 INSERT INTO `deliveries` (`DeliveryID`, `PurchaseOrderID`, `SupplierID`, `DeliveryDate`, `ReceivedBy`, `TotalDeliveredItems`, `DeliveryStatus`) VALUES
-(1, 2, 1, '2024-10-27 18:52:56', 3, 50, 'Back Order');
+(1, 2, 1, '2024-10-27 18:52:56', 3, 50, 'Back Order'),
+(2, 5, 1, '2024-11-05 22:24:45', 3, 100, 'Completed');
 
 -- --------------------------------------------------------
 
@@ -217,7 +254,8 @@ CREATE TABLE `delivery_items` (
 --
 
 INSERT INTO `delivery_items` (`ItemID`, `DeliveryID`, `LotNumber`, `ExpiryDate`, `QuantityDelivered`, `Bonus`, `QuantityRemaining`, `NetAmount`, `isExpired`) VALUES
-(2, 1, '1H17359', '2025-11-11', 50, 5, 54, 400, '0');
+(2, 1, '1H17359', '2025-11-11', 50, 5, 54, 400, '0'),
+(2, 2, 'GG', '2026-11-05', 100, 0, 100, 900, '0');
 
 -- --------------------------------------------------------
 
@@ -284,15 +322,16 @@ CREATE TABLE `inventory` (
 --
 
 INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `Discount`, `VAT_exempted`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`) VALUES
-(2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Mg', 59, 50, 0, 9.00, 1, 0, 1, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
+(2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Mg', 150, 50, 50, 9.45, 1, 0, 1, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
 (3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Mg', 0, 20, 0, 300.00, 1, 1, 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg'),
 (4, 'Ibuprofen', 'Advil', 'Medicine', '200', 'Milligrams', 0, 0, 0, 299.00, 0, 1, 1, '', 'Active', 'products-icon/Advil.png', 'AdvilIbuprofen200mg'),
 (5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Milligrams', 0, 0, 0, 499.00, 1, 1, 2, '', 'Active', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg'),
-(6, 'Loperamide', 'Diatabs', 'Medicine', '2', 'Milligrams', 0, 0, 0, 149.00, 0, 1, NULL, '', '', 'products-icon/Diatabs.png', 'DiatabsLoperamide2mg'),
-(7, 'Loperamide', 'Imodium', 'Medicine', '2', 'Milligrams', 0, 0, 0, 149.00, 0, 1, NULL, '', '', 'products-icon/Imodium.png', 'ImodiumLoperamide2mg'),
-(8, 'Aluminum Hydroxide Magnesium Hydroxide Simeticone', 'Kremil-S', 'Medicine', '30', 'Milligrams', 0, 0, 0, 499.00, 0, 1, NULL, '', '', 'products-icon/kremilS.png', 'KremilS30mg'),
-(10, 'Bisacodyl', 'Dulcolax', 'Medicine', '5', 'Milligrams', 0, 0, 0, 149.00, 0, 1, NULL, '', '', 'products-icon/dulcolax.png', 'Dulcolax5mg'),
-(11, 'Ibuprofen', 'Medicol Advance', 'Medicine', '200', 'Milligrams', 0, 0, 0, 200.00, 0, 1, NULL, '', 'Archived', 'products-icon/medicol.png', 'MedicolAdvance200mg');
+(6, 'Loperamide', 'Diatabs', 'Medicine', '2', 'Milligrams', 0, 0, 0, 149.00, 0, 1, NULL, '', 'Archived', 'products-icon/Diatabs.png', 'DiatabsLoperamide2mg'),
+(7, 'Loperamide', 'Imodium', 'Medicine', '2', 'Milligrams', 0, 0, 0, 149.00, 0, 1, NULL, '', 'Archived', 'products-icon/Imodium.png', 'ImodiumLoperamide2mg'),
+(8, 'Aluminum Hydroxide Magnesium Hydroxide Simeticone', 'Kremil-S', 'Medicine', '30', 'Milligrams', 0, 0, 0, 499.00, 0, 1, NULL, '', 'Archived', 'products-icon/kremilS.png', 'KremilS30mg'),
+(10, 'Bisacodyl', 'Dulcolax', 'Medicine', '5', 'Mg', 0, 0, 0, 149.99, 0, 0, NULL, '', 'Archived', 'products-icon/dulcolax.png', 'Dulcolax5mg'),
+(11, 'Ibuprofen', 'Medicol Advance', 'Medicine', '200', 'Milligrams', 0, 0, 0, 200.00, 0, 1, NULL, '', 'Archived', 'products-icon/medicol.png', 'MedicolAdvance200mg'),
+(12, 'Product', 'Sample', 'Medicine', '500', 'Mg', 0, 0, 0, 5.50, 1, 1, NULL, '', 'Active', '../resources/img/default_Icon.png', 'ALGN5829921');
 
 -- --------------------------------------------------------
 
@@ -334,7 +373,8 @@ INSERT INTO `purchaseorders` (`PurchaseOrderID`, `OrderDate`, `SupplierID`, `Acc
 (1, '2024-10-10 10:09:03', 2, 3, '{\"1\":{\"itemID\":\"3\",\"qty\":100},\"2\":{\"itemID\":\"5\",\"qty\":200}}', 300, 0, NULL, 'Cancelled'),
 (2, '2024-10-16 10:45:15', 1, 3, '{\"1\":{\"itemID\":\"2\",\"qty\":100}}', 100, 50, NULL, 'Back Order'),
 (3, '2024-10-21 22:31:00', 2, 3, '{\"1\":{\"itemID\":\"3\",\"qty\":100},\"2\":{\"itemID\":\"5\",\"qty\":50}}', 150, 0, NULL, 'Cancelled'),
-(4, '2024-10-27 23:18:11', 2, 3, '{\"1\":{\"itemID\":\"3\",\"qty\":20}}', 20, 0, NULL, 'Pending');
+(4, '2024-10-27 23:18:11', 2, 3, '{\"1\":{\"itemID\":\"3\",\"qty\":20}}', 20, 0, NULL, 'Pending'),
+(5, '2024-11-05 21:30:15', 1, 3, '{\"1\":{\"itemID\":\"2\",\"qty\":100}}', 100, 100, NULL, 'Received');
 
 -- --------------------------------------------------------
 
@@ -364,7 +404,8 @@ CREATE TABLE `sales` (
 --
 
 INSERT INTO `sales` (`InvoiceID`, `SaleDate`, `AccountID`, `SalesDetails`, `TotalItems`, `Subtotal`, `Tax`, `Discount`, `AmountPaid`, `PaymentMethod`, `Status`, `RefundAmount`) VALUES
-(1, '2024-09-29 01:34:29', 3, '{\n	\"1\":{\n		\"itemID\":\"2\",\n		\"qty\":5\n	},\n	\"2\":{\n		\"itemID\":\"3\",\n		\"qty\":3\n	}\n}', 8, 1900.00, 228.00, 0.00, 2500.00, 'Cash', 'Sales', 0.00);
+(1, '2024-09-29 01:34:29', 3, '{\n	\"1\":{\n		\"itemID\":\"2\",\n		\"qty\":5\n	},\n	\"2\":{\n		\"itemID\":\"3\",\n		\"qty\":3\n	}\n}', 8, 1900.00, 228.00, 0.00, 2500.00, 'Cash', 'Sales', 0.00),
+(2, '2024-11-05 23:06:36', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":9}}', 9, 85.05, 10.21, 0.00, 100.00, 'Cash', 'Sales', 0.00);
 
 -- --------------------------------------------------------
 
@@ -422,7 +463,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`AccountID`, `employeeName`, `employeeLName`, `role`, `accountName`, `password`, `picture`, `dateCreated`, `status`, `connected`, `SuppliersPerms`, `TransactionsPerms`, `InventoryPerms`, `POSPerms`, `REPerms`, `POPerms`, `UsersPerms`) VALUES
 (2, 'Sayra', 'Jackson', 'Admin', 'E002_sjackson', 'jackson-e002', 'Chichi.jpg', '2024-09-22 21:27:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
-(3, 'Lance', 'Tiangco', 'Admin', 'E003_ltiangco', 'lancetiangco26!!', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '1', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
+(3, 'Lance', 'Tiangco', 'Admin', 'E003_ltiangco', 'lancetiangco26!!', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
 (4, 'Aileen', 'Castro', 'Admin', 'E004_acastro', 'castro-e004', 'owner.png', '2024-10-14 14:44:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
 (5, 'The', 'Shrek', 'Pharmacy Assistant', 'E005_tshrek', 'test-e005', 'Shrek.png', '2024-10-14 18:59:03', 'Inactive', '0', 'off', 'on', 'off', 'on', 'on', 'off', 'off'),
 (6, 'Cashier', 'Ashiera', 'Pharmacy Assistant', 'E006_cashiera', 'ashiera-e006', 'cashier.png', '2024-10-29 22:13:40', 'Active', '0', 'off', 'on', 'off', 'on', 'on', 'off', 'off');
@@ -517,13 +558,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `audittrail`
 --
 ALTER TABLE `audittrail`
-  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
+  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
 
 --
 -- AUTO_INCREMENT for table `deliveries`
 --
 ALTER TABLE `deliveries`
-  MODIFY `DeliveryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `DeliveryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `goodsissue`
@@ -535,13 +576,13 @@ ALTER TABLE `goodsissue`
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `ItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `ItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `purchaseorders`
 --
 ALTER TABLE `purchaseorders`
-  MODIFY `PurchaseOrderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `PurchaseOrderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `sales`

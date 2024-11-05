@@ -220,10 +220,9 @@
                     <table id="example" class="display">
                         <thead>
                             <tr class="highlight-row">
-                                <th style="text-align: center; font-size: 12px;">Item ID</th>
+                                <th style="text-align: left; font-size: 12px;">Item ID</th>
                                 <th style="text-align: center; font-size: 12px;">Generic Name</th>
                                 <th style="text-align: center; font-size: 12px;">Brand Name</th>
-                                <th style="text-align: center; font-size: 12px;">Item Type</th>
                                 <th style="text-align: center; font-size: 12px;">Measurement</th>
                                 <th style="text-align: center; font-size: 12px;">Price</th>
                                 <th style="text-align: center; font-size: 12px;">Total Sold</th>

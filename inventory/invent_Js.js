@@ -101,84 +101,55 @@ const modalVerifyTextFront = document.getElementById('modalVerifyText-Front');
 
 // UPDATE AND ADDING
 
-// Add event listener for form submission
-// Add event listener for form submission
+
+// Function to add peso sign only if input is empty
+function addPesoSign() {
+    const priceInput = document.getElementById('pricePerUnit');
+    if (priceInput.value.trim() === '') {
+        priceInput.value = '₱ ';
+    }
+}
+
+// Function to clean up input when focus is lost
+function cleanPriceInput() {
+    const priceInput = document.getElementById('pricePerUnit');
+    if (priceInput.value === '₱ ') {
+        priceInput.value = ''; // Clear if only peso sign is present
+    }
+}
+
 document.getElementById('PurchaseForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent default form submission
-
-    // Validate form fields
-    const validationErrors = validateForm();
-    if (validationErrors.length > 0) {
-        showError(validationErrors.join(" ")); // Show errors in a single message
-        return; // Stop submission if there are errors
-    }
 
     const form = document.getElementById('PurchaseForm');
     const formData = new FormData(form);
 
-    // Ensure ItemID is included in the form data if in edit mode
-    if (isEditMode) {
-        formData.append('itemID', document.getElementById('itemID').value);
-        
-        // If icon was not changed, remove ProductIcon from FormData
-        if (!document.getElementById('iconFile').hasAttribute('data-changed')) {
-            formData.delete('ProductIcon');
-        }
-    } else {
-        // For adding a new product, set a default value for InStock to 0
-        formData.append('InStock', 0); // Automatically set InStock to 0
-    }
+    // Extract and format `pricePerUnit` as a float to preserve decimals
+    const priceInput = document.getElementById('pricePerUnit').value.replace('₱ ', '').trim();
+    const pricePerUnitValue = parseFloat(priceInput).toFixed(2); // Retain 2 decimal places
 
-    // Get values from input fields for validation
-    const mass = parseFloat(document.getElementById('mass').value);
-    const pricePerUnit = parseFloat(document.getElementById('pricePerUnit').value.replace('₱ ', '').trim());
-    //const inStock = parseInt(formData.get('InStock'), 10); // Get the value of InStock from formData
-    const discount = parseInt(document.querySelector('select[name="Discount"]').value, 10); // Ensure correct fetching of discount
-    const vatExempted = parseInt(document.getElementById('VAT_exempted').value, 10); // Get VAT exempted value
-
-    // Validate mass, pricePerUnit, and InStock for negative values
-    if (mass < 0) {
-        showError('Mass cannot be negative.');
-        return;
-    }
-    if (pricePerUnit < 0) {
-        showError('Price per unit cannot be negative.');
-        return;
-    }
-    //if (isNaN(inStock) || inStock < 0) {
-   //     showError('In Stock must be a non-negative number.');
-   //     return;
-   // }
-
-    // Update discount validation to allow value 0 (Unavailable)
-    if (isNaN(discount)) { // Check if discount is not a number (i.e., no option selected)
-        showError('Please select a discount option.');
+    if (isNaN(pricePerUnitValue) || pricePerUnitValue <= 0) {
+        showError('Price per unit must be a valid positive number.');
         return;
     }
 
-    // Validate VAT exempted value
-    if (isNaN(vatExempted)) {
-        showError('Please select a VAT exemption option.');
-        return;
-    }
+    formData.set('pricePerUnit', pricePerUnitValue); // Update formData with parsed price
 
-    // Prepare to send the request
-    const url = isEditMode ? 'updateInventory.php' : 'insertInventory.php'; // Use update script if in edit mode
+    // Submit form data via fetch
+    const url = isEditMode ? 'updateInventory.php' : 'insertInventory.php';
 
     fetch(url, { method: 'POST', body: formData })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Show confirmation modal on success
                 const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
                 document.getElementById('modalVerifyTitle').textContent = 'Success';
                 document.getElementById('modalVerifyText').textContent = isEditMode ? 
                     'Product has been updated successfully!' : 'Product has been added successfully!';
                 confirmationModal.show();
 
-                // Redirect after a short delay
                 setTimeout(() => {
-                    window.location.href = 'inventory.php'; // Redirect on success
+                    window.location.href = 'inventory.php';
                 }, 1000);
             } else {
                 showError('Error saving product: ' + data.message);
@@ -188,7 +159,6 @@ document.getElementById('PurchaseForm').addEventListener('submit', function(even
             alert('An error occurred: ' + error.message);
         });
 });
-
 
 
 
@@ -207,15 +177,15 @@ function loadFormForEdit(item) {
     document.getElementById('unitOfMeasure').value = item.UnitOfMeasure;
     document.getElementById('pricePerUnit').value = item.PricePerUnit;
     document.getElementById('Discount').value = item.Discount;
-    document.getElementById('VAT_exempted').value = item.VAT_exempted; // Set VAT_exempted field
-    //document.getElementById('inStockInput').value = item.InStock; // Use the correct ID for InStock input
-
-
-    // Enable the In Stock field for editing
-    //document.getElementById('inStockInput').disabled = false; 
+    document.getElementById('VAT_exempted').value = item.VAT_exempted;
+    
+    // Set the values for InStock, Ordered, and ReorderLevel fields
+    document.getElementById('InStock').value = item.InStock;
+    document.getElementById('Ordered').value = item.Ordered;
+    document.getElementById('ReorderLevel').value = item.ReorderLevel;
 
     // Set the icon preview
-    document.getElementById('iconPreview').src = item.ProductIcon || '../resources/img/add_icon.png'; // Use default if no icon
+    document.getElementById('iconPreview').src = item.ProductIcon || '../resources/img/add_icon.png';
 
     modal.style.display = "block"; // Show the modal
 }
@@ -311,6 +281,38 @@ function closeError() {
 }
 
 
+// Function to hide the product fields
+function hideProductFields() {
+    document.querySelectorAll(
+        'label[for="InStock"], label[for="Ordered"], label[for="ReorderLevel"], #InStock, #Ordered, #ReorderLevel'
+    ).forEach(element => {
+        element.style.display = 'none'; // Hide the element
+    });
+}
+
+// Function to show the product fields
+function showProductFields() {
+    document.querySelectorAll(
+        'label[for="InStock"], label[for="Ordered"], label[for="ReorderLevel"], #InStock, #Ordered, #ReorderLevel'
+    ).forEach(element => {
+        element.style.display = ''; // Show the element
+    });
+}
+
+
+// Function to disable the product fields
+function disableProductFields() {
+    const fields = document.querySelectorAll('#InStock, #Ordered, #ReorderLevel');
+    fields.forEach(field => {
+        field.disabled = true; // Disable each input field
+    });
+}
+
+// Event listener for the "New Product" button
+document.getElementById('addProductButton').addEventListener('click', function() {
+    hideProductFields(); // Hide the fields when the button is clicked
+    // You may also want to open the form or do other actions here
+});
 
 // Function to handle update button click
 function handleUpdate(itemId) {
@@ -321,6 +323,9 @@ function handleUpdate(itemId) {
 
     // Log the itemId for debugging
     console.log('Fetching data for ItemID:', itemId);
+
+    // Call showProductFields to ensure the fields are visible
+    showProductFields();
 
     fetch(`getProduct_data.php?itemID=${encodeURIComponent(itemId)}`)
         .then(response => {
@@ -342,17 +347,24 @@ function handleUpdate(itemId) {
         .then(data => {
             // Log the data for debugging
             console.log('Fetched data:', data);
-
+        
             if (data.success) {
-                loadFormForEdit(data.data); // Load item data into the form
+                // Load item data into the form
+                loadFormForEdit(data.data);
+        
+                // Prepend the peso sign to the price input field
+                const priceInput = document.getElementById('pricePerUnit');
+                priceInput.value = '₱ ' + (data.data.PricePerUnit || ''); // Use a default if undefined
+        
+                // Now disable the fields after loading the data
+                disableProductFields();
             } else {
                 showError('Error fetching product data: ' + data.message);
             }
         })
-        .catch(error => {
-            showError('An error occurred while fetching the product data.');
-        });
 }
+
+
 
 
 // Function to initialize or reinitialize DataTables
@@ -368,10 +380,10 @@ function setDataTables() {
         "columnDefs": [
             { "targets": 0, "width": "5%" }, // Item ID
             { "targets": 1, "width": "10%", "orderable": false }, // Icon 
-            { "targets": 2, "width": "10%" }, // Generic Name
-            { "targets": 3, "width": "10%" }, // Brand Name
-            { "targets": 4, "width": "10%" }, // Item Type
-            { "targets": 5, "width": "5%" }, // Mass & Unit of Measure
+            { "targets": 2, "width": "10%", "orderable": false }, // Generic Name
+            { "targets": 3, "width": "10%", "orderable": false }, // Brand Name
+            { "targets": 4, "width": "10%", "orderable": false }, // Item Type
+            { "targets": 5, "width": "5%", "orderable": false }, // Mass & Unit of Measure
             { "targets": 6, "width": "10%" }, // Price Per Unit
             { "targets": 7, "width": "10%" }, // InStock
             { "targets": 8, "width": "10%" }, // Ordered
@@ -553,6 +565,11 @@ toArchivedUsers.addEventListener('click', function () {
 
 // End of Archive
 
+const FastmovingBtn = document.getElementById('FastmovingBtn');
+FastmovingBtn.addEventListener('click', function () {
+    window.location.href = 'Fastmoving.php';
+});
+
 
 // ECONOMIC ORDER QUANTITY //
 
@@ -566,152 +583,305 @@ function truncateText(text, maxLength) {
 // Function to check low stock items
 
 function checkLowStock() {
+    const selectedView = document.getElementById("modalSelect").value;
+    const lowStockItemsBody = document.getElementById('lowStockItemsBody');
+    const tableHeader = document.getElementById("tableHeader");
+    
+    lowStockItemsBody.innerHTML = ''; // Clear previous items
+    setTableHeaders(selectedView, tableHeader);
+
+    fetchData(selectedView, lowStockItemsBody);
+    
+    document.getElementById("lowStockModal").style.display = "block"; 
+}
+
+function setTableHeaders(selectedView, tableHeader) {
+    if (selectedView === 'lowStock') {
+        tableHeader.innerHTML = `
+            <th>Brand Name</th>
+            <th>Generic Name</th>
+            <th>In Stock</th>
+            <th>Ordered</th>
+            <th>Total Sold</th>
+            <th>EOQ</th>
+        `;
+    } else {
+        tableHeader.innerHTML = `
+            <th>Brand Name</th>
+            <th>Generic Name</th>
+            <th>Expiry Date</th>
+            <th>Days to Expiry</th>
+        `;
+    }
+}
+
+function fetchData(selectedView, lowStockItemsBody) {
     $.ajax({
-        url: 'checkLowStock.php',
+        url: selectedView === 'lowStock' ? 'checkLowStock.php' : 'checkNearExpiry.php',
         method: 'GET',
         dataType: 'json',
         success: function(data) {
-            // Handle any server-side errors
-            if (data.error) {
-                console.error("Error: " + data.error);
-                displayMessage('Error retrieving low stock items.');
-                return;
-            }
-
-            const lowStockItemsBody = document.getElementById('lowStockItemsBody');
-            lowStockItemsBody.innerHTML = ''; // Clear previous items
-
-            // Populate low stock items into the modal
-            if (data.length > 0) {
-                data.forEach(item => {
-                    const inStock = parseInt(item.InStock, 10);
-                    const ordered = parseInt(item.Ordered, 10);
-                    const reorderLevel = parseInt(item.ReorderLevel, 10) || (ordered * 0.5); // Use existing reorder level or set to 50% of ordered amount if not set
-
-                    // Calculate EOQ if there's enough sales data
-                    let eoq = 0;
-                    if (ordered > 0) {
-                        const demand = ordered; // This is the demand (units sold) for simplicity
-                        const orderingCost = 50; // Example ordering cost per order (you can adjust this value)
-                        const holdingCost = 2; // Example holding cost per unit per period (you can adjust this value)
-
-                        // EOQ formula: EOQ = sqrt((2 * Demand * Ordering Cost) / Holding Cost)
-                        eoq = Math.sqrt((2 * demand * orderingCost) / holdingCost).toFixed(2);
-                    }
-
-                    // Check if item is low in stock compared to reorder level
-                    if (inStock <= reorderLevel) {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td class="table-row">${truncateText(item.BrandName, 20)}</td>
-                            <td class="table-row">${truncateText(item.GenericName, 20)}</td>
-                            <td class="table-row low-stock">${inStock}</td>
-                            <td class="table-row">${ordered}</td>
-                            <td class="table-row">${eoq}</td> <!-- Display calculated EOQ -->
-                        `;
-                        lowStockItemsBody.appendChild(row);
-                    }
-                });
-
-                // Open the modal if there are low stock items
-                if (lowStockItemsBody.children.length > 0) {
-                    openModal(); // Open the modal to display the low stock items
-                } else {
-                    displayMessage('All items are sufficiently stocked.'); // Show message if no low stock items
-                }
-            } else {
-                displayMessage('All items are sufficiently stocked.'); // Show message if no data returned
-            }
+            processFetchedData(data, selectedView, lowStockItemsBody);
         },
         error: function(xhr, status, error) {
-            console.error("AJAX Error: " + error);
-            displayMessage('Error connecting to server.'); // Show error message
+            console.error("AJAX Error:", status, error);
+            lowStockItemsBody.innerHTML = `<tr><td colspan="6">Error connecting to server.</td></tr>`;
         }
     });
 }
 
+function processFetchedData(data, selectedView, lowStockItemsBody) {
+    if (data.error) {
+        console.error("Error: " + data.error);
+        lowStockItemsBody.innerHTML = `<tr><td colspan="6">Error retrieving ${selectedView} items.</td></tr>`;
+        return;
+    }
 
+    if (data.length > 0) {
+        let hasItems = false;
 
+        data.forEach(item => {
+            const { ItemID, BrandName, GenericName, InStock = 0, Ordered = 0, totalSold = 0, ExpiryDate, DaysToExpiry } = item;
 
-// Function to open the modal
-function openModal() {
-    document.getElementById('lowStockModal').style.display = 'block';
+            // Process item and display in the table
+            if (selectedView === 'lowStock' && shouldDisplayLowStock(InStock, Ordered)) {
+                hasItems = true;
+                appendLowStockRow(lowStockItemsBody, BrandName, GenericName, InStock, Ordered, totalSold);
+            } else if (selectedView === 'nearExpiry') {
+                hasItems = true;
+                appendNearExpiryRow(lowStockItemsBody, BrandName, GenericName, ExpiryDate, DaysToExpiry);
+            }
+        });
+
+        if (!hasItems) {
+            lowStockItemsBody.innerHTML = `<tr><td colspan="${selectedView === 'lowStock' ? '6' : '4'}">All items are sufficiently stocked or not near expiry.</td></tr>`;
+        }
+    } else {
+        lowStockItemsBody.innerHTML = `<tr><td colspan="${selectedView === 'lowStock' ? '6' : '4'}">No items found.</td></tr>`;
+    }
+}
+function checkNearExpiry() {
+    $.ajax({
+        url: 'checkNearExpiry.php',
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            const lowStockItemsBody = document.getElementById('lowStockItemsBody');
+            lowStockItemsBody.innerHTML = ''; // Clear previous items
+
+            // Check for errors in the response
+            if (data.error) {
+                console.error("Error: " + data.error);
+                lowStockItemsBody.innerHTML = `<tr><td colspan="4">Error retrieving near expiry items.</td></tr>`;
+                return;
+            }
+
+            // Populate near expiry items
+            if (data.length > 0) {
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="table-row" style="padding-left: 10px">${truncateText(item.BrandName, 20)}</td>
+                        <td class="table-row" style="padding-left: 20px;">${truncateText(item.GenericName, 20)}</td>
+                        <td class="table-row" style="padding-left: 10px;">${item.ExpiryDate}</td>
+                        <td class="table-row" style="padding-left: 10px;">${item.LotNumber}</td>
+                    `;
+                    lowStockItemsBody.appendChild(row);
+                });
+            } else {
+                lowStockItemsBody.innerHTML = `<tr><td colspan="4">No items nearing expiry.</td></tr>`;
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX Error: " + error);
+            const lowStockItemsBody = document.getElementById('lowStockItemsBody');
+            lowStockItemsBody.innerHTML = `<tr><td colspan="4">Error connecting to server.</td></tr>`;
+            openModal(); // Ensure the modal opens even on error
+        }
+    });
 }
 
-// Function to close the modal
-function closeModal() {
-    document.getElementById('lowStockModal').style.display = 'none';
+function shouldDisplayLowStock(inStock, ordered) {
+    const reorderLevel = Math.floor(ordered / 2); // Set reorder level to half of the ordered amount
+    return parseInt(inStock, 10) <= reorderLevel; // Returns true if in stock is below or equal to reorder level
 }
 
-// Add event listener to the button to check low stock
-document.getElementById('checkLowStockButton').addEventListener('click', function() {
-    console.log('Check Low Stock Button Clicked'); // Log button click for debugging
-    checkLowStock(); // Call the function to check low stock
+function appendLowStockRow(lowStockItemsBody, BrandName, GenericName, InStock, Ordered, totalSold) {
+    const eoq = calculateEOQ(totalSold);
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td class="table-row">${truncateText(BrandName, 20)}</td>
+        <td class="table-row">${truncateText(GenericName, 20)}</td>
+        <td class="table-row low-stock">${InStock}</td>
+        <td class="table-row">${Ordered}</td>
+        <td class="table-row">${totalSold}</td>
+        <td class="table-row">${eoq}</td>
+    `;
+    lowStockItemsBody.appendChild(row);
+}
+
+function appendNearExpiryRow(lowStockItemsBody, BrandName, GenericName, ExpiryDate, DaysToExpiry) {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td class="table-row">${truncateText(BrandName, 20)}</td>
+        <td class="table-row">${truncateText(GenericName, 20)}</td>
+        <td class="table-row">${ExpiryDate || 'N/A'}</td>
+        <td class="table-row">${DaysToExpiry || 'N/A'}</td>
+    `;
+    lowStockItemsBody.appendChild(row);
+}
+
+function calculateEOQ(totalSold) {
+    if (totalSold <= 0) return 0; // Return 0 if no sales
+    const orderingCost = 50; // Example ordering cost
+    const holdingCost = 2; // Example holding cost
+    return Math.sqrt((2 * totalSold * orderingCost) / holdingCost).toFixed(2); // Calculate EOQ
+}
+
+function fetchSalesDataForPastYear() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: 'fetchSalesData.php', // Your PHP script to fetch sales data
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                resolve(data); // Resolve with fetched data
+            },
+            error: function(xhr, status, error) {
+                reject(error); // Reject on error
+            }
+        });
+    });
+}
+
+function updateReorderLevelInDatabase(itemId, newReorderLevel) {
+    $.ajax({
+        url: 'updateReorderLevel.php', // Your PHP script to update the reorder level
+        method: 'POST',
+        data: { itemId: itemId, reorderLevel: newReorderLevel },
+        success: function(response) {
+            console.log(`Updated ItemID ${itemId} with new Reorder Level: ${newReorderLevel}`);
+        },
+        error: function(xhr, status, error) {
+            console.error(`Error updating reorder level for ItemID ${itemId}:`, error);
+        }
+    });
+}
+
+function calculateEOQ(totalSold) {
+    if (totalSold <= 0) return 0; // Return 0 if no sales
+    const orderingCost = 50; // Example ordering cost
+    const holdingCost = 2; // Example holding cost
+    return Math.sqrt((2 * totalSold * orderingCost) / holdingCost).toFixed(2); // Calculate EOQ
+}
+
+function updateTableView() {
+    const selectedView = document.getElementById("modalSelect").value;
+    const tableHeader = document.getElementById("tableHeader");
+    const tableBody = document.getElementById("lowStockItemsBody");
+
+    // Clear the existing table headers and rows
+    tableHeader.innerHTML = "";
+    tableBody.innerHTML = "";
+
+    if (selectedView === "lowStock") {
+        // Set headers for Low Stock Items view
+        tableHeader.innerHTML = `
+            <th style="text-align: left; padding: 8px;">Brand Name</th>
+            <th style="text-align: left; padding: 8px;">Generic Name</th>
+            <th style="text-align: left; padding: 8px;">In Stock</th>
+            <th>Ordered</th>
+            <th>EOQ</th>
+        `;
+
+        // Populate table with low stock data via AJAX
+        checkLowStock(); 
+        
+    } else if (selectedView === "nearExpiry") {
+        // Set headers for Near Expiry Items view
+        tableHeader.innerHTML = `
+            <th style="text-align: left; padding: 8px;">Brand Name</th>
+            <th style="text-align: left; padding: 8px;">Generic Name</th>
+            <th style="text-align: left; padding: 8px;">Expiry Date</th>
+            <th style="text-align: left; padding: 8px;">Lot Number</th>
+        `;
+
+        // Populate table with near expiry data
+        checkNearExpiry();
+    }
+}
+
+
+//STATUS MODAL END
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Open modal button event listener
+    const openModalButton = document.getElementById('checkLowStockButton');
+    if (openModalButton) {
+        openModalButton.addEventListener('click', openModal);
+    }
+
+    // Close modal button event listener
+    const closeButton = document.getElementById('BtnCloseLowStock');
+    if (closeButton) {
+        closeButton.addEventListener('click', function(event) {
+            event.stopPropagation(); // Prevent propagation to parent elements
+            console.log('Close button clicked'); // Debugging log
+            closeModal();
+        });
+    }
+
+    // Close modal when clicking outside the modal content
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('lowStockModal');
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
 });
 
-// Get the <span> element that closes the modal
-const closeModalButton = document.getElementsByClassName("closeAlert")[0];
-
-// When the user clicks on <span> (x), close the modal
-closeModalButton.onclick = function() {
-    closeModal();
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    const modal = document.getElementById('lowStockModal');
-    if (event.target === modal) {
-        closeModal();
-    }
-}
-
-// Function to display messages
-function displayMessage(message) {
-    alert(message); // Can be customized to show messages in a different way
-}
-
-// Modal handling functions
+// Open modal function
+// Open modal function
 function openModal() {
-    document.getElementById('lowStockModal').style.display = 'block';
+    const modal = document.getElementById('lowStockModal');
+    modal.style.display = 'block'; // Show modal
+    updateTableView();
 }
 
+
+// Close modal function
 function closeModal() {
-    document.getElementById('lowStockModal').style.display = 'none';
-}
-
-
-window.onclick = function(event) {
     const modal = document.getElementById('lowStockModal');
-    if (event.target === modal) {
-        closeModal();
-    }
+    modal.style.display = 'none'; // Hide modal
 }
 
-// Function to open the low stock modal
-function openLowStockModal() {
-    document.getElementById('lowStockModal').style.display = 'block';
-}
-
-// Function to close the low stock modal
-function closeLowStockModal() {
-    document.getElementById('lowStockModal').style.display = 'none';
-}
-
-// Event listener for closing the modal when the close button is clicked
-document.querySelector('.closeAlert').addEventListener('click', closeLowStockModal);
-
-// Event listener for closing the modal when clicking outside the modal content
-window.addEventListener('click', function(event) {
-    const modal = document.getElementById('lowStockModal');
-    if (event.target === modal) {
-        closeLowStockModal();
-    }
-});
 
 
 
 ////////////////////////////////////////
 // GOODS ISSUE PART///
+
+function resetFormFields() {
+    document.getElementById('selectProd').value = ''; // Clear the product selection
+    document.getElementById('productSelect').innerHTML = ''; // Clear product dropdown options
+    document.getElementById('productSelect').style.display = 'none'; // Hide the product dropdown
+
+    document.getElementById('selectLot').value = ''; // Clear the lot number selection
+    document.getElementById('lotSelect').innerHTML = ''; // Clear lot dropdown options
+    document.getElementById('lotSelect').style.display = 'none'; // Hide the lot dropdown
+
+    document.getElementById('QuantityRemaining').value = ''; // Reset QuantityRemaining field
+    document.getElementById('orderedAmount').value = ''; // Reset Ordered amount field
+
+    // Disable the lot number input field
+    document.getElementById('selectLot').disabled = true; // Lock the lot number input field
+}
+
+// Event listener for the close button
+document.getElementById('GIcloseBtn').addEventListener('click', function() {
+    resetFormFields(); // Call the reset function when the exit button is clicked
+    document.getElementById('overlayEdit1').style.display = 'none'; // Hide the modal overlay
+});
 
 
 
@@ -724,6 +894,9 @@ window.addEventListener('click', function(event) {
     document.getElementById("GIcloseBtn").addEventListener("click", function () {
         closeEditOverlay();
     });
+
+
+    
 
 // Function to close the overlay and reset the form
 function closeEditOverlay() {
@@ -738,8 +911,6 @@ function closeEditOverlay() {
     }
 }
 
-
-
 function filterOptions() {
     const input = document.getElementById('selectProd');
     const filter = input.value.toLowerCase();
@@ -747,9 +918,9 @@ function filterOptions() {
     dropdown.innerHTML = ''; // Clear previous options
     dropdown.style.display = 'none'; // Initially hide the dropdown
 
-    // Clear Ordered and QuantityRemaining fields if the input is empty
+    // Clear ordered amount field if the input is empty
     if (filter === '') {
-        resetOrderedField(); // Only reset the Ordered field
+        resetOrderedField(); // Ensure this function resets the new field
         return; // Stop function if input is empty
     }
 
@@ -769,6 +940,7 @@ function filterOptions() {
                     defaultOption.onclick = () => {
                         input.value = ''; // Clear input if default is clicked
                         dropdown.style.display = 'none';
+                        resetOrderedField(); // Reset ordered field on clear
                     };
                     dropdown.appendChild(defaultOption);
 
@@ -795,13 +967,18 @@ function filterOptions() {
     xhr.send();
 }
 
+
+// Product selection enabling lot input
 function selectProduct(option) {
     const input = document.getElementById('selectProd');
     input.value = option.textContent;
     currentSelectedItemID = option.dataset.value; // Store the selected ItemID
     document.getElementById('productSelect').style.display = 'none';
 
-    // Fetch product data and update Ordered field
+    // Enable the lot number input
+    document.getElementById('selectLot').disabled = false; // Enable the selectLot input
+
+    // Fetch product data and update ordered amount field
     fetchProductData(currentSelectedItemID);
 }
 
@@ -910,14 +1087,14 @@ function fetchProductData(itemID) {
                     console.log(productData); // Debugging log
 
                     if (productData) {
-                        // Update Ordered only, do not clear QuantityRemaining
-                        document.getElementById('Ordered').value = productData.Ordered || 0; // Update Ordered only
+                        // Update the Ordered input field with the fetched value
+                        document.getElementById('orderedAmount').value = productData.Ordered || 0; // Update Ordered only
                     } else {
-                        document.getElementById('Ordered').value = 0; // Set Ordered to 0 if no data found
+                        document.getElementById('orderedAmount').value = 0; // Set Ordered to 0 if no data found
                     }
                 } else {
                     console.error('Error fetching product data:', xhr.statusText);
-                    document.getElementById('Ordered').value = 0; // Reset Ordered on error
+                    document.getElementById('orderedAmount').value = 0; // Reset Ordered on error
                 }
             }
         };
@@ -925,9 +1102,9 @@ function fetchProductData(itemID) {
     }
 }
 
-// Separate function to reset the Ordered field
 function resetOrderedField() {
-    document.getElementById('Ordered').value = ''; // Clear Ordered
+    const orderedField = document.getElementById('orderedAmount'); // Use the new ID
+    orderedField.value = ''; // Reset the value of the ordered amount field
 }
 
 // Separate function to reset the QuantityRemaining field
@@ -1087,32 +1264,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
-
-
-// Function to add peso sign when the input is focused
-function addPesoSign() {
-    const priceInput = document.getElementById('pricePerUnit');
-    if (!priceInput.value.startsWith('₱ ')) {
-        priceInput.value = '₱ ' + priceInput.value;
-    }
-}
-
-// Function to update the price input value
-function updatePrice() {
-    const priceInput = document.getElementById('pricePerUnit');
-    const currentValue = priceInput.value.replace('₱ ', ''); // Remove peso sign for processing
-    const numericValue = currentValue.replace(/[^0-9.]/g, ''); // Allow only numbers and decimal points
-    
-    // Update the input value without the peso sign
-    priceInput.value = '₱ ' + numericValue; // Add peso sign back
-}
-
-// Function to clean up the input value on blur (optional)
-function cleanPriceInput() {
-    const priceInput = document.getElementById('pricePerUnit');
-    if (priceInput.value === '₱ ') {
-        priceInput.value = ''; // Clear if only peso sign is present
-    }
-}
 
