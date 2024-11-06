@@ -13,6 +13,7 @@
     width: 100%;
   }
 }
+
 /*MY Modals and Forms*/
 
 #PurchaseForm {
@@ -27,23 +28,29 @@
 }
 
 .modal {
-  display: none; /* Hidden by default */
+  display: none;
+  /* Hidden by default */
   position: fixed;
   z-index: 1000;
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Black w/ opacity */
 }
 
 .modal-content {
-  
+
   background-color: #fefefe;
-  margin: 7% auto; /* 15% from the top and centered */
+  margin: 3% auto;
+  /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
-  width: 70%; /* Could be more or less, depending on screen size */
+  width: 70%;
+  /* Could be more or less, depending on screen size */
   z-index: 1000;
 }
 
@@ -62,21 +69,31 @@
   justify-content: center;
   z-index: 1000;
   /* High z-index value to ensure it's on top */
-  
+
 }
 
 
 #overlayAD {
-  position: fixed; /* Position overlay fixed to the viewport */
-  top: 0; /* Align to the top */
-  left: 0; /* Align to the left */
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  display: none; /* Initially hidden */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  z-index: 999; /* Make sure it's above other content */
+  position: fixed;
+  /* Position overlay fixed to the viewport */
+  top: 0;
+  /* Align to the top */
+  left: 0;
+  /* Align to the left */
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent background */
+  display: none;
+  /* Initially hidden */
+  justify-content: center;
+  /* Center horizontally */
+  align-items: center;
+  /* Center vertically */
+  z-index: 999;
+  /* Make sure it's above other content */
 }
 
 .overlayAD-content {
@@ -84,16 +101,20 @@
   padding: 40px;
   border-radius: 8px;
   width: auto;
-  max-width: 500px; /* Optional: Set a max width for better appearance */
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for better visibility */
+  max-width: 500px;
+  /* Optional: Set a max width for better appearance */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  /* Optional: Add shadow for better visibility */
+  position: relative;
 }
 
 .overlay-content {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
-  width: flex;
+  width: auto;
   position: relative;
+  margin: 2% auto;
 }
 
 .overlay-content h3 {
@@ -125,8 +146,7 @@
   margin-left: 12px;
 }
 
-.closeAlert
-{
+.closeAlert {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -138,86 +158,110 @@
 #checkLowStockButton {
   cursor: pointer;
   height: 36px;
-  width: 100px; /* Adjust width if needed */
+  width: 100px;
+  /* Adjust width if needed */
   padding: 0 12px;
   display: flex;
-  align-items: center; /* Center align vertically */
-  justify-content: flex-start; /* Align items to the start (left) */
+  align-items: center;
+  /* Center align vertically */
+  justify-content: flex-start;
+  /* Align items to the start (left) */
   font-size: 14px;
   line-height: 22px;
   font-weight: 400;
-  color: #FFFFFFFF; /* white */
-  background: #005500FF; /* primary-500 */
+  color: #FFFFFFFF;
+  /* white */
+  background: #005500FF;
+  /* primary-500 */
   opacity: 1;
   border: none;
   border-radius: 12px;
-  gap: 6px; /* Space between the icon and text */
+  gap: 6px;
+  /* Space between the icon and text */
   margin-bottom: 10px;
   margin-left: 12px;
 }
 
 #checkLowStockButton img {
-  width: 20px; /* Set the size of the image */
-  height: auto; /* Keep the aspect ratio */
-  margin-right: 6px; /* Space between the image and text */
+  width: 20px;
+  /* Set the size of the image */
+  height: auto;
+  /* Keep the aspect ratio */
+  margin-right: 6px;
+  /* Space between the image and text */
 }
 
-#GoodsIssueBtn
-{
+#GoodsIssueBtn {
   cursor: pointer;
   height: 36px;
-  width: 130px; /* Adjust width if needed */
+  width: 130px;
+  /* Adjust width if needed */
   padding: 0 12px;
   display: flex;
-  align-items: center; /* Center align vertically */
-  justify-content: flex-start; /* Align items to the start (left) */
+  align-items: center;
+  /* Center align vertically */
+  justify-content: flex-start;
+  /* Align items to the start (left) */
   font-size: 13px;
   line-height: 22px;
   font-weight: 400;
-  color: #FFFFFFFF; /* white */
-  background: #005500FF; /* primary-500 */
+  color: #FFFFFFFF;
+  /* white */
+  background: #005500FF;
+  /* primary-500 */
   opacity: 1;
   border: none;
   border-radius: 12px;
-  gap: 6px; /* Space between the icon and text */
-  margin-bottom: 10px;
-  margin-left: 12px;
-}
-#GoodsIssueBtn img
-{
-  width: 20px; /* Set the size of the image */
-  height: auto; /* Keep the aspect ratio */
-  margin-right: 6px; /* Space between the image and text */
-}
-
-
-#FastmovingBtn
-{
-  cursor: pointer;
-  height: 36px;
-  width: 170px; /* Adjust width if needed */
-  padding: 0 12px;
-  display: flex;
-  align-items: center; /* Center align vertically */
-  justify-content: flex-start; /* Align items to the start (left) */
-  font-size: 13px;
-  line-height: 22px;
-  font-weight: 400;
-  color: #FFFFFFFF; /* white */
-  background: #005500FF; /* primary-500 */
-  opacity: 1;
-  border: none;
-  border-radius: 12px;
-  gap: 6px; /* Space between the icon and text */
+  gap: 6px;
+  /* Space between the icon and text */
   margin-bottom: 10px;
   margin-left: 12px;
 }
 
-#FastmovingBtn img
-{
-  width: 20px; /* Set the size of the image */
-  height: auto; /* Keep the aspect ratio */
-  margin-right: 6px; /* Space between the image and text */
+#GoodsIssueBtn img {
+  width: 20px;
+  /* Set the size of the image */
+  height: auto;
+  /* Keep the aspect ratio */
+  margin-right: 6px;
+  /* Space between the image and text */
+}
+
+
+#FastmovingBtn {
+  cursor: pointer;
+  height: 36px;
+  width: 170px;
+  /* Adjust width if needed */
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  /* Center align vertically */
+  justify-content: flex-start;
+  /* Align items to the start (left) */
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #FFFFFFFF;
+  /* white */
+  background: #005500FF;
+  /* primary-500 */
+  opacity: 1;
+  border: none;
+  border-radius: 12px;
+  gap: 6px;
+  /* Space between the icon and text */
+  margin-bottom: 10px;
+  margin-left: 12px;
+}
+
+#FastmovingBtn img {
+  width: 20px;
+  /* Set the size of the image */
+  height: auto;
+  /* Keep the aspect ratio */
+  margin-right: 6px;
+  /* Space between the image and text */
 }
 
 
@@ -366,8 +410,8 @@
   background-color: #4CAF50;
   /*margin-left: auto; /* Align Save button to the right */
 }
-.form-button #saveBtn :hover
-{
+
+.form-button #saveBtn :hover {
   background-color: #45a049;
 }
 
@@ -418,7 +462,8 @@
   background: #F3F4F6FF;
   border-radius: 4px;
   border-width: 0px;
-  outline: none;  outline: none;
+  outline: none;
+  outline: none;
 }
 
 .textbox select {
@@ -436,8 +481,10 @@
 
 .label {
   margin-bottom: 5px;
-  font-size: 14px; /* Increase the text size */
-  font-weight: bold; /* Make the text bold */
+  font-size: 14px;
+  /* Increase the text size */
+  font-weight: bold;
+  /* Make the text bold */
 }
 
 
@@ -577,7 +624,8 @@
 }
 
 #closeNotification:hover {
-  background-color: #45a049;;
+  background-color: #45a049;
+  ;
 }
 
 
@@ -608,7 +656,7 @@
 .close-btn {
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 20px;
   font-size: 24px;
   cursor: pointer;
 }
@@ -654,7 +702,7 @@
   border-radius: 3px;
   cursor: pointer;
   font-size: 16px;
-  
+
 }
 
 #confirmDeleteBtn {
@@ -832,10 +880,14 @@ td {
 }
 
 .text-truncate {
-  overflow: hidden; /* Hide overflow text */
-  white-space: nowrap; /* Prevent text from wrapping */
-  text-overflow: ellipsis; /* Show ellipsis for overflowing text */
-  max-width: 150px; /* Adjust as needed for your design */
+  overflow: hidden;
+  /* Hide overflow text */
+  white-space: nowrap;
+  /* Prevent text from wrapping */
+  text-overflow: ellipsis;
+  /* Show ellipsis for overflowing text */
+  max-width: 150px;
+  /* Adjust as needed for your design */
 }
 
 .containerAddArchive {
@@ -848,12 +900,14 @@ td {
   margin-left: auto;
   cursor: pointer;
   height: 36px;
-  width: auto; /* Adjusts width to fit text and icon */
+  width: auto;
+  /* Adjusts width to fit text and icon */
   padding: 0 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px; /* Slightly smaller font to fit the text */
+  font-size: 13px;
+  /* Slightly smaller font to fit the text */
   font-weight: 400;
   color: #FFFFFF;
   background: #3343ce;
@@ -863,7 +917,7 @@ td {
   gap: 6px;
   margin-bottom: 10px;
   margin-right: 12px;
-  
+
 }
 
 /* Hover */
@@ -908,29 +962,32 @@ td {
 /* Close Button */
 /* Close Button */
 .closeAlert {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
 }
 
 .closeAlert:hover,
 .closeAlert:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 /* Low Stock Message */
 .low-stock-message {
-    color: red;
-    font-weight: bold;
-    margin-top: 10px;
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
 }
+
 /* Close Button Container */
 .closeAlertContainer {
-  display: flex; /* Use flexbox */
-  justify-content: flex-end; /* Align to the right */
+  display: flex;
+  /* Use flexbox */
+  justify-content: flex-end;
+  /* Align to the right */
 }
 
 /*GOODS ISSUE CSS*/
@@ -943,183 +1000,279 @@ td {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100%; /* Set the width you desire */
-  height: 90%;
-  max-width: 560px; /* Limit maximum width for larger screens */
-  max-height: 655px; /* Limit maximum height for larger screens */
+  width: 100%;
+  /* Set the width you desire */
+  height: 100%;
   border: 1px solid #ddd;
   padding: 20px;
-  background-color: #fff; /* Add a background color for readability */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Optional shadow for depth */
-  z-index: 600;
-  overflow: hidden; /* Prevent scrolling */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  /* Optional shadow for depth */
+  overflow: hidden;
+  /* Prevent scrolling */
 }
 
 #selectProd {
-  width: 450px; /* Full width */
-  flex: 1; /* Flexibility for responsiveness */
-  -moz-box-sizing: content-box; /* For Firefox */
-  -webkit-box-sizing: content-box; /* For Safari */
-  box-sizing: content-box; /* Default box-sizing */
-  padding-left: 12px; /* Left padding */
-  padding-right: 12px; /* Right padding */
-  font-size: 14px; /* Font size */
-  background: #F3F4F6FF; /* Light background color */
-  border-radius: 4px; /* Rounded corners */
-  border-width: 0px; /* No border */
-  outline: none; /* No outline on focus */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-  text-align: left; /* Align text to the left */
+  width: 450px;
+  /* Full width */
+  flex: 1;
+  /* Flexibility for responsiveness */
+  -moz-box-sizing: content-box;
+  /* For Firefox */
+  -webkit-box-sizing: content-box;
+  /* For Safari */
+  box-sizing: content-box;
+  /* Default box-sizing */
+  padding-left: 12px;
+  /* Left padding */
+  padding-right: 12px;
+  /* Right padding */
+  font-size: 14px;
+  /* Font size */
+  background: #F3F4F6FF;
+  /* Light background color */
+  border-radius: 4px;
+  /* Rounded corners */
+  border-width: 0px;
+  /* No border */
+  outline: none;
+  /* No outline on focus */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* Shadow for depth */
+  text-align: left;
+  /* Align text to the left */
 }
 
 #productSelect {
-  display: none; /* Hidden by default */
-  flex: 1; /* Flexibility for responsiveness */
-  -moz-box-sizing: content-box; /* For Firefox */
-  -webkit-box-sizing: content-box; /* For Safari */
-  box-sizing: content-box; /* Default box-sizing */
-  padding-left: 12px; /* Left padding */
-  padding-right: 12px; /* Right padding */
-  font-size: 14px; /* Font size */
-  background: #F3F4F6FF; /* Light background color */
-  border-radius: 4px; /* Rounded corners */
-  border-width: 0px; /* No border */
-  outline: none; /* No outline on focus */
-  position: absolute; /* Positioning below the input */
-  z-index: 999; /* Ensure it appears above other elements */
-  width: 100%; /* Full width */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-  text-align: left; /* Align text to the left */
+  display: none;
+  /* Hidden by default */
+  flex: 1;
+  /* Flexibility for responsiveness */
+  -moz-box-sizing: content-box;
+  /* For Firefox */
+  -webkit-box-sizing: content-box;
+  /* For Safari */
+  box-sizing: content-box;
+  /* Default box-sizing */
+  padding-left: 12px;
+  /* Left padding */
+  padding-right: 12px;
+  /* Right padding */
+  font-size: 14px;
+  /* Font size */
+  background: #F3F4F6FF;
+  /* Light background color */
+  border-radius: 4px;
+  /* Rounded corners */
+  border-width: 0px;
+  /* No border */
+  outline: none;
+  /* No outline on focus */
+  position: absolute;
+  /* Positioning below the input */
+  z-index: 999;
+  /* Ensure it appears above other elements */
+  width: 100%;
+  /* Full width */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* Shadow for depth */
+  text-align: left;
+  /* Align text to the left */
 }
 
 #selectLot {
-  flex: 1; /* Flexibility for responsiveness */
-  -moz-box-sizing: content-box; /* For Firefox */
-  -webkit-box-sizing: content-box; /* For Safari */
-  box-sizing: content-box; /* Default box-sizing */
-  padding-left: 12px; /* Left padding */
-  padding-right: 12px; /* Right padding */
-  font-size: 14px; /* Font size */
-  background: #F3F4F6FF; /* Light background color */
-  border-radius: 4px; /* Rounded corners */
-  border-width: 0px; /* No border */
-  outline: none; /* No outline on focus */
-  width: 450px; /* Full width */
+  flex: 1;
+  /* Flexibility for responsiveness */
+  -moz-box-sizing: content-box;
+  /* For Firefox */
+  -webkit-box-sizing: content-box;
+  /* For Safari */
+  box-sizing: content-box;
+  /* Default box-sizing */
+  padding-left: 12px;
+  /* Left padding */
+  padding-right: 12px;
+  /* Right padding */
+  font-size: 14px;
+  /* Font size */
+  background: #F3F4F6FF;
+  /* Light background color */
+  border-radius: 4px;
+  /* Rounded corners */
+  border-width: 0px;
+  /* No border */
+  outline: none;
+  /* No outline on focus */
+  width: 450px;
+  /* Full width */
   height: 30px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-  text-align: left; /* Align text to the left */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* Shadow for depth */
+  text-align: left;
+  /* Align text to the left */
 }
 
 #lotSelect {
-  display: none; /* Hidden by default */
-  flex: 1; /* Flexibility for responsiveness */
-  -moz-box-sizing: content-box; /* For Firefox */
-  -webkit-box-sizing: content-box; /* For Safari */
-  box-sizing: content-box; /* Default box-sizing */
-  padding-left: 12px; /* Left padding */
-  padding-right: 12px; /* Right padding */
-  font-size: 14px; /* Font size */
-  background: #F3F4F6FF; /* Light background color */
-  border-radius: 4px; /* Rounded corners */
-  border-width: 0px; /* No border */
-  outline: none; /* No outline on focus */
-  position: absolute; /* Positioning below the input */
-  z-index: 999; /* Ensure it appears above other elements */
-  width: 100%; /* Full width */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-  text-align: left; /* Align text to the left */
+  display: none;
+  /* Hidden by default */
+  flex: 1;
+  /* Flexibility for responsiveness */
+  -moz-box-sizing: content-box;
+  /* For Firefox */
+  -webkit-box-sizing: content-box;
+  /* For Safari */
+  box-sizing: content-box;
+  /* Default box-sizing */
+  padding-left: 12px;
+  /* Left padding */
+  padding-right: 12px;
+  /* Right padding */
+  font-size: 14px;
+  /* Font size */
+  background: #F3F4F6FF;
+  /* Light background color */
+  border-radius: 4px;
+  /* Rounded corners */
+  border-width: 0px;
+  /* No border */
+  outline: none;
+  /* No outline on focus */
+  position: absolute;
+  /* Positioning below the input */
+  z-index: 999;
+  /* Ensure it appears above other elements */
+  width: 100%;
+  /* Full width */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* Shadow for depth */
+  text-align: left;
+  /* Align text to the left */
 }
 
 textarea {
-  padding: 10px; /* Add padding for better spacing */
-  font-size: 16px; /* Set a readable font size */
-  line-height: 1.5; /* Improve line spacing */
-  flex: 1; /* Flexibility for responsiveness */
-  -moz-box-sizing: content-box; /* For Firefox */
-  -webkit-box-sizing: content-box; /* For Safari */
-  box-sizing: content-box; /* Default box-sizing */
-  padding-left: 12px; /* Left padding */
-  padding-right: 12px; /* Right padding */
-  font-size: 14px; /* Font size */
-  background: #F3F4F6FF; /* Light background color */
-  border-radius: 4px; /* Rounded corners */
-  border-width: 0px; /* No border */
-  outline: none; /* No outline on focus */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-  text-align: left; /* Align text to the left */
+  padding: 10px;
+  /* Add padding for better spacing */
+  font-size: 16px;
+  /* Set a readable font size */
+  line-height: 1.5;
+  /* Improve line spacing */
+  flex: 1;
+  /* Flexibility for responsiveness */
+  -moz-box-sizing: content-box;
+  /* For Firefox */
+  -webkit-box-sizing: content-box;
+  /* For Safari */
+  box-sizing: content-box;
+  /* Default box-sizing */
+  padding-left: 12px;
+  /* Left padding */
+  padding-right: 12px;
+  /* Right padding */
+  font-size: 14px;
+  /* Font size */
+  background: #F3F4F6FF;
+  /* Light background color */
+  border-radius: 4px;
+  /* Rounded corners */
+  border-width: 0px;
+  /* No border */
+  outline: none;
+  /* No outline on focus */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* Shadow for depth */
+  text-align: left;
+  /* Align text to the left */
 }
 
 .custom-dropdown {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
 }
 
 .dropdown-content {
-    position: absolute;
-    background-color: white;
-    border: 1px solid #ccc;
-    z-index: 1;
-    width: 100%;
-    max-height: 200px; /* Limit height for scrolling */
-    overflow-y: auto; /* Enable scrolling if too many options */
-    display: none; /* Initially hidden */
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 1;
+  width: 100%;
+  max-height: 200px;
+  /* Limit height for scrolling */
+  overflow-y: auto;
+  /* Enable scrolling if too many options */
+  display: none;
+  /* Initially hidden */
 }
 
 .option {
-    padding: 8px;
-    cursor: pointer;
+  padding: 8px;
+  cursor: pointer;
 }
 
 .option:hover {
-    background-color: #f1f1f1; /* Highlight on hover */
+  background-color: #f1f1f1;
+  /* Highlight on hover */
 }
 
 .textbox input:disabled {
   color: #171A1FFF;
-    background: #F3F4F6FF; /* neutral-200 */
+  background: #F3F4F6FF;
+  /* neutral-200 */
 }
 
 /* Hover effect for options */
 #productSelect option:hover {
-  background-color: #e5e7eb; /* Slightly darker gray on hover */
+  background-color: #e5e7eb;
+  /* Slightly darker gray on hover */
 }
 
 /* Style for the options */
 #productSelect option {
-  padding: 10px; /* Inner spacing for options */
-  cursor: pointer; /* Pointer cursor on hover */
+  padding: 10px;
+  /* Inner spacing for options */
+  cursor: pointer;
+  /* Pointer cursor on hover */
 }
 
 
 #Quantity {
-  width: 200px; /* Change this value to your desired width */
+  width: 200px;
+  /* Change this value to your desired width */
 }
 
-.add, .sub
-{
+.add,
+.sub {
   width: 30px;
   height: 32px;
-  padding: 0 12px; /* Horizontal padding */
-  border: none; /* Remove default border */
-  cursor: pointer; /* Pointer cursor on hover */
-  font-size: 14px; /* Font size */
-  font-weight: 500; /* Bold text */
-  border-radius: 5px; /* Rounded corners */
-  transition: background-color 0.3s ease; /* Smooth transition for hover effects */
-}
-.add
-{
-  background-color: #4CAF50; /* Green color for confirm button */
-  color: #fff; /* White text color */
-}
-.sub
-{
-  background-color: #af4c4c; /* Red color for cancel button */
-  color: #fff; /* White text color */
+  padding: 0 12px;
+  /* Horizontal padding */
+  border: none;
+  /* Remove default border */
+  cursor: pointer;
+  /* Pointer cursor on hover */
+  font-size: 14px;
+  /* Font size */
+  font-weight: 500;
+  /* Bold text */
+  border-radius: 5px;
+  /* Rounded corners */
+  transition: background-color 0.3s ease;
+  /* Smooth transition for hover effects */
 }
 
-#Reason
-{
+.add {
+  background-color: #4CAF50;
+  /* Green color for confirm button */
+  color: #fff;
+  /* White text color */
+}
+
+.sub {
+  background-color: #af4c4c;
+  /* Red color for cancel button */
+  color: #fff;
+  /* White text color */
+}
+
+#Reason {
   width: 450px;
   height: 100px;
 }
@@ -1128,62 +1281,106 @@ textarea {
 
 /* Button Container */
 .button-container {
-  margin-bottom: 10px; /* Space below the button container */
-  display: flex; /* Align buttons in a row */
-  justify-content: flex-end; /* Align buttons to the right */
-  gap: 10px; /* Space between buttons */
+  margin-bottom: 10px;
+  /* Space below the button container */
+  display: flex;
+  /* Align buttons in a row */
+  justify-content: flex-end;
+  /* Align buttons to the right */
+  gap: 10px;
+  /* Space between buttons */
 }
 
 /* Button Styling */
 .button-container button {
-  width: 100px; /* Fixed width for buttons */
-  height: 36px; /* Height for better touch targets */
-  padding: 0 12px; /* Horizontal padding */
-  border: none; /* Remove default border */
-  cursor: pointer; /* Pointer cursor on hover */
-  font-size: 14px; /* Font size */
-  font-weight: 500; /* Bold text */
-  border-radius: 4px; /* Rounded corners */
-  transition: background-color 0.3s ease; /* Smooth transition for hover effects */
+  width: 100px;
+  /* Fixed width for buttons */
+  height: 36px;
+  /* Height for better touch targets */
+  padding: 0 12px;
+  /* Horizontal padding */
+  border: none;
+  /* Remove default border */
+  cursor: pointer;
+  /* Pointer cursor on hover */
+  font-size: 14px;
+  /* Font size */
+  font-weight: 500;
+  /* Bold text */
+  border-radius: 4px;
+  /* Rounded corners */
+  transition: background-color 0.3s ease;
+  /* Smooth transition for hover effects */
 }
 
 /* Cancel Button Styling */
 #cancelBtn {
-  background-color: #af4c4c; /* Red color for cancel button */
-  color: #fff; /* White text color */
+  background-color: #af4c4c;
+  /* Red color for cancel button */
+  color: #fff;
+  /* White text color */
 }
 
 #cancelBtn:hover {
-  background-color: #a03e3e; /* Darker red on hover */
+  background-color: #a03e3e;
+  /* Darker red on hover */
 }
 
 /* Confirm Button Styling */
 .submit {
-  background-color: #4CAF50; /* Green color for confirm button */
-  color: #fff; /* White text color */
+  background-color: #4CAF50;
+  /* Green color for confirm button */
+  color: #fff;
+  /* White text color */
 }
 
 .submit:hover {
-  background-color: #45a049; /* Darker green on hover */
+  background-color: #45a049;
+  /* Darker green on hover */
 }
 
 
 #modalSelect {
-  width: 230px; /* Full width */
-  height: auto; /* Adjust height to auto for better fitting */
-  font-size: 25px; /* Increased font size for better visibility */
-  
-  flex: 1; /* Flexibility for responsiveness */
-  -moz-box-sizing: content-box; /* For Firefox */
-  -webkit-box-sizing: content-box; /* For Safari */
-  box-sizing: content-box; /* Default box-sizing */
-  padding-left: 12px; /* Left padding */
-  padding-right: 12px; /* Right padding */
-  background: transparent; /* Make the background transparent */
-  border-radius: 4px; /* Rounded corners */
-  border-width: 0px; /* No border */
-  outline: none; /* No outline on focus */
+  width: 230px;
+  /* Full width */
+  height: auto;
+  /* Adjust height to auto for better fitting */
+  font-size: 25px;
+  /* Increased font size for better visibility */
 
-  text-align: left; 
+  flex: 1;
+  /* Flexibility for responsiveness */
+  -moz-box-sizing: content-box;
+  /* For Firefox */
+  -webkit-box-sizing: content-box;
+  /* For Safari */
+  box-sizing: content-box;
+  /* Default box-sizing */
+  padding-left: 12px;
+  /* Left padding */
+  padding-right: 12px;
+  /* Right padding */
+  background: transparent;
+  /* Make the background transparent */
+  border-radius: 4px;
+  /* Rounded corners */
+  border-width: 0px;
+  /* No border */
+  outline: none;
+  /* No outline on focus */
+
+  text-align: left;
 }
 
+#itemID {
+  background-color: #e0e0e0;
+  /* Darker gray background */
+  color: #333;
+  /* Darker text color */
+  cursor: not-allowed;
+  /* Indicate it's readonly */
+}
+
+#modal-content-archive {
+  margin: 40% auto;
+}

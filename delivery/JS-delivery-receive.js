@@ -1,6 +1,3 @@
-const modalVerifyTitleFront = document.getElementById('modalVerifyTitle-Front');
-const modalVerifyTextFront = document.getElementById('modalVerifyText-Front');
-
 // Function to calculate total quantity from the table
 function calculateTotalItems() {
     const tableBody = document.querySelector('#listTable tbody');

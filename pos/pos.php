@@ -19,7 +19,9 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="../resources/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -83,7 +85,7 @@
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
-            </li>            
+            </li>
 
           </ul><!-- End Profile Dropdown Items -->
 
@@ -93,17 +95,18 @@
     </nav><!-- End Icons Navigation -->
 
     <!-- Error Dialog -->
-    <div class="toast-container position-fixed top-0 end-0 p-3"><div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
-      <div id="alert-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+      <div class="toast-container position-fixed top-0 start-50 translate-middle-x p-3">
+        <div id="alert-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
           <div class="toast-header">
-              <strong class="me-auto">Error</strong>
-              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            <strong class="me-auto">Error</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
           </div>
           <div class="toast-body">
-              Enter a valid quantity.
+            Enter a valid quantity.
           </div>
+        </div>
       </div>
-    </div>
 
   </header><!-- End Header -->
 
@@ -112,108 +115,108 @@
 
     <ul class="sidebar-nav" id="sidebar-nav">
 
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="../dashboard/dashboard.php">
-                <i class="bi bi-grid"></i>
-                <span>Dashboard</span>
-            </a>
-        </li><!-- End Dashboard Nav -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="../dashboard/dashboard.php">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
 
-        <li class="nav-heading"></li>
+      <li class="nav-heading"></li>
 
-        <?php if ($_SESSION['SuppliersPerms'] === 'on'): ?>
+      <?php if ($_SESSION['SuppliersPerms'] === 'on'): ?>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="../suppliers/suppliers.php">
-                <i class="bi bi-shop"></i>
-                <span>Suppliers</span>
-            </a>
+          <a class="nav-link collapsed" href="../suppliers/suppliers.php">
+            <i class="bi bi-shop"></i>
+            <span>Suppliers</span>
+          </a>
         </li><!-- End Suppliers Page Nav -->
-        <?php endif; ?>
+      <?php endif; ?>
 
-        <?php if ($_SESSION['TransactionsPerms'] === 'on'): ?>
+      <?php if ($_SESSION['TransactionsPerms'] === 'on'): ?>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="../transactions/transactions.php">
-                <i class="bi bi-cash-coin"></i>
-                <span>Transactions</span>
-            </a>
+          <a class="nav-link collapsed" href="../transactions/transactions.php">
+            <i class="bi bi-cash-coin"></i>
+            <span>Transactions</span>
+          </a>
         </li><!-- End Transactions Page Nav -->
-        <?php endif; ?>
+      <?php endif; ?>
 
-        <?php if ($_SESSION['POPerms'] === 'on'): ?>
+      <?php if ($_SESSION['POPerms'] === 'on'): ?>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
-                <i class="bi bi-mailbox"></i>
-                <span>Purchase Orders</span>
-            </a>
+          <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
+            <i class="bi bi-mailbox"></i>
+            <span>Purchase Orders</span>
+          </a>
         </li><!-- End Purchase Order Page Nav -->
-        <?php endif; ?>
+      <?php endif; ?>
 
-        <?php if ($_SESSION['POPerms'] === 'on'): ?>
+      <?php if ($_SESSION['POPerms'] === 'on'): ?>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="../delivery/delivery.php">
-                <i class="bi bi-truck"></i>
-                <span>Deliveries</span>
-            </a>
-        </li><!-- End Deliveries Page Nav -->
-        <?php endif; ?>
+          <a class="nav-link collapsed" href="../delivery/delivery.php">
+            <i class="bi bi-truck"></i>
+            <span>Deliveries</span>
+          </a>
+        </li><!-- End Delivery Page Nav -->
+      <?php endif; ?>
 
-        <?php if ($_SESSION['InventoryPerms'] === 'on'): ?>
+      <?php if ($_SESSION['InventoryPerms'] === 'on'): ?>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="../inventory/inventory.php">
-                <i class="bi bi-box-seam"></i>
-                <span>Inventory</span>
-            </a>
+          <a class="nav-link collapsed" href="../inventory/inventory.php">
+            <i class="bi bi-box-seam"></i>
+            <span>Inventory</span>
+          </a>
         </li><!-- End Inventory Page Nav -->
-        <?php endif; ?>
+      <?php endif; ?>
 
-        <li class="nav-heading"></li>
+      <li class="nav-heading"></li>
 
-        <?php if ($_SESSION['POSPerms'] === 'on'): ?>
+      <?php if ($_SESSION['POSPerms'] === 'on'): ?>
         <li class="nav-item">
-            <a class="nav-link" href="../pos/pos.php">
-                <i class="bi bi-printer"></i>
-                <span>POS</span>
-            </a>
+          <a class="nav-link" href="../pos/pos.php">
+            <i class="bi bi-printer"></i>
+            <span>POS</span>
+          </a>
         </li><!-- End POS Page Nav -->
-        <?php endif; ?>
+      <?php endif; ?>
 
-        <?php if ($_SESSION['REPerms'] === 'on'): ?>
+      <?php if ($_SESSION['REPerms'] === 'on'): ?>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
-                <i class="bi bi-cart-dash"></i>
-                <span>Return & Exchange</span>
-            </a>
+          <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
+            <i class="bi bi-cart-dash"></i>
+            <span>Return & Exchange</span>
+          </a>
         </li><!-- End Return & Exchange Page Nav -->
-        <?php endif; ?>
+      <?php endif; ?>
 
-        <li class="nav-heading"></li>
+      <li class="nav-heading"></li>
 
-        <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+      <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="../users/users.php">
-                <i class="bi bi-person"></i>
-                <span>Users</span>
-            </a>
+          <a class="nav-link collapsed" href="../users/users.php">
+            <i class="bi bi-person"></i>
+            <span>Users</span>
+          </a>
         </li><!-- End Users Page Nav -->
-        <?php endif; ?>
+      <?php endif; ?>
 
-        <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+      <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="../audittrail/audittrail.php">
-                <i class="bi bi-clipboard-data"></i>
-                <span>Audit Trail</span>
-            </a>
+          <a class="nav-link collapsed" href="../audittrail/audittrail.php">
+            <i class="bi bi-clipboard-data"></i>
+            <span>Audit Trail</span>
+          </a>
         </li><!-- End Audit Trail Page Nav -->
-        <?php endif; ?>
+      <?php endif; ?>
 
-        <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+      <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
-                <i class="bi bi-cloud-check"></i>
-                <span>Backup & Restore</span>
-            </a>
+          <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
+            <i class="bi bi-cloud-check"></i>
+            <span>Backup & Restore</span>
+          </a>
         </li><!-- End B&R Page Nav -->
-        <?php endif; ?>
+      <?php endif; ?>
 
     </ul>
 
@@ -244,32 +247,33 @@
 
                 <div class="card-header">
                   <div class="search-bar">
-                      <form class="search-form d-flex align-items-center" method="POST" action="#">
-                          <div class="input-group">
-                              <input type="text" name="query" placeholder="Search" title="Enter search keyword" class="form-control">
-                              <span class="input-group-text">
-                                  <i class="bi bi-search"></i>
-                              </span>
-                              <button type="button" title="Clear" class="btn btn-outline-secondary" id="clear-search">
-                                  <i class="bi bi-x"></i>
-                              </button>
-                          </div>
-                      </form>
+                    <form class="search-form d-flex align-items-center" method="POST" action="#">
+                      <div class="input-group">
+                        <input type="text" name="query" placeholder="Search" title="Enter search keyword"
+                          class="form-control">
+                        <span class="input-group-text">
+                          <i class="bi bi-search"></i>
+                        </span>
+                        <button type="button" title="Clear" class="btn btn-outline-secondary" id="clear-search">
+                          <i class="bi bi-x"></i>
+                        </button>
+                      </div>
+                    </form>
                   </div>
                 </div><!-- End Card Header -->
-                
+
                 <div class="card-body">
 
                   <div class="row align-items-top" id="in-stock-list">
-                      <!-- First row of products -->
+                    <!-- First row of products -->
                   </div>
 
                   <div class="row align-items-top" id="low-stock-list">
-                      <!-- Second row of products -->
+                    <!-- Second row of products -->
                   </div>
 
                   <div class="row align-items-top" id="out-of-stock-list">
-                      <!-- Third row of products -->
+                    <!-- Third row of products -->
                   </div>
 
                 </div><!-- End Card Body -->
@@ -323,28 +327,29 @@
 
           <!-- Basket -->
           <div class="card" id="basket">
-              <div class="card-body">
-                  <div class="list-group" id="basket-items" style="height: 500px; overflow-y: auto;">
-                      <!-- Items will be dynamically inserted here -->
-                  </div>
+            <div class="card-body">
+              <div class="list-group" id="basket-items" style="height: 500px; overflow-y: auto;">
+                <!-- Items will be dynamically inserted here -->
               </div>
-              <div>
-                  <div class="card-footer">
-                      <div class="d-flex w-100 justify-content-between">
-                          <small>Tax 12%:</small>
-                          <p id="basket-tax">₱0.00</p>
-                      </div>
-                      <div class="d-flex w-100 justify-content-between">
-                          <small>Total:</small>
-                          <p id="basket-total">₱0.00</p>
-                      </div>
-                      <div class="d-grid gap-2 mt-3">
-                        <button id="checkout" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verticalycentered" disabled>
-                          Checkout
-                        </button>
-                      </div>
-                  </div>
+            </div>
+            <div>
+              <div class="card-footer">
+                <div class="d-flex w-100 justify-content-between">
+                  <small>Tax 12%:</small>
+                  <p id="basket-tax">₱0.00</p>
+                </div>
+                <div class="d-flex w-100 justify-content-between">
+                  <small>Total:</small>
+                  <p id="basket-total">₱0.00</p>
+                </div>
+                <div class="d-grid gap-2 mt-3">
+                  <button id="checkout" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#verticalycentered" disabled>
+                    Checkout
+                  </button>
+                </div>
               </div>
+            </div>
           </div>
         </div><!-- End Right side columns -->
 
@@ -364,7 +369,8 @@
           <div class="modal-footer">
             <div class="row align-items-top w-100">
               <div class="col-lg-3">
-                <button id="quantity-cancel" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button id="quantity-cancel" type="button" class="btn btn-secondary"
+                  data-bs-dismiss="modal">Cancel</button>
               </div>
               <div class="col-lg-4">
                 <input type="number" class="form-control" id="quantity-input" placeholder="Quantity" min="1">
@@ -397,11 +403,13 @@
             <div class="accordion" id="seniorPwdAccordion" style="display: none;">
               <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#seniorPwdForm" aria-expanded="true" aria-controls="seniorPwdForm">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#seniorPwdForm" aria-expanded="true" aria-controls="seniorPwdForm">
                     Senior Citizen / PWD Information
                   </button>
                 </h2>
-                <div id="seniorPwdForm" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#seniorPwdAccordion">
+                <div id="seniorPwdForm" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                  data-bs-parent="#seniorPwdAccordion">
                   <div class="accordion-body">
                     <div class="mb-3">
                       <label for="seniorPwdID" class="form-label">ID Number</label>
@@ -444,24 +452,28 @@
               </div>
             </div>
 
-            <br><h2 id="total-display" style="font-weight: bold;">Total: ₱0.00</h2><br>
+            <br>
+            <h2 id="total-display" style="font-weight: bold;">Total: ₱0.00</h2><br>
 
             <div class="row mb-0">
               <h2 for="paymentInput" class="col-sm-5" style="font-weight: bold;">Payment: ₱</h2>
               <div class="col-sm-6">
-                <input type="number" id="paymentInput" class="form-control no-arrows" min="1" max="999999" placeholder="0" oninput="validatePayment(this)">
+                <input type="number" id="paymentInput" class="form-control no-arrows" min="1" max="999999"
+                  placeholder="0" oninput="validatePayment(this)">
                 <div class="invalid-feedback">
                   Please enter an amount between ₱1 and ₱999,999
                 </div>
               </div>
             </div>
 
-            <br><h2 id="change-display" style="font-weight: bold;">Change: ₱0.00</h2>
+            <br>
+            <h2 id="change-display" style="font-weight: bold;">Change: ₱0.00</h2>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-checkout">Cancel</button>
             <div class="d-grid gap-2">
-              <button id="confirm-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal" disabled>
+              <button id="confirm-button" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#largeModal" disabled>
                 Confirm
               </button>
             </div>
@@ -478,7 +490,8 @@
             <h5 class="modal-title">Receipt</h5>
           </div>
 
-          <br><h5 style="font-weight: bold; text-align: center;">Mother & Child Pharmacy and Medical Supplies</h5>
+          <br>
+          <h5 style="font-weight: bold; text-align: center;">Mother & Child Pharmacy and Medical Supplies</h5>
           <h6 style="text-align: center;">Gen. Luna Street, Babo Sacan, Porac, Pampanga</h6>
           <h6 style="text-align: center;">
             ---------------------------------------------------------------------------------
@@ -486,7 +499,7 @@
           <div class="modal-body">
             <div id="receiptItems"></div> <!-- Container for receipt items -->
           </div>
-          
+
           <div class="row text-center justify-content-between">
             <div class="col-xl-5">
               <small>Total Items:</small>
@@ -568,8 +581,9 @@
               <small id="order-num">Order No.: #0000000</small>
             </div>
             <div class="col-xl-6">
-              <small id="date-time">Date: <?php echo date('F j, Y'); ?> 
-                <?php date_default_timezone_set('Asia/Manila'); echo date('h:i A');?>
+              <small id="date-time">Date: <?php echo date('F j, Y'); ?>
+                <?php date_default_timezone_set('Asia/Manila');
+                echo date('h:i A'); ?>
               </small>
             </div>
           </div>
@@ -585,16 +599,14 @@
 
           <div class="row mb-3 text-center justify-content-between">
             <div class="col-xl-6">
-              <small id="role">Role: <?php echo htmlspecialchars($role); ?></small>
-            </div>
-            <div class="col-xl-6">
               <small id="status">Status: Sales</small>
             </div>
           </div>
 
           <div class="modal-footer">
 
-            <button id="cancel-receipt" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#verticalycentered">Cancel</button>
+            <button id="cancel-receipt" type="button" class="btn btn-secondary" data-bs-toggle="modal"
+              data-bs-target="#verticalycentered">Cancel</button>
 
             <div class="d-grid gap-2">
               <button id="print-button" type="button" class="btn btn-primary" data-bs-dismiss="modal">
@@ -614,11 +626,13 @@
       &copy; Copyright <strong><span>Mother & Child Pharmacy and Medical Supplies</span></strong>. All Rights Reserved
     </div>
     <div class="credits">
-      Designed by <a href="https://www.sti.edu/campuses-details.asp?campus_id=QU5H">STI College Angeles - BSIT4-A S.Y 2024-2025 </a>
+      Designed by <a href="https://www.sti.edu/campuses-details.asp?campus_id=QU5H">STI College Angeles - BSIT4-A S.Y
+        2024-2025 </a>
     </div>
   </footer><!-- End Footer -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
   <script src="../resources/vendor/apexcharts/apexcharts.min.js"></script>
@@ -632,7 +646,7 @@
 
   <!-- Template Main JS File -->
   <script src="../main.js"></script>
-  
+
   <!-- Template POS JS File -->
   <script src="pos.js"></script>
 
