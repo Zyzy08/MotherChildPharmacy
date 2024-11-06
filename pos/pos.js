@@ -483,7 +483,7 @@ function updateModalTotal() {
     const discountAmount = subtotal * (discountPercentage / 100);
     const discountedTotal = subtotal + tax - discountAmount;
 
-    document.getElementById('total-display').textContent = `Total: ₱${formatCurrency(subtotal)}`;
+    document.getElementById('total-display').textContent = `Total: ₱${formatCurrency(discountedTotal)}`;
 }
 
 let receiptItems = [];
