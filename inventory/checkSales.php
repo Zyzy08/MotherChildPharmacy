@@ -21,7 +21,7 @@ $sql = "
     FROM 
         sales 
     WHERE 
-        SaleDate >= NOW() - INTERVAL 1 MONTH;
+        SaleDate >= NOW() - INTERVAL 6 MONTH;
 ";
 
 $result = $conn->query($sql);
