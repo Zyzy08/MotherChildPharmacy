@@ -1328,3 +1328,21 @@
     white-space: pre-wrap;
     overflow: hidden;
   }
+
+  .toast-container {
+    position: fixed;  /* Ensure it is in the correct position */
+    z-index: 1056 !important;  /* Higher than the default modal z-index */
+}
+
+.modal-backdrop.show {
+  z-index: 1056;
+}
+
+.modal-backdrop.fade.show {
+  z-index: 1054;
+}
+
+#modal-content-id{
+  margin: 50% auto;
+  width: 75%;
+}

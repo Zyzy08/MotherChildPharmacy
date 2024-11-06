@@ -13,9 +13,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch delivery statuses
-$sql = "SELECT PurchaseOrderID, OrderDate, Status 
-        FROM purchaseorders 
-        WHERE DATE(OrderDate) <= CURDATE()";  // You may adjust the query as needed
+$sql = "SELECT PurchaseOrderID, OrderDate, Status FROM purchaseorders WHERE Status IN ('Pending', 'Back Order');"; 
 $result = $conn->query($sql);
 
 $deliveries = [];

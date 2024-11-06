@@ -438,18 +438,18 @@
                     </div>
                 </div>
 
-                <div class="row text-center justify-content-between">
+                <div class="row text-center justify-content-between" style="font-weight: bold;">
                     <div class="col-xl-5" style="text-align: left;">
-                        <small>Subtotal:</small>
+                        <small>Amount Due:</small>
                     </div>
                     <div class="col-xl-5" style="text-align: right;">
-                        <small id="sub-total">₱0.00</small>
+                        <small id="amount-due">₱0.00</small>
                     </div>
                 </div>
 
                 <div class="row text-center justify-content-between">
                     <div class="col-xl-5" style="text-align: left;">
-                        <small>VAT:</small>
+                        <small>VAT Amount:</small>
                     </div>
                     <div class="col-xl-5" style="text-align: right;">
                         <small id="tax">₱0.00</small>
@@ -462,15 +462,6 @@
                     </div>
                     <div class="col-xl-5" style="text-align: right;">
                         <small id="discount">₱-0.00</small>
-                    </div>
-                </div>
-
-                <div class="row text-center justify-content-between" style="font-weight: bold;">
-                    <div class="col-xl-5" style="text-align: left;">
-                        <small>Amount Due:</small>
-                    </div>
-                    <div class="col-xl-5" style="text-align: right;">
-                        <small id="amount-due">₱0.00</small>
                     </div>
                 </div>
 
@@ -703,7 +694,6 @@
         const amountdue = document.getElementById('amount-due');
         const discount = document.getElementById('discount');
         const tax = document.getElementById('tax');
-        const subtotal = document.getElementById('sub-total');
         const totalitems = document.getElementById('total-items');
         const paymentmethod = document.getElementById('payment-method');
         const staff = document.getElementById('staff');
@@ -717,7 +707,6 @@
                     if (data) {
                         displayReceiptItems(data.listItems);
                         totalitems.textContent = data.TotalItems;
-                        subtotal.textContent = '₱' + data.Subtotal;
                         tax.textContent = '₱' + data.Tax;
                         discount.textContent = '₱' + data.Discount;
                         amountdue.textContent = '₱' + data.NetAmount;

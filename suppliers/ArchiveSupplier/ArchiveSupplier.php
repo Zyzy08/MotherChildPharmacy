@@ -7,13 +7,13 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Archived Users - Mother & Child Pharmacy and Medical Supplies</title>
+    <title>Archived Suppliers - Mother & Child Pharmacy and Medical Supplies</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="../resources/img/favicon.png" rel="icon">
-    <link href="../resources/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <link href="../../resources/img/favicon.png" rel="icon">
+    <link href="../../resources/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">

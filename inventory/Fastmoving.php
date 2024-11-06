@@ -220,7 +220,7 @@
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="../dashboard/dashboard.php">Home</a></li>
           <li class="breadcrumb-item"><a href="inventory.php">Inventory</a></li>
-          <li class="breadcrumb-item active">Fast Moving Item</li>
+          <li class="breadcrumb-item active">Fast Moving Items</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -237,11 +237,11 @@
                 <thead>
                   <tr class="highlight-row">
                     <th style="text-align: left; font-size: 12px;">Item ID</th>
-                    <th style="text-align: center; font-size: 12px;">Generic Name</th>
-                    <th style="text-align: center; font-size: 12px;">Brand Name</th>
-                    <th style="text-align: center; font-size: 12px;">Measurement</th>
-                    <th style="text-align: center; font-size: 12px;">Price</th>
-                    <th style="text-align: center; font-size: 12px;">Total Sold</th>
+                    <th style="font-size: 12px;">Generic Name</th>
+                    <th style="font-size: 12px;">Brand Name</th>
+                    <th style="font-size: 12px;">Measurement</th>
+                    <th style="font-size: 12px;">Price</th>
+                    <th style="font-size: 12px;">Total Sold</th>
                   </tr>
                 </thead>
                 <tbody id="tableBody">

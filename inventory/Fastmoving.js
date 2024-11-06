@@ -33,12 +33,12 @@ function loadTopSellingProducts() {
 
                 // Use truncated values in the table cells
                 row.innerHTML = `
-                    <td style="text-align: center; font-size: 12px;">${product.itemID}</td>
-                    <td style="text-align: center; font-size: 12px;" title="${product.GenericName}">${truncatedGenericName}</td>
-                    <td style="text-align: center; font-size: 12px;" title="${product.BrandName}">${truncatedBrandName}</td>
-                    <td style="text-align: center; font-size: 12px;">${product.Measurement}</td>
-                    <td style="text-align: center; font-size: 12px;">${product.PricePerUnit}</td>
-                    <td style="text-align: center; font-size: 12px;">${product.totalSold}</td>
+                    <td style="font-size: 14px;">I-0${product.itemID}</td>
+                    <td style="font-size: 14px;" title="${product.GenericName}">${truncatedGenericName}</td>
+                    <td style="font-size: 14px;" title="${product.BrandName}">${truncatedBrandName}</td>
+                    <td style="font-size: 14px;">${product.Measurement}</td>
+                    <td style="font-size: 14px;">₱ ${product.PricePerUnit}</td>
+                    <td style="font-size: 14px;">${product.totalSold}</td>
                 `;
 
                 // Append row to table body

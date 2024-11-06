@@ -246,11 +246,11 @@
                             <table id="example" class="display">
                                 <thead>
                                     <tr class="highlight-row">
-                                        <th style="text-align: center;">Supplier ID</th>
-                                        <th style="text-align: center;">Company Name</th>
-                                        <th style="text-align: center;">Agent Name</th>
-                                        <th style="text-align: center;">Contact No.</th>
-                                        <th style="text-align: center;">Email</th>
+                                        <th>Supplier ID</th>
+                                        <th>Company Name</th>
+                                        <th>Agent Name</th>
+                                        <th>Contact No.</th>
+                                        <th>Email</th>
 
                                         <th style="text-align: center;">Actions</th>
                                     </tr>
