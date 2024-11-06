@@ -214,11 +214,6 @@
 
     </aside><!-- End Sidebar -->
 
-
-    </ul>
-
-    </aside><!-- End Sidebar-->
-
     <main id="main" class="main">
 
         <div class="pagetitle">

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 05, 2024 at 04:56 PM
+-- Generation Time: Nov 06, 2024 at 08:56 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -205,7 +205,14 @@ INSERT INTO `audittrail` (`auditID`, `AccountID`, `action`, `description`, `crea
 (161, 3, 'Update Supplier', 'User updated a supplier (SupplierID: 2).', '2024-11-05 15:20:32', '::1', '1'),
 (162, 3, 'Update Supplier', 'User updated a supplier (SupplierID: 2).', '2024-11-05 15:20:32', '::1', '1'),
 (163, 3, 'Logout', 'User logged out successfully.', '2024-11-05 15:55:54', '::1', '1'),
-(164, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-05 15:55:55', '::1', '1');
+(164, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-05 15:55:55', '::1', '1'),
+(165, 3, 'Login', 'User logged in successfully.', '2024-11-06 06:33:20', '::1', '1'),
+(166, 3, 'Create Order', 'Created purchase order (OrderID: 6).', '2024-11-06 06:34:59', '::1', '1'),
+(167, 3, 'Received Delivery', 'User successfully received delivery (Delivery ID: DE-03).', '2024-11-06 06:35:22', '::1', '1'),
+(168, 3, 'Create Order', 'Created purchase order (OrderID: 7).', '2024-11-06 07:54:45', '::1', '1'),
+(169, 3, 'Received Delivery', 'User successfully received delivery (Delivery ID: DE-04).', '2024-11-06 07:55:46', '::1', '1'),
+(170, 3, 'Logout', 'User logged out successfully.', '2024-11-06 07:56:08', '::1', '1'),
+(171, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-06 07:56:08', '::1', '1');
 
 -- --------------------------------------------------------
 
@@ -229,7 +236,9 @@ CREATE TABLE `deliveries` (
 
 INSERT INTO `deliveries` (`DeliveryID`, `PurchaseOrderID`, `SupplierID`, `DeliveryDate`, `ReceivedBy`, `TotalDeliveredItems`, `DeliveryStatus`) VALUES
 (1, 2, 1, '2024-10-27 18:52:56', 3, 50, 'Back Order'),
-(2, 5, 1, '2024-11-05 22:24:45', 3, 100, 'Completed');
+(2, 5, 1, '2024-11-05 22:24:45', 3, 100, 'Completed'),
+(3, 6, 1, '2024-11-06 14:35:22', 3, 90, 'Completed'),
+(4, 7, 2, '2024-11-06 15:55:46', 3, 30, 'Completed');
 
 -- --------------------------------------------------------
 
@@ -255,7 +264,9 @@ CREATE TABLE `delivery_items` (
 
 INSERT INTO `delivery_items` (`ItemID`, `DeliveryID`, `LotNumber`, `ExpiryDate`, `QuantityDelivered`, `Bonus`, `QuantityRemaining`, `NetAmount`, `isExpired`) VALUES
 (2, 1, '1H17359', '2025-11-11', 50, 5, 54, 400, '0'),
-(2, 2, 'GG', '2026-11-05', 100, 0, 100, 900, '0');
+(2, 2, 'GG', '2026-11-05', 100, 0, 100, 900, '0'),
+(2, 3, '123GG', '2025-11-06', 90, 5, 95, 1000, '0'),
+(3, 4, 'NFP11127', '2027-11-11', 30, 5, 35, 210, '0');
 
 -- --------------------------------------------------------
 
@@ -322,8 +333,8 @@ CREATE TABLE `inventory` (
 --
 
 INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `Discount`, `VAT_exempted`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`) VALUES
-(2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Mg', 150, 50, 50, 9.45, 1, 0, 1, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
-(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Mg', 0, 20, 0, 300.00, 1, 1, 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg'),
+(2, 'Biogesic', 'Paracetamol', 'Medicine', '100', 'Mg', 245, 50, 50, 11.67, 1, 0, 1, '', 'Active', 'products-icon/biogesic.png', 'ParacetamolBiogesic100mg'),
+(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Mg', 36, 20, 10, 7.35, 1, 1, 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg'),
 (4, 'Ibuprofen', 'Advil', 'Medicine', '200', 'Milligrams', 0, 0, 0, 299.00, 0, 1, 1, '', 'Active', 'products-icon/Advil.png', 'AdvilIbuprofen200mg'),
 (5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Milligrams', 0, 0, 0, 499.00, 1, 1, 2, '', 'Active', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg'),
 (6, 'Loperamide', 'Diatabs', 'Medicine', '2', 'Milligrams', 0, 0, 0, 149.00, 0, 1, NULL, '', 'Archived', 'products-icon/Diatabs.png', 'DiatabsLoperamide2mg'),
@@ -374,7 +385,9 @@ INSERT INTO `purchaseorders` (`PurchaseOrderID`, `OrderDate`, `SupplierID`, `Acc
 (2, '2024-10-16 10:45:15', 1, 3, '{\"1\":{\"itemID\":\"2\",\"qty\":100}}', 100, 50, NULL, 'Back Order'),
 (3, '2024-10-21 22:31:00', 2, 3, '{\"1\":{\"itemID\":\"3\",\"qty\":100},\"2\":{\"itemID\":\"5\",\"qty\":50}}', 150, 0, NULL, 'Cancelled'),
 (4, '2024-10-27 23:18:11', 2, 3, '{\"1\":{\"itemID\":\"3\",\"qty\":20}}', 20, 0, NULL, 'Pending'),
-(5, '2024-11-05 21:30:15', 1, 3, '{\"1\":{\"itemID\":\"2\",\"qty\":100}}', 100, 100, NULL, 'Received');
+(5, '2024-11-05 21:30:15', 1, 3, '{\"1\":{\"itemID\":\"2\",\"qty\":100}}', 100, 100, NULL, 'Received'),
+(6, '2024-11-06 14:34:59', 1, 3, '{\"1\":{\"itemID\":\"2\",\"qty\":90}}', 90, 90, NULL, 'Received'),
+(7, '2024-11-06 15:54:45', 2, 3, '{\"1\":{\"itemID\":\"3\",\"qty\":30}}', 30, 30, NULL, 'Received');
 
 -- --------------------------------------------------------
 
@@ -558,13 +571,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `audittrail`
 --
 ALTER TABLE `audittrail`
-  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
+  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
 
 --
 -- AUTO_INCREMENT for table `deliveries`
 --
 ALTER TABLE `deliveries`
-  MODIFY `DeliveryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `DeliveryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `goodsissue`
@@ -582,7 +595,7 @@ ALTER TABLE `inventory`
 -- AUTO_INCREMENT for table `purchaseorders`
 --
 ALTER TABLE `purchaseorders`
-  MODIFY `PurchaseOrderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `PurchaseOrderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `sales`

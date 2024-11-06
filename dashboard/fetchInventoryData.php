@@ -17,10 +17,10 @@ $status = $_GET['status'] ?? 'in-stock';
 
 // Query based on status
 $query = match($status) {
-    'in-stock' => "SELECT COUNT(*) as count FROM inventory WHERE InStock >= 50",
-    'low-stock' => "SELECT COUNT(*) as count FROM inventory WHERE InStock BETWEEN 1 AND 49",
-    'out-of-stock' => "SELECT COUNT(*) as count FROM inventory WHERE InStock = 0",
-    default => "SELECT COUNT(*) as count FROM inventory WHERE InStock >= 50"
+    'in-stock' => "SELECT COUNT(*) as count FROM inventory WHERE InStock >= ReorderLevel AND InStock > 0 AND Status = 'Active'",
+    'low-stock' => "SELECT COUNT(*) as count FROM inventory WHERE InStock < ReorderLevel AND InStock > 0 AND Status = 'Active'",
+    'out-of-stock' => "SELECT COUNT(*) as count FROM inventory WHERE InStock = 0 AND Status = 'Active'",
+    default => "SELECT COUNT(*) as count FROM inventory WHERE InStock > ReorderLevel"
 };
 
 $result = $conn->query($query);

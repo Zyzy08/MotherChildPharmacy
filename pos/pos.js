@@ -43,7 +43,7 @@ async function loadProducts() {
     const inStockContainer = document.getElementById('in-stock-list');
     const lowStockContainer = document.getElementById('low-stock-list');
     const outOfStockContainer = document.getElementById('out-of-stock-list');
-    
+
     inStockContainer.innerHTML = '';
     lowStockContainer.innerHTML = '';
     outOfStockContainer.innerHTML = '';
@@ -68,7 +68,7 @@ async function loadProducts() {
         const encodedProduct = encodeProductData(product);
         const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
         let stockBadge = '';
-    
+
         if (product.InStock == 0) {
             stockBadge = `<span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i>Out-of-Stock</span>`;
         } else if (product.InStock < 50 && product.InStock > 0) {
@@ -76,7 +76,7 @@ async function loadProducts() {
         } else {
             stockBadge = `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
         }
-    
+
         return `
             <div class="col-lg-3 mb-3">
                 <div class="card clickable-card ${product.InStock == 0 ? 'non-clickable-card' : ''}" 
@@ -150,7 +150,7 @@ function updatePaginationControls() {
         // Add page numbers
         const startPage = Math.max(1, currentPage - 2);
         const endPage = Math.min(totalPages, startPage + 4);
-        
+
         for (let i = startPage; i <= endPage; i++) {
             paginationList.insertAdjacentHTML('beforeend', `
                 <li class="page-item ${i === currentPage ? 'active' : ''}" id="page-${i}">
@@ -172,10 +172,10 @@ function updatePaginationControls() {
 
         // Add event listeners
         document.querySelectorAll('.pagination .page-item').forEach(item => {
-            item.addEventListener('click', function(e) {
+            item.addEventListener('click', function (e) {
                 e.preventDefault();
                 if (this.classList.contains('disabled')) return;
-                
+
                 if (this.id === 'first-page') {
                     currentPage = 1;
                 } else if (this.id === 'prev-page' && currentPage > 1) {
@@ -195,7 +195,7 @@ function updatePaginationControls() {
 
 function attachCardListeners() {
     document.querySelectorAll('.clickable-card').forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             if (!this.classList.contains('non-clickable-card')) {
                 highlightCard(this);
                 const encodedProductData = JSON.parse(this.dataset.product);
@@ -232,13 +232,13 @@ document.head.insertAdjacentHTML('beforeend', `
 `);
 
 const searchInput = document.querySelector('input[name="query"]');
-searchInput.addEventListener('input', function() {
+searchInput.addEventListener('input', function () {
     searchQuery = this.value;
     currentPage = 1;
     loadProducts();
 });
 
-searchInput.addEventListener('keypress', async function(event) {
+searchInput.addEventListener('keypress', async function (event) {
     if (event.key === 'Enter') {
         event.preventDefault();
         if (this.value.trim() === '') return;
@@ -303,10 +303,10 @@ searchInput.addEventListener('keypress', async function(event) {
 function showQuantityModal(product) {
     const modalBody = document.getElementById('quantity-modal-body');
     const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
-    let stockBadge = product.InStock < 50 ? 
+    let stockBadge = product.InStock < 50 ?
         `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>` :
         `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
-    
+
     modalBody.innerHTML = `
         <div class="card mb-3">
             <div class="row g-0">
@@ -355,7 +355,7 @@ function showQuantityModal(product) {
 
 //-------------------------------------------------------------------------------------------------
 
-document.getElementById('quantity-cancel').addEventListener('click', function() {
+document.getElementById('quantity-cancel').addEventListener('click', function () {
     document.querySelectorAll('.clickable-card').forEach(card => card.classList.remove('active'));
     localStorage.removeItem('selectedCardId');
 });
@@ -451,7 +451,7 @@ function updateCheckoutButtonState() {
 
 document.addEventListener('DOMContentLoaded', updateCheckoutButtonState);
 
-document.getElementById('clear-search').addEventListener('click', function(event) {
+document.getElementById('clear-search').addEventListener('click', function (event) {
     event.preventDefault();
     clearSearch();
 });
@@ -528,7 +528,7 @@ function updateAmountDueDisplay() {
 function displayReceiptItems() {
     const receiptContainer = document.getElementById('receiptItems');
     receiptContainer.innerHTML = '';
-    
+
     const headerHTML = `
         <div class="row text-center mb-2">
             <div class="col-4"><small><strong>Quantity</strong></small></div>
@@ -537,7 +537,7 @@ function displayReceiptItems() {
         </div>
     `;
     receiptContainer.insertAdjacentHTML('beforeend', headerHTML);
-    
+
     receiptItems.forEach(item => {
         const itemHTML = `
             <div class="row text-center">
@@ -554,23 +554,23 @@ function updatePaymentDisplay() {
     const paymentInput = document.getElementById('paymentInput');
     const payment = parseFloat(paymentInput.value) || 0;
     document.getElementById('payment').textContent = `₱${formatCurrency(payment)}`;
-    
-    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g,""));
+
+    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g, ""));
     const change = Math.max(0, payment - amountDue);
     document.getElementById('change').textContent = `₱${formatPrice(change)}`;
 }
 
 function updateChangeDisplay() {
     const payment = parseFloat(document.getElementById("paymentInput").value) || 0;
-    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g,""));
+    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g, ""));
     const change = Math.max(0, payment - amountDue);
     document.getElementById("change").textContent = `₱${change.toFixed(2)}`;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const checkoutButton = document.getElementById('checkout');
     if (checkoutButton) {
-        checkoutButton.addEventListener('click', function() {
+        checkoutButton.addEventListener('click', function () {
             if (basket.length === 0) {
                 showToast("Your basket is empty. Please add items before checking out.");
                 return;
@@ -592,43 +592,43 @@ const confirmButton = document.getElementById('confirm-button');
 
 document.getElementById('paymentInput').addEventListener('input', updatePaymentDisplay);
 
-document.getElementById('confirm-button').addEventListener('click', function() {
+document.getElementById('confirm-button').addEventListener('click', function () {
     const paymentInput = document.getElementById('paymentInput');
     const payment = parseFloat(paymentInput.value) || 0;
-    
+
     // Update the receipt payment display
     document.getElementById('payment').textContent = `₱${payment.toFixed(2)}`;
-    
+
     // Calculate and update change
-    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g,""));
+    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g, ""));
     const change = Math.max(0, payment - amountDue);
     document.getElementById('change').textContent = `₱${change.toFixed(2)}`;
-    
+
     // Hide checkout modal
     const checkoutModal = bootstrap.Modal.getInstance(document.getElementById('verticalycentered'));
     checkoutModal.hide();
-    
+
     // Show receipt modal
     const receiptModal = new bootstrap.Modal(document.getElementById('largeModal'));
     receiptModal.show();
-    
+
     // Reset payment input
     paymentInput.value = '';
     paymentInput.classList.remove('is-valid', 'is-invalid');
 });
 
-document.getElementById('largeModal').addEventListener('show.bs.modal', function() {
+document.getElementById('largeModal').addEventListener('show.bs.modal', function () {
     generateReceiptItems();
     displayReceiptItems();
-    
+
     // Get the payment value from the input before it's cleared
     const payment = parseFloat(document.getElementById('paymentInput').value) || 0;
-    
+
     // Update payment display
     document.getElementById('payment').textContent = `₱${payment.toFixed(2)}`;
-    
+
     // Calculate and update change
-    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g,""));
+    const amountDue = parseFloat(document.getElementById('amount-due').textContent.replace(/[^0-9.-]+/g, ""));
     const change = Math.max(0, payment - amountDue);
     document.getElementById('change').textContent = `₱${change.toFixed(2)}`;
 });
@@ -679,7 +679,7 @@ function validateForm() {
 }
 
 // Toggle event for Senior Citizen / PWD checkbox
-seniorCitizenCheckbox.addEventListener('change', function() {
+seniorCitizenCheckbox.addEventListener('change', function () {
     if (this.checked) {
         // Show the accordion
         document.getElementById('seniorPwdAccordion').style.display = 'block';
@@ -701,7 +701,7 @@ Object.values(seniorPwdFields).forEach(field => {
 // Payment input event listener
 document.getElementById('paymentInput').addEventListener('input', validateForm);
 
-document.getElementById('cancel-checkout').addEventListener('click', function() {
+document.getElementById('cancel-checkout').addEventListener('click', function () {
     const modal = bootstrap.Modal.getInstance(document.getElementById('verticalycentered'));
     if (modal) {
         modal.hide();
@@ -714,7 +714,7 @@ document.getElementById('cancel-checkout').addEventListener('click', function() 
     }
 });
 
-document.getElementById('cancel-receipt').addEventListener('click', function() {
+document.getElementById('cancel-receipt').addEventListener('click', function () {
     // First, ensure the receipt modal is properly hidden
     const receiptModal = bootstrap.Modal.getInstance(document.getElementById('largeModal'));
     if (receiptModal) {
@@ -785,18 +785,18 @@ function getCurrentDateTime() {
 
 function getSalesDetails() {
     const salesDetails = {};
-    
+
     receiptItems.forEach((item, index) => {
         salesDetails[index + 1] = {
             itemID: item.ItemID,
             qty: item.quantity
         };
     });
-    
+
     return salesDetails;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const paymentInput = document.getElementById('paymentInput');
     const confirmButton = document.getElementById('confirm-button');
     const totalDisplay = document.getElementById('total-display');
@@ -804,7 +804,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updatePaymentValidation() {
         const payment = parseFloat(paymentInput.value) || 0;
-        const totalAmount = parseFloat(totalDisplay.textContent.replace(/[^0-9.-]+/g,""));
+        const totalAmount = parseFloat(totalDisplay.textContent.replace(/[^0-9.-]+/g, ""));
 
         if (payment === 0 || payment < totalAmount) {
             paymentInput.classList.add('is-invalid');
@@ -828,7 +828,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Print button
-document.getElementById('print-button').addEventListener('click', async function() {
+document.getElementById('print-button').addEventListener('click', async function () {
     try {
         // Get items from the basket
         const inventoryUpdates = receiptItems.map(item => ({
@@ -848,14 +848,14 @@ document.getElementById('print-button').addEventListener('click', async function
         });
 
         const inventoryResult = await inventoryResponse.json();
-        
+
         if (!inventoryResult.success) {
             throw new Error(inventoryResult.error || 'Failed to update inventory');
         }
 
         // If inventory update successful, proceed with receipt saving
         const receiptData = getReceiptData();
-        
+
         const receiptResponse = await fetch('saveReceipt.php', {
             method: 'POST',
             headers: {
@@ -869,7 +869,7 @@ document.getElementById('print-button').addEventListener('click', async function
         }
 
         const receiptResult = await receiptResponse.json();
-        
+
         if (receiptResult.success) {
             await saveAsTxtAndPrint();
         } else {
@@ -884,7 +884,7 @@ document.getElementById('print-button').addEventListener('click', async function
 
 function saveAsTxtAndPrint() {
     const receiptContent = generateReceiptContent();
-    
+
     // Create a form data object to send the content to PHP
     const formData = new FormData();
     formData.append('content', receiptContent);
@@ -895,18 +895,18 @@ function saveAsTxtAndPrint() {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            window.location.reload(); // Reload the page after successful print
-        } else {
-            showToast('Error printing receipt. Please try again.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showToast('An error occurred while printing. Please try again.');
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload(); // Reload the page after successful print
+            } else {
+                showToast('Error printing receipt. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('An error occurred while printing. Please try again.');
+        });
 }
 
 function getReceiptData() {
@@ -919,7 +919,7 @@ function getReceiptData() {
         subtotal: receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0).toFixed(2),
         tax: (receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0) * 0.12).toFixed(2),
         discount: 0.00,
-        amountPaid: parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g,"")),
+        amountPaid: parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g, "")),
         paymentMethod: 'Cash',
         status: 'Sales',
         refundAmount: 0.00
@@ -954,8 +954,8 @@ function generateReceiptContent() {
         return `${formattedQty}${formattedItem} ${priceStr}`;  // Add a single space between item and price
     }
 
-    let content = 
-`${centerText('Mother & Child')}
+    let content =
+        `${centerText('Mother & Child')}
 ${centerText('Pharmacy and Medical Supplies')}
 ${centerText('Gen. Luna Street, Babo Sacan,')}
 ${centerText('Porac, Pampanga')}
@@ -974,7 +974,7 @@ ${'-'.repeat(maxWidth)}
     const tax = (subtotal * 0.12).toFixed(2);
     const discount = 0.00;
     const amountDue = (parseFloat(subtotal) + parseFloat(tax) - discount).toFixed(2);
-    const amountPaid = parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g,"")).toFixed(2);
+    const amountPaid = parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g, "")).toFixed(2);
     const change = (amountPaid - amountDue).toFixed(2);
 
     // Add summary information
@@ -982,7 +982,9 @@ ${'-'.repeat(maxWidth)}
     content += formatLine(`Total Items:`, `${totalItems}\n`);
     content += formatLine(`Subtotal:`, `P${formatPrice(subtotal)}\n`);
     content += formatLine(`Tax 12%:`, `P${formatPrice(tax)}\n`);
-    content += formatLine(`Discount:`, `P-${formatPrice(discount)}\n`);
+    if (discount > 0) {
+        content += formatLine(`Discount:`, `P-${formatPrice(discount)}\n`);
+    }
     content += formatLine(`Amount Due:`, `P${formatPrice(amountDue)}\n`);
     content += formatLine(`Refund Amount:`, `P0.00\n`);
     content += formatLine(`Payment:`, `P${formatPrice(amountPaid)}\n`);
@@ -993,55 +995,54 @@ ${'-'.repeat(maxWidth)}
     content += formatLine(`Payment Method:`, `Cash\n`);
     content += formatLine(`Status:`, `Sales\n\n`);
     content += formatLine(`Staff:`, `${employeeName}\n`);
-    content += formatLine(`Role:`, `${role}\n`);
     content += `${' '.repeat(maxWidth)}\n`;
-    content += `${centerText('Thank you for your purchase!')}\n`; 
+    content += `${centerText('Thank you for your purchase!')}\n`;
     content += `\n${' '.repeat(maxWidth)}\n`;
     content += `\n${' '.repeat(maxWidth)}\n`;
 
     return content;
 }
 
-document.getElementById('seniorCitizenCheckbox').addEventListener('change', function() {
+document.getElementById('seniorCitizenCheckbox').addEventListener('change', function () {
     const accordion = document.getElementById('seniorPwdAccordion');
     if (this.checked) {
-      accordion.style.display = 'block';
+        accordion.style.display = 'block';
     } else {
-      accordion.style.display = 'none';
+        accordion.style.display = 'none';
     }
 });
 
 function validatePayment(input) {
-  const value = parseInt(input.value);
-  const min = 1;
-  const max = 999999;
+    const value = parseInt(input.value);
+    const min = 1;
+    const max = 999999;
 
-  // Remove any leading zeros
-  if (input.value.startsWith('0')) {
-    input.value = parseInt(input.value, 10);
-  }
+    // Remove any leading zeros
+    if (input.value.startsWith('0')) {
+        input.value = parseInt(input.value, 10);
+    }
 
-  // Check if the value is within bounds
-  if (value < min || value > max || isNaN(value)) {
-    input.classList.add('is-invalid');
-    input.classList.remove('is-valid');
-    
-    // Reset to max value if exceeding max
-    if (value > max) {
-      input.value = max;
+    // Check if the value is within bounds
+    if (value < min || value > max || isNaN(value)) {
+        input.classList.add('is-invalid');
+        input.classList.remove('is-valid');
+
+        // Reset to max value if exceeding max
+        if (value > max) {
+            input.value = max;
+        }
+
+        // Reset to min value if below min
+        if (value < min && value !== 0) {
+            input.value = min;
+        }
+    } else {
+        input.classList.remove('is-invalid');
+        input.classList.add('is-valid');
     }
-    
-    // Reset to min value if below min
-    if (value < min && value !== 0) {
-      input.value = min;
-    }
-  } else {
-    input.classList.remove('is-invalid');
-    input.classList.add('is-valid');
-  }
-  
-  // Prevent non-numeric input
-  input.value = input.value.replace(/[^0-9]/g, '');
+
+    // Prevent non-numeric input
+    input.value = input.value.replace(/[^0-9]/g, '');
 }
 
 function formatPrice(price) {

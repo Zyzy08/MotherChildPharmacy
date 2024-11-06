@@ -38,7 +38,7 @@
   <!-- Template Main CSS File -->
   <link href="../style.css" rel="stylesheet">
   <link href="../inventory/invent_style.css" rel="stylesheet">
-  
+
 </head>
 
 <body>
@@ -114,129 +114,145 @@
 
       <li class="nav-heading"></li>
 
-      <li class="nav-item">
-                    <a class="nav-link collapsed" href="../suppliers/suppliers.php">
-                        <i class="bi bi-shop"></i>
-                        <span>Suppliers</span>
-                    </a>
-                </li><!-- End Suppliers Page Nav -->
-
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../transactions/transactions.php">
-        <i class="bi bi-cash-coin"></i>
-        <span>Transactions</span>
-      </a>
-      </li><!-- End Transactions Page Nav -->
-
-      <li class="nav-item"></li>
-          <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
-              <i class="bi bi-mailbox"></i>
-              <span>Purchase Orders</span>
-          </a>
-      </li><!-- End Purchase Order Page Nav -->
-
-      <li class="nav-item">
-            <a class="nav-link collapsed" href="../delivery/delivery.php">
-                <i class="bi bi-truck"></i>
-                <span>Delivery</span>
-            </a>
-        </li><!-- End Delivery Page Nav -->
-
-
-      <li class="nav-item"></li>
-      <a class="nav-link" href="../inventory/inventory.php">
-        <i class="bi bi-box-seam"></i>
-        <span>Inventory</span>
-      </a>
-      </li><!-- End Inventory Page Nav -->
-
-
-      <li class="nav-heading"></li>
-
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../pos/pos.php">
-        <i class="bi bi-printer"></i>
-        <span>POS</span>
-      </a>
-      </li><!-- End POS Page Nav -->
-
-      <li class="nav-item"></li>
-      <a class="nav-link collapsed" href="../returnexchange/return.html">
-        <i class="bi bi-cart-dash"></i>
-        <span>Return & Exchange</span>
-      </a>
-      </li><!-- End Return & Exchange Page Nav -->
-
-      <li class="nav-heading"></li>
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="../users/users.php">
-          <i class="bi bi-person"></i>
-          <span>Users</span>
-        </a>
-      </li><!-- End Users Page Nav -->
-
-      <li class="nav-item">
-            <a class="nav-link collapsed" href="../audittrail/audittrail.php">
-                <i class="bi bi-clipboard-data"></i>
-                <span>Audit Trail</span>
-            </a>
-        </li><!-- End Audit Trail Page Nav -->
-
-
+      <?php if ($_SESSION['SuppliersPerms'] === 'on'): ?>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
-                <i class="bi bi-cloud-check"></i>
-                <span>Backup & Restore</span>
-            </a>
-        </li><!-- End B&R Page Nav -->
+          <a class="nav-link collapsed" href="../suppliers/suppliers.php">
+            <i class="bi bi-shop"></i>
+            <span>Suppliers</span>
+          </a>
+        </li><!-- End Suppliers Page Nav -->
+      <?php endif; ?>
 
+      <?php if ($_SESSION['TransactionsPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../transactions/transactions.php">
+            <i class="bi bi-cash-coin"></i>
+            <span>Transactions</span>
+          </a>
+        </li><!-- End Transactions Page Nav -->
+      <?php endif; ?>
+
+      <?php if ($_SESSION['POPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../purchaseorders/purchaseorders.php">
+            <i class="bi bi-mailbox"></i>
+            <span>Purchase Orders</span>
+          </a>
+        </li><!-- End Purchase Order Page Nav -->
+      <?php endif; ?>
+
+      <?php if ($_SESSION['POPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../delivery/delivery.php">
+            <i class="bi bi-truck"></i>
+            <span>Deliveries</span>
+          </a>
+        </li><!-- End Delivery Page Nav -->
+      <?php endif; ?>
+
+      <?php if ($_SESSION['InventoryPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link" href="../inventory/inventory.php">
+            <i class="bi bi-box-seam"></i>
+            <span>Inventory</span>
+          </a>
+        </li><!-- End Inventory Page Nav -->
+      <?php endif; ?>
+
+      <li class="nav-heading"></li>
+
+      <?php if ($_SESSION['POSPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../pos/pos.php">
+            <i class="bi bi-printer"></i>
+            <span>POS</span>
+          </a>
+        </li><!-- End POS Page Nav -->
+      <?php endif; ?>
+
+      <?php if ($_SESSION['REPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../returnexchange/returnexchange.php">
+            <i class="bi bi-cart-dash"></i>
+            <span>Return & Exchange</span>
+          </a>
+        </li><!-- End Return & Exchange Page Nav -->
+      <?php endif; ?>
+
+      <li class="nav-heading"></li>
+
+      <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../users/users.php">
+            <i class="bi bi-person"></i>
+            <span>Users</span>
+          </a>
+        </li><!-- End Users Page Nav -->
+      <?php endif; ?>
+
+      <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../audittrail/audittrail.php">
+            <i class="bi bi-clipboard-data"></i>
+            <span>Audit Trail</span>
+          </a>
+        </li><!-- End Audit Trail Page Nav -->
+      <?php endif; ?>
+
+      <?php if ($_SESSION['UsersPerms'] === 'on'): ?>
+        <li class="nav-item">
+          <a class="nav-link collapsed" href="../backuprestore/backuprestore.php">
+            <i class="bi bi-cloud-check"></i>
+            <span>Backup & Restore</span>
+          </a>
+        </li><!-- End B&R Page Nav -->
+      <?php endif; ?>
 
     </ul>
 
-  </aside><!-- End Sidebar-->
+  </aside><!-- End Sidebar -->
 
   <main id="main" class="main">
 
-<div class="pagetitle">
-    <h1>Inventory</h1>
-    <nav>
+    <div class="pagetitle">
+      <h1>Inventory</h1>
+      <nav>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="../dashboard.php">Home</a></li>
-            <li class="breadcrumb-item"><a href="inventory.php">Inventory</a></li>
-            <li class="breadcrumb-item active">Fast Moving Item</li>
+          <li class="breadcrumb-item"><a href="../dashboard/dashboard.php">Home</a></li>
+          <li class="breadcrumb-item"><a href="inventory.php">Inventory</a></li>
+          <li class="breadcrumb-item active">Fast Moving Item</li>
         </ol>
-    </nav>
-</div><!-- End Page Title -->
+      </nav>
+    </div><!-- End Page Title -->
 
-   
 
-<section class="section users">
-    <div class="row">
+
+    <section class="section users">
+      <div class="row">
         <br>
         <div class="col-xl-12">
-            <div class="card">
-                <div class="card-body profile-card usersTableSize flex-column align-items-center">
-                    <table id="example" class="display">
-                        <thead>
-                            <tr class="highlight-row">
-                                <th style="text-align: left; font-size: 12px;">Item ID</th>
-                                <th style="text-align: center; font-size: 12px;">Generic Name</th>
-                                <th style="text-align: center; font-size: 12px;">Brand Name</th>
-                                <th style="text-align: center; font-size: 12px;">Measurement</th>
-                                <th style="text-align: center; font-size: 12px;">Price</th>
-                                <th style="text-align: center; font-size: 12px;">Total Sold</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody">
-                            <!-- Data rows will be inserted here by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
+          <div class="card">
+            <div class="card-body profile-card usersTableSize flex-column align-items-center">
+              <table id="example" class="display">
+                <thead>
+                  <tr class="highlight-row">
+                    <th style="text-align: left; font-size: 12px;">Item ID</th>
+                    <th style="text-align: center; font-size: 12px;">Generic Name</th>
+                    <th style="text-align: center; font-size: 12px;">Brand Name</th>
+                    <th style="text-align: center; font-size: 12px;">Measurement</th>
+                    <th style="text-align: center; font-size: 12px;">Price</th>
+                    <th style="text-align: center; font-size: 12px;">Total Sold</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody">
+                  <!-- Data rows will be inserted here by JavaScript -->
+                </tbody>
+              </table>
             </div>
+          </div>
         </div>
-    </div>
-</section>
+      </div>
+    </section>
 
 
 
