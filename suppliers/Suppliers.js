@@ -380,40 +380,40 @@ function fetchProductData() {
         if (data.success) {
             const products = data.products;
 
-            // Clear existing rows in the table body
-            const productTableBody = document.getElementById('productTableBody');
-            productTableBody.innerHTML = ''; // Clear the table body
-
-            // Check if there are products to display
-            if (products.length === 0) {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td colspan="4" style="text-align: center;">No products available.</td>`;
-                productTableBody.appendChild(row);
-            } else {
-                // Populate the table with fetched products
-                products.forEach(product => {
-                    const row = document.createElement('tr');
-                    
-                    // Create and truncate BrandName
-                    const brandName = product.BrandName.length > 20 ? product.BrandName.substring(0, 20) + '...' : product.BrandName;
-                    
-                    // Create and truncate GenericName
-                    const genericName = product.GenericName.length > 20 ? product.GenericName.substring(0, 20) + '...' : product.GenericName;
-
-                    row.innerHTML = `
-                        <td style="text-align: center;">
-                            <input type="checkbox" class="product-checkbox" data-id="${product.ItemID}" />
-                        </td>
-                        <td style="text-align: center;" class="truncated">${brandName}</td>
-                        <td style="text-align: center;" class="truncated">${genericName}</td>
-                        <td style="text-align: center;">${product.PricePerUnit.toFixed(2)}</td>
-                    `;
-                    productTableBody.appendChild(row);
-                });
+            // Destroy existing DataTable instance before reinitializing
+            if ($.fn.DataTable.isDataTable('#productTable')) {
+                $('#productTable').DataTable().clear().destroy();
             }
 
-            // Initialize the DataTable after populating the rows
-            initializeDataTable();
+            // Initialize DataTable with product data
+            $('#productTable').DataTable({
+                "data": products,
+                "columns": [
+                    { "data": null, render: () => '<input type="checkbox" class="product-checkbox" />' }, // Checkbox
+                    { "data": "BrandName", render: data => data.length > 20 ? data.substring(0, 20) + '...' : data },
+                    { "data": "GenericName", render: data => data.length > 20 ? data.substring(0, 20) + '...' : data },
+                    { "data": "PricePerUnit", render: data => data.toFixed(2) }
+                ],
+                "order": [],
+                "responsive": true,
+                "paging": true,
+                "lengthChange": false,
+                "pageLength": 3,
+                "searching": true,
+                "info": true,
+                "language": {
+                    "info": "Showing _TOTAL_ entries",
+                    "infoEmpty": "No entries available",
+                    "paginate": {
+                        "first": "First",
+                        "last": "Last",
+                        "next": "Next",
+                        "previous": "Previous"
+                    }
+                },
+                "dom": 'lfrtip',
+                "pagingType": "full_numbers"
+            });
         } else {
             console.error('Error fetching products:', data.message);
             alert('Error fetching products: ' + data.message);
