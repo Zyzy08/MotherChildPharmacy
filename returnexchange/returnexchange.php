@@ -240,7 +240,7 @@
 
             <!-- Product List -->
             <div class="col-12">
-              <div class="card">
+              <div class="card-list">
 
                 <div class="card-header">
                   <div class="search-bar">
@@ -323,6 +323,17 @@
 
           <!-- Basket -->
           <div class="card" id="basket">
+              <div class="card-header">
+                <ul class="nav nav-pills card-header-pills align-items-center justify-content-between">
+                  <span>Order #-----</span>
+                  <small>-:--</small>
+                  <small style="text-decoration: underline;">0 item/s</small>
+                  <li class="nav-item">
+                    <a class="nav-link active" href="recent_Transactions/reTransac.php">Select Order</a>
+                  </li>
+                </ul>
+              </div>
+
               <div class="card-body">
                   <div class="list-group" id="basket-items" style="height: 500px; overflow-y: auto;">
                       <!-- Items will be dynamically inserted here -->
