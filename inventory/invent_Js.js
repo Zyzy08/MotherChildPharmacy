@@ -1158,6 +1158,7 @@ function resetQuantityRemainingField() {
     document.getElementById('QuantityRemaining').value = ''; // Clear QuantityRemaining field
 }
 
+
 function fetchProductData(itemID) {
     if (itemID) {
         const xhr = new XMLHttpRequest();

@@ -991,7 +991,7 @@ ${'-'.repeat(maxWidth)}
     content += formatLine(`Order No.:`, `#${orderNum}\n`);
     content += formatLine(`Date:`, `${getCurrentDateTime()}\n`);
     content += formatLine(`Payment Method:`, `Cash\n`);
-    content += formatLine(`Status:`, `Sales\n\n`);
+    content += formatLine(`Status:`, `Return\n\n`);
     content += formatLine(`Staff:`, `${employeeName}\n`);
     content += formatLine(`Role:`, `${role}\n`);
     content += `${' '.repeat(maxWidth)}\n`;
