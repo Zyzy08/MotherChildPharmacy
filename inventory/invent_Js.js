@@ -1062,12 +1062,7 @@ function selectProduct(option) {
 }
 
 
-
-function clearLot() {
-    document.getElementById('selectLot').value = ''; // Clear QuantityRemaining field
-}
-
-// LOT 
+// LOT Search part
 
 
 
@@ -1086,8 +1081,13 @@ function filterLotOptions() {
         resetQuantityRemainingField(); // Only clear QuantityRemaining when input is empty
     }
 
+    if (currentSelectedItemID === null) {
+        // If no product is selected, do not fetch any lots
+        return;
+    }
+
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `goodIssueGetData.php?lotQuery=${encodeURIComponent(filter)}`, true);
+    xhr.open('GET', `goodIssueGetData.php?lotQuery=${encodeURIComponent(filter)}&ItemID=${currentSelectedItemID}`, true);
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
@@ -1110,14 +1110,13 @@ function filterLotOptions() {
                         const option = document.createElement('div');
                         option.classList.add('option');
                         option.dataset.value = lot.LotNumber;
-                        option.dataset.quantity = lot.QuantityRemaining; // Store QuantityRemaining in data attribute
+                        option.dataset.quantity = lot.QuantityRemaining; // Store QuantityRemaining
 
                         option.textContent = lot.LotNumber.length > MAX_LENGTH
                             ? lot.LotNumber.substring(0, MAX_LENGTH - 3) + '...'
                             : lot.LotNumber;
-
                         option.onclick = function () {
-                            selectLot(option);
+                            selectLot(option); // Call selectLot on option click
                         };
                         dropdown.appendChild(option);
                     });
@@ -1138,6 +1137,54 @@ function filterLotOptions() {
     xhr.send();
 }
 
+function fetchAllLots() {
+    const dropdown = document.getElementById('lotSelect');
+    if (currentSelectedItemID === null) {
+        // If no product is selected, don't show any lots
+        dropdown.style.display = 'none';
+        return;
+    }
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `goodIssueGetData.php?lotQuery=&ItemID=${currentSelectedItemID}`, true); // Add ItemID to filter by product
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const lots = JSON.parse(xhr.responseText);
+            const MAX_LENGTH = 50;
+
+            dropdown.innerHTML = ''; // Clear previous options
+            if (lots.length > 0) {
+                const defaultOption = document.createElement('div');
+                defaultOption.classList.add('option');
+                defaultOption.textContent = 'Select a Lot Number';
+                defaultOption.onclick = () => {
+                    const input = document.getElementById('selectLot');
+                    input.value = ''; // Clear input if default is clicked
+                    dropdown.style.display = 'none';
+                    resetQuantityRemainingField(); // Reset QuantityRemaining on clear
+                };
+                dropdown.appendChild(defaultOption);
+
+                lots.forEach(lot => {
+                    const option = document.createElement('div');
+                    option.classList.add('option');
+                    option.dataset.value = lot.LotNumber; // Store the LotNumber
+                    option.dataset.quantity = lot.QuantityRemaining; // Store QuantityRemaining
+
+                    option.textContent = lot.LotNumber.length > MAX_LENGTH
+                        ? lot.LotNumber.substring(0, MAX_LENGTH - 3) + '...'
+                        : lot.LotNumber;
+                    option.onclick = function () {
+                        selectLot(option); // Call selectLot on option click
+                    };
+                    dropdown.appendChild(option);
+                });
+                dropdown.style.display = 'block'; // Show dropdown if results found
+            }
+        }
+    };
+    xhr.send();
+}
 
 function selectLot(option) {
     const input = document.getElementById('selectLot');
@@ -1153,10 +1200,6 @@ function selectLot(option) {
     console.log(`Lot selected: ${currentLotNumber}, Quantity Remaining: ${quantityRemaining || 0}`);
 }
 
-// Function to reset the QuantityRemaining field (not defined in your provided code)
-function resetQuantityRemainingField() {
-    document.getElementById('QuantityRemaining').value = ''; // Clear QuantityRemaining field
-}
 
 
 function fetchProductData(itemID) {
@@ -1184,6 +1227,30 @@ function fetchProductData(itemID) {
         };
         xhr.send();
     }
+}
+document.addEventListener('click', closeDropdownsOnClickOutside);
+
+function closeDropdownsOnClickOutside(event) {
+    const productDropdown = document.getElementById('productSelect');
+    const lotDropdown = document.getElementById('lotSelect');
+    const productInput = document.getElementById('selectProd');
+    const lotInput = document.getElementById('selectLot');
+
+    if (!productInput.contains(event.target) && !productDropdown.contains(event.target)) {
+        productDropdown.style.display = 'none'; // Close product dropdown if clicked outside
+    }
+
+    if (!lotInput.contains(event.target) && !lotDropdown.contains(event.target)) {
+        lotDropdown.style.display = 'none'; // Close lot dropdown if clicked outside
+    }
+}
+
+// Function to reset the QuantityRemaining field (not defined in your provided code)
+function resetQuantityRemainingField() {
+    document.getElementById('QuantityRemaining').value = ''; // Clear QuantityRemaining field
+}
+function clearLot() {
+    document.getElementById('selectLot').value = ''; // Clear QuantityRemaining field
 }
 
 function resetOrderedField() {

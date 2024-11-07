@@ -18,10 +18,10 @@ if ($conn->connect_error) {
 if (isset($_GET['itemID'])) {
     $itemID = intval($_GET['itemID']);
     $sql = "SELECT inventory.InStock, inventory.Ordered, delivery_items.QuantityRemaining 
-    FROM inventory 
-    LEFT JOIN delivery_items ON inventory.ItemID = delivery_items.ItemID 
-    WHERE inventory.ItemID = ? AND inventory.Status = 'Active'";
-    
+            FROM inventory 
+            LEFT JOIN delivery_items ON inventory.ItemID = delivery_items.ItemID 
+            WHERE inventory.ItemID = ? AND inventory.Status = 'Active'";
+
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         error_log("SQL Error: " . $conn->error); // Log SQL error
@@ -43,7 +43,7 @@ if (isset($_GET['itemID'])) {
     $sql = "SELECT ItemID, GenericName, BrandName, Mass, UnitOfMeasure, InStock, Ordered 
             FROM inventory 
             WHERE (GenericName LIKE ? OR BrandName LIKE ?) AND Status = 'Active' LIMIT 10";
-    
+
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         error_log("SQL Error: " . $conn->error); // Log SQL error
@@ -60,9 +60,14 @@ if (isset($_GET['itemID'])) {
         $products[] = $row;
     }
     echo json_encode($products);
-} elseif (isset($_GET['lotQuery'])) {
+} elseif (isset($_GET['lotQuery']) && isset($_GET['ItemID'])) {
+    // Fetch lots based on ItemID and lot search query
     $lotQuery = $_GET['lotQuery'];
-    $sql = "SELECT LotNumber, QuantityRemaining FROM delivery_items WHERE LotNumber LIKE ? LIMIT 10";
+    $itemID = intval($_GET['ItemID']); // Get ItemID from request
+    $sql = "SELECT LotNumber, QuantityRemaining 
+            FROM delivery_items 
+            WHERE LotNumber LIKE ? AND ItemID = ? LIMIT 10";
+
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         error_log("SQL Error: " . $conn->error); // Log SQL error
@@ -70,7 +75,7 @@ if (isset($_GET['itemID'])) {
         exit;
     }
     $searchTerm = "%" . $lotQuery . "%";
-    $stmt->bind_param("s", $searchTerm);
+    $stmt->bind_param("si", $searchTerm, $itemID); // Bind LotNumber and ItemID parameters
     $stmt->execute();
     $result = $stmt->get_result();
 
