@@ -808,7 +808,7 @@ h4 {
 }
 
 small {
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .col-xl-6 {
@@ -824,18 +824,18 @@ h6 {
 
 .h5,
 h5 {
-  font-size: 0.9rem;
+  font-size: 1.15rem;
 }
 
 .col-2 {
   flex: 0 0 auto;
-  width: 14%;
+  width: 71.5%;
   padding-right: 0;
 }
 
 .col-5 {
   flex: 0 0 auto;
-  width: 57%;
+  width: 28.5%;
 }
 
 .col-3 {
@@ -850,7 +850,7 @@ h5 {
   padding-bottom: 0px;
 }
 
-.row.text-center.mb-2 {
+.row.mb-2 {
   margin-bottom: 0px !important;
 }
 

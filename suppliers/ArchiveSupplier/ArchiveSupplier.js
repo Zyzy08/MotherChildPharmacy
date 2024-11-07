@@ -44,12 +44,11 @@ function updateTable(data) {
 
     data.forEach(row => {
         table.row.add([
-            `<div style="text-align: center;">${row.SupplierID}</div>`,
-            `<div style="text-align: center;">${truncateString(row.SupplierName || 'N/A', maxLength)}</div>`,
-            `<div style="text-align: center;">${truncateString(row.AgentName || 'N/A', maxLength)}</div>`,
-            `<div style="text-align: center;">${truncateString(row.Phone || 'N/A', maxLength)}</div>`,
-            `<div style="text-align: center;">${truncateString(row.Email || 'N/A', maxLength)}</div>`,
-            `<div style="text-align: center;">${truncateString(row.Notes || 'N/A', maxLength)}</div>`,
+            `<div>SP-0${row.SupplierID}</div>`,
+            `<div>${row.SupplierName}</div>`,
+            `<div>${truncateString(row.AgentName || 'N/A', maxLength)}</div>`,
+            `<div>${truncateString(row.Phone || 'N/A', maxLength)}</div>`,
+            `<div>${truncateString(row.Email || 'N/A', maxLength)}</div>`,
             `
                 <div style="text-align: center;">
                     <img src="../../resources/img/s-remove.png" alt="Delete" style="cursor:pointer;margin-left:10px;" onclick="showDeleteOptions('${row.SupplierID}')" />
@@ -102,11 +101,7 @@ function setDataTables() {
                     "width": "12.6%"
                 },
                 {
-                    "targets": 5, // Notes
-                    "width": "10.6%"
-                },
-                {
-                    "targets": 6, // Actions
+                    "targets": 5, // Actions
                     "width": "10.6%",
                     "orderable": false // Disable sorting for Actions column
                 }
@@ -153,6 +148,7 @@ modalYes.addEventListener('click', function () {
 
                 if (xhr.status >= 200 && xhr.status < 300) {
                     if (response.success) {
+                        modalFooterAD.style.display = 'none';
                         modalVerifyTextAD.textContent = 'The Supplier have been unarchived!';
                         modalVerifyTitleAD.textContent = 'Success';
 

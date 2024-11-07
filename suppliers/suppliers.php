@@ -251,7 +251,6 @@
                                         <th>Agent Name</th>
                                         <th>Contact No.</th>
                                         <th>Email</th>
-
                                         <th style="text-align: center;">Actions</th>
                                     </tr>
                                 </thead>

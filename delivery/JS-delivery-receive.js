@@ -77,7 +77,15 @@ async function createOrderDetails() {
     return orderDetailsJSON; // Return the JSON string
 }
 
+const confirmButton = document.getElementById('confirmButton');
 const userFormEdit = document.getElementById('userFormEdit');
+
+confirmButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    //(ADD VALIDATION HERE)
+
+    userFormEdit.dispatchEvent(new Event('submit'));  // Dispatch the submit event
+});
 
 userFormEdit.addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent the default form submission

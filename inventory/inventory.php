@@ -342,19 +342,13 @@
                 <option value="mL">mL</option>
                 <option value="mol">mol</option>
                 <option value="	mmol">mmol</option>
-
               </select>
 
               <select name="VAT_exempted" id="VAT_exempted" required>
                 <option value=""></option>
                 <option value="1">Available</option>
                 <option value="0">Unavailable</option>
-
               </select>
-
-
-
-
             </div>
           </div>
           <div>
@@ -369,9 +363,9 @@
             <label class="label" for="ReorderLevel">Reorder Level</label>
           </div>
           <div class="textbox">
-            <input style="margin-right: 30px;" type="number" id="ReorderLevel" name="ReorderLevel">
             <input style="margin-right: 30px;" type="number" id="InStock" name="InStock">
-            <input type="number" id="Ordered" name="Ordered">
+            <input style="margin-right: 30px;" type="number" id="Ordered" name="Ordered">
+            <input type="number" id="ReorderLevel" name="ReorderLevel">
           </div>
 
 

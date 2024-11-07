@@ -20,18 +20,20 @@ $searchQuery = isset($_POST['query']) ? $_POST['query'] : '';
 if ($searchQuery) {
     $sql = "SELECT ItemID, BrandName, GenericName, Mass, UnitOfMeasure, InStock, PricePerUnit, ProductIcon, ProductCode 
             FROM inventory 
-            WHERE BrandName LIKE ? OR GenericName LIKE ? OR ProductCode LIKE ?";
-    
+            WHERE (BrandName LIKE ? OR GenericName LIKE ? OR ProductCode LIKE ?) 
+            AND Status = 'Active'
+            ";
+
     $stmt = $conn->prepare($sql);
     $searchTerm = "%" . $searchQuery . "%";
-    
+
     // Bind three parameters since there are three placeholders in the SQL query
     $stmt->bind_param('sss', $searchTerm, $searchTerm, $searchTerm);
-    
+
     $stmt->execute();
     $result = $stmt->get_result();
 } else {
-    $sql = "SELECT ItemID, BrandName, GenericName, Mass, UnitOfMeasure, InStock, PricePerUnit, ProductIcon, ProductCode FROM inventory";
+    $sql = "SELECT ItemID, BrandName, GenericName, Mass, UnitOfMeasure, InStock, PricePerUnit, ProductIcon, ProductCode FROM inventory WHERE Status = 'Active'";
     $result = $conn->query($sql);
 }
 

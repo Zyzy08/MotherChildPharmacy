@@ -553,29 +553,6 @@
   /* neutral-900 */
 }
 
-
-
-
-.close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 24px;
-  font-weight: bold;
-  color: #aaa;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-.close:hover {
-  color: black;
-  text-decoration: none;
-}
-
-
-
-
 /*NOTIFICATION AND OTHER STUFF*/
 
 /* Notification container */
@@ -703,6 +680,24 @@
   cursor: pointer;
   font-size: 16px;
 
+}
+
+.close#closeBtn {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #aaa;
+  border: none;
+  background: none;
+  cursor: pointer;
+  margin: 0px;
+}
+
+.close#closeBtn:hover {
+  color: black;
+  text-decoration: none;
 }
 
 #confirmDeleteBtn {

@@ -1,7 +1,7 @@
 function setDataTables() {
     $(document).ready(function () {
         $('#example').DataTable({
-            "order": [[1, 'desc']], // Sort by the first column (OrderID) in descending order
+            "order": [[0, 'desc']], // Sort by the first column (ID) in descending order
             "pageLength": 5,
             "columnDefs": [
                 {

@@ -249,12 +249,11 @@
                             <table id="example" class="display">
                                 <thead>
                                     <tr class="highlight-row">
-                                        <th style="text-align: center;">Supplier ID</th>
-                                        <th style="text-align: center;">Company Name</th>
-                                        <th style="text-align: center;">Agent Name</th>
-                                        <th style="text-align: center;">Contact No.</th>
-                                        <th style="text-align: center;">Email</th>
-                                        <th style="text-align: center;">Notes</th>
+                                        <th>Supplier ID</th>
+                                        <th>Company Name</th>
+                                        <th>Agent Name</th>
+                                        <th>Contact No.</th>
+                                        <th>Email</th>
                                         <th style="text-align: center;">Actions</th>
                                     </tr>
                                 </thead>
@@ -291,7 +290,7 @@
             <h2>Other Options</h2>
             <hr>
             <button id="unarchiveUserBtn" type="button" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD"><img
-                    src="../../resources/img/archive.png"> Unarchive Product</button>
+                    src="../../resources/img/archive.png"> Unarchive Supplier</button>
             <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
                 <div class="modal-dialog">
                     <div class="modal-content">

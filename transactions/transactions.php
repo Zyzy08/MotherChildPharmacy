@@ -268,7 +268,7 @@
                                         <th>Date (Time)</th>
                                         <th>No. of Items</th>
                                         <th>Total</th>
-                                        <th>Payment</th>
+                                        <th>Staff</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -430,75 +430,73 @@
                     ----------------------------------------------------
                 </h6>
                 <div class="row text-center justify-content-between">
-                    <div class="col-xl-5" style="text-align: left;">
+                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
                         <small>Total Items:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right;">
+                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
                         <small id="total-items">0</small>
                     </div>
                 </div>
 
                 <div class="row text-center justify-content-between" style="font-weight: bold;">
-                    <div class="col-xl-5" style="text-align: left;">
+                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
                         <small>Amount Due:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right;">
+                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
                         <small id="amount-due">₱0.00</small>
                     </div>
                 </div>
 
                 <div class="row text-center justify-content-between">
-                    <div class="col-xl-5" style="text-align: left;">
+                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
                         <small>VAT Amount:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right;">
+                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
                         <small id="tax">₱0.00</small>
                     </div>
                 </div>
 
                 <div class="row text-center justify-content-between" id="receiptDiscountRow">
-                    <div class="col-xl-5" style="text-align: left;">
+                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
                         <small>Discount:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right;">
+                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
                         <small id="discount">₱-0.00</small>
                     </div>
                 </div>
 
                 <div class="row text-center justify-content-between" id="receiptRefundRow">
-                    <div class="col-xl-5" style="text-align: left;">
+                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
                         <small>Refund:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right;">
+                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
                         <small id="refund-amount">₱0.00</small>
                     </div>
                 </div>
 
-                <div class="row text-center justify-content-between" id="paymentMethodRow">
-                    <div class="col-xl-5" style="text-align: left;">
+                <!-- <div class="row text-center justify-content-between" id="paymentMethodRow">
+                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
                         <small>Payment Mode:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right;">
+                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
                         <small id="payment-method"></small>
                     </div>
-                </div>
-
-
+                </div> -->
 
                 <div class="row text-center justify-content-between">
-                    <div class="col-xl-5" style="text-align: left;">
+                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
                         <small>Payment:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right;">
+                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
                         <small id="payment">₱0.00</small>
                     </div>
                 </div>
 
                 <div class="row text-center justify-content-between">
-                    <div class="col-xl-5" style="text-align: left;">
+                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
                         <small>Change:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right;">
+                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
                         <small id="change">₱0.00</small>
                     </div>
                 </div>
@@ -549,7 +547,7 @@
         function setDataTables() {
             $(document).ready(function () {
                 $('#example').DataTable({
-                    "order": [], // Disable initial sorting
+                    "order": [[0, 'desc']], // Sort by the first column (OrderID) in descending order
                     "pageLength": 5,
                     "columnDefs": [
                         {
@@ -566,11 +564,11 @@
                         },
                         {
                             "targets": 3, // Total
-                            "width": "16.6%"
+                            "width": "14.6%"
                         },
                         {
-                            "targets": 4, // Payment
-                            "width": "15%"
+                            "targets": 4, // Staff
+                            "width": "17%"
                         },
                         {
                             "targets": 5, // Actions
@@ -657,7 +655,7 @@
                     row.SalesDate,
                     row.TotalItems,
                     "₱ " + row.NetAmount,
-                    row.PaymentMethod,
+                    row.employeeName + ' ' + row.employeeLName,
                     `<img src="../resources/img/viewfile.png" 
                 alt="View" 
                 style="cursor:pointer;margin-left:10px;" 
@@ -695,7 +693,7 @@
         const discount = document.getElementById('discount');
         const tax = document.getElementById('tax');
         const totalitems = document.getElementById('total-items');
-        const paymentmethod = document.getElementById('payment-method');
+        // const paymentmethod = document.getElementById('payment-method');
         const staff = document.getElementById('staff');
         const datetime = document.getElementById('date-time');
         const ordernum = document.getElementById('order-num');
@@ -711,7 +709,7 @@
                         discount.textContent = '₱' + data.Discount;
                         amountdue.textContent = '₱' + data.NetAmount;
                         refundamount.textContent = '₱' + data.RefundAmount;
-                        paymentmethod.textContent = data.PaymentMethod;
+                        // paymentmethod.textContent = data.PaymentMethod;
                         payment.textContent = '₱' + data.AmountPaid;
                         change.textContent = '₱' + data.AmountChange;
                         ordernum.textContent = 'Invoice No: IN-0' + data.InvoiceID;
@@ -837,19 +835,17 @@
             receiptContainer.innerHTML = '';
 
             const headerHTML = `
-        <div class="row text-center mb-2">
-            <div class="col-2"><small><strong>Qty</strong></small></div>
-            <div class="col-5" style="text-align: right;"><small><strong>Item Description</strong></small></div>
-            <div class="col-3" style="text-align: right;"><small><strong>Price</strong></small></div>
+        <div class="row mb-2">
+            <div class="col-2"><small><strong>Item Description</strong></small></div>
+            <div class="col-5" style="text-align: right;"><small><strong>Qty</strong></small></div>
         </div>`;
             receiptContainer.insertAdjacentHTML('beforeend', headerHTML);
 
             orderDetails.forEach(item => {
                 const itemHTML = `
-            <div class="row text-center">
-                <div class="col-2" style="text-align: right;"><small>${item.qty}</small></div>
-                <div class="col-5" style="text-align: right;"><small>${item.description}</small></div>
-                <div class="col-3" style="text-align: right;"><small>₱${parseFloat(item.price).toFixed(2)}</small></div>
+            <div class="row">
+                <div class="col-2"><small>${item.description}</small></div>
+                <div class="col-5" style="text-align: right;"><small>${item.qty}</small></div>
             </div>`;
                 receiptContainer.insertAdjacentHTML('beforeend', itemHTML);
             });

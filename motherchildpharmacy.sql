@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2024 at 11:41 PM
+-- Generation Time: Nov 07, 2024 at 05:52 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -233,7 +233,33 @@ INSERT INTO `audittrail` (`auditID`, `AccountID`, `action`, `description`, `crea
 (189, 3, 'Update Supplier', 'User updated a supplier (SupplierID: 2).', '2024-11-06 20:37:21', '::1', '1'),
 (190, 3, 'Update Supplier', 'User updated a supplier (SupplierID: 2).', '2024-11-06 20:37:21', '::1', '1'),
 (191, 3, 'Database Backup', 'Backup initiated for database \'motherchildpharmacy\' by user.', '2024-11-06 21:21:01', '::1', '1'),
-(192, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-11-06 21:45:56', '::1', '1');
+(192, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-11-06 21:45:56', '::1', '1'),
+(193, 3, 'Logout', 'User logged out successfully.', '2024-11-06 22:42:16', '::1', '1'),
+(194, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-06 22:42:16', '::1', '1'),
+(195, 3, 'Login', 'User logged in successfully.', '2024-11-07 05:56:23', '::1', '1'),
+(196, 3, 'Logout', 'User logged out successfully.', '2024-11-07 05:59:08', '::1', '1'),
+(197, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-07 05:59:08', '::1', '1'),
+(198, 3, 'Login', 'User failed to login (Incorrect password).', '2024-11-07 13:00:33', '::1', ''),
+(199, 3, 'Login', 'User logged in successfully.', '2024-11-07 13:00:40', '::1', '1'),
+(200, 3, 'Login', 'User logged in successfully.', '2024-11-07 15:32:28', '::1', '1'),
+(201, 3, 'Archive Supplier', 'User archived a supplier. (SupplierID: 2).', '2024-11-07 15:35:46', '::1', '1'),
+(202, 3, 'Unarchive Supplier', 'User unarchived a supplier. (SupplierID: 2).', '2024-11-07 15:35:54', '::1', '1'),
+(203, 3, 'Archive Supplier', 'User archived a supplier. (SupplierID: 2).', '2024-11-07 15:36:48', '::1', '1'),
+(204, 3, 'Unarchive Supplier', 'User unarchived a supplier. (SupplierID: 2).', '2024-11-07 15:41:37', '::1', '1'),
+(205, 3, 'Archive Supplier', 'User archived a supplier. (SupplierID: 2).', '2024-11-07 15:41:43', '::1', '1'),
+(206, 3, 'Unarchive Supplier', 'User unarchived a supplier. (SupplierID: 2).', '2024-11-07 15:42:32', '::1', '1'),
+(207, 3, 'Archive Supplier', 'User archived a supplier. (SupplierID: 2).', '2024-11-07 15:43:47', '::1', '1'),
+(208, 3, 'Unarchive Supplier', 'User unarchived a supplier. (SupplierID: 2).', '2024-11-07 15:43:52', '::1', '1'),
+(209, 3, 'Archive Supplier', 'User archived a supplier. (SupplierID: 2).', '2024-11-07 15:44:19', '::1', '1'),
+(210, 3, 'Unarchive Supplier', 'User unarchived a supplier. (SupplierID: 2).', '2024-11-07 15:44:42', '::1', '1'),
+(211, 3, 'Unarchive Product', 'User unarchived a product. (ItemID: 12).', '2024-11-07 15:47:11', '::1', '1'),
+(212, 3, 'Archive Product', 'User archived a product. (ItemID: 12).', '2024-11-07 15:47:28', '::1', '1'),
+(213, 3, 'Logout', 'User logged out successfully.', '2024-11-07 15:55:52', '::1', '1'),
+(214, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-07 15:55:52', '::1', '1'),
+(215, 3, 'Login', 'User logged in successfully.', '2024-11-07 15:56:06', '::1', '1'),
+(216, 3, 'View User Details', 'Viewed details for account: E002_sjackson', '2024-11-07 16:02:47', '::1', '1'),
+(217, 3, 'View User Details', 'Viewed details for account: E002_sjackson', '2024-11-07 16:05:49', '::1', '1'),
+(218, 3, 'View User Details', 'Viewed details for account: E004_acastro', '2024-11-07 16:06:10', '::1', '1');
 
 -- --------------------------------------------------------
 
@@ -427,7 +453,7 @@ CREATE TABLE `sales` (
   `Discount` decimal(10,2) DEFAULT 0.00,
   `NetAmount` decimal(10,2) GENERATED ALWAYS AS (`Subtotal` - `Discount` + `Tax`) STORED,
   `AmountPaid` decimal(10,2) DEFAULT 0.00,
-  `AmountChange` decimal(10,2) GENERATED ALWAYS AS (`AmountPaid` - `NetAmount`) STORED,
+  `AmountChange` decimal(10,2) GENERATED ALWAYS AS (`AmountPaid` - `Subtotal`) STORED,
   `PaymentMethod` enum('Cash','GCash') NOT NULL,
   `Status` enum('Sales','Return','Return/Exchange') NOT NULL,
   `RefundAmount` decimal(10,2) DEFAULT 0.00
@@ -438,8 +464,8 @@ CREATE TABLE `sales` (
 --
 
 INSERT INTO `sales` (`InvoiceID`, `SaleDate`, `AccountID`, `SalesDetails`, `TotalItems`, `Subtotal`, `Tax`, `Discount`, `AmountPaid`, `PaymentMethod`, `Status`, `RefundAmount`) VALUES
-(1, '2024-09-29 01:34:29', 3, '{\n	\"1\":{\n		\"itemID\":\"2\",\n		\"qty\":5\n	},\n	\"2\":{\n		\"itemID\":\"3\",\n		\"qty\":3\n	}\n}', 8, 1900.00, 228.00, 0.00, 2500.00, 'Cash', 'Sales', 0.00),
-(2, '2024-11-05 23:06:36', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":9}}', 9, 85.05, 10.21, 0.00, 100.00, 'Cash', 'Sales', 0.00);
+(1, '2024-09-29 01:34:29', 3, '{\n	\"1\":{\n		\"itemID\":\"2\",\n		\"qty\":5\n	},\n	\"2\":{\n		\"itemID\":\"3\",\n		\"qty\":3\n	}\n}', 8, 67.05, 7.18, 0.00, 70.00, 'Cash', 'Sales', 0.00),
+(2, '2024-11-05 23:06:36', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":9}}', 9, 85.05, 9.11, 0.00, 100.00, 'Cash', 'Sales', 0.00);
 
 -- --------------------------------------------------------
 
@@ -592,7 +618,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `audittrail`
 --
 ALTER TABLE `audittrail`
-  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=193;
+  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
 
 --
 -- AUTO_INCREMENT for table `deliveries`

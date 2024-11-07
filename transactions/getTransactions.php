@@ -18,11 +18,60 @@ if ($conn->connect_error) {
 $selectedTab = isset($_GET['tab']) ? $_GET['tab'] : '1'; // Default to tab 1
 
 // Default SQL with WHERE Status = 'Sales'
-$sql = "SELECT InvoiceID, DATE_FORMAT(SaleDate, '%m/%d/%y (%l:%i %p)') AS SalesDate, TotalItems, NetAmount, PaymentMethod FROM sales WHERE Status = 'Sales'";
+// $sql = "SELECT InvoiceID, DATE_FORMAT(SaleDate, '%m/%d/%y (%l:%i %p)') AS SalesDate, TotalItems, NetAmount, PaymentMethod FROM sales WHERE Status = 'Sales'";
+$sql = "
+        SELECT 
+            s.InvoiceID, 
+            DATE_FORMAT(s.SaleDate, '%m/%d/%y (%l:%i %p)') AS SalesDate,
+            s.SaleDate AS SalesDateTime, 
+            s.TotalItems, 
+            s.Subtotal,
+            s.NetAmount, 
+            s.PaymentMethod,
+            s.Tax,
+            s.Discount, 
+            s.AmountPaid,
+            s.AmountChange,
+            s.Status,
+            u.employeeName, 
+            u.employeeLName,
+            s.SalesDetails,
+            s.RefundAmount
+        FROM 
+            sales s
+        JOIN 
+            users u ON s.AccountID = u.AccountID 
+        WHERE 
+            s.Status = 'Sales'
+    ";
 
 switch ($selectedTab) {
     case '2':
-        $sql = "SELECT InvoiceID, DATE_FORMAT(SaleDate, '%m/%d/%y (%l:%i %p)') AS SalesDate, TotalItems, NetAmount, PaymentMethod FROM sales WHERE Status = 'ReturnExchange'";
+        $sql = "
+        SELECT 
+            s.InvoiceID, 
+            DATE_FORMAT(s.SaleDate, '%m/%d/%y (%l:%i %p)') AS SalesDate,
+            s.SaleDate AS SalesDateTime, 
+            s.TotalItems, 
+            s.Subtotal,
+            s.NetAmount, 
+            s.PaymentMethod,
+            s.Tax,
+            s.Discount, 
+            s.AmountPaid,
+            s.AmountChange,
+            s.Status,
+            u.employeeName, 
+            u.employeeLName,
+            s.SalesDetails,
+            s.RefundAmount
+        FROM 
+            sales s
+        JOIN 
+            users u ON s.AccountID = u.AccountID 
+        WHERE 
+            s.Status = 'ReturnExchange'
+    ";
         break;
     // case '3':
     //     $sql = "SELECT PurchaseOrderID, DATE_FORMAT(OrderDate, '%m/%d/%y (%l:%i %p)') AS SalesDate, TotalItems, NetAmount, PaymentMethod FROM sales WHERE Status = 'PurchaseOrder'";

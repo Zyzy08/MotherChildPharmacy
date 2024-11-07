@@ -336,7 +336,7 @@
                 <br>
                 <div class="line"></div>
                 <div class="button-container-2">
-                    <button type="submit" id="confirmButton">Receive Delivery</button>
+                    <button type="button" id="confirmButton">Receive Delivery</button>
                 </div>
             </form>
         </div>
@@ -399,7 +399,7 @@
         function setDataTables() {
             $(document).ready(function () {
                 $('#example').DataTable({
-                    "order": [[1, 'desc']], // Sort by the first column (OrderID) in descending order
+                    "order": [[0, 'desc']], // Sort by the first column (OrderID) in descending order
                     "columnDefs": [
                         {
                             "targets": 0, // OrderID

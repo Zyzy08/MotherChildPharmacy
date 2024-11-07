@@ -42,11 +42,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Add event listeners to dropdown items
     dropdownItems.forEach(item => {
-        item.addEventListener('click', function (e) {
-            e.preventDefault();
-            const period = this.getAttribute('data-period');
-            fetchSalesData(period);
-        });
+        if (item.id !== 'myprofiledropdownselect') {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+                const period = this.getAttribute('data-period');
+                fetchSalesData(period);
+            });
+        }
     });
 });
 
