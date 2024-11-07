@@ -16,8 +16,7 @@ try {
     // SQL query to get sales details from the last year
     $salesQuery = "
         SELECT SalesDetails
-        FROM sales
-        WHERE SaleDate >= NOW() - INTERVAL 1 YEAR;
+        FROM sales;
     ";
 
     // Execute the sales query
@@ -62,6 +61,7 @@ try {
             $product['Measurement'] = $itemData['Mass'] . ' ' . $itemData['UnitOfMeasure'];
             $product['InStock'] = $itemData['InStock'];
             $product['Ordered'] = $itemData['Ordered'];
+            $product['EOQ'] = $itemData['ReorderLevel'];
             
             // Calculate EOQ if totalSold is greater than zero
             if ($product['totalSold'] > 0) {

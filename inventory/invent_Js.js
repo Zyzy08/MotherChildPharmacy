@@ -19,7 +19,7 @@ var currentItemId = null; // Store the ItemID when editing
 var formClosedWithoutSubmission = false; // Flag to indicate if form was closed without submission
 
 // When the user clicks the button, open the modal for new product
-btn.onclick = function() {
+btn.onclick = function () {
     modal.style.display = "block";
     isEditMode = false; // Indicate that this is a new product
     document.getElementById('PurchaseForm').reset(); // Clear form fields
@@ -42,17 +42,17 @@ btn.onclick = function() {
 
 var clearBtn = document.getElementById("Clear");
 
-clearBtn.onclick = function() {
+clearBtn.onclick = function () {
     var form = document.getElementById('PurchaseForm');
     Array.from(form.elements).forEach(element => {
         if (element.id !== 'itemID' && element.id !== 'iconFile') {
             if (element.type === 'text' || element.type === 'number' || element.type === 'select-one') {
-                element.value = ''; 
+                element.value = '';
             }
         }
     });
 };
-closeBtn.onclick = function() {
+closeBtn.onclick = function () {
     formClosedWithoutSubmission = true; // Set the flag to indicate form was closed without submission
     modal.style.display = "none";
 }
@@ -61,7 +61,7 @@ closeBtn.onclick = function() {
 
 function validateForm() {
     const errors = [];
-    
+
     // Check for required fields
     const itemType = document.getElementById('itemType').value;
     const pricePerUnit = document.getElementById('pricePerUnit').value.trim();
@@ -70,7 +70,7 @@ function validateForm() {
     const mass = document.getElementById('mass').value.trim();
     const unitOfMeasure = document.getElementById('unitOfMeasure').value;
     const productCode = document.getElementById('productCode').value.trim();
-    
+
     if (!itemType) errors.push("Item Type is required.");
     if (!pricePerUnit) errors.push("Price Per Unit is required.");
     if (!brandName) errors.push("Brand Name is required.");
@@ -99,12 +99,29 @@ const modalVerifyTextFront = document.getElementById('modalVerifyText-Front');
 
 // UPDATE AND ADDING
 
+function validateCurrencyInput(input) {
+    const value = input.value;
 
-// Function to add peso sign only if input is empty
+    // If user tries to delete the peso sign, restore it
+    if (!value.startsWith("₱")) {
+        input.value = "₱" + value.replace(/₱/g, '');  // Ensure peso sign is at the start
+    }
+
+    // Keep only the "₱" sign, numbers, and one optional decimal
+    const cleanedValue = input.value
+        .replace(/[^₱\d.]/g, '') // Remove all non-numeric characters except ₱ and .
+        .replace(/(₱+)/g, '₱')    // Ensure only one ₱ at the start
+        .replace(/^₱?/, '₱');     // Ensure ₱ is always at the start
+
+    // Allow only two decimal places and no more than one decimal point
+    const decimalMatch = cleanedValue.match(/₱\d+(\.\d{0,2})?/);
+    input.value = decimalMatch ? decimalMatch[0] : '₱';
+}
+
 function addPesoSign() {
-    const priceInput = document.getElementById('pricePerUnit');
-    if (priceInput.value.trim() === '') {
-        priceInput.value = '₱ ';
+    const input = document.getElementById('pricePerUnit');
+    if (!input.value.startsWith("₱")) {
+        input.value = "₱";
     }
 }
 
@@ -116,14 +133,14 @@ function cleanPriceInput() {
     }
 }
 
-document.getElementById('PurchaseForm').addEventListener('submit', function(event) {
+document.getElementById('PurchaseForm').addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent default form submission
 
     const form = document.getElementById('PurchaseForm');
     const formData = new FormData(form);
 
     // Extract and format `pricePerUnit` as a float to preserve decimals
-    const priceInput = document.getElementById('pricePerUnit').value.replace('₱ ', '').trim();
+    const priceInput = document.getElementById('pricePerUnit').value.replace('₱', '').trim();
     const pricePerUnitValue = parseFloat(priceInput).toFixed(2); // Retain 2 decimal places
 
     if (isNaN(pricePerUnitValue) || pricePerUnitValue <= 0) {
@@ -142,7 +159,7 @@ document.getElementById('PurchaseForm').addEventListener('submit', function(even
             if (data.success) {
                 const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
                 document.getElementById('modalVerifyTitle').textContent = 'Success';
-                document.getElementById('modalVerifyText').textContent = isEditMode ? 
+                document.getElementById('modalVerifyText').textContent = isEditMode ?
                     'Product has been updated successfully!' : 'Product has been added successfully!';
                 confirmationModal.show();
 
@@ -176,7 +193,7 @@ function loadFormForEdit(item) {
     document.getElementById('pricePerUnit').value = item.PricePerUnit;
     document.getElementById('Discount').value = item.Discount;
     document.getElementById('VAT_exempted').value = item.VAT_exempted;
-    
+
     // Set the values for InStock, Ordered, and ReorderLevel fields
     document.getElementById('InStock').value = item.InStock;
     document.getElementById('Ordered').value = item.Ordered;
@@ -213,9 +230,9 @@ function previewImage(event) {
 
     if (file) {
         const reader = new FileReader();
-        
+
         // Set up the reader to update the image preview
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             iconPreview.src = e.target.result; // Update the image source with the file data
         }
 
@@ -237,14 +254,14 @@ document.getElementById('iconFile').addEventListener('change', previewImage);
 //CLOSING FORM
 
 // Function to close the form/modal
-document.getElementById('closeBtn').addEventListener('click', function(event) {
+document.getElementById('closeBtn').addEventListener('click', function (event) {
     console.log('Close button clicked'); // Check if this logs
     event.preventDefault(); // Prevent any default behavior
     document.getElementById('PurchaseForm').style.display = 'none'; // Hide the form/modal
 });
 
 // Stop form submission if the close button is clicked
-document.getElementById('closeBtn').addEventListener('click', function(event) {
+document.getElementById('closeBtn').addEventListener('click', function (event) {
     event.stopPropagation(); // Stop the click event from bubbling up to the form
 });
 
@@ -264,7 +281,7 @@ function showError(message) {
     console.error(message);
     const notificationMessage = document.getElementById("notificationMessage");
     const notification = document.getElementById("notification");
-    
+
     notificationMessage.textContent = message; // Set the error message
     notification.style.display = "block"; // Show the notification
 
@@ -307,7 +324,7 @@ function disableProductFields() {
 }
 
 // Event listener for the "New Product" button
-document.getElementById('addProductButton').addEventListener('click', function() {
+document.getElementById('addProductButton').addEventListener('click', function () {
     hideProductFields(); // Hide the fields when the button is clicked
     // You may also want to open the form or do other actions here
 });
@@ -345,15 +362,15 @@ function handleUpdate(itemId) {
         .then(data => {
             // Log the data for debugging
             console.log('Fetched data:', data);
-        
+
             if (data.success) {
                 // Load item data into the form
                 loadFormForEdit(data.data);
-        
+
                 // Prepend the peso sign to the price input field
                 const priceInput = document.getElementById('pricePerUnit');
-                priceInput.value = '₱ ' + (data.data.PricePerUnit || ''); // Use a default if undefined
-        
+                priceInput.value = '₱' + (data.data.PricePerUnit || ''); // Use a default if undefined
+
                 // Now disable the fields after loading the data
                 disableProductFields();
             } else {
@@ -376,7 +393,7 @@ function setDataTables() {
         "autoWidth": false, // Disable automatic column width calculation
         "responsive": true, // Enable responsiveness
         "columnDefs": [
-            { "targets": 0, "width": "5%" }, // Item ID
+            { "targets": 0, "width": "9%" }, // Item ID
             { "targets": 1, "width": "10%", "orderable": false }, // Icon 
             { "targets": 2, "width": "10%", "orderable": false }, // Generic Name
             { "targets": 3, "width": "10%", "orderable": false }, // Brand Name
@@ -390,7 +407,7 @@ function setDataTables() {
     });
 
     // Adjust table layout on sidebar toggle
-    $(window).on('resize', function() {
+    $(window).on('resize', function () {
         table.columns.adjust().draw(); // Redraw the DataTable to adjust the columns
     });
 }
@@ -405,16 +422,16 @@ function updateTable(items) {
         row.setAttribute('data-id', item.ItemID); // Set data-id attribute
 
         row.innerHTML = `
-                <td class="text-center text-truncate">${item.ItemID}</td>
+                <td class="text-truncate">I-0${item.ItemID}</td>
                 <td class="text-center"><img src="${item.ProductIcon}" alt="Icon" style="width: 50px; height: auto;"></td>
-                <td class="text-center text-truncate">${item.GenericName}</td>
-                <td class="text-center text-truncate">${item.BrandName}</td>
-                <td class="text-center text-truncate">${item.ItemType}</td>
-                <td class="text-center text-truncate">${item.Mass} ${item.UnitOfMeasure}</td>
-                <td class="text-center text-truncate">₱ ${item.PricePerUnit}</td>
-                <td class="text-center text-truncate">${item.InStock}</td>
-                <td class="text-center text-truncate">${item.Ordered}</td>
-                <td class="text-center">
+                <td class="text-truncate">${item.GenericName}</td>
+                <td class="text-truncate">${item.BrandName}</td>
+                <td class="text-truncate">${item.ItemType}</td>
+                <td class="text-truncate">${item.Mass} ${item.UnitOfMeasure}</td>
+                <td class="text-truncate">₱ ${item.PricePerUnit}</td>
+                <td class="text-truncate">${item.InStock}</td>
+                <td class="text-truncate">${item.Ordered}</td>
+                <td>
                 <img src="../resources/img/d-edit.png" alt="Edit" style="cursor:pointer; display: inline-block; width: 15px;" onclick="handleUpdate('${item.ItemID}')" />
                 <img src="../resources/img/s-remove.png" alt="Delete" style="cursor:pointer; display: inline-block; width: 15px; margin-left: 10px;" onclick="showDeleteOptions('${item.ItemID}')" />
     </td>
@@ -422,9 +439,9 @@ function updateTable(items) {
 
         tableBody.appendChild(row);
     });
-        //<td style="text-align: center;">${item.Status}</td>
-        //img class="update-btn" onclick="handleUpdate(${item.ItemID})">Update</button>
-        //<img class="delete-btn" onclick="handleDelete(${item.ItemID})">Delete</button>
+    //<td style="text-align: center;">${item.Status}</td>
+    //img class="update-btn" onclick="handleUpdate(${item.ItemID})">Update</button>
+    //<img class="delete-btn" onclick="handleDelete(${item.ItemID})">Delete</button>
     setDataTables(); // Reinitialize DataTables
 }
 
@@ -491,7 +508,7 @@ function showDeleteOptions(ItemID) {
 archiveUserBtn.addEventListener('click', function () {
     modalVerifyTextAD.textContent = 'Are you sure you want to archive this product?';
     modalStatus = 'archive';  // Set the modal status to 'archive'
-    
+
 });
 
 // Event listener for 'Yes' button in the modal
@@ -510,33 +527,33 @@ modalYes.addEventListener('click', function () {
             },
             body: JSON.stringify({ itemID: selectedItemID }) // Sending itemID
         })
-        .then(response => {
-            if (!response.ok) {
-                if (response.status === 404) {
-                    throw new Error('Product not found.');
-                } else if (response.status === 500) {
-                    throw new Error('Server error. Please try again later.');
-                } else {
-                    throw new Error('Error: ' + response.statusText);
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('Product not found.');
+                    } else if (response.status === 500) {
+                        throw new Error('Server error. Please try again later.');
+                    } else {
+                        throw new Error('Error: ' + response.statusText);
+                    }
                 }
-            }
-            return response.json();
-        })
-        .then(data => {
-            modalVerifyTextAD.textContent = data.message; // Display the response message
-            modalFooterAD.style.display = 'none';
-            modalCloseAD.style.display = 'none';
-            modalVerifyTextAD.textContent = 'Product has been archived successfully!';
-            document.getElementById('modalVerifyTitle-AD').textContent = 'Success';
+                return response.json();
+            })
+            .then(data => {
+                modalVerifyTextAD.textContent = data.message; // Display the response message
+                modalFooterAD.style.display = 'none';
+                modalCloseAD.style.display = 'none';
+                modalVerifyTextAD.textContent = 'Product has been archived successfully!';
+                document.getElementById('modalVerifyTitle-AD').textContent = 'Success';
 
-            // Redirect after a short delay
-            setTimeout(() => {
-                window.location.href = '../inventory/ArchiveProduct/ArchiveProd.php'; // Adjust URL if necessary
-            }, 1000);
-        })
-        .catch(error => {
-            alert('Error: ' + error.message);
-        });
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = '../inventory/ArchiveProduct/ArchiveProd.php'; // Adjust URL if necessary
+                }, 1000);
+            })
+            .catch(error => {
+                alert('Error: ' + error.message);
+            });
     }
 });
 
@@ -584,13 +601,13 @@ function checkLowStock() {
     const selectedView = document.getElementById("modalSelect").value;
     const lowStockItemsBody = document.getElementById('lowStockItemsBody');
     const tableHeader = document.getElementById("tableHeader");
-    
+
     lowStockItemsBody.innerHTML = ''; // Clear previous items
     setTableHeaders(selectedView, tableHeader);
 
     fetchData(selectedView, lowStockItemsBody);
-    
-    document.getElementById("lowStockModal").style.display = "block"; 
+
+    document.getElementById("lowStockModal").style.display = "block";
 }
 
 function setTableHeaders(selectedView, tableHeader) {
@@ -601,7 +618,7 @@ function setTableHeaders(selectedView, tableHeader) {
             <th>In Stock</th>
             <th>Ordered</th>
             <th>Total Sold</th>
-            <th>EOQ</th>
+            <th>Reorder Level</th>
         `;
     } else {
         tableHeader.innerHTML = `
@@ -618,10 +635,10 @@ function fetchData(selectedView, lowStockItemsBody) {
         url: selectedView === 'lowStock' ? 'checkLowStock.php' : 'checkNearExpiry.php',
         method: 'GET',
         dataType: 'json',
-        success: function(data) {
+        success: function (data) {
             processFetchedData(data, selectedView, lowStockItemsBody);
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error("AJAX Error:", status, error);
             lowStockItemsBody.innerHTML = `<tr><td colspan="6">Error connecting to server.</td></tr>`;
         }
@@ -663,7 +680,7 @@ function checkNearExpiry() {
         url: 'checkNearExpiry.php',
         method: 'GET',
         dataType: 'json',
-        success: function(data) {
+        success: function (data) {
             const lowStockItemsBody = document.getElementById('lowStockItemsBody');
             lowStockItemsBody.innerHTML = ''; // Clear previous items
 
@@ -690,7 +707,7 @@ function checkNearExpiry() {
                 lowStockItemsBody.innerHTML = `<tr><td colspan="4">No items nearing expiry.</td></tr>`;
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error("AJAX Error: " + error);
             const lowStockItemsBody = document.getElementById('lowStockItemsBody');
             lowStockItemsBody.innerHTML = `<tr><td colspan="4">Error connecting to server.</td></tr>`;
@@ -742,10 +759,10 @@ function fetchSalesDataForPastYear() {
             url: 'fetchSalesData.php', // Your PHP script to fetch sales data
             method: 'GET',
             dataType: 'json',
-            success: function(data) {
+            success: function (data) {
                 resolve(data); // Resolve with fetched data
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 reject(error); // Reject on error
             }
         });
@@ -757,10 +774,10 @@ function updateReorderLevelInDatabase(itemId, newReorderLevel) {
         url: 'updateReorderLevel.php', // Your PHP script to update the reorder level
         method: 'POST',
         data: { itemId: itemId, reorderLevel: newReorderLevel },
-        success: function(response) {
+        success: function (response) {
             console.log(`Updated ItemID ${itemId} with new Reorder Level: ${newReorderLevel}`);
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             console.error(`Error updating reorder level for ItemID ${itemId}:`, error);
         }
     });
@@ -789,12 +806,12 @@ function updateTableView() {
             <th style="text-align: left; padding: 8px;">Generic Name</th>
             <th style="text-align: left; padding: 8px;">In Stock</th>
             <th>Ordered</th>
-            <th>EOQ</th>
+            <th>Reorder Level</th>
         `;
 
         // Populate table with low stock data via AJAX
-        checkLowStock(); 
-        
+        checkLowStock();
+
     } else if (selectedView === "nearExpiry") {
         // Set headers for Near Expiry Items view
         tableHeader.innerHTML = `
@@ -822,7 +839,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Close modal button event listener
     const closeButton = document.getElementById('BtnCloseLowStock');
     if (closeButton) {
-        closeButton.addEventListener('click', function(event) {
+        closeButton.addEventListener('click', function (event) {
             event.stopPropagation(); // Prevent propagation to parent elements
             console.log('Close button clicked'); // Debugging log
             closeModal();
@@ -830,7 +847,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Close modal when clicking outside the modal content
-    window.addEventListener('click', function(event) {
+    window.addEventListener('click', function (event) {
         const modal = document.getElementById('lowStockModal');
         if (event.target === modal) {
             closeModal();
@@ -876,25 +893,28 @@ function resetFormFields() {
 }
 
 // Event listener for the close button
-document.getElementById('GIcloseBtn').addEventListener('click', function() {
+document.getElementById('GIcloseBtn').addEventListener('click', function () {
     resetFormFields(); // Call the reset function when the exit button is clicked
     document.getElementById('overlayEdit1').style.display = 'none'; // Hide the modal overlay
 });
 
 
 
-    // Show the overlay when the Goods Issue button is clicked
-    document.getElementById("GoodsIssueBtn").addEventListener("click", function () {
-        document.getElementById("overlayEdit1").style.display = "flex";
-    });
+// Show the overlay when the Goods Issue button is clicked
+document.getElementById("GoodsIssueBtn").addEventListener("click", function () {
+    isAddMode = true;
+    document.getElementById('ToggleAdd').style.backgroundColor = 'green';
+    document.getElementById('ToggleAdd').style.boxShadow = '0 0 10px green';
+    document.getElementById("overlayEdit1").style.display = "flex";
+});
 
-    // Close the overlay when the close button is clicked
-    document.getElementById("GIcloseBtn").addEventListener("click", function () {
-        closeEditOverlay();
-    });
+// Close the overlay when the close button is clicked
+document.getElementById("GIcloseBtn").addEventListener("click", function () {
+    closeEditOverlay();
+});
 
 
-    
+
 
 // Function to close the overlay and reset the form
 function closeEditOverlay() {
@@ -915,6 +935,12 @@ function showProductDropdown() {
     fetchAllProducts(); // Fetch all products to show in the dropdown
 }
 
+function hideProductDropdown() {
+    const dropdown = document.getElementById('productSelect');
+    dropdown.style.display = 'none'; // Show the dropdown when the input is clicked
+    fetchAllProducts(); // Fetch all products to show in the dropdown
+}
+
 function filterOptions() {
     const input = document.getElementById('selectProd');
     const filter = input.value.toLowerCase();
@@ -922,7 +948,7 @@ function filterOptions() {
     document.getElementById('selectLot').disabled = true; // Enable the selectLot input
     dropdown.innerHTML = ''; // Clear previous options
     document.getElementById('selectLot').style.cursor = "not-allowed";
-    
+
 
     // Clear ordered amount field if the input is empty
     if (filter === '') {
@@ -930,7 +956,7 @@ function filterOptions() {
         resetQuantityRemainingField();
         clearLot();
         return; // Stop function if input is empty
-        
+
     }
 
     // AJAX request to fetch matching products
@@ -959,10 +985,10 @@ function filterOptions() {
                         option.classList.add('option');
                         option.dataset.value = product.ItemID; // Store the ItemID
                         const displayText = `${product.GenericName} ${product.BrandName} (${product.Mass} ${product.UnitOfMeasure})`;
-                        option.textContent = displayText.length > MAX_LENGTH 
-                            ? displayText.substring(0, MAX_LENGTH - 3) + '...' 
+                        option.textContent = displayText.length > MAX_LENGTH
+                            ? displayText.substring(0, MAX_LENGTH - 3) + '...'
                             : displayText;
-                        option.onclick = function() {
+                        option.onclick = function () {
                             selectProduct(option);
                         };
                         dropdown.appendChild(option);
@@ -1004,10 +1030,10 @@ function fetchAllProducts() {
                     option.classList.add('option');
                     option.dataset.value = product.ItemID; // Store the ItemID
                     const displayText = `${product.GenericName} ${product.BrandName} (${product.Mass} ${product.UnitOfMeasure})`;
-                    option.textContent = displayText.length > MAX_LENGTH 
-                        ? displayText.substring(0, MAX_LENGTH - 3) + '...' 
+                    option.textContent = displayText.length > MAX_LENGTH
+                        ? displayText.substring(0, MAX_LENGTH - 3) + '...'
                         : displayText;
-                    option.onclick = function() {
+                    option.onclick = function () {
                         selectProduct(option);
                     };
                     dropdown.appendChild(option);
@@ -1058,12 +1084,11 @@ function filterLotOptions() {
 
     if (filter === '') {
         resetQuantityRemainingField(); // Only clear QuantityRemaining when input is empty
-        return; // Exit function
     }
 
     const xhr = new XMLHttpRequest();
     xhr.open('GET', `goodIssueGetData.php?lotQuery=${encodeURIComponent(filter)}`, true);
-    
+
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
@@ -1087,11 +1112,11 @@ function filterLotOptions() {
                         option.dataset.value = lot.LotNumber;
                         option.dataset.quantity = lot.QuantityRemaining; // Store QuantityRemaining in data attribute
 
-                        option.textContent = lot.LotNumber.length > MAX_LENGTH 
-                            ? lot.LotNumber.substring(0, MAX_LENGTH - 3) + '...' 
+                        option.textContent = lot.LotNumber.length > MAX_LENGTH
+                            ? lot.LotNumber.substring(0, MAX_LENGTH - 3) + '...'
                             : lot.LotNumber;
 
-                        option.onclick = function() {
+                        option.onclick = function () {
                             selectLot(option);
                         };
                         dropdown.appendChild(option);
@@ -1109,7 +1134,7 @@ function filterLotOptions() {
             }
         }
     };
-    
+
     xhr.send();
 }
 
@@ -1138,7 +1163,7 @@ function fetchProductData(itemID) {
     if (itemID) {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', `goodIssueGetData.php?itemID=${itemID}`, true);
-        
+
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
@@ -1177,22 +1202,22 @@ let currentSelectedItemID; // Declare a variable to hold the selected ItemID
 let currentLotNumber; // Store the selected LotNumber
 
 // Event listener for the Add button
-document.getElementById('ToggleAdd').addEventListener('click', function() {
+document.getElementById('ToggleAdd').addEventListener('click', function () {
     isAddMode = true;
-    this.style.backgroundColor = 'green'; 
-    this.style.boxShadow = '0 0 10px green'; 
-    document.getElementById('ToggleSub').style.backgroundColor = ''; 
-    document.getElementById('ToggleSub').style.boxShadow = ''; 
+    this.style.backgroundColor = 'green';
+    this.style.boxShadow = '0 0 10px green';
+    document.getElementById('ToggleSub').style.backgroundColor = '';
+    document.getElementById('ToggleSub').style.boxShadow = '';
 });
 
 
 // Event listener for the Subtract button
-document.getElementById('ToggleSub').addEventListener('click', function() {
+document.getElementById('ToggleSub').addEventListener('click', function () {
     isAddMode = false;
-    this.style.backgroundColor = 'red'; 
-    this.style.boxShadow = '0 0 10px red'; 
-    document.getElementById('ToggleAdd').style.backgroundColor = ''; 
-    document.getElementById('ToggleAdd').style.boxShadow = ''; 
+    this.style.backgroundColor = 'red';
+    this.style.boxShadow = '0 0 10px red';
+    document.getElementById('ToggleAdd').style.backgroundColor = '';
+    document.getElementById('ToggleAdd').style.boxShadow = '';
 });
 
 
@@ -1200,7 +1225,7 @@ document.getElementById('ToggleSub').addEventListener('click', function() {
 const quantityInput = document.getElementById('Quantity');
 
 // Add event listener to the Confirm button
-document.getElementById('ConfirmAction').addEventListener('click', function() {
+document.getElementById('ConfirmAction').addEventListener('click', function () {
     const quantityInput = document.getElementById('Quantity');
     const quantity = parseInt(quantityInput.value, 10);
     const reason = document.getElementById('Reason').value;
@@ -1240,29 +1265,29 @@ document.getElementById('ConfirmAction').addEventListener('click', function() {
         },
         body: JSON.stringify(data),
     })
-    .then(response => response.json())
-    .then(result => {
-        console.log(result.message);
-        
-        // Display the response message in the modal
-        modalVerifyTextAD.textContent = result.message; // Display the response message
-        modalFooterAD.style.display = 'none';
-        modalCloseAD.style.display = 'none';
-        document.getElementById('modalVerifyTitle-AD').textContent = 'Success';
+        .then(response => response.json())
+        .then(result => {
+            console.log(result.message);
 
-        // Show the success modal
-        const successModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
-        successModal.show();
+            // Display the response message in the modal
+            modalVerifyTextAD.textContent = result.message; // Display the response message
+            modalFooterAD.style.display = 'none';
+            modalCloseAD.style.display = 'none';
+            document.getElementById('modalVerifyTitle-AD').textContent = 'Success';
 
-        // Redirect after a short delay
-        setTimeout(() => {
-            window.location.href = 'inventory.php'; // Redirect to inventory.php
-        }, 1000);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showNotification('Error: ' + error.message); // Show error message using notification
-    });
+            // Show the success modal
+            const successModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+            successModal.show();
+
+            // Redirect after a short delay
+            setTimeout(() => {
+                window.location.href = 'inventory.php'; // Redirect to inventory.php
+            }, 1000);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Error: ' + error.message); // Show error message using notification
+        });
 });
 
 
@@ -1281,7 +1306,7 @@ function showNotification(message) {
     notification.style.display = 'block';
 
     // Close notification when the close button is clicked
-    closeNotification.onclick = function() {
+    closeNotification.onclick = function () {
         notification.style.display = 'none';
     };
 
@@ -1298,14 +1323,14 @@ function showNotification(message) {
 // Function to handle the input from the barcode scanner
 function handleBarcodeInput(event) {
     const productCodeInput = document.getElementById('productCode');
-    
+
     // Wait for the 'Enter' key to process the barcode scan
     if (event.key === 'Enter') {
         event.preventDefault(); // Prevent default form submission
-        
+
         // Process the full scanned code
         console.log('Scanned Barcode:', productCodeInput.value);
-        
+
         // Here, add any additional processing, such as form submission or fetching product data
     }
 }
@@ -1313,12 +1338,12 @@ function handleBarcodeInput(event) {
 // Attach the event listener for 'input' and 'keypress' events when the DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
     const productCodeInput = document.getElementById('productCode');
-    
+
     // Only listen for the 'keypress' event to detect the 'Enter' key
     productCodeInput.addEventListener('keypress', handleBarcodeInput);
-    
+
     // Ensure manual typing works by preventing key appending for each input
-    productCodeInput.addEventListener('input', function() {
+    productCodeInput.addEventListener('input', function () {
         // Placeholder for additional logic if needed on each input update
     });
 });

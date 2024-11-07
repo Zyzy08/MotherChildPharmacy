@@ -16,7 +16,7 @@ $sql = "SELECT inv.ItemID, inv.BrandName, inv.GenericName, del.ExpiryDate, del.L
         FROM inventory inv
         JOIN delivery_items del ON inv.ItemID = del.ItemID
         WHERE del.ExpiryDate >= CURDATE() 
-        AND del.ExpiryDate <= DATE_ADD(CURDATE(), INTERVAL 3 MONTH)
+        AND del.ExpiryDate <= DATE_ADD(CURDATE(), INTERVAL 6 MONTH)
         ORDER BY del.ExpiryDate ASC";  // Order by expiry date
 
 $result = $conn->query($sql);

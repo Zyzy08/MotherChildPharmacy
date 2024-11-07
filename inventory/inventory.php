@@ -250,8 +250,8 @@
         </div>
 
         <div class="button" id="FastmovingBtn">
-          <img src="../resources/img/Sales.png" alt="Goods Issue">
-          Fast Moving Item
+          <img src="../resources/img/Sales.png" alt="Fast Moving Items">
+          Fast Moving Items
         </div>
 
         <div class="archived-users" id="toArchivedUsers">
@@ -266,7 +266,7 @@
 
       <form id="PurchaseForm" class="modal" enctype="multipart/form-data" action="../inventory/insertInventory.php"
         method="POST">
-        <div class="modal-content">
+        <div class="modal-content" id="item-details-modal">
 
           <div class="form-section">
             <h3 class="h3">Product Information & Sale Information</h3>
@@ -283,7 +283,7 @@
 
             <div class="textbox">
               <input style="margin-right: 30px;" type="text" id="itemID" name="itemID" readonly>
-              <select style="margin-right: 30px;" class="itemType" id="itemType" name="itemType">
+              <select style="margin-right: 30px;" class="itemType" id="itemType" name="itemType" required>
                 <option value=""></option>
                 <option value="Medicine">Medicine</option>
                 <option value="Milk">Milk</option>
@@ -294,8 +294,9 @@
               </select>
 
               <!--<input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱" onfocus="addPesoSign()" oninput="addPesoSign()" /> -->
-              <input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱ " onfocus="addPesoSign()"
-                onblur="cleanPriceInput()" />
+              <input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱"
+                oninput="validateCurrencyInput(this)" onfocus="addPesoSign()" onblur="cleanPriceInput()" required/>
+
 
 
 
@@ -309,9 +310,9 @@
 
             <div class="textbox">
               <input style="margin-right: 30px;" type="text" id="brandName" name="brandName">
-              <input style="margin-right: 30px;" type="text" id="genericName" name="genericName">
+              <input style="margin-right: 30px;" type="text" id="genericName" name="genericName" required>
 
-              <select name="Discount" id="Discount" onchange="updateValue()">
+              <select name="Discount" id="Discount" required>
                 <option value=""></option>
                 <option value="1">Available</option>
                 <option value="0">Unavailable</option>
@@ -327,9 +328,9 @@
 
             </div>
             <div class="textbox">
-              <input style="margin-right: 30px;" type="number" id="mass" name="mass">
+              <input style="margin-right: 30px;" type="number" id="mass" name="mass" required>
               <!--<input type="text" id="unitOfMeasure" name="unitOfMeasure">-->
-              <select style="margin-right: 35px;" class="unitOfMeasure" id="unitOfMeasure" name="unitOfMeasure">
+              <select style="margin-right: 35px;" class="unitOfMeasure" id="unitOfMeasure" name="unitOfMeasure" required>
                 <option value=""></option>
                 <option value="pc">pcs</option>
                 <option value="kg">kg</option>
@@ -344,7 +345,7 @@
 
               </select>
 
-              <select name="VAT_exempted" id="VAT_exempted" onchange="updateValue()">
+              <select name="VAT_exempted" id="VAT_exempted" required>
                 <option value=""></option>
                 <option value="1">Available</option>
                 <option value="0">Unavailable</option>
@@ -357,22 +358,20 @@
             </div>
           </div>
           <div>
-            <label class="label" style="margin-right: 160px;" for="ProductCode">Product Code</label>
-            <label class="label" style="margin-right: 205px;" for="InStock">Instock</label>
-            <label class="label" for="Ordered">Ordered</label>
-
+            <label class="label" for="ProductCode">Product Code</label>
           </div>
           <div class="textbox">
             <input style="margin-right: 30px;" type="text" id="productCode" name="ProductCode">
+          </div>
+          <div class="textbox">
+            <label class="label" style="margin-right: 200px;" for="InStock">Instock</label>
+            <label class="label" style="margin-right: 197px;" for="Ordered">Ordered</label>
+            <label class="label" for="ReorderLevel">Reorder Level</label>
+          </div>
+          <div class="textbox">
+            <input style="margin-right: 30px;" type="number" id="ReorderLevel" name="ReorderLevel">
             <input style="margin-right: 30px;" type="number" id="InStock" name="InStock">
             <input type="number" id="Ordered" name="Ordered">
-
-          </div>
-          <div class="textbox">
-            <label class="label" for="ReorderLevel">Reorderlevel</label>
-          </div>
-          <div class="textbox">
-            <input type="number" id="ReorderLevel" name="ReorderLevel">
           </div>
 
 
@@ -407,17 +406,17 @@
                 <table id="example" class="display">
                   <thead>
                     <tr class="highlight-row">
-                      <th style="text-align: center; font-size: 12px;">Item ID</th>
-                      <th style="text-align: center; font-size: 12px;">Picture</th>
-                      <th style="text-align: center; font-size: 12px;">Generic Name</th>
-                      <th style="text-align: center; font-size: 12px;">Brand Name</th>
-                      <th style="text-align: center; font-size: 12px;">Item Type</th>
-                      <th style="text-align: center; font-size: 12px;">Measurement</th>
-                      <th style="text-align: center; font-size: 12px;">Price</th>
-                      <!--<th style="text-align: center; font-size: 12px;">Status</th>-->
-                      <th style="text-align: center; font-size: 12px;">InStock</th>
-                      <th style="text-align: center; font-size: 12px;">Ordered</th>
-                      <th style="text-align: center; font-size: 12px;">Actions</th>
+                      <th style="font-size: 12px;">Item ID</th>
+                      <th style="font-size: 12px;">Picture</th>
+                      <th style="font-size: 12px;">Generic Name</th>
+                      <th style="font-size: 12px;">Brand Name</th>
+                      <th style="font-size: 12px;">Item Type</th>
+                      <th style="font-size: 12px;">Measurement</th>
+                      <th style="font-size: 12px;">Price</th>
+                      <!--<th style="font-size: 12px;">Status</th>-->
+                      <th style="font-size: 12px;">InStock</th>
+                      <th style="font-size: 12px;">Ordered</th>
+                      <th style="font-size: 12px;">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="tableBody">
@@ -466,7 +465,7 @@
             <img src="../resources/img/box-archive.png"> Archive Product
           </button>
           <br>
-          <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
+          <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false" style="z-index: 1000;">
             <div class="modal-dialog">
               <div class="modal-content" id="modal-content-archive">
                 <div class="modal-header">
@@ -520,7 +519,7 @@
 
 
 
-      <div class="modal" id="disablebackdrop" tabindex="-1" data-bs-backdrop="false">
+      <div class="modal" id="disablebackdrop" tabindex="-1" data-bs-backdrop="false" style="z-index: 1000;">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -567,7 +566,7 @@
             <div class="textbox" style="margin-bottom: 10px;">
 
               <input type="text" id="selectLot" name="selectLot" placeholder="Search Lot Number..."
-                oninput="filterLotOptions()" onclick="showLotDropdown()" autocomplete="off" disabled>
+                oninput="filterLotOptions()" onclick="filterLotOptions()" autocomplete="off" disabled style="cursor: not-allowed;">
               <div class="custom-dropdown">
                 <div id="lotSelect" class="dropdown-content" style="display: none;">
                   <div class="option" onclick="selectLot(this)" data-value="">Select a Lot Number</div>
@@ -577,8 +576,8 @@
             </div>
 
             <div class="textbox" style="margin-top: 10px;">
-              <label class="label" style="margin-right: 210px;" for="QuantityRemaining">Stock</label>
-              <label class="label" for="Orderedd">Ordered</label>
+              <label class="label" style="margin-right: 182px;" for="QuantityRemaining">Lot Stock</label>
+              <label class="label" for="Orderedd">Total Ordered</label>
             </div>
 
             <div class="textbox" style="margin-bottom: 15px;">

@@ -620,6 +620,19 @@
 
   </main><!-- End #main -->
 
+  <div class="modal" id="disablebackdrop-Front" tabindex="-1" style="z-index: 1111;">
+    <div class="modal-dialog" data-bs-backdrop="false">
+      <div class="modal-content" id="modal-content-id">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalVerifyTitle-Front">Title Text</h5>
+        </div>
+        <div class="modal-body" id="modalVerifyText-Front">
+          Text
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
