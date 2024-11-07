@@ -109,8 +109,10 @@ function updateTable(data) {
 
         table.row.add([
             `SP-0${row.SupplierID}`,
-            `${row.SupplierName.slice(0, 13)}...`, // Truncate Company Name
-            `${row.AgentName.slice(0, 10)}...`, // Truncate Agent Name
+            // `${row.SupplierName.slice(0, 13)}...`, // Truncate Company Name
+            // `${row.AgentName.slice(0, 10)}...`, // Truncate Agent Name
+            `${row.SupplierName}`,
+            `${row.AgentName}`,
             `${row.Phone}`,
             `${row.Email.slice(0, 10)}...`, // Truncate Email
             `<div style="text-align: center;">

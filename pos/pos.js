@@ -346,7 +346,13 @@ function showQuantityModal(product) {
             bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
         } else {
             // Show message if adding would exceed available stock
-            showToast(`Cannot add more than ${product.InStock} of this item.`);
+            // showToast(`Cannot add more than ${product.InStock} of this item.`);
+            const modalVerifyTitleFront = document.getElementById('modalVerifyTitle-Front');
+            const modalVerifyTextFront = document.getElementById('modalVerifyText-Front');
+            const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
+            modalVerifyTitleFront.textContent = 'Error';
+            modalVerifyTextFront.textContent = `Cannot add more than a total of ${product.InStock} of this item.`;
+            confirmationModal.show();
         }
     };
 
@@ -930,7 +936,6 @@ function generateReceiptContent() {
     const maxWidth = 32;
 
     const employeeName = document.getElementById('staff').textContent.replace('Staff: ', '').trim();
-    const role = document.getElementById('role').textContent.replace('Role: ', '');
 
     function centerText(text) {
         const padding = Math.max(0, Math.floor((maxWidth - text.length) / 2));

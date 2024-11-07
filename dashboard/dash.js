@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const salesTotal = document.getElementById('sales-total');
     const percentageChange = document.getElementById('percentage-change');
     const changeText = document.getElementById('change-text');
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add event listeners to dropdown items
     dropdownItems.forEach(item => {
-        item.addEventListener('click', function(e) {
+        item.addEventListener('click', function (e) {
             e.preventDefault();
             const period = this.getAttribute('data-period');
             fetchSalesData(period);
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const customerTotal = document.getElementById('customer-total');
     const customerPercentageChange = document.getElementById('customer-percentage-change');
     const customerChangeText = document.getElementById('customer-change-text');
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add event listeners to dropdown items
     customerDropdownItems.forEach(item => {
-        item.addEventListener('click', function(e) {
+        item.addEventListener('click', function (e) {
             e.preventDefault();
             const period = this.getAttribute('data-period');
             fetchCustomerData(period);
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const inventoryCount = document.getElementById('inventory-count');
     const statusText = document.getElementById('status-text');
     const statusIcon = document.getElementById('status-icon');
@@ -135,11 +135,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateCardAppearance(status) {
         const config = statusConfigs[status];
-        
+
         // Update icon
         statusIcon.className = `card-icon rounded-circle d-flex align-items-center justify-content-center ${config.bgClass}`;
         statusIcon.innerHTML = `<i class="bi ${config.icon} ${config.iconClass}"></i>`;
-        
+
         // Update text
         statusDescription.className = `${config.textClass} small pt-1 fw-bold`;
         statusDescription.textContent = config.description;
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add click event listeners to filter dropdown items
     document.querySelectorAll('.dropdown-item-inv').forEach(item => {
-        item.addEventListener('click', function(e) {
+        item.addEventListener('click', function (e) {
             e.preventDefault();
             const status = this.dataset.status;
             currentStatus = status;
@@ -250,23 +250,30 @@ document.addEventListener("DOMContentLoaded", function () {
                         case 'Cancelled':
                             statusColor = "text-danger"; // Red
                             break;
+                        case 'Back Order':
+                            statusColor = "text-primary"; // Blue
+                            break;
                         default:
                             statusColor = "text-muted"; // Gray for unknown status
                     }
 
                     // Format OrderDate for display
                     const orderDate = new Date(delivery.OrderDate);
-                    const timeLabel = orderDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const month = orderDate.toLocaleDateString('en-US', { month: 'short' }) + '.';
+                    const day = orderDate.toLocaleDateString('en-US', { day: 'numeric' });
+                    const dateLabel = `${month} ${day}`;
+
+
 
                     // Create the HTML for each delivery item
                     const activityItem = document.createElement("div");
                     activityItem.classList.add("activity-item", "d-flex");
 
                     activityItem.innerHTML = `
-                        <div class="activite-label">${timeLabel}</div>
+                        <div class="activite-label">${dateLabel}</div>
                         <i class="bi bi-circle-fill activity-badge ${statusColor} align-self-start"></i>
                         <div class="activity-content">
-                            Order #${delivery.PurchaseOrderID} - <span class="fw-bold">${delivery.Status}</span>
+                            Order #PO-0${delivery.PurchaseOrderID} - <span class="fw-bold">${delivery.Status}</span>
                         </div>
                     `;
 

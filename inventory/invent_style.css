@@ -31,7 +31,7 @@
   display: none;
   /* Hidden by default */
   position: fixed;
-  z-index: 1000;
+  z-index: 999;
   left: 0;
   top: 0;
   width: 100%;
@@ -1071,7 +1071,7 @@ td {
   /* Positioning below the input */
   z-index: 999;
   /* Ensure it appears above other elements */
-  width: 100%;
+  width: 94.5%;
   /* Full width */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   /* Shadow for depth */
@@ -1140,7 +1140,7 @@ td {
   /* Positioning below the input */
   z-index: 999;
   /* Ensure it appears above other elements */
-  width: 100%;
+  width: 94.4%;
   /* Full width */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   /* Shadow for depth */
@@ -1259,14 +1259,14 @@ textarea {
 }
 
 .add {
-  background-color: #4CAF50;
+  background-color: #3b493c;
   /* Green color for confirm button */
   color: #fff;
   /* White text color */
 }
 
 .sub {
-  background-color: #af4c4c;
+  background-color: #473636;
   /* Red color for cancel button */
   color: #fff;
   /* White text color */
@@ -1383,4 +1383,13 @@ textarea {
 
 #modal-content-archive {
   margin: 40% auto;
+}
+
+#Ordered, #InStock, #ReorderLevel, #orderedAmount, #QuantityRemaining {
+  cursor: not-allowed;
+  background-color: #e0e0e0;
+}
+
+#item-details-modal{
+  width: 60%;
 }

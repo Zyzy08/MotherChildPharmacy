@@ -47,13 +47,13 @@ function updateTable(data) {
             return; // Skip this item if essential properties are missing
         }
         table.row.add([
-            `<span class="text-truncate">${item.ItemID}</span>`, // Item ID with truncation
+            `<span class="text-truncate">I-0${item.ItemID}</span>`, // Item ID with truncation
             `<img src="../${item.ProductIcon}" alt="Icon" style="width: 50px; height: auto;">`, // Product Icon
             `<td class="text-truncate">${item.GenericName}</span>`, // Generic Name with truncation
             `<td class="text-truncate">${item.BrandName}</span>`, // Brand Name with truncation
             `<td class="text-truncate">${item.ItemType}</span>`, // Item Type with truncation
             `<td class="text-truncate">${item.Mass} ${item.UnitOfMeasure}</span>`, // Mass with Unit of Measure
-            `<td class="text-truncate">${item.PricePerUnit}</span>`, // Price Per Unit with truncation
+            `<td class="text-truncate">₱ ${item.PricePerUnit}</span>`, // Price Per Unit with truncation
             `<td class="text-truncate">${item.InStock}</span>`, // In Stock with truncation
             `<td class="text-truncate">${item.Ordered}</span>`, // Ordered with truncation
 
@@ -88,12 +88,12 @@ function setDataTables() {
         "autoWidth": false, // Disable automatic column width calculation
         "responsive": true, // Enable responsiveness
         "columnDefs": [
-            { "targets": 0, "width": "5%" }, // Item ID
+            { "targets": 0, "width": "10%" }, // Item ID
             { "targets": 1, "width": "10%", "orderable": false }, // Icon 
-            { "targets": 2, "width": "10%" }, // Generic Name
-            { "targets": 3, "width": "10%" }, // Brand Name
-            { "targets": 4, "width": "10%" }, // Item Type
-            { "targets": 5, "width": "5%" }, // Mass & Unit of Measure
+            { "targets": 2, "width": "10%", "orderable": false }, // Generic Name
+            { "targets": 3, "width": "10%", "orderable": false }, // Brand Name
+            { "targets": 4, "width": "10%", "orderable": false }, // Item Type
+            { "targets": 5, "width": "5%", "orderable": false }, // Mass & Unit of Measure
             { "targets": 6, "width": "10%" }, // Price Per Unit
             { "targets": 7, "width": "10%" }, // InStock
             { "targets": 8, "width": "10%" }, // Ordered
