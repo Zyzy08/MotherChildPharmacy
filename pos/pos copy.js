@@ -6,6 +6,7 @@ let totalItems = 0;
 let totalPages = 0;
 let searchQuery = '';
 let basket = [];
+let VATamt = 0;
 
 async function fetchProducts(query = '') {
     try {
@@ -48,15 +49,18 @@ async function loadProducts() {
     outOfStockContainer.innerHTML = '';
 
     function getStockStatus(product) {
+        console.log(product.BrandName + ' stock comparison is ' + (Number(product.InStock) > Number(product.ReorderLevel)));
         if (product.InStock == 0 && product.Status === 'Active') {
             return 'out-of-stock';
         }
-        if (product.InStock < product.ReorderLevel && product.InStock > 0 && product.Status === 'Active') {
+        if ((Number(product.InStock) < Number(product.ReorderLevel)) && (Number(product.InStock) > 0) && (product.Status === 'Active')) {
             return 'low-stock';
         }
-        if (product.InStock >= product.ReorderLevel && product.Status === 'Active') {
+        if ((Number(product.InStock) >= Number(product.ReorderLevel)) && product.Status === 'Active') {
             return 'in-stock';
         }
+        console.log('InStock:', product.InStock, 'ReorderLevel:', product.ReorderLevel);
+        console.log(typeof product.InStock, typeof product.ReorderLevel);
         return 'unknown';
     }
 
@@ -82,7 +86,7 @@ async function loadProducts() {
 function createProductHTML(product, stockBadge) {
     return `
         <div class="col-lg-3 mb-3">
-            <div class="card clickable-card ${product.InStock === 0 ? 'non-clickable-card' : ''}" 
+            <div class="card clickable-card ${product.InStock == 0 ? 'non-clickable-card' : ''}" 
                 data-id="${product.BrandName.toLowerCase().replace(/ /g, "-")}" 
                 data-product='${JSON.stringify(product)}'>
                 ${stockBadge}
@@ -274,10 +278,14 @@ searchInput.addEventListener('keypress', async function (event) {
     new bootstrap.Modal(document.getElementById('quantity-modal')).show();
 }*/
 
+const modalVerifyTitleFront = document.getElementById('modalVerifyTitle-Front');
+const modalVerifyTextFront = document.getElementById('modalVerifyText-Front');
+const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
+
 function showQuantityModal(product) {
     const modalBody = document.getElementById('quantity-modal-body');
     const formattedUnit = formatUnitOfMeasure(product.UnitOfMeasure);
-    let stockBadge = product.InStock < 50 ?
+    let stockBadge = Number(product.InStock) < Number(product.ReorderLevel) ?
         `<span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i>Low-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>` :
         `<span class="badge bg-info text-dark"><i class="bi bi-info-circle me-1"></i>In-Stock <span class="badge bg-white text-primary">${product.InStock}</span></span>`;
 
@@ -318,14 +326,16 @@ function showQuantityModal(product) {
             // Add item if total does not exceed stock
             addItemToBasket(product, quantityToAdd);
             bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
-        } else {
+        } else if (quantityToAdd > 0 && totalQuantity > product.InStock) {
+            modalVerifyTitleFront.textContent = 'Warning';
+            modalVerifyTextFront.textContent = `Cannot add more than a total of ${product.InStock} of this item.`;
+            confirmationModal.show();
+        }
+        else {
             // Show message if adding would exceed available stock
             // showToast(`Cannot add more than ${product.InStock} of this item.`);
-            const modalVerifyTitleFront = document.getElementById('modalVerifyTitle-Front');
-            const modalVerifyTextFront = document.getElementById('modalVerifyText-Front');
-            const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
-            modalVerifyTitleFront.textContent = 'Error';
-            modalVerifyTextFront.textContent = `Cannot add more than a total of ${product.InStock} of this item.`;
+            modalVerifyTitleFront.textContent = 'Invalid Input';
+            modalVerifyTextFront.textContent = `Please enter a valid quantity.`;
             confirmationModal.show();
         }
     };
@@ -366,7 +376,8 @@ function addItemToBasket(product, quantity) {
             BrandName: product.BrandName,
             GenericName: product.GenericName,
             PricePerUnit: product.PricePerUnit,
-            quantity: quantity
+            quantity: quantity,
+            VAT_exempted: product.VAT_exempted
         });
     }
     updateBasketDisplay();
@@ -383,9 +394,14 @@ function updateBasketDisplay() {
     const basketItemsContainer = document.getElementById('basket-items');
     basketItemsContainer.innerHTML = '';
     let basketTotal = 0;
+    VATamt = 0;
 
     basket.forEach(item => {
         const itemTotal = item.PricePerUnit * item.quantity;
+        // Get total tax of VATable products
+        if(item.VAT_exempted == 0){
+            VATamt += item.PricePerUnit - (item.PricePerUnit/1.12)
+        }
         basketTotal += itemTotal;
 
         const escapedId = item.id.replace(/'/g, "\\'").replace(/"/g, '\\"');
@@ -408,8 +424,9 @@ function updateBasketDisplay() {
         `);
     });
 
-    const tax = (basketTotal * 0.12).toFixed(2);
-    const totalAmount = (basketTotal + parseFloat(tax)).toFixed(2);
+    const tax = VATamt.toFixed(2);
+    // const totalAmount = (basketTotal + parseFloat(tax)).toFixed(2);
+    const totalAmount = (basketTotal).toFixed(2);
     document.getElementById('basket-total').textContent = `₱${formatPrice(totalAmount)}`;
     document.getElementById('basket-tax').textContent = `₱${formatPrice(tax)}`;
     updateCheckoutButtonState();
@@ -455,13 +472,13 @@ document.querySelectorAll('#verticalycentered .form-check-input').forEach(checkb
 
 function updateModalTotal() {
     const subtotal = basket.reduce((total, item) => total + (item.PricePerUnit * item.quantity), 0);
-    const tax = subtotal * 0.12;
+    const tax = VATamt;
     let discountPercentage = 0;
 
     if (document.getElementById('seniorCitizenCheckbox').checked) discountPercentage += 20;
 
     const discountAmount = subtotal * (discountPercentage / 100);
-    const discountedTotal = subtotal + tax - discountAmount;
+    const discountedTotal = subtotal - discountAmount;
 
     document.getElementById('total-display').textContent = `Total: ₱${formatCurrency(discountedTotal)}`;
 }
@@ -601,6 +618,18 @@ document.getElementById('largeModal').addEventListener('show.bs.modal', function
     generateReceiptItems();
     displayReceiptItems();
 
+    // Get current date time
+    const currentDate = new Date();
+
+    // Format options for date and time
+    const dateOptions = { month: 'long', day: 'numeric', year: 'numeric' };
+    const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
+
+    // Format the date and time separately and combine them
+    const formattedDate = currentDate.toLocaleDateString('en-US', dateOptions);
+    const formattedTime = currentDate.toLocaleTimeString('en-US', timeOptions);
+    document.getElementById('date-time').textContent = `Date: ${formattedDate} ${formattedTime}`;
+
     // Get the payment value from the input before it's cleared
     const payment = parseFloat(document.getElementById('paymentInput').value) || 0;
 
@@ -695,6 +724,7 @@ document.getElementById('cancel-checkout').addEventListener('click', function ()
 });
 
 document.getElementById('cancel-receipt').addEventListener('click', function () {
+    confirmButton.setAttribute('disabled', 'true');
     // First, ensure the receipt modal is properly hidden
     const receiptModal = bootstrap.Modal.getInstance(document.getElementById('largeModal'));
     if (receiptModal) {
@@ -706,12 +736,6 @@ document.getElementById('cancel-receipt').addEventListener('click', function () 
             backdrop.remove();
         }
     }
-
-    // Then, show the checkout modal after a short delay
-    setTimeout(() => {
-        const checkoutModal = new bootstrap.Modal(document.getElementById('verticalycentered'));
-        checkoutModal.show();
-    }, 1000);
 });
 
 let orderNum = 0;
@@ -1034,3 +1058,9 @@ function formatPrice(price) {
 function formatCurrency(number) {
     return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
+
+scrollTop = document.getElementById('scrollTop');
+scrollTop.addEventListener('click', function(event){
+    document.body.style.removeProperty("overflow");
+    document.body.style.removeProperty("padding-right");
+});

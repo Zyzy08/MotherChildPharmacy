@@ -17,7 +17,7 @@ if ($conn->connect_error) {
 $searchQuery = isset($_POST['query']) ? $_POST['query'] : '';
 
 // Prepare the SQL statement to fetch products
-$sql = "SELECT ItemID, BrandName, GenericName, Mass, UnitOfMeasure, InStock, PricePerUnit, ProductIcon, ProductCode, ReorderLevel, Status 
+$sql = "SELECT ItemID, BrandName, GenericName, Mass, UnitOfMeasure, InStock, PricePerUnit, ProductIcon, ProductCode, ReorderLevel, Discount, VAT_exempted, Status 
         FROM inventory";
 
 if ($searchQuery) {

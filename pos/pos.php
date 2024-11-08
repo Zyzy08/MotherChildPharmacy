@@ -335,7 +335,7 @@
             <div>
               <div class="card-footer">
                 <div class="d-flex w-100 justify-content-between">
-                  <small>Tax 12%:</small>
+                  <small>VAT Amount (12%):</small>
                   <p id="basket-tax">₱0.00</p>
                 </div>
                 <div class="d-flex w-100 justify-content-between">
@@ -438,12 +438,11 @@
             <h2 id="total-display" style="font-weight: bold;">Total: ₱0.00</h2><br>
 
             <div class="row mb-0">
-              <hor="paymentInput" class="col-sm-5" style="font-weight: bold;">Payment: ₱</h2>
+              <h2 for="paymentInput" class="col-sm-5" style="font-weight: bold;">Payment: ₱</h2>
               <div class="col-sm-6">
-                <input type="number" id="paymentInput" class="form-control no-arrows" min="1" max="999999"
-                  placeholder="0" oninput="validatePayment(this)">
+                <input type="number" id="paymentInput" class="form-control no-arrows" placeholder="0" oninput="validatePayment(this)">
                 <div class="invalid-feedback">
-                  Please enter an amount between ₱1 and ₱999,999
+                  Insufficient amount!
                 </div>
               </div>
             </div>
@@ -502,7 +501,7 @@
 
           <div class="row text-center justify-content-between">
             <div class="col-xl-5">
-              <small>Tax 12%:</small>
+              <small>VAT (12%):</small>
             </div>
             <div class="col-xl-5">
               <small id="tax">₱0.00</small>
@@ -626,7 +625,7 @@
     </div>
   </footer><!-- End Footer -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center" id="scrollTop"><i
       class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
