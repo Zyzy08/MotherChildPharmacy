@@ -1,0 +1,29 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+2   Advil                 P30.00
+--------------------------------
+Total Items:                 2
+Subtotal:               P30.00
+Tax 12%:                 P3.60
+Amount Due:             P33.60
+Refund Amount:           P0.00
+Payment:                P44.00
+Change:                 P10.40
+--------------------------------
+Order No.:                  #8
+Date:      2024-11-08 18:03:21
+Payment Method:           Cash
+Status:                 Sales
+
+Staff:           Sayra Jackson
+                                
+  Thank you for your purchase!
+
+                                
+
+                                

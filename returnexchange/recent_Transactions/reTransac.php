@@ -230,66 +230,90 @@
           if ($conn->connect_error) {
               die("Connection failed: " . $conn->connect_error);
           }
-
-          // Remove any existing static accordion items from the HTML first
           ?>
 
           <div class="card">
-            <div class="card-body">
-              <div class="accordion" id="accordionExample">
-                <?php
-                // Fetch sales data
-                $sql = "SELECT * FROM sales ORDER BY SaleDate DESC";
-                $result = $conn->query($sql);
+              <div class="card-body" style="height: 425px; overflow-y: auto;">
+                  <div class="accordion" id="accordionExample">
+                      <?php
+                      // Fetch sales data
+                      $sql = "SELECT * FROM sales ORDER BY SaleDate DESC";
+                      $result = $conn->query($sql);
 
-                if ($result->num_rows > 0) {
-                    while($row = $result->fetch_assoc()) {
-                        // Format date and time
-                        $dateTime = new DateTime($row['SaleDate']);
-                        $formattedDate = $dateTime->format('M d, Y');
-                        $formattedTime = $dateTime->format('h:i A');
-                        
-                        // Format monetary values
-                        $netAmount = number_format($row['NetAmount'], 2);
-                        
-                        echo <<<HTML
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading{$row['InvoiceID']}">
-                                <button class="accordion-button collapsed" type="button" 
-                                        data-bs-toggle="collapse" 
-                                        data-bs-target="#collapse{$row['InvoiceID']}" 
-                                        aria-expanded="false" 
-                                        aria-controls="collapse{$row['InvoiceID']}">
-                                    <div style="position: relative; width: 100%;">
-                                        <div style="position: absolute; left: 0;">
-                                            <strong>Order #{$row['InvoiceID']}</strong>&nbsp;
-                                            <span>{$formattedDate} | {$formattedTime}</span>
+                      if ($result->num_rows > 0) {
+                          while($row = $result->fetch_assoc()) {
+                              // Format date and time
+                              $dateTime = new DateTime($row['SaleDate']);
+                              $formattedDate = $dateTime->format('M d, Y');
+                              $formattedTime = $dateTime->format('h:i A');
+
+                              // Format monetary values
+                              $netAmount = number_format($row['NetAmount'], 2);
+
+                              echo <<<HTML
+                              <div class="accordion-item">
+                                  <h2 class="accordion-header" id="heading{$row['InvoiceID']}">
+                                      <button class="accordion-button collapsed" type="button" 
+                                              data-bs-toggle="collapse" 
+                                              data-bs-target="#collapse{$row['InvoiceID']}" 
+                                              aria-expanded="false" 
+                                              aria-controls="collapse{$row['InvoiceID']}">
+                                          <div style="position: relative; width: 100%;">
+                                              <div style="position: absolute; left: 0;">
+                                                  <strong>Order #{$row['InvoiceID']}</strong>&nbsp;
+                                                  <span>{$formattedDate} | {$formattedTime}</span>
+                                              </div>
+                                              <div style="position: absolute; right: 0; margin-right: 50px;">
+                                                  <span style="text-decoration: underline;">{$row['TotalItems']} item/s</span>&nbsp;
+                                                  <span>|</span>&nbsp;
+                                                  <span style="text-decoration: underline;">₱{$netAmount}</span>
+                                              </div>
+                                          </div>
+                                      </button>
+                                  </h2>
+                                  <div id="collapse{$row['InvoiceID']}" 
+                                      class="accordion-collapse collapse" 
+                                      aria-labelledby="heading{$row['InvoiceID']}" 
+                                      data-bs-parent="#accordionExample">
+                                      <div class="accordion-body">
+                                        <div class="card mb-3">
+                                            <div class="row g-0" style="height: 200px">
+                                                <div class="col-md-4">
+                                                    <img src="../../inventory/products-icon/sample.png" class="img-fluid rounded-start" alt="Product Icon" style="height: 100%; object-fit: cover;">
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="card-body">
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                            <span class="badge bg-info text-dark">x0</span>
+                                                            <span class="badge bg-primary">₱0.00</span>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                          <small class="card-text">₱0.00</small>
+                                                          <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" id="gridCheck1">
+                                                            <label class="form-check-label" for="gridCheck1">
+                                                              Return
+                                                            </label>
+                                                          </div>
+                                                        </div>
+                                                        <h5 class="card-title">Brand_name 0mg</h5>
+                                                        <p class="card-text">Generic_name</p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div style="position: absolute; right: 0; margin-right: 50px;">
-                                            <span style="text-decoration: underline;">{$row['TotalItems']} item/s</span>&nbsp;
-                                            <span>|</span>&nbsp;
-                                            <span style="text-decoration: underline;">₱{$netAmount}</span>
-                                        </div>
+                                        <button type="button" class="btn btn-primary">Select Order</button>
                                     </div>
-                                </button>
-                            </h2>
-                            <div id="collapse{$row['InvoiceID']}" 
-                                class="accordion-collapse collapse" 
-                                aria-labelledby="heading{$row['InvoiceID']}" 
-                                data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    <!-- Accordion content will go here -->
-                                </div>
-                            </div>
-                        </div>
+                                  </div>
+                              </div>
           HTML;
-                    }
-                } else {
-                    echo '<div class="alert alert-info">No transactions found.</div>';
-                }
-                ?>
+                          }
+                      } else {
+                          echo '<div class="alert alert-info">No transactions found.</div>';
+                      }
+                      ?>
+                  </div>
               </div>
-            </div>
           </div>
 
           <?php

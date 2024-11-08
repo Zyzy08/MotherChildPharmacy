@@ -435,28 +435,10 @@
             </div>
 
             <br>
-
-            <div id="payment-method">
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="cash" checked="">
-                <label class="form-check-label" for="gridRadios1">
-                  Cash
-                </label>
-              </div>
-
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="gcash">
-                <label class="form-check-label" for="gridRadios2">
-                  GCash
-                </label>
-              </div>
-            </div>
-
-            <br>
             <h2 id="total-display" style="font-weight: bold;">Total: ₱0.00</h2><br>
 
             <div class="row mb-0">
-              <h2 for="paymentInput" class="col-sm-5" style="font-weight: bold;">Payment: ₱</h2>
+              <hor="paymentInput" class="col-sm-5" style="font-weight: bold;">Payment: ₱</h2>
               <div class="col-sm-6">
                 <input type="number" id="paymentInput" class="form-control no-arrows" min="1" max="999999"
                   placeholder="0" oninput="validatePayment(this)">
@@ -661,7 +643,7 @@
   <script src="../main.js"></script>
 
   <!-- Template POS JS File -->
-  <script src="pos.js"></script>
+  <script src="pos copy.js"></script>
 
 </body>
 
