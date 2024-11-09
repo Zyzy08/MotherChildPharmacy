@@ -2,6 +2,20 @@
 // Enable error reporting for debugging
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+// Get the current user's AccountID from the session or other source
+session_start();
+$sessionAccountID = $_SESSION['AccountID'] ?? null;
+
+// Function to log actions
+function logAction($conn, $userId, $action, $description, $status)
+{
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address, status) VALUES (?, ?, ?, ?, ?)";
+    $logStmt = $conn->prepare($logSql);
+    $logStmt->bind_param("ssssi", $userId, $action, $description, $ipAddress, $status);
+    $logStmt->execute();
+    $logStmt->close();
+}
 
 try {
     // Database connection parameters
@@ -64,7 +78,8 @@ try {
     }
 
     // Bind parameters
-    $stmt->bind_param("isisiddddssd", 
+    $stmt->bind_param(
+        "isisiddddssd",
         $data['invoiceID'],
         $data['saleDate'],
         $data['accountID'],
@@ -84,6 +99,27 @@ try {
         throw new Exception("Execute failed: " . $stmt->error . ". SQL State: " . $stmt->sqlstate);
     }
 
+    // If the senior citizen information is provided, insert it into the seniorlog table
+    if (!empty($data['seniorID'])) {
+        // Extract senior citizen details
+        $seniorID = $data['seniorID'];
+        $idType = $data['idType'];
+        $fullName = $data['fullName'];
+
+        // Insert into the seniorlog table
+        $sqlSenior = "INSERT INTO seniorlog (seniorID, idType, fullName, InvoiceID) 
+                      VALUES ('$seniorID', '$idType', '$fullName', '{$data['invoiceID']}')";
+
+        if ($conn->query($sqlSenior) !== TRUE) {
+            throw new Exception("Error saving senior citizen details: " . $conn->error);
+        }
+    }
+
+    $updatedetails = "(Invoice ID: IN-0" . $data['invoiceID'] . ")";
+
+    //Log if Success
+    $description = "User successfully processed a transaction $updatedetails.";
+    logAction($conn, $sessionAccountID, 'Process Sales', $description, 1);
     echo json_encode(['success' => true]);
 
     // Close statement and connection

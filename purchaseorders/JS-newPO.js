@@ -122,7 +122,7 @@ document.getElementById('productSelectForm').addEventListener('submit', function
         </td>
         <td>${selectedProductText}</td>
         <td>
-            <input type="number" value="${quantity}" min="0" step="1" 
+            <input type="number" value="${quantity}" min="1" step="1" 
                    onkeydown="return event.key >= '0' && event.key <= '9' || event.key === 'Backspace' || event.key === 'Tab';">
         </td>
     `;

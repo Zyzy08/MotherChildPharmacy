@@ -686,6 +686,27 @@
         closeBtnEdit.addEventListener('click', function () {
             overlayEdit.style.display = 'none';
         })
+
+        // Function to check if at least one row has a complete set of Lot No., Expiry Date, Qty Served, and Net Amount > 0
+        function isAtLeastOneRowComplete() {
+            const tableBody = document.querySelector('#listTable tbody');
+            const rows = tableBody.querySelectorAll('tr');
+            let isComplete = false;
+
+            rows.forEach(row => {
+                const lotNo = row.querySelector('[data-key="lotNo"]').textContent.trim();
+                const expiryDate = row.querySelector('[data-key="expiryDate"]').textContent.trim();
+                const qtyServed = parseInt(row.querySelector('[data-key="qtyServed"]').textContent.trim(), 10);
+                const netAmt = parseFloat(row.querySelector('[data-key="netAmt"]').textContent.replace(/[₱,]/g, '').trim());
+
+                // Check if all fields are filled and if Net Amount is greater than 0
+                if (lotNo && expiryDate && qtyServed > 0 && netAmt > 0) {
+                    isComplete = true;
+                }
+            });
+
+            return isComplete;
+        }
     </script>
     <script src="JS-delivery-receive.js"></script>
 

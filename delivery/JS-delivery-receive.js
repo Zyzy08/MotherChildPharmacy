@@ -90,6 +90,18 @@ confirmButton.addEventListener('click', function (event) {
 userFormEdit.addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent the default form submission
 
+    if (isAtLeastOneRowComplete()) {
+        // Proceed with further actions, like submitting the form
+        console.log("Proceeding with the submission.");
+    } else {
+        // Show a warning modal if validation fails
+        const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
+        modalVerifyTitleFront.textContent = 'Warning: Incomplete Data';
+        modalVerifyTextFront.textContent = 'Please ensure at least one row has a complete set of Lot No., Expiry Date, Qty Served, and a Net Amount greater than ₱0.00.';
+        confirmationModal.show();
+        return;
+    }
+
     // Get identifierID
     const identifierID = document.getElementById('identifierID').textContent;
     const totalItems = calculateTotalItems(); // Function to calculate total quantity
@@ -136,8 +148,5 @@ userFormEdit.addEventListener('submit', function (event) {
             modalVerifyTitleFront.textContent = 'Error';
             modalVerifyTextFront.textContent = 'An unexpected error occurred. Please try again. ';
             confirmationModal.show();
-            setTimeout(() => {
-                window.location.href = 'delivery.php'; // Redirect on success
-            }, 2000);
         });
 });

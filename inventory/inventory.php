@@ -284,7 +284,7 @@
             <div class="textbox">
               <input style="margin-right: 30px;" type="text" id="itemID" name="itemID" readonly>
               <select style="margin-right: 30px;" class="itemType" id="itemType" name="itemType" required>
-                <option value=""></option>
+                <option value="" selected disabled>Select Type</option>
                 <option value="Medicine">Medicine</option>
                 <option value="Milk">Milk</option>
                 <option value="Supplement">Supplement</option>
@@ -294,8 +294,8 @@
               </select>
 
               <!--<input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱" onfocus="addPesoSign()" oninput="addPesoSign()" /> -->
-              <input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱"
-                oninput="validateCurrencyInput(this)" onfocus="addPesoSign()" onblur="cleanPriceInput()" required/>
+              <input type="text" id="pricePerUnit" name="pricePerUnit" placeholder="₱0.00"
+                oninput="validateCurrencyInput(this)" onfocus="addPesoSign()" onblur="cleanPriceInput()" required />
 
 
 
@@ -305,15 +305,17 @@
             <div class="textbox">
               <label class="label" style="margin-right: 165px;" for="brandName">Brand Name</label>
               <label class="label" style="margin-right: 155px;" for="genericName">Generic Name</label>
-              <label class="label" for="Discount">Discount</label>
+              <label class="label" for="Discount">Discountable</label>
             </div>
 
             <div class="textbox">
-              <input style="margin-right: 30px;" type="text" id="brandName" name="brandName">
-              <input style="margin-right: 30px;" type="text" id="genericName" name="genericName" required>
+              <input style="margin-right: 30px;" type="text" id="brandName" name="brandName"
+                placeholder="Enter Brand Name (Optional)">
+              <input style="margin-right: 30px;" type="text" id="genericName" name="genericName" required
+                placeholder="Enter Generic Name">
 
               <select name="Discount" id="Discount" required>
-                <option value=""></option>
+                <option value="" selected disabled>Choose if Discountable</option>
                 <option value="1">Available</option>
                 <option value="0">Unavailable</option>
 
@@ -328,10 +330,12 @@
 
             </div>
             <div class="textbox">
-              <input style="margin-right: 30px;" type="number" id="mass" name="mass" required>
+              <input style="margin-right: 30px;" type="number" id="mass" name="mass" required
+                placeholder="Enter Mass Here">
               <!--<input type="text" id="unitOfMeasure" name="unitOfMeasure">-->
-              <select style="margin-right: 35px;" class="unitOfMeasure" id="unitOfMeasure" name="unitOfMeasure" required>
-                <option value=""></option>
+              <select style="margin-right: 35px;" class="unitOfMeasure" id="unitOfMeasure" name="unitOfMeasure"
+                required>
+                <option value="" selected disabled>Select a unit</option>
                 <option value="pc">pcs</option>
                 <option value="kg">kg</option>
                 <option value="g">g</option>
@@ -345,7 +349,7 @@
               </select>
 
               <select name="VAT_exempted" id="VAT_exempted" required>
-                <option value=""></option>
+                <option value="" selected disabled>Choose if VAT Exempted</option>
                 <option value="1">Available</option>
                 <option value="0">Unavailable</option>
               </select>
@@ -355,7 +359,8 @@
             <label class="label" for="ProductCode">Product Code</label>
           </div>
           <div class="textbox">
-            <input style="margin-right: 30px;" type="text" id="productCode" name="ProductCode">
+            <input style="margin-right: 30px;" type="text" id="productCode" name="ProductCode"
+              placeholder="Enter Barcode Here (Optional)">
           </div>
           <div class="textbox">
             <label class="label" style="margin-right: 200px;" for="InStock">Instock</label>
@@ -370,7 +375,7 @@
 
 
           <div class="textbox">
-            <label class="label" for="iconFile">Picture</label>
+            <label class="label" for="iconFile" style="margin-top: 6px;">Picture (Optional)</label>
             <div class="icon-upload">
               <label for="iconFile">
                 <img id="iconPreview" src="../resources/img/add_icon.png" alt="+" class="icon-preview"
@@ -560,7 +565,8 @@
             <div class="textbox" style="margin-bottom: 10px;">
 
               <input type="text" id="selectLot" name="selectLot" placeholder="Search Lot Number..."
-                oninput="filterLotOptions()" onclick="filterLotOptions()" autocomplete="off" disabled style="cursor: not-allowed;">
+                oninput="filterLotOptions()" onclick="filterLotOptions()" autocomplete="off" disabled
+                style="cursor: not-allowed;">
               <div class="custom-dropdown">
                 <div id="lotSelect" class="dropdown-content" style="display: none;">
                   <div class="option" onclick="selectLot(this)" data-value="">Select a Lot Number</div>
@@ -597,7 +603,7 @@
             </div>
 
             <div class="textbox" style="margin-bottom: 15px;">
-              <textarea id="Reason" name="Reason"
+              <textarea id="Reason" name="Reason" placeholder="Enter reason here..."
                 style="width: 100%; box-sizing: border-box; height: 100px; resize: none; vertical-align: top;"
                 required></textarea>
             </div>
@@ -652,6 +658,29 @@
   <!-- Template Main JS File -->
   <script src="../main.js"></script>
   <script src="../inventory/invent_Js.js"></script>
+
+  <script>
+    // Function to change the text color based on the select value
+    function updateSelectColors() {
+      const selects = document.querySelectorAll('select');
+
+      selects.forEach(select => {
+        if (select.value === "") {
+          select.style.color = "gray"; // Set to gray if empty value
+        } else {
+          select.style.color = "black"; // Set to black if value is selected
+        }
+      });
+    }
+
+    // Initial call to set the colors correctly
+    updateSelectColors();
+
+    // Optional: Listen for changes on select elements to update colors dynamically
+    document.querySelectorAll('select').forEach(select => {
+      select.addEventListener('change', updateSelectColors);
+    });
+  </script>
 
 </body>
 

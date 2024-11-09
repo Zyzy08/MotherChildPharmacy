@@ -77,7 +77,8 @@
                         </li>
 
                         <li>
-                            <a class="dropdown-item d-flex align-items-center" href="../users/users-profile/users-profile.php">
+                            <a class="dropdown-item d-flex align-items-center"
+                                href="../users/users-profile/users-profile.php">
                                 <i class="bi bi-person"></i>
                                 <span>My Profile</span>
                             </a>
@@ -335,13 +336,15 @@
                         <div class="label">
                             <label for="companyName">Company Name</label><br>
                         </div>
-                        <input type="text" id="companyName" name="companyName" required>
+                        <input type="text" id="companyName" name="companyName" required
+                            placeholder="Enter Company Here">
                     </div>
                     <div class="textbox">
                         <div class="label">
                             <label for="agentName">Agent Name</label><br>
                         </div>
-                        <input type="text" id="agentName" name="agentName" required>
+                        <input type="text" id="agentName" name="agentName" required placeholder="Enter Agent Name Here"
+                            onkeydown="return /^[A-Za-z\s]$/.test(event.key) || event.key === 'Backspace' || event.key === 'Tab';">
                     </div>
                 </div>
                 <div class="container">
@@ -349,13 +352,16 @@
                         <div class="label">
                             <label for="ContactNo">Contact No.</label><br>
                         </div>
-                        <input type="text" id="ContactNo" name="ContactNo" required>
+                        <input type="tel" id="ContactNo" name="ContactNo" required
+                            placeholder="Enter 11-Digit Number Here" pattern="^\d{11}$" maxlength="11" minlength="11"
+                            onkeydown="return event.key >= '0' && event.key <= '9' || event.key === 'Backspace' || event.key === 'Tab';">
+
                     </div>
                     <div class="textbox">
                         <div class="label">
                             <label for="Email">Email</label><br>
                         </div>
-                        <input type="email" id="Email" name="Email" required>
+                        <input type="email" id="Email" name="Email" placeholder="Enter E-mail Here">
                     </div>
                 </div>
 
@@ -368,7 +374,8 @@
 
                 <div class="container">
                     <div class="col-xl-12">
-                        <div class="card-body profile-card usersTableSize flex-column align-items-center" id="supplierProducts">
+                        <div class="card-body profile-card usersTableSize flex-column align-items-center"
+                            id="supplierProducts">
                             <!-- Product Table -->
                             <table id="productTable" class="display">
                                 <thead>
@@ -464,7 +471,8 @@
                 </div>
                 <!-- Update Supplier Table -->
                 <div class="col-xl-12">
-                    <div class="card-body profile-card usersTableSize flex-column align-items-center" id="supplierProducts">
+                    <div class="card-body profile-card usersTableSize flex-column align-items-center"
+                        id="supplierProducts">
                         <table id="productTableUpdate" class="display">
                             <thead>
                                 <tr class="highlight-row">

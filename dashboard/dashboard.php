@@ -234,9 +234,9 @@
                             <li class="dropdown-header text-start">
                                 <h6>Filter</h6>
                             </li>
-                            <li><a class="dropdown-item-inv" href="#" data-status="in-stock">In Stock</a></li>
-                            <li><a class="dropdown-item-inv" href="#" data-status="low-stock">Low Stock</a></li>
+                            <li><a class="dropdown-item-inv" href="#" data-status="low-stock">Low Stock</a></li>                                                        
                             <li><a class="dropdown-item-inv" href="#" data-status="out-of-stock">Out of Stock</a></li>
+                            <li><a class="dropdown-item-inv" href="#" data-status="in-stock">In Stock</a></li>
                         </ul>
                     </div>
 

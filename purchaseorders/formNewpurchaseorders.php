@@ -328,7 +328,7 @@
                         <div class="label">
                             <label for="qtySelect">Quantity</label><br>
                         </div>
-                        <input type="number" id="qtySelect" name="qtySelect" required step="1" min="0"
+                        <input type="number" id="qtySelect" name="qtySelect" required step="1" min="1"
                             onkeydown="return event.key >= '0' && event.key <= '9' || event.key === 'Backspace' || event.key === 'Tab';">
                     </div>
                 </div>

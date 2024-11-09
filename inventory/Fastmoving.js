@@ -16,19 +16,22 @@ function loadTopSellingProducts() {
             const tableBody = document.getElementById('tableBody');
             tableBody.innerHTML = ''; // Clear existing rows
 
+            // Filter the products to include only fast-moving items
+            const fastMovingProducts = products.filter(product => product.classification === 'Fast-moving');
+
             // Populate table rows with fetched data
-            products.forEach(product => {
+            fastMovingProducts.forEach(product => {
                 const row = document.createElement('tr');
 
                 // Define maximum length for truncation
                 const maxLength = 30;
 
                 // Truncate GenericName and BrandName if they exceed maxLength
-                const truncatedGenericName = product.GenericName.length > maxLength 
-                    ? product.GenericName.substring(0, maxLength) + '...' 
+                const truncatedGenericName = product.GenericName.length > maxLength
+                    ? product.GenericName.substring(0, maxLength) + '...'
                     : product.GenericName;
-                const truncatedBrandName = product.BrandName.length > maxLength 
-                    ? product.BrandName.substring(0, maxLength) + '...' 
+                const truncatedBrandName = product.BrandName.length > maxLength
+                    ? product.BrandName.substring(0, maxLength) + '...'
                     : product.BrandName;
 
                 // Use truncated values in the table cells
@@ -75,7 +78,7 @@ function setDataTables() {
     });
 
     // Adjust table layout on window resize
-    $(window).on('resize', function() {
+    $(window).on('resize', function () {
         table.columns.adjust().draw(); // Redraw the DataTable to adjust the columns
     });
 }

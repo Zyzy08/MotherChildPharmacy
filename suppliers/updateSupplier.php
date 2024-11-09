@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $selectedProducts = isset($_POST["selectedProducts"]) ? json_decode(trim($_POST["selectedProducts"]), true) : [];
 
     // Check if all required fields are present
-    if (!$supplierID || !$companyName || !$agentName || !$ContactNo || !$Email) {
+    if (!$supplierID || !$companyName || !$agentName || !$ContactNo) {
         echo json_encode(['success' => false, 'message' => 'Missing required fields.']);
         exit();
     }

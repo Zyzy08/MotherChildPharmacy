@@ -25,8 +25,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $Notes = trim($_POST["Notes"] ?? '');
 
     // Validate inputs
-    if (empty($companyName) || empty($ContactNo) || empty($Email)) {
-        $response['message'] = 'Company name, Contact number, and Email are required.';
+    if (empty($companyName) || empty($ContactNo)) {
+        $response['message'] = 'Company name and Contact No. are required.';
         echo json_encode($response);
         exit();
     }

@@ -1,0 +1,29 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+2   Paracetamol           P18.00
+1   Neozep Forte           P7.35
+--------------------------------
+Total Items:                 3
+Subtotal:               P25.35
+Tax 12%:                 P2.72
+Discount:               P-7.24
+Amount Due:             P18.11
+Payment:                P19.00
+Change:                  P0.89
+--------------------------------
+Order No.:                  #5
+Date:      2024-11-09 20:12:43
+Status:                  Sales
+Payment Method:           Cash
+Staff:           Lance Tiangco
+                                
+  Thank you for your purchase!
+
+                                
+
+                                

@@ -7,6 +7,11 @@ let totalPages = 0;
 let searchQuery = '';
 let basket = [];
 let VATamt = 0;
+let totalDiscountableAmt = 0;
+let givenDiscount = 0;
+let finalAmtDue = 0;
+
+const receiptModalDiscountRow = document.getElementById('receiptModal-discountRow');
 
 async function fetchProducts(query = '') {
     try {
@@ -314,29 +319,37 @@ function showQuantityModal(product) {
     const addItemButton = document.getElementById('add-item-button');
     addItemButton.onclick = () => {
         const quantityToAdd = parseInt(quantityInput.value, 10);
-
-        // Check current item quantity in the basket
-        const basketItem = basket.find(item => item.ItemID === product.ItemID);
-        const currentBasketQuantity = basketItem ? basketItem.quantity : 0;
-
-        // Calculate the combined quantity (existing + new) and check if it exceeds stock
-        const totalQuantity = currentBasketQuantity + quantityToAdd;
-
-        if (quantityToAdd > 0 && totalQuantity <= product.InStock) {
-            // Add item if total does not exceed stock
-            addItemToBasket(product, quantityToAdd);
-            bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
-        } else if (quantityToAdd > 0 && totalQuantity > product.InStock) {
-            modalVerifyTitleFront.textContent = 'Warning';
-            modalVerifyTextFront.textContent = `Cannot add more than a total of ${product.InStock} of this item.`;
-            confirmationModal.show();
-        }
-        else {
-            // Show message if adding would exceed available stock
-            // showToast(`Cannot add more than ${product.InStock} of this item.`);
+        console.log(quantityInput.value + ' - ' + quantityToAdd);
+        if (quantityInput.value - quantityToAdd != 0) {
             modalVerifyTitleFront.textContent = 'Invalid Input';
-            modalVerifyTextFront.textContent = `Please enter a valid quantity.`;
+            modalVerifyTextFront.textContent = `Please enter a valid positive integer.`;
             confirmationModal.show();
+        } else {
+            // Check current item quantity in the basket
+            const basketItem = basket.find(item => item.ItemID === product.ItemID);
+            const currentBasketQuantity = basketItem ? basketItem.quantity : 0;
+
+
+
+            // Calculate the combined quantity (existing + new) and check if it exceeds stock
+            const totalQuantity = currentBasketQuantity + quantityToAdd;
+
+            if (quantityToAdd > 0 && totalQuantity <= product.InStock) {
+                // Add item if total does not exceed stock
+                addItemToBasket(product, quantityToAdd);
+                bootstrap.Modal.getInstance(document.getElementById('quantity-modal')).hide();
+            } else if (quantityToAdd > 0 && totalQuantity > product.InStock) {
+                modalVerifyTitleFront.textContent = 'Warning';
+                modalVerifyTextFront.textContent = `Cannot add more than a total of ${product.InStock} of this item.`;
+                confirmationModal.show();
+            }
+            else {
+                // Show message if adding would exceed available stock
+                // showToast(`Cannot add more than ${product.InStock} of this item.`);
+                modalVerifyTitleFront.textContent = 'Invalid Input';
+                modalVerifyTextFront.textContent = `Please enter a valid positive integer.`;
+                confirmationModal.show();
+            }
         }
     };
 
@@ -377,7 +390,8 @@ function addItemToBasket(product, quantity) {
             GenericName: product.GenericName,
             PricePerUnit: product.PricePerUnit,
             quantity: quantity,
-            VAT_exempted: product.VAT_exempted
+            VAT_exempted: product.VAT_exempted,
+            Discount: product.Discount
         });
     }
     updateBasketDisplay();
@@ -395,13 +409,21 @@ function updateBasketDisplay() {
     basketItemsContainer.innerHTML = '';
     let basketTotal = 0;
     VATamt = 0;
+    totalDiscountableAmt = 0;
 
     basket.forEach(item => {
         const itemTotal = item.PricePerUnit * item.quantity;
         // Get total tax of VATable products
-        if(item.VAT_exempted == 0){
-            VATamt += item.PricePerUnit - (item.PricePerUnit/1.12)
+        if (item.VAT_exempted == 0) {
+            VATamt += item.quantity * (item.PricePerUnit - (item.PricePerUnit / 1.12));
         }
+        // Get total amount for discountable products
+        if (item.Discount == 1 && item.VAT_exempted == 0) {
+            totalDiscountableAmt += item.quantity * ((item.PricePerUnit - (item.PricePerUnit / 1.12)) + (item.PricePerUnit / 1.12) * 0.20);
+        } else if (item.Discount == 1 && item.VAT_exempted == 1) {
+            totalDiscountableAmt += item.quantity * (item.PricePerUnit * 0.20);
+        }
+
         basketTotal += itemTotal;
 
         const escapedId = item.id.replace(/'/g, "\\'").replace(/"/g, '\\"');
@@ -473,14 +495,38 @@ document.querySelectorAll('#verticalycentered .form-check-input').forEach(checkb
 function updateModalTotal() {
     const subtotal = basket.reduce((total, item) => total + (item.PricePerUnit * item.quantity), 0);
     const tax = VATamt;
-    let discountPercentage = 0;
+    let discountAmount = 0;
 
-    if (document.getElementById('seniorCitizenCheckbox').checked) discountPercentage += 20;
+    if (document.getElementById('seniorCitizenCheckbox').checked) discountAmount += totalDiscountableAmt;
 
-    const discountAmount = subtotal * (discountPercentage / 100);
     const discountedTotal = subtotal - discountAmount;
 
     document.getElementById('total-display').textContent = `Total: ₱${formatCurrency(discountedTotal)}`;
+    finalAmtDue = discountedTotal;
+
+    const paymentInput = document.getElementById('paymentInput');
+    const confirmButton = document.getElementById('confirm-button');
+    const totalDisplay = document.getElementById('total-display');
+    const changeDisplay = document.getElementById('change-display');
+
+    function updatePaymentValidation() {
+        const payment = parseFloat(paymentInput.value) || 0;
+        const totalAmount = parseFloat(totalDisplay.textContent.replace(/[^0-9.-]+/g, ""));
+
+        if (payment === 0 || payment < totalAmount) {
+            paymentInput.classList.add('is-invalid');
+            paymentInput.classList.remove('is-valid');
+            confirmButton.setAttribute('disabled', 'true');
+            changeDisplay.textContent = 'Change: ₱0.00';
+        } else {
+            paymentInput.classList.remove('is-invalid');
+            paymentInput.classList.add('is-valid');
+            confirmButton.removeAttribute('disabled');
+            const change = payment - totalAmount;
+            changeDisplay.textContent = `Change: ₱${change.toFixed(2)}`;
+        }
+    }
+    updatePaymentValidation();
 }
 
 let receiptItems = [];
@@ -489,7 +535,7 @@ function generateReceiptItems() {
     receiptItems = basket.map(item => ({
         ItemID: item.ItemID,
         quantity: item.quantity,
-        item_name: item.BrandName,
+        item_name: item.BrandName + ' ' + item.GenericName,
         total_item_price: (item.PricePerUnit * item.quantity).toFixed(2)
     }));
 
@@ -511,15 +557,14 @@ function updateSubtotalDisplay() {
 
 function updateTaxDisplay() {
     const subtotal = receiptItems.reduce((total, item) => total + parseFloat(item.total_item_price), 0);
-    const tax = (subtotal * 0.12).toFixed(2);
+    const tax = VATamt.toFixed(2);
     document.getElementById('tax').textContent = `₱${tax}`;
 }
 
 function updateAmountDueDisplay() {
-    const subtotal = receiptItems.reduce((total, item) => total + parseFloat(item.total_item_price), 0);
-    const tax = subtotal * 0.12;
-    const amountDue = (subtotal + tax).toFixed(2);
+    const amountDue = finalAmtDue.toFixed(2);
     document.getElementById('amount-due').textContent = `₱${amountDue}`;
+    if (document.getElementById('seniorCitizenCheckbox').checked) document.getElementById('discount').textContent = `₱${totalDiscountableAmt.toFixed(2)}`;
 }
 
 function displayReceiptItems() {
@@ -528,8 +573,8 @@ function displayReceiptItems() {
 
     const headerHTML = `
         <div class="row text-center mb-2">
-            <div class="col-4"><small><strong>Quantity</strong></small></div>
-            <div class="col-4"><small><strong>Item</strong></small></div>
+            <div class="col-2"><small><strong>Qty</strong></small></div>
+            <div class="col-4"><small><strong>Item Description</strong></small></div>
             <div class="col-3"><small><strong>Price</strong></small></div>
         </div>
     `;
@@ -538,7 +583,7 @@ function displayReceiptItems() {
     receiptItems.forEach(item => {
         const itemHTML = `
             <div class="row text-center">
-                <div class="col-4"><small>${item.quantity}</small></div>
+                <div class="col-2"><small>${item.quantity}</small></div>
                 <div class="col-4"><small>${item.item_name}</small></div>
                 <div class="col-3"><small>₱${formatPrice(item.total_item_price)}</small></div>
             </div>
@@ -610,8 +655,8 @@ document.getElementById('confirm-button').addEventListener('click', function () 
     receiptModal.show();
 
     // Reset payment input
-    paymentInput.value = '';
-    paymentInput.classList.remove('is-valid', 'is-invalid');
+    // paymentInput.value = '';
+    // paymentInput.classList.remove('is-valid', 'is-invalid');
 });
 
 document.getElementById('largeModal').addEventListener('show.bs.modal', function () {
@@ -622,13 +667,13 @@ document.getElementById('largeModal').addEventListener('show.bs.modal', function
     const currentDate = new Date();
 
     // Format options for date and time
-    const dateOptions = { month: 'long', day: 'numeric', year: 'numeric' };
+    const dateOptions = { month: 'short', day: 'numeric', year: 'numeric' };
     const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: true };
 
     // Format the date and time separately and combine them
     const formattedDate = currentDate.toLocaleDateString('en-US', dateOptions);
     const formattedTime = currentDate.toLocaleTimeString('en-US', timeOptions);
-    document.getElementById('date-time').textContent = `Date: ${formattedDate} ${formattedTime}`;
+    document.getElementById('date-time').textContent = `${formattedDate} ${formattedTime}`;
 
     // Get the payment value from the input before it's cleared
     const payment = parseFloat(document.getElementById('paymentInput').value) || 0;
@@ -649,10 +694,19 @@ const seniorPwdFields = {
     fullName: document.getElementById('seniorPwdName'),
 };
 
+document.getElementById('seniorPwdID').addEventListener('input', function (event) {
+    let seniorIDInput = document.getElementById('seniorPwdID').value;
+
+    // Allow only numeric input
+    if (!/^\d*$/.test(seniorIDInput)) {
+        event.target.value = seniorIDInput.replace(/\D/g, ''); // Remove non-numeric characters
+    }
+})
+
 // Function to validate Senior / PWD fields and payment
 function validateForm() {
     const idFilled = seniorPwdFields.idNumber.value.trim() !== '';
-    const idTypeValid = seniorPwdFields.idType.value === 'Senior Citizen ID' || seniorPwdFields.idType.value === 'PWD ID';
+    const idTypeValid = seniorPwdFields.idType.value === 'senior' || seniorPwdFields.idType.value === 'pwd';
     const fullNameFilled = seniorPwdFields.fullName.value.trim() !== '';
     const paymentFilled = parseFloat(document.getElementById('paymentInput').value) > 0; // Ensure payment is greater than 0
 
@@ -692,9 +746,11 @@ seniorCitizenCheckbox.addEventListener('change', function () {
     if (this.checked) {
         // Show the accordion
         document.getElementById('seniorPwdAccordion').style.display = 'block';
+        receiptModalDiscountRow.style.display = 'flex';
     } else {
         // Hide the accordion and remove highlights
         document.getElementById('seniorPwdAccordion').style.display = 'none';
+        receiptModalDiscountRow.style.display = 'none';
         Object.values(seniorPwdFields).forEach(field => {
             field.classList.remove('is-invalid'); // Remove red highlight
         });
@@ -724,7 +780,7 @@ document.getElementById('cancel-checkout').addEventListener('click', function ()
 });
 
 document.getElementById('cancel-receipt').addEventListener('click', function () {
-    confirmButton.setAttribute('disabled', 'true');
+    // confirmButton.setAttribute('disabled', 'true');
     // First, ensure the receipt modal is properly hidden
     const receiptModal = bootstrap.Modal.getInstance(document.getElementById('largeModal'));
     if (receiptModal) {
@@ -747,7 +803,7 @@ function fetchInvoiceID() {
             const newInvoiceID = data.newInvoiceID;
             orderNum = newInvoiceID;
             const formattedInvoiceID = newInvoiceID > 0 ? `#${newInvoiceID}` : '#0';
-            document.getElementById('order-num').textContent = `Order No.: ${formattedInvoiceID}`;
+            document.getElementById('order-num').textContent = `${formattedInvoiceID}`;
         })
         .catch(error => console.error('Error fetching InvoiceID:', error));
 }
@@ -819,6 +875,7 @@ document.addEventListener('DOMContentLoaded', function () {
             paymentInput.classList.remove('is-invalid');
             paymentInput.classList.add('is-valid');
             confirmButton.removeAttribute('disabled');
+            validateForm();
             const change = payment - totalAmount;
             changeDisplay.textContent = `Change: ₱${change.toFixed(2)}`;
         }
@@ -888,6 +945,7 @@ document.getElementById('print-button').addEventListener('click', async function
 
 function saveAsTxtAndPrint() {
     const receiptContent = generateReceiptContent();
+    console.log("Receipt Content Generated!")
 
     // Create a form data object to send the content to PHP
     const formData = new FormData();
@@ -914,6 +972,11 @@ function saveAsTxtAndPrint() {
 }
 
 function getReceiptData() {
+    if (document.getElementById('seniorCitizenCheckbox').checked) {
+        givenDiscount = totalDiscountableAmt;
+    } else {
+        givenDiscount = 0;
+    }
     return {
         invoiceID: orderNum,
         saleDate: getCurrentDateTime(),
@@ -921,12 +984,15 @@ function getReceiptData() {
         salesDetails: getSalesDetails(),
         totalItems: receiptItems.reduce((sum, item) => sum + item.quantity, 0),
         subtotal: receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0).toFixed(2),
-        tax: (receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0) * 0.12).toFixed(2),
-        discount: 0.00,
+        tax: VATamt.toFixed(2),
+        discount: givenDiscount,
         amountPaid: parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g, "")),
         paymentMethod: 'Cash',
         status: 'Sales',
-        refundAmount: 0.00
+        refundAmount: 0.00,
+        seniorID: document.getElementById('seniorPwdID').value,
+        idType: document.getElementById('idType').value,
+        fullName: document.getElementById('seniorPwdName').value
     };
 }
 
@@ -974,9 +1040,9 @@ ${'-'.repeat(maxWidth)}
 
     const totalItems = receiptItems.reduce((sum, item) => sum + item.quantity, 0);
     const subtotal = parseFloat(receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0)).toFixed(2);
-    const tax = (subtotal * 0.12).toFixed(2);
-    const discount = 0.00;
-    const amountDue = (parseFloat(subtotal) + parseFloat(tax) - discount).toFixed(2);
+    const tax = VATamt.toFixed(2);
+    const discount = totalDiscountableAmt.toFixed(2);
+    const amountDue = (parseFloat(subtotal) - discount).toFixed(2);
     const amountPaid = parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g, "")).toFixed(2);
     const change = (amountPaid - amountDue).toFixed(2);
 
@@ -986,17 +1052,16 @@ ${'-'.repeat(maxWidth)}
     content += formatLine(`Subtotal:`, `P${formatPrice(subtotal)}\n`);
     content += formatLine(`Tax 12%:`, `P${formatPrice(tax)}\n`);
     if (discount > 0) {
-        content += formatLine(`Discount:`, `P-${formatPrice(discount)}\n`);
+        content += formatLine(`Discount:`, `P${formatPrice(discount)}\n`);
     }
     content += formatLine(`Amount Due:`, `P${formatPrice(amountDue)}\n`);
-    content += formatLine(`Refund Amount:`, `P0.00\n`);
+    //content += formatLine(`Refund Amount:`, `P0.00\n`);
     content += formatLine(`Payment:`, `P${formatPrice(amountPaid)}\n`);
     content += formatLine(`Change:`, `P${formatPrice(change)}\n`);
     content += `${'-'.repeat(maxWidth)}\n`;
     content += formatLine(`Order No.:`, `#${orderNum}\n`);
     content += formatLine(`Date:`, `${getCurrentDateTime()}\n`);
-    content += formatLine(`Payment Method:`, `Cash\n`);
-    content += formatLine(`Status:`, `Sales\n\n`);
+    content += formatLine(`Status:`, `Sales\n`);
     content += formatLine(`Staff:`, `${employeeName}\n`);
     content += `${' '.repeat(maxWidth)}\n`;
     content += `${centerText('Thank you for your purchase!')}\n`;
@@ -1016,13 +1081,13 @@ document.getElementById('seniorCitizenCheckbox').addEventListener('change', func
 });
 
 function validatePayment(input) {
-    const value = parseInt(input.value);
-    const min = 1;
+    const value = input.value;
+    const min = 0;
     const max = 999999;
 
     // Remove any leading zeros
-    if (input.value.startsWith('0')) {
-        input.value = parseInt(input.value, 10);
+    if (input.value.startsWith('0') && !(input.value.startsWith('0.'))) {
+        input.value = parseFloat(input.value, 10);
     }
 
     // Check if the value is within bounds
@@ -1044,8 +1109,7 @@ function validatePayment(input) {
         input.classList.add('is-valid');
     }
 
-    // Prevent non-numeric input
-    input.value = input.value.replace(/[^0-9]/g, '');
+    //input.value = input.value.replace(/[^0-9.]/g, '');
 }
 
 function formatPrice(price) {
@@ -1060,7 +1124,20 @@ function formatCurrency(number) {
 }
 
 scrollTop = document.getElementById('scrollTop');
-scrollTop.addEventListener('click', function(event){
+scrollTop.addEventListener('click', function (event) {
     document.body.style.removeProperty("overflow");
     document.body.style.removeProperty("padding-right");
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('../inventory/setReorderLevel.php', {
+        method: 'GET',
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+        })
+        .catch(error => {
+            console.error('Error calling PHP script:', error);
+        });
 });

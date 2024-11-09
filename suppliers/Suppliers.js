@@ -161,7 +161,7 @@ function setDataTables() {
     });
 
     // Adjust table layout on window resize
-    $(window).on('resize', function() {
+    $(window).on('resize', function () {
         table.columns.adjust().draw(); // Redraw the DataTable to adjust the columns
     });
 }
@@ -186,7 +186,7 @@ addUserBtn.addEventListener('click', function (event) {
         .then(data => {
             if (data.nextAutoIncrement) {
                 VnewID = parseInt(data.nextAutoIncrement);
-                newID.value = VnewID;
+                newID.value = 'SP-0' + VnewID;
             } else {
                 console.error('No nextAutoIncrement found in the response.');
             }
@@ -215,7 +215,7 @@ function showDeleteOptions(SupplierID) {
 archiveUserBtn.addEventListener('click', function () {
     modalVerifyTextAD.textContent = 'Are you sure you want to archive this supplier?';
     modalStatus = 'archive';  // Set the modal status to 'archive'
-    
+
 });
 
 // Event listener for 'Yes' button in the modal
@@ -234,33 +234,44 @@ modalYes.addEventListener('click', function () {
             },
             body: JSON.stringify({ SupplierID: selectedSupplierID }) // Sending itemID
         })
-        .then(response => {
-            if (!response.ok) {
-                if (response.status === 404) {
-                    throw new Error('Supplier not found.');
-                } else if (response.status === 500) {
-                    throw new Error('Server error. Please try again later.');
-                } else {
-                    throw new Error('Error: ' + response.statusText);
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('Supplier not found.');
+                    } else if (response.status === 500) {
+                        throw new Error('Server error. Please try again later.');
+                    } else {
+                        throw new Error('Error: ' + response.statusText);
+                    }
                 }
-            }
-            return response.json();
-        })
-        .then(data => {
-            modalVerifyTextAD.textContent = data.message; // Display the response message
-            modalFooterAD.style.display = 'none';
-            modalCloseAD.style.display = 'none';
-            modalVerifyTextAD.textContent = 'Supplier has been archived successfully!';
-            document.getElementById('modalVerifyTitle-AD').textContent = 'Success';
+                return response.json();
+            })
+            .then(data => {
+                modalVerifyTextAD.textContent = data.message; // Display the response message
+                modalFooterAD.style.display = 'none';
+                modalCloseAD.style.display = 'none';
+                modalVerifyTextAD.textContent = 'Supplier has been archived successfully!';
+                document.getElementById('modalVerifyTitle-AD').textContent = 'Success';
 
-            // Redirect after a short delay
-            setTimeout(() => {
-                window.location.href = 'suppliers.php'; // Adjust URL if necessary
-            }, 1000);
-        })
-        .catch(error => {
-            alert('Error: ' + error.message);
-        });
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = 'suppliers.php'; // Adjust URL if necessary
+                }, 1000);
+            })
+            .catch(error => {
+                console.error('Error:', error.message);
+                // Update modal content
+                document.getElementById('modalVerifyText').textContent = 'An error has occured: ' + error.message;
+                document.getElementById('modalVerifyTitle').textContent = 'Error';
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+                modal.show();
+
+                // Redirect on success after a short delay
+                setTimeout(() => {
+                    window.location.href = 'suppliers.php';
+                }, 2000);
+            });
     }
 });
 
@@ -327,18 +338,46 @@ function handleFormSubmit(event) {
         method: 'POST',
         body: formData
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok'); // Handle non-2xx responses
-        }
-        return response.json(); // Attempt to parse as JSON
-    })
-    .then(data => {
-        if (data.success) {
-            // Update modal content
-            document.getElementById('modalVerifyText').textContent = 'Supplier has been added successfully!';
-            document.getElementById('modalVerifyTitle').textContent = 'Success';
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok'); // Handle non-2xx responses
+            }
+            return response.json(); // Attempt to parse as JSON
+        })
+        .then(data => {
+            if (data.success) {
+                // Update modal content
+                document.getElementById('modalVerifyText').textContent = 'Supplier has been added successfully!';
+                document.getElementById('modalVerifyTitle').textContent = 'Success';
 
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+                modal.show();
+
+                // Redirect on success after a short delay
+                setTimeout(() => {
+                    window.location.href = 'suppliers.php';
+                }, 1000);
+            } else {
+                console.error('Error:', data.message);
+                // Update modal content
+                document.getElementById('modalVerifyText').textContent = 'An error has occured: ' + data.message;
+                document.getElementById('modalVerifyTitle').textContent = 'Error';
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+                modal.show();
+
+                // Redirect on success after a short delay
+                setTimeout(() => {
+                    window.location.href = 'suppliers.php';
+                }, 2000);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+            // Update modal content
+            document.getElementById('modalVerifyText').textContent = 'An error has occured: ' + error.message;
+            document.getElementById('modalVerifyTitle').textContent = 'Error';
             // Show the modal
             const modal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
             modal.show();
@@ -346,19 +385,11 @@ function handleFormSubmit(event) {
             // Redirect on success after a short delay
             setTimeout(() => {
                 window.location.href = 'suppliers.php';
-            }, 1000);
-        } else {
-            console.error('Error:', data.message);
-            alert('Error: ' + data.message); // Alert user if there's an error
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error); // Log error
-        alert('An error occurred: ' + error.message); // Alert user
-    });
+            }, 2000);
+        });
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     fetchProductData(); // Fetch product data on page load
 });
 
@@ -369,60 +400,80 @@ function fetchProductData() {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Response data:', data);
-        if (data.success) {
-            const products = data.products;
-
-            // Destroy existing DataTable instance before reinitializing
-            if ($.fn.DataTable.isDataTable('#productTable')) {
-                $('#productTable').DataTable().clear().destroy();
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data.success) {
+                const products = data.products;
 
-            // Initialize DataTable with product data
-            $('#productTable').DataTable({
-                "data": products,
-                "columns": [
-                    { "data": null, render: () => '<input type="checkbox" class="product-checkbox" />' }, // Checkbox
-                    { "data": "BrandName", render: data => data.length > 20 ? data.substring(0, 20) + '...' : data },
-                    { "data": "GenericName", render: data => data.length > 20 ? data.substring(0, 20) + '...' : data },
-                    { "data": "PricePerUnit", render: data => data.toFixed(2) }
-                ],
-                "order": [],
-                "responsive": true,
-                "paging": true,
-                "lengthChange": false,
-                "pageLength": 3,
-                "searching": true,
-                "info": true,
-                "language": {
-                    "info": "Showing _TOTAL_ entries",
-                    "infoEmpty": "No entries available",
-                    "paginate": {
-                        "first": "First",
-                        "last": "Last",
-                        "next": "Next",
-                        "previous": "Previous"
-                    }
-                },
-                "dom": 'lfrtip',
-                "pagingType": "full_numbers"
-            });
-        } else {
-            console.error('Error fetching products:', data.message);
-            alert('Error fetching products: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching products:', error);
-        alert('An error occurred: ' + error.message);
-    });
+                // Destroy existing DataTable instance before reinitializing
+                if ($.fn.DataTable.isDataTable('#productTable')) {
+                    $('#productTable').DataTable().clear().destroy();
+                }
+
+                // Initialize DataTable with product data
+                $('#productTable').DataTable({
+                    "data": products,
+                    "columns": [
+                        { "data": null, render: () => '<input type="checkbox" class="product-checkbox" />' }, // Checkbox
+                        { "data": "BrandName", render: data => data.length > 20 ? data.substring(0, 20) + '...' : data },
+                        { "data": "GenericName", render: data => data.length > 20 ? data.substring(0, 20) + '...' : data },
+                        { "data": "PricePerUnit", render: data => data.toFixed(2) }
+                    ],
+                    "order": [],
+                    "responsive": true,
+                    "paging": true,
+                    "lengthChange": false,
+                    "pageLength": 3,
+                    "searching": true,
+                    "info": true,
+                    "language": {
+                        "info": "Showing _TOTAL_ entries",
+                        "infoEmpty": "No entries available",
+                        "paginate": {
+                            "first": "First",
+                            "last": "Last",
+                            "next": "Next",
+                            "previous": "Previous"
+                        }
+                    },
+                    "dom": 'lfrtip',
+                    "pagingType": "full_numbers"
+                });
+            } else {
+                console.error('Error:', data.message);
+                // Update modal content
+                document.getElementById('modalVerifyText').textContent = 'Error fetching products: ' + data.message;
+                document.getElementById('modalVerifyTitle').textContent = 'Error';
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+                modal.show();
+
+                // Redirect on success after a short delay
+                setTimeout(() => {
+                    window.location.href = 'suppliers.php';
+                }, 2000);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+            // Update modal content
+            document.getElementById('modalVerifyText').textContent = 'An error has occured: ' + error.message;
+            document.getElementById('modalVerifyTitle').textContent = 'Error';
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+            modal.show();
+
+            // Redirect on success after a short delay
+            setTimeout(() => {
+                window.location.href = 'suppliers.php';
+            }, 2000);
+        });
 }
 
 function initializeDataTable() {
@@ -455,7 +506,7 @@ function initializeDataTable() {
     });
 
     // Adjust table layout on window resize
-    $(window).on('resize', function() {
+    $(window).on('resize', function () {
         $('#productTable').DataTable().columns.adjust(); // Adjust the column widths on resize
     });
 }
@@ -491,37 +542,58 @@ function handleFormSubmit1(event) {
         method: 'POST',
         body: formData,
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            setTimeout(() => {
-                // Update modal content
-                document.getElementById('modalVerifyText').textContent = 'Supplier has been updated successfully!';
-                document.getElementById('modalVerifyTitle').textContent = 'Success';
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                setTimeout(() => {
+                    // Update modal content
+                    document.getElementById('modalVerifyText').textContent = 'Supplier has been updated successfully!';
+                    document.getElementById('modalVerifyTitle').textContent = 'Success';
 
-                // Show the modal if it exists
-                const modalElement = document.getElementById('disablebackdrop');
-                if (modalElement) {
-                    const modal = new bootstrap.Modal(modalElement);
-                    modal.show();
+                    // Show the modal if it exists
+                    const modalElement = document.getElementById('disablebackdrop');
+                    if (modalElement) {
+                        const modal = new bootstrap.Modal(modalElement);
+                        modal.show();
 
-                    // Redirect after a short delay to allow the modal to be visible
-                    setTimeout(() => {
+                        // Redirect after a short delay to allow the modal to be visible
+                        setTimeout(() => {
+                            window.location.href = 'suppliers.php';
+                        }, 1000);
+                    } else {
+                        // If the modal doesn't exist, fallback to direct redirection
                         window.location.href = 'suppliers.php';
-                    }, 1000);
-                } else {
-                    // If the modal doesn't exist, fallback to direct redirection
+                    }
+                }, 1000);
+            } else {
+                console.error('Error:', data.message);
+                // Update modal content
+                document.getElementById('modalVerifyText').textContent = 'An error has occured. Ensure that fields are unique from other suppliers.';
+                document.getElementById('modalVerifyTitle').textContent = 'Error';
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+                modal.show();
+
+                // Redirect on success after a short delay
+                setTimeout(() => {
                     window.location.href = 'suppliers.php';
-                }
-            }, 1000);
-        } else {
-            alert(data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while submitting the form.');
-    });
+                }, 2000);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Update modal content
+            document.getElementById('modalVerifyText').textContent = 'An error has occured: ' + error.message;
+            document.getElementById('modalVerifyTitle').textContent = 'Error';
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+            modal.show();
+
+            // Redirect on success after a short delay
+            setTimeout(() => {
+                window.location.href = 'suppliers.php';
+            }, 2000);
+        });
 }
 
 let CurrentSupplierID; // Declare the variable globally
@@ -543,11 +615,11 @@ function handleUpdate(supplierID) {
             console.log('Fetched Data:', data);
             if (data.success && data.supplier) {
                 // Populate form fields with supplier data
-                document.getElementById('edit_newID').value = data.supplier.SupplierID || ''; 
-                document.getElementById('edit_companyName').value = data.supplier.SupplierName || ''; 
-                document.getElementById('edit_agentName').value = data.supplier.AgentName || ''; 
-                document.getElementById('edit_ContactNo').value = data.supplier.Phone || ''; 
-                document.getElementById('edit_Email').value = data.supplier.Email || ''; 
+                document.getElementById('edit_newID').value = data.supplier.SupplierID || '';
+                document.getElementById('edit_companyName').value = data.supplier.SupplierName || '';
+                document.getElementById('edit_agentName').value = data.supplier.AgentName || '';
+                document.getElementById('edit_ContactNo').value = data.supplier.Phone || '';
+                document.getElementById('edit_Email').value = data.supplier.Email || '';
 
                 // Show the overlay for editing
                 const overlay = document.getElementById('overlayEdit1');
@@ -558,13 +630,33 @@ function handleUpdate(supplierID) {
                 // Fetch products related to this supplier and update the checkboxes
                 fetchProductDataTwo(supplierID); // Directly use the supplierID
             } else {
-                console.error('Error fetching supplier data:', data.message || 'Unknown error');
-                alert('Error fetching supplier data: ' + (data.message || 'Unknown error'));
+                console.error('Error:', data.message);
+                // Update modal content
+                document.getElementById('modalVerifyText').textContent = 'Error fetching supplier data: ' + data.message;
+                document.getElementById('modalVerifyTitle').textContent = 'Error';
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+                modal.show();
+
+                // Redirect on success after a short delay
+                setTimeout(() => {
+                    window.location.href = 'suppliers.php';
+                }, 2000);
             }
         })
         .catch(error => {
-            console.error('An error occurred:', error);
-            alert('An error occurred while fetching supplier data.');
+            console.error('Error:', error.message);
+            // Update modal content
+            document.getElementById('modalVerifyText').textContent = 'An error has occured while fetching supplier data: ' + error.message;
+            document.getElementById('modalVerifyTitle').textContent = 'Error';
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+            modal.show();
+
+            // Redirect on success after a short delay
+            setTimeout(() => {
+                window.location.href = 'suppliers.php';
+            }, 2000);
         });
 }
 
@@ -635,12 +727,32 @@ function fetchProductDataTwo(supplierID) {
                 }
             } else {
                 console.error('Error: products field is missing or not an array.', data);
-                alert('Error fetching products: ' + (data.message || 'Unknown error'));
+                // Update modal content
+                document.getElementById('modalVerifyText').textContent = 'Error fetching products: ' + data.message;
+                document.getElementById('modalVerifyTitle').textContent = 'Error';
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+                modal.show();
+
+                // Redirect on success after a short delay
+                setTimeout(() => {
+                    window.location.href = 'suppliers.php';
+                }, 2000);
             }
         })
         .catch(error => {
-            console.error('Error fetching products:', error);
-            alert('An error occurred: ' + error.message);
+            console.error('Error:', error.message);
+            // Update modal content
+            document.getElementById('modalVerifyText').textContent = 'An error has occured: ' + error.message;
+            document.getElementById('modalVerifyTitle').textContent = 'Error';
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+            modal.show();
+
+            // Redirect on success after a short delay
+            setTimeout(() => {
+                window.location.href = 'suppliers.php';
+            }, 2000);
         });
 }
 
@@ -676,7 +788,7 @@ function initializeDataTableUpdate() {
         ]
     });
 
-    $(window).on('resize', function() {
+    $(window).on('resize', function () {
         table.columns.adjust(); // Adjust the column widths on resize
     });
 }

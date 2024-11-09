@@ -86,7 +86,7 @@ while ($row = $result->fetch_assoc()) {
         'InvoiceID' => $row['InvoiceID'],
         'SaleDate' => $row['SaleDate'],
         'Items' => implode('<br /><br />', $items),
-        'Quantities' => implode('<br /><br />', $quantities),
+        'Quantities' => implode('<br /><br /><br />', $quantities),
         'NetAmount' => floatval($row['NetAmount'])
     );
 }

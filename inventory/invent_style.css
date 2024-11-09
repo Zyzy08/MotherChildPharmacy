@@ -467,7 +467,10 @@
 }
 
 .textbox select {
-  width: 220px;
+  font-size: 14px;
+  padding-block: 1px;
+  padding-left: 12px;
+  width: 208px;
   height: 30px;
   flex: 1;
   -moz-box-sizing: content-box;
@@ -1380,11 +1383,23 @@ textarea {
   margin: 40% auto;
 }
 
-#Ordered, #InStock, #ReorderLevel, #orderedAmount, #QuantityRemaining {
+#Ordered,
+#InStock,
+#ReorderLevel,
+#orderedAmount,
+#QuantityRemaining {
   cursor: not-allowed;
   background-color: #e0e0e0;
 }
 
-#item-details-modal{
+#item-details-modal {
   width: 60%;
+}
+
+select option:disabled {
+  color: gray;
+}
+
+select option {
+  color: black;
 }

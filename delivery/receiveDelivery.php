@@ -153,17 +153,16 @@ if ($newReceivedItems == $totalItemsOrdered || $newReceivedItems > $totalItemsOr
 }
 
 $stmt->bind_param("iiiss", $purchaseOrderID, $supplierID, $receivedBy, $totalDeliveredItems, $deliveryStatus);
-
-if (!$stmt->execute()) {
-    $response = [
-        'status' => 'error',
-        'message' => 'Failed to insert delivery record: ' . $stmt->error
-    ];
-    sendResponse($response);
+if ($totalDeliveredItems > 0) {
+    if (!$stmt->execute()) {
+        $response = [
+            'status' => 'error',
+            'message' => 'Failed to insert delivery record: ' . $stmt->error
+        ];
+        sendResponse($response);
+    }
+    $deliveryID = $stmt->insert_id; // Get the last inserted DeliveryID
 }
-
-
-$deliveryID = $stmt->insert_id; // Get the last inserted DeliveryID
 
 // Insert each item into `delivery_items` table
 $insertItemSQL = "INSERT INTO delivery_items (ItemID, DeliveryID, LotNumber, ExpiryDate, QuantityDelivered, Bonus, QuantityRemaining, NetAmount) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

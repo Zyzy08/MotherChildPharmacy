@@ -414,114 +414,139 @@
 
     <!-- Receipt Modal -->
     <div class="modal" id="largeModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog modal-lg">
-            <div class="modal-content">
-                <span id="closeBtnReceipt" class="close-btn">&times;</span>
-                <br>
-                <h5 style="font-weight: bold; text-align: center;">Mother & Child Pharmacy and Medical Supplies</h5>
-                <h6 style="text-align: center;">Gen. Luna Street, Babo Sacan, Porac, Pampanga</h6>
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog modal-lg" id="receipt-modal-dialog">
+            <div class="modal-content" id="receipt-modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Receipt</h5>
+                    <span id="closeBtnReceipt" class="close-btn">&times;</span>                    
+                </div>
+                <h5 style="font-weight: bold; text-align: center; padding-top: 10px">Mother & Child</h5>
+                <h5 style="font-weight: bold; text-align: center;">Pharmacy and Medical Supplies</h5>
+                <h6 style="text-align: center;">Gen. Luna Street, Babo Sacan</h6>
+                <h6 style="text-align: center;">Porac, Pampanga</h6>
                 <h6 style="text-align: center;">
-                    ----------------------------------------------------
+                    --------------------------------------------------------
                 </h6>
-                <div class="modal-body">
+                <div class="modal-body" style="padding-inline: 40px; padding-top: 0px;">
                     <div id="receiptItems"></div> <!-- Container for receipt items -->
                 </div>
-                <h6 style="text-align: center;">
-                    ----------------------------------------------------
-                </h6>
+
                 <div class="row text-center justify-content-between">
-                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
+                    <div class="col-xl-5 firstxl5">
                         <small>Total Items:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
+                    <div class="col-xl-5 secondxl5">
                         <small id="total-items">0</small>
                     </div>
                 </div>
 
-                <div class="row text-center justify-content-between" style="font-weight: bold;">
-                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
-                        <small>Amount Due:</small>
+                <div class="row text-center justify-content-between">
+                    <div class="col-xl-5 firstxl5">
+                        <small>Subtotal:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
-                        <small id="amount-due">₱0.00</small>
+                    <div class="col-xl-5 secondxl5">
+                        <small id="sub-total">₱0.00</small>
                     </div>
                 </div>
 
                 <div class="row text-center justify-content-between">
-                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
-                        <small>VAT Amount:</small>
+                    <div class="col-xl-5 firstxl5">
+                        <small>VAT (12%):</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
+                    <div class="col-xl-5 secondxl5">
                         <small id="tax">₱0.00</small>
                     </div>
                 </div>
 
-                <div class="row text-center justify-content-between" id="receiptDiscountRow">
-                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
+                <div class="row text-center justify-content-between" id="receiptModal-discountRow"
+                    style="display: none;">
+                    <div class="col-xl-5 firstxl5">
                         <small>Discount:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
+                    <div class="col-xl-5 secondxl5">
                         <small id="discount">₱-0.00</small>
                     </div>
                 </div>
 
-                <div class="row text-center justify-content-between" id="receiptRefundRow">
-                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
-                        <small>Refund:</small>
+                <div class="row text-center justify-content-between" style="font-weight: bold;">
+                    <div class="col-xl-5 firstxl5">
+                        <small>Amount Due:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
+                    <div class="col-xl-5 secondxl5">
+                        <small id="amount-due">₱0.00</small>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-between" id="receiptModal-refundRow">
+                    <div class="col-xl-5 firstxl5">
+                        <small>Refund Amount:</small>
+                    </div>
+                    <div class="col-xl-5 secondxl5">
                         <small id="refund-amount">₱0.00</small>
                     </div>
                 </div>
 
-                <!-- <div class="row text-center justify-content-between" id="paymentMethodRow">
-                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
-                        <small>Payment Mode:</small>
-                    </div>
-                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
-                        <small id="payment-method"></small>
-                    </div>
-                </div> -->
-
                 <div class="row text-center justify-content-between">
-                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
+                    <div class="col-xl-5 firstxl5">
                         <small>Payment:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
+                    <div class="col-xl-5 secondxl5">
                         <small id="payment">₱0.00</small>
                     </div>
                 </div>
 
                 <div class="row text-center justify-content-between">
-                    <div class="col-xl-5" style="text-align: left; padding-right: 0px">
+                    <div class="col-xl-5 firstxl5">
                         <small>Change:</small>
                     </div>
-                    <div class="col-xl-5" style="text-align: right; padding-right: 12px">
+                    <div class="col-xl-5 secondxl5">
                         <small id="change">₱0.00</small>
                     </div>
                 </div>
 
                 <h6 style="text-align: center;">
-                    ----------------------------------------------------
+                    --------------------------------------------------------
                 </h6>
 
                 <div class="row text-center justify-content-between">
-                    <div class="col-xl-6" style="text-align: left;">
-                        <small id="order-num">Invoice No.:</small>
+                    <div class="col-xl-5 firstxl5">
+                        <small>Order No.:</small>
+                    </div>
+                    <div class="col-xl-5 secondxl5">
+                        <small id="order-num">#0000000</small>
                     </div>
                 </div>
 
                 <div class="row text-center justify-content-between">
-                    <div class="col-xl-6" style="text-align: left;">
-                        <small id="date-time">Date:</small>
+                    <div class="col-xl-5 firstxl5">
+                        <small>Date:
+                        </small>
+                    </div>
+                    <div class="col-xl-5 secondxl5">
+                        <small id="date-time">
+                        </small>
                     </div>
                 </div>
 
                 <div class="row text-center justify-content-between">
-                    <div class="col-xl-6" style="text-align: left; margin-bottom: 10px;">
-                        <small id="staff">Staff:</small>
+                    <div class="col-xl-5 firstxl5">
+                        <small>Status:</small>
+                    </div>
+                    <div class="col-xl-5 secondxl5">
+                        <small id="status">Sales</small>
                     </div>
                 </div>
+
+                <div class="row text-center justify-content-between">
+                    <div class="col-xl-5 firstxl5">
+                        <small id="stafflabel">Staff:</small>
+                    </div>
+                    <div class="col-xl-5 secondxl5">
+                        <small id="staff"></small>
+                    </div>
+                </div>
+
+                <br>
             </div>
         </div>
     </div>
@@ -693,10 +718,12 @@
         const discount = document.getElementById('discount');
         const tax = document.getElementById('tax');
         const totalitems = document.getElementById('total-items');
+        const subtotal = document.getElementById('sub-total');
         // const paymentmethod = document.getElementById('payment-method');
         const staff = document.getElementById('staff');
         const datetime = document.getElementById('date-time');
         const ordernum = document.getElementById('order-num');
+        const status = document.getElementById('status');
 
         function fetchDetails(identifier) {
             fetch(`getData.php?InvoiceID=${encodeURIComponent(identifier)}`)
@@ -707,17 +734,18 @@
                         totalitems.textContent = data.TotalItems;
                         tax.textContent = '₱' + data.Tax;
                         discount.textContent = '₱' + data.Discount;
+                        subtotal.textContent = '₱' + data.Subtotal;
                         amountdue.textContent = '₱' + data.NetAmount;
                         refundamount.textContent = '₱' + data.RefundAmount;
                         // paymentmethod.textContent = data.PaymentMethod;
                         payment.textContent = '₱' + data.AmountPaid;
                         change.textContent = '₱' + data.AmountChange;
-                        ordernum.textContent = 'Invoice No: IN-0' + data.InvoiceID;
+                        ordernum.textContent = '#' + data.InvoiceID;
                         datetime.textContent = 'Date: ' + data.SalesDate;
                         staff.textContent = 'Staff: ' + data.employeeName + ' ' + data.employeeLName;
 
                         // Conditionally show or hide the Refund row
-                        const refundRow = document.getElementById('receiptRefundRow');
+                        const refundRow = document.getElementById('receiptModal-refundRow');
                         if (parseFloat(data.RefundAmount) === 0) {
                             refundRow.style.display = 'none';
                         } else {
@@ -726,7 +754,7 @@
                         }
 
                         // Conditionally show or hide the Discount row
-                        const discountRow = document.getElementById('receiptDiscountRow');
+                        const discountRow = document.getElementById('receiptModal-discountRow');
                         if (parseFloat(data.Discount) === 0) {
                             discountRow.style.display = 'none';
                         } else {
@@ -836,16 +864,16 @@
 
             const headerHTML = `
         <div class="row mb-2">
-            <div class="col-2"><small><strong>Item Description</strong></small></div>
-            <div class="col-5" style="text-align: right;"><small><strong>Qty</strong></small></div>
+            <div class="col-2"><small><strong>Qty</strong></small></div>
+            <div class="col-4" style="text-align: right;"><small><strong>Item Description</strong></small></div>
         </div>`;
             receiptContainer.insertAdjacentHTML('beforeend', headerHTML);
 
             orderDetails.forEach(item => {
                 const itemHTML = `
             <div class="row">
-                <div class="col-2"><small>${item.description}</small></div>
-                <div class="col-5" style="text-align: right;"><small>${item.qty}</small></div>
+                <div class="col-2"><small>${item.qty}</small></div>
+                <div class="col-4" style="text-align: right;"><small>${item.description}</small></div>
             </div>`;
                 receiptContainer.insertAdjacentHTML('beforeend', itemHTML);
             });

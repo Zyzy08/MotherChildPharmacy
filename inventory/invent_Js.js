@@ -30,7 +30,7 @@ btn.onclick = function () {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                document.getElementById('itemID').value = data.nextItemID; // Set the ItemID textbox with the next auto-increment value
+                document.getElementById('itemID').value = 'I-0' + data.nextItemID; // Set the ItemID textbox with the next auto-increment value
             } else {
                 console.error('Error fetching next ItemID:', data.message);
             }
@@ -73,11 +73,11 @@ function validateForm() {
 
     if (!itemType) errors.push("Item Type is required.");
     if (!pricePerUnit) errors.push("Price Per Unit is required.");
-    if (!brandName) errors.push("Brand Name is required.");
+    // if (!brandName) errors.push("Brand Name is required.");
     if (!genericName) errors.push("Generic Name is required.");
-    if (!mass) errors.push("Mass is required.");
+    if ((!mass) || parseFloat(mass) <= 0) errors.push("Mass requires a positive number.");
     if (!unitOfMeasure) errors.push("Unit of Measure is required.");
-    if (!productCode) errors.push("Product Code is required.");
+    // if (!productCode) errors.push("Product Code is required.");
     if (!Discount) errors.push("Discount is required.");
 
     return errors;
@@ -148,6 +148,13 @@ document.getElementById('PurchaseForm').addEventListener('submit', function (eve
         return;
     }
 
+    const massInput = document.getElementById('mass').value.trim();
+
+    if (isNaN(massInput) || massInput <= 0) {
+        showError('Mass must be a valid positive number.');
+        return;
+    }
+
     formData.set('pricePerUnit', pricePerUnitValue); // Update formData with parsed price
 
     // Submit form data via fetch
@@ -180,6 +187,7 @@ document.getElementById('PurchaseForm').addEventListener('submit', function (eve
 
 // Function to load form data for editing
 function loadFormForEdit(item) {
+
     isEditMode = true; // Set to edit mode
     currentItemId = item.ItemID;
 
@@ -201,7 +209,7 @@ function loadFormForEdit(item) {
 
     // Set the icon preview
     document.getElementById('iconPreview').src = item.ProductIcon || '../resources/img/add_icon.png';
-
+    updateSelectColors();
     modal.style.display = "block"; // Show the modal
 }
 
@@ -617,7 +625,6 @@ function setTableHeaders(selectedView, tableHeader) {
             <th>Generic Name</th>
             <th>In Stock</th>
             <th>Ordered</th>
-            <th>Total Sold</th>
             <th>Reorder Level</th>
         `;
     } else {
@@ -656,12 +663,12 @@ function processFetchedData(data, selectedView, lowStockItemsBody) {
         let hasItems = false;
 
         data.forEach(item => {
-            const { ItemID, BrandName, GenericName, InStock = 0, Ordered = 0, totalSold = 0, ExpiryDate, DaysToExpiry } = item;
+            const { ItemID, BrandName, GenericName, InStock = 0, Ordered = 0, ReorderLevel = 0, ExpiryDate, DaysToExpiry } = item;
 
             // Process item and display in the table
-            if (selectedView === 'lowStock' && shouldDisplayLowStock(InStock, Ordered)) {
+            if (selectedView === 'lowStock') {
                 hasItems = true;
-                appendLowStockRow(lowStockItemsBody, BrandName, GenericName, InStock, Ordered, totalSold);
+                appendLowStockRow(lowStockItemsBody, BrandName, GenericName, InStock, Ordered, ReorderLevel);
             } else if (selectedView === 'nearExpiry') {
                 hasItems = true;
                 appendNearExpiryRow(lowStockItemsBody, BrandName, GenericName, ExpiryDate, DaysToExpiry);
@@ -721,16 +728,14 @@ function shouldDisplayLowStock(inStock, ordered) {
     return parseInt(inStock, 10) <= reorderLevel; // Returns true if in stock is below or equal to reorder level
 }
 
-function appendLowStockRow(lowStockItemsBody, BrandName, GenericName, InStock, Ordered, totalSold) {
-    const eoq = calculateEOQ(totalSold);
+function appendLowStockRow(lowStockItemsBody, BrandName, GenericName, InStock, Ordered, ReorderLevel) {
     const row = document.createElement('tr');
     row.innerHTML = `
         <td class="table-row">${truncateText(BrandName, 20)}</td>
         <td class="table-row">${truncateText(GenericName, 20)}</td>
         <td class="table-row low-stock">${InStock}</td>
         <td class="table-row">${Ordered}</td>
-        <td class="table-row">${totalSold}</td>
-        <td class="table-row">${eoq}</td>
+        <td class="table-row">${ReorderLevel}</td>
     `;
     lowStockItemsBody.appendChild(row);
 }
@@ -746,12 +751,12 @@ function appendNearExpiryRow(lowStockItemsBody, BrandName, GenericName, ExpiryDa
     lowStockItemsBody.appendChild(row);
 }
 
-function calculateEOQ(totalSold) {
-    if (totalSold <= 0) return 0; // Return 0 if no sales
-    const orderingCost = 50; // Example ordering cost
-    const holdingCost = 2; // Example holding cost
-    return Math.sqrt((2 * totalSold * orderingCost) / holdingCost).toFixed(2); // Calculate EOQ
-}
+// function calculateEOQ(totalSold) {
+//     if (totalSold <= 0) return 0; // Return 0 if no sales
+//     const orderingCost = 50; // Example ordering cost
+//     const holdingCost = 2; // Example holding cost
+//     return Math.sqrt((2 * totalSold * orderingCost) / holdingCost).toFixed(2); // Calculate EOQ
+// }
 
 function fetchSalesDataForPastYear() {
     return new Promise((resolve, reject) => {
@@ -783,12 +788,12 @@ function updateReorderLevelInDatabase(itemId, newReorderLevel) {
     });
 }
 
-function calculateEOQ(totalSold) {
-    if (totalSold <= 0) return 0; // Return 0 if no sales
-    const orderingCost = 50; // Example ordering cost
-    const holdingCost = 2; // Example holding cost
-    return Math.sqrt((2 * totalSold * orderingCost) / holdingCost).toFixed(2); // Calculate EOQ
-}
+// function calculateEOQ(totalSold) {
+//     if (totalSold <= 0) return 0; // Return 0 if no sales
+//     const orderingCost = 50; // Example ordering cost
+//     const holdingCost = 2; // Example holding cost
+//     return Math.sqrt((2 * totalSold * orderingCost) / holdingCost).toFixed(2); // Calculate EOQ
+// }
 
 function updateTableView() {
     const selectedView = document.getElementById("modalSelect").value;
@@ -860,6 +865,19 @@ document.addEventListener('DOMContentLoaded', function () {
 function openModal() {
     const modal = document.getElementById('lowStockModal');
     modal.style.display = 'block'; // Show modal
+
+
+    fetch('setReorderLevel.php', {
+        method: 'GET',
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+        })
+        .catch(error => {
+            console.error('Error calling PHP script:', error);
+        });
+
     updateTableView();
 }
 
@@ -1415,4 +1433,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const trigger = urlParams.get('trigger');
 
+    if (trigger === 'lowStock') {
+        const lowStockButton = document.getElementById('checkLowStockButton');
+        if (lowStockButton) {
+            lowStockButton.click();
+        }
+    }
+});

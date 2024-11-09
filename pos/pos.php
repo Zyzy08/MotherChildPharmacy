@@ -373,7 +373,7 @@
                   data-bs-dismiss="modal">Cancel</button>
               </div>
               <div class="col-lg-4">
-                <input type="number" class="form-control" id="quantity-input" placeholder="Quantity" min="1">
+                <input type="number" class="form-control" id="quantity-input" placeholder="Quantity" min="1" step="1">
               </div>
               <div class="col-lg-5">
                 <div class="d-grid gap-2">
@@ -440,7 +440,8 @@
             <div class="row mb-0">
               <h2 for="paymentInput" class="col-sm-5" style="font-weight: bold;">Payment: ₱</h2>
               <div class="col-sm-6">
-                <input type="number" id="paymentInput" class="form-control no-arrows" placeholder="0" oninput="validatePayment(this)">
+                <input type="number" id="paymentInput" class="form-control no-arrows" placeholder="0"
+                  oninput="validatePayment(this)">
                 <div class="invalid-feedback">
                   Insufficient amount!
                 </div>
@@ -465,104 +466,114 @@
 
     <!-- Receipt Modal -->
     <div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-scrollable modal-dialog modal-lg">
-        <div class="modal-content">
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog modal-lg" id="receipt-modal-dialog">
+        <div class="modal-content" id="receipt-modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Receipt</h5>
           </div>
-
-          <br>
-          <h5 style="font-weight: bold; text-align: center;">Mother & Child Pharmacy and Medical Supplies</h5>
-          <h6 style="text-align: center;">Gen. Luna Street, Babo Sacan, Porac, Pampanga</h6>
+          <h5 style="font-weight: bold; text-align: center; padding-top: 10px">Mother & Child</h5>
+          <h5 style="font-weight: bold; text-align: center;">Pharmacy and Medical Supplies</h5>
+          <h6 style="text-align: center;">Gen. Luna Street, Babo Sacan</h6>
+          <h6 style="text-align: center;">Porac, Pampanga</h6>
           <h6 style="text-align: center;">
-            ---------------------------------------------------------------------------------
-          </h6><br>
-          <div class="modal-body">
+            --------------------------------------------------------
+          </h6>
+          <div class="modal-body" style="padding-inline: 40px; padding-top: 0px;">
             <div id="receiptItems"></div> <!-- Container for receipt items -->
           </div>
 
           <div class="row text-center justify-content-between">
-            <div class="col-xl-5">
+            <div class="col-xl-5 firstxl5">
               <small>Total Items:</small>
             </div>
-            <div class="col-xl-5">
+            <div class="col-xl-5 secondxl5">
               <small id="total-items">0</small>
             </div>
           </div>
 
           <div class="row text-center justify-content-between">
-            <div class="col-xl-5">
+            <div class="col-xl-5 firstxl5">
               <small>Subtotal:</small>
             </div>
-            <div class="col-xl-5">
+            <div class="col-xl-5 secondxl5">
               <small id="sub-total">₱0.00</small>
             </div>
           </div>
 
           <div class="row text-center justify-content-between">
-            <div class="col-xl-5">
+            <div class="col-xl-5 firstxl5">
               <small>VAT (12%):</small>
             </div>
-            <div class="col-xl-5">
+            <div class="col-xl-5 secondxl5">
               <small id="tax">₱0.00</small>
             </div>
           </div>
 
-          <div class="row text-center justify-content-between">
-            <div class="col-xl-5">
+          <div class="row text-center justify-content-between" id="receiptModal-discountRow" style="display: none;">
+            <div class="col-xl-5 firstxl5">
               <small>Discount:</small>
             </div>
-            <div class="col-xl-5">
-              <small id="discount">₱-0.00</small>
+            <div class="col-xl-5 secondxl5">
+              <small id="discount">₱0.00</small>
             </div>
           </div>
 
           <div class="row text-center justify-content-between" style="font-weight: bold;">
-            <div class="col-xl-5">
+            <div class="col-xl-5 firstxl5">
               <small>Amount Due:</small>
             </div>
-            <div class="col-xl-5">
+            <div class="col-xl-5 secondxl5">
               <small id="amount-due">₱0.00</small>
             </div>
           </div>
 
-          <div class="row text-center justify-content-between">
-            <div class="col-xl-5">
+          <!-- <div class="row text-center justify-content-between">
+            <div class="col-xl-5 firstxl5">
               <small>Refund Amount:</small>
             </div>
-            <div class="col-xl-5">
+            <div class="col-xl-5 secondxl5">
               <small id="refund-amount">₱0.00</small>
             </div>
-          </div>
+          </div> -->
 
           <div class="row text-center justify-content-between">
-            <div class="col-xl-5">
+            <div class="col-xl-5 firstxl5">
               <small>Payment:</small>
             </div>
-            <div class="col-xl-5">
+            <div class="col-xl-5 secondxl5">
               <small id="payment">₱0.00</small>
             </div>
           </div>
 
           <div class="row text-center justify-content-between">
-            <div class="col-xl-5">
+            <div class="col-xl-5 firstxl5">
               <small>Change:</small>
             </div>
-            <div class="col-xl-5">
+            <div class="col-xl-5 secondxl5">
               <small id="change">₱0.00</small>
             </div>
           </div>
 
           <h6 style="text-align: center;">
-            ---------------------------------------------------------------------------------
+            --------------------------------------------------------
           </h6>
 
           <div class="row text-center justify-content-between">
-            <div class="col-xl-6">
-              <small id="order-num">Order No.: #0000000</small>
+            <div class="col-xl-5 firstxl5">
+              <small>Order No.:</small>
             </div>
-            <div class="col-xl-6">
-              <small id="date-time">Date: <?php echo date('F j, Y'); ?>
+            <div class="col-xl-5 secondxl5">
+              <small id="order-num">#0000000</small>
+            </div>
+          </div>
+
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5 firstxl5">
+              <small>Date:
+              </small>
+            </div>
+            <div class="col-xl-5 secondxl5">
+              <small id="date-time"><?php echo date('F j, Y'); ?>
                 <?php date_default_timezone_set('Asia/Manila');
                 echo date('h:i A'); ?>
               </small>
@@ -570,19 +581,24 @@
           </div>
 
           <div class="row text-center justify-content-between">
-            <div class="col-xl-6">
-              <small id="staff">Staff: <?php echo htmlspecialchars($employeeFullName); ?></small>
+            <div class="col-xl-5 firstxl5">
+              <small id="status">Status:</small>
             </div>
-            <div class="col-xl-6">
-              <small id="payment-method">Payment Method: Cash</small>
+            <div class="col-xl-5 secondxl5">
+              <small id="status">Sales</small>
             </div>
           </div>
 
-          <div class="row mb-3 text-center justify-content-between">
-            <div class="col-xl-6">
-              <small id="status">Status: Sales</small>
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5 firstxl5">
+              <small id="stafflabel">Staff:</small>
+            </div>
+            <div class="col-xl-5 secondxl5">
+              <small id="staff"><?php echo htmlspecialchars($employeeFullName); ?></small>
             </div>
           </div>
+
+          <br>
 
           <div class="modal-footer">
 

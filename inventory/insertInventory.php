@@ -49,14 +49,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validate required fields (excluding InStock)
     if (empty($productCode)) {
-        echo json_encode(['success' => false, 'message' => 'Product Code is required']);
-        exit;
     } elseif (empty($itemType)) {
         echo json_encode(['success' => false, 'message' => 'Item Type is required']);
         exit;
     } elseif (empty($brandName)) {
-        echo json_encode(['success' => false, 'message' => 'Brand Name is required']);
-        exit;
+
     } elseif (empty($genericName)) {
         echo json_encode(['success' => false, 'message' => 'Generic Name is required']);
         exit;
@@ -68,6 +65,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     } elseif (empty($pricePerUnit) || !is_numeric($pricePerUnit)) {
         echo json_encode(['success' => false, 'message' => 'Price per Unit must be a valid numeric value']);
+        exit;
+    } elseif ($mass <= 0) {
+        echo json_encode(['success' => false, 'message' => 'Mass must be a positive numeric value']);
         exit;
     } elseif ($Discount === '') {
         echo json_encode(['success' => false, 'message' => 'Discount is required']);

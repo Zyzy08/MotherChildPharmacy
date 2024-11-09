@@ -245,9 +245,10 @@
                             <form id="restoreForm" method="POST" enctype="multipart/form-data">
                                 <div class="mb-3">
                                     <label for="sqlFile" class="form-label">Upload SQL File for Restore</label>
-                                    <input type="file" class="form-control" id="sqlFile" name="sqlFile" required>
+                                    <input type="file" class="form-control" id="sqlFile" name="sqlFile" accept=".sql"
+                                        required>
                                 </div>
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" id="btnRestoreDB">
                                     <i class="bi bi-cloud-upload"></i> Restore Database
                                 </button>
                             </form>
@@ -320,6 +321,7 @@
     <script src="../resources/vendor/php-email-form/validate.js"></script>
 
     <script>
+        const btnRestoreDB = document.getElementById('btnRestoreDB');
         // Function to display the modal with dynamic content
         function showModal(title, message) {
             document.getElementById('modalTitle').innerText = title;
@@ -354,6 +356,9 @@
             // Create a FormData object from the form
             const formData = new FormData(this);
 
+            btnRestoreDB.innerHTML = '<i class="bi bi-cloud-upload"></i> Restore in progress...';
+            btnRestoreDB.disabled = true;
+
             // Use fetch to send the form data to restore.php
             fetch('restore.php', {
                 method: 'POST',
@@ -379,6 +384,8 @@
             document.getElementById('modalBody2').innerHTML = message; // Allow HTML for messages
             let modal = new bootstrap.Modal(document.getElementById('disablebackdrop-Front2'));
             modal.show();
+            btnRestoreDB.innerHTML = '<i class="bi bi-cloud-upload"></i> Restore Database';
+            btnRestoreDB.disabled = false;
         }
     </script>
 

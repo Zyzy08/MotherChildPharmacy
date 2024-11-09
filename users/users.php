@@ -301,7 +301,7 @@
                         <div class="label">
                             <label for="employeeName">Employee First Name</label><br>
                         </div>
-                        <input type="text" id="employeeName" name="employeeName" required>
+                        <input type="text" id="employeeName" name="employeeName" required placeholder="Enter First Name">
                     </div>
                     <!-- <div class="textbox">
                         <div class="label">
@@ -313,7 +313,7 @@
                         <div class="label">
                             <label for="employeeLName">Employee Last Name</label><br>
                         </div>
-                        <input type="text" id="employeeLName" name="employeeLName" required>
+                        <input type="text" id="employeeLName" name="employeeLName" required placeholder="Enter Last Name">
                     </div>
                 </div>
                 <div class="container">

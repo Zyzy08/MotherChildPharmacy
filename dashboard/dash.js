@@ -104,12 +104,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+let inventoryLink = "../inventory/inventory.php";
+
 document.addEventListener('DOMContentLoaded', function () {
     const inventoryCount = document.getElementById('inventory-count');
     const statusText = document.getElementById('status-text');
     const statusIcon = document.getElementById('status-icon');
     const statusDescription = document.getElementById('status-description');
-    let currentStatus = 'in-stock';
+    let currentStatus = 'low-stock';
 
     const statusConfigs = {
         'in-stock': {
@@ -137,10 +139,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateCardAppearance(status) {
         const config = statusConfigs[status];
+        if (status === 'low-stock') {
+            inventoryLink = "../inventory/inventory.php?trigger=lowStock";
+        } else {
+            inventoryLink = "../inventory/inventory.php";
+        }
 
         // Update icon
-        statusIcon.className = `card-icon rounded-circle d-flex align-items-center justify-content-center ${config.bgClass}`;
-        statusIcon.innerHTML = `<i class="bi ${config.icon} ${config.iconClass}"></i>`;
+        statusIcon.innerHTML = `<a href="${inventoryLink}" class="card-icon rounded-circle d-flex align-items-center justify-content-center ${config.bgClass}" style="text-decoration: none;">
+                                    <i style="cursor: pointer;" class="bi ${config.icon} ${config.iconClass}"></i>
+                                </a>`;
 
         // Update text
         statusDescription.className = `${config.textClass} small pt-1 fw-bold`;
@@ -206,13 +214,17 @@ document.addEventListener("DOMContentLoaded", function () {
                     hour: '2-digit',
                     minute: '2-digit'
                 });
+                // Split sale.Items by commas (assuming items are comma-separated), truncate each item, and join them back
+                const truncatedItems = sale.Items.split("<br /><br />").map(item =>
+                    item.length > 25 ? item.substring(0, 25) + "..." : item
+                ).join("<br /><br />");
 
                 // Display items and quantities in separate columns
                 const row = `
                     <tr>
-                        <th scope="row"><a href="#">#${sale.InvoiceID}</a></th>
+                        <th scope="row">#${sale.InvoiceID}</th>
                         <td>${saleTime}</td>
-                        <td><a href="#" class="text-primary">${sale.Items}</a></td>
+                        <td>${truncatedItems}</td>
                         <td>${sale.Quantities}</td>
                         <td>₱${sale.NetAmount.toFixed(2)}</td>
                     </tr>
@@ -286,4 +298,17 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         })
         .catch(error => console.error("Error fetching deliveries data:", error));
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('../inventory/setReorderLevel.php', {
+        method: 'GET',
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+        })
+        .catch(error => {
+            console.error('Error calling PHP script:', error);
+        });
 });

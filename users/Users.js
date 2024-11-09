@@ -89,11 +89,14 @@ function closeOverlay() {
     const isFormFilled = username.value.trim() !== '' || accname.value.trim() !== '' || pass.value.trim() !== '';
 
     if (isFormFilled) {
-        if (confirm("Are you sure you want to close the form? Any unsaved changes will be lost.")) {
-            document.getElementById('userForm').reset();
-            document.getElementById('preview').style.display = 'none';
-            hideOverlay();
-        }
+        // if (confirm("Are you sure you want to close the form? Any unsaved changes will be lost.")) {
+        //     document.getElementById('userForm').reset();
+        //     document.getElementById('preview').style.display = 'none';
+        //     hideOverlay();
+        // }
+        document.getElementById('userForm').reset();
+        document.getElementById('preview').style.display = 'none';
+        hideOverlay();
     } else {
         hideOverlay();
     }
