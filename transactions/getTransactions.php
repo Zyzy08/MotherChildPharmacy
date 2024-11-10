@@ -70,12 +70,35 @@ switch ($selectedTab) {
         JOIN 
             users u ON s.AccountID = u.AccountID 
         WHERE 
-            s.Status = 'ReturnExchange'
+            s.Status = 'Return/Exchange';
     ";
         break;
-    // case '3':
-    //     $sql = "SELECT PurchaseOrderID, DATE_FORMAT(OrderDate, '%m/%d/%y (%l:%i %p)') AS SalesDate, TotalItems, NetAmount, PaymentMethod FROM sales WHERE Status = 'PurchaseOrder'";
-    //     break;
+    case '3':
+        $sql = "
+        SELECT 
+            s.InvoiceID, 
+            DATE_FORMAT(s.SaleDate, '%m/%d/%y (%l:%i %p)') AS SalesDate,
+            s.SaleDate AS SalesDateTime, 
+            s.TotalItems, 
+            s.Subtotal,
+            s.NetAmount, 
+            s.PaymentMethod,
+            s.Tax,
+            s.Discount, 
+            s.AmountPaid,
+            s.AmountChange,
+            s.Status,
+            u.employeeName, 
+            u.employeeLName,
+            s.SalesDetails,
+            s.RefundAmount
+        FROM 
+            sales s
+        JOIN 
+            users u ON s.AccountID = u.AccountID 
+        WHERE 
+            s.Status IN ('Returned', 'ReturnedForExchange')";
+        break;
     // Default to tab 1 is already handled
 }
 
@@ -84,7 +107,7 @@ $result = $conn->query($sql);
 $data = array();
 
 if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
+    while ($row = $result->fetch_assoc()) {
         $data[] = $row;
     }
 }

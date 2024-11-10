@@ -253,11 +253,11 @@
                                 type="button" role="tab" aria-controls="contact" aria-selected="false"
                                 tabindex="-1">Return/Exchange</button>
                         </li>
-                        <!-- <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="3-tab" data-bs-toggle="tab" data-bs-target="#contact"
-                                type="button" role="tab" aria-controls="contact" aria-selected="false"
-                                tabindex="-1">Purchase Orders</button>
-                        </li> -->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="3-tab" data-bs-toggle="tab" data-bs-target="#contact2"
+                                type="button" role="tab" aria-controls="contact2" aria-selected="false"
+                                tabindex="-1">Returns</button>
+                        </li>
                     </ul>
                     <div class="card">
                         <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
@@ -405,9 +405,28 @@
             <hr>
             <form id="userFormAD" action="deleteData.php" method="post" enctype="multipart/form-data"
                 onsubmit="handleFormSubmit()">
-                <button id="deleteDataBtn" type="button"><img src="../resources/img/delete.png"
+                <button id="deleteDataBtn" type="button" data-bs-toggle="modal"
+                    data-bs-target="#disablebackdrop-AD"><img src="../resources/img/delete.png"
                         style="padding-bottom: 2px;"> Void Transaction</button>
             </form>
+            <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
+                <div class="modal-dialog">
+                    <div class="modal-content" style="margin: 50% auto;">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalVerifyTitle-AD">Confirmation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                id="modalClose-AD"></button>
+                        </div>
+                        <div class="modal-body" id="modalVerifyText-AD">
+                            Are you sure you want to void this transaction?
+                        </div>
+                        <div class="modal-footer" id="modal-footer-AD">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-primary" id="modalYes">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- End of Overlay for Options -->
@@ -418,7 +437,7 @@
             <div class="modal-content" id="receipt-modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Receipt</h5>
-                    <span id="closeBtnReceipt" class="close-btn">&times;</span>                    
+                    <span id="closeBtnReceipt" class="close-btn">&times;</span>
                 </div>
                 <h5 style="font-weight: bold; text-align: center; padding-top: 10px">Mother & Child</h5>
                 <h5 style="font-weight: bold; text-align: center;">Pharmacy and Medical Supplies</h5>
@@ -468,21 +487,21 @@
                     </div>
                 </div>
 
-                <div class="row text-center justify-content-between" style="font-weight: bold;">
-                    <div class="col-xl-5 firstxl5">
-                        <small>Amount Due:</small>
-                    </div>
-                    <div class="col-xl-5 secondxl5">
-                        <small id="amount-due">₱0.00</small>
-                    </div>
-                </div>
-
                 <div class="row text-center justify-content-between" id="receiptModal-refundRow">
                     <div class="col-xl-5 firstxl5">
                         <small>Refund Amount:</small>
                     </div>
                     <div class="col-xl-5 secondxl5">
                         <small id="refund-amount">₱0.00</small>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-between" style="font-weight: bold;">
+                    <div class="col-xl-5 firstxl5">
+                        <small>Amount Due:</small>
+                    </div>
+                    <div class="col-xl-5 secondxl5">
+                        <small id="amount-due">₱0.00</small>
                     </div>
                 </div>
 
@@ -551,6 +570,19 @@
         </div>
     </div>
 
+    <div class="modal" id="disablebackdrop-Front" tabindex="-1">
+        <div class="modal-dialog" data-bs-backdrop="false">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalVerifyTitle-Front">Title Text</h5>
+                </div>
+                <div class="modal-body" id="modalVerifyText-Front">
+                    Text
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Template Main JS File -->
     <script src="../main.js"></script>
@@ -567,6 +599,8 @@
     <script src="../resources/vendor/php-email-form/validate.js"></script>
 
     <script>
+        const modalVerifyTitleFront = document.getElementById('modalVerifyTitle-Front');
+        const modalVerifyTextFront = document.getElementById('modalVerifyText-Front');
         const userRole = '<?php echo $role; ?>'; // Embed PHP role variable into JavaScript
 
         function setDataTables() {
@@ -742,7 +776,8 @@
                         change.textContent = '₱' + data.AmountChange;
                         ordernum.textContent = '#' + data.InvoiceID;
                         datetime.textContent = 'Date: ' + data.SalesDate;
-                        staff.textContent = 'Staff: ' + data.employeeName + ' ' + data.employeeLName;
+                        staff.textContent = data.employeeName + ' ' + data.employeeLName;
+                        status.textContent = data.Status;
 
                         // Conditionally show or hide the Refund row
                         const refundRow = document.getElementById('receiptModal-refundRow');
@@ -825,10 +860,15 @@
             overlayAD.style.display = 'none';
         })
 
+        const modalVerifyTextAD = document.getElementById('modalVerifyText-AD');
+        const modalVerifyTitleAD = document.getElementById('modalVerifyTitle-AD');
+        const modalFooterAD = document.getElementById('modal-footer-AD');
+        const modalCloseAD = document.getElementById('modalClose-AD');
+        const modalYes = document.getElementById('modalYes');
+
         const deleteDataBtn = document.getElementById('deleteDataBtn');
-        deleteDataBtn.addEventListener('click', function () {
-            let confirmationUser = confirm("Are you sure you want to void this transaction?");
-            if (confirmationUser === true) {
+        modalYes.addEventListener('click', function () {
+            if (true) {
                 if (!selectedID || selectedID.trim() === '') {
                     alert('No data selected.');
                     return;
@@ -849,10 +889,14 @@
                 };
 
                 xhr.send(JSON.stringify({ selectedID: selectedID }));
-                alert("Transaction voided successfully!");
+                //Extra
+                modalFooterAD.style.display = 'none'; // Set display to none to hide it
+                modalCloseAD.style.display = 'none';
+                modalVerifyTextAD.textContent = 'Transaction has been voided successfully!';
+                modalVerifyTitleAD.textContent = 'Success';
                 setTimeout(() => {
                     window.location.href = 'transactions.php'; // Redirect on success
-                }, 100);
+                }, 1000);
             } else {
 
             }
@@ -883,7 +927,7 @@
         //Tabs for Types
         const tab1 = document.getElementById('1-tab');
         const tab2 = document.getElementById('2-tab');
-        // const tab3 = document.getElementById('3-tab');
+        const tab3 = document.getElementById('3-tab');
 
         function fetchTransactions(tab) {
             fetch(`getTransactions.php?tab=${tab}`)
@@ -897,7 +941,7 @@
         // Event listeners for tab clicks
         tab1.addEventListener('click', () => fetchTransactions('1'));
         tab2.addEventListener('click', () => fetchTransactions('2'));
-        // tab3.addEventListener('click', () => fetchTransactions('3'));
+        tab3.addEventListener('click', () => fetchTransactions('3'));
 
 
     </script>

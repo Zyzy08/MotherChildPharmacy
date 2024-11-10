@@ -238,7 +238,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Database Backup & Restore</h5>
-                            <button type="submit" class="btn btn-success" onclick="runBackup()">
+                            <button type="submit" class="btn btn-success" onclick="runBackup()" id="btnBackupDB">
                                 <i class="bi bi-cloud-arrow-down"></i> Backup Database
                             </button>
                             <hr>
@@ -322,16 +322,22 @@
 
     <script>
         const btnRestoreDB = document.getElementById('btnRestoreDB');
+        const btnBackupDB = document.getElementById('btnBackupDB');
+
         // Function to display the modal with dynamic content
         function showModal(title, message) {
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalBody').innerHTML = message; // Allow HTML for file path
             let modal = new bootstrap.Modal(document.getElementById('disablebackdrop-Front'));
             modal.show();
+            btnBackupDB.innerHTML = '<i class="bi bi-cloud-arrow-down"></i> Backup Database';
+            btnBackupDB.disabled = false;
         }
 
         // Function to run the backup and show the modal with the response
         function runBackup() {
+            btnBackupDB.innerHTML = '<i class="bi bi-cloud-arrow-down"></i> Backup in progress...';
+            btnBackupDB.disabled = true;
             fetch('backup.php')
                 .then(response => response.json())
                 .then(data => {

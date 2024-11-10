@@ -1,1 +1,24 @@
-[10-Nov-2024 02:23:05 Europe/Berlin] ZERO
+[10-Nov-2024 11:27:13 Europe/Berlin] LINE 47: UPDATED Status to Return
+[10-Nov-2024 11:27:13 Europe/Berlin] LINE 56: SalesDetails Selected
+[10-Nov-2024 11:27:13 Europe/Berlin] LINE 76: InStock returned
+[10-Nov-2024 11:27:13 Europe/Berlin] LINE 101: QuantityRemaining returned
+[10-Nov-2024 11:27:13 Europe/Berlin] LINE 155: COMMITTING...
+[10-Nov-2024 11:27:13 Europe/Berlin] LINE 158: COMMITTED.
+[10-Nov-2024 11:31:55 Europe/Berlin] LINE 47: UPDATED Status to Return
+[10-Nov-2024 11:31:55 Europe/Berlin] LINE 56: SalesDetails Selected
+[10-Nov-2024 11:31:55 Europe/Berlin] LINE 76: InStock returned
+[10-Nov-2024 11:31:55 Europe/Berlin] LINE 101: QuantityRemaining returned
+[10-Nov-2024 11:31:55 Europe/Berlin] LINE 155: COMMITTING...
+[10-Nov-2024 11:31:55 Europe/Berlin] LINE 158: COMMITTED.
+[10-Nov-2024 13:53:25 Europe/Berlin] LINE 47: UPDATED Status to Return
+[10-Nov-2024 13:53:25 Europe/Berlin] LINE 56: SalesDetails Selected
+[10-Nov-2024 13:53:25 Europe/Berlin] LINE 76: InStock returned
+[10-Nov-2024 13:53:25 Europe/Berlin] LINE 101: QuantityRemaining returned
+[10-Nov-2024 13:53:25 Europe/Berlin] LINE 155: COMMITTING...
+[10-Nov-2024 13:53:25 Europe/Berlin] LINE 158: COMMITTED.
+[10-Nov-2024 14:10:22 Europe/Berlin] LINE 47: UPDATED Status to Return
+[10-Nov-2024 14:10:22 Europe/Berlin] LINE 56: SalesDetails Selected
+[10-Nov-2024 14:10:22 Europe/Berlin] LINE 76: InStock returned
+[10-Nov-2024 14:10:22 Europe/Berlin] LINE 101: QuantityRemaining returned
+[10-Nov-2024 14:10:22 Europe/Berlin] LINE 155: COMMITTING...
+[10-Nov-2024 14:10:22 Europe/Berlin] LINE 158: COMMITTED.

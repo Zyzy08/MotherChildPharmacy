@@ -35,7 +35,7 @@ $sql = "SELECT
 FROM 
     sales s
 WHERE 
-    DATE(s.SaleDate) = CURDATE()
+    DATE(s.SaleDate) = CURDATE() AND Status IN ('Sales', 'Return/Exchange')
 ORDER BY 
     s.SaleDate DESC";
 

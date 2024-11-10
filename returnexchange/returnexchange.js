@@ -1001,7 +1001,7 @@ function getReceiptData() {
         discount: givenDiscount,
         amountPaid: parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g, "")),
         paymentMethod: 'Cash',
-        status: 'Sales',
+        status: 'Return/Exchange',
         refundAmount: selectedRefundAmount,
         seniorID: document.getElementById('seniorPwdID').value,
         idType: document.getElementById('idType').value,
@@ -1054,7 +1054,7 @@ ${'-'.repeat(maxWidth)}
     const totalItems = receiptItems.reduce((sum, item) => sum + item.quantity, 0);
     const subtotal = parseFloat(receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0)).toFixed(2);
     const tax = VATamt.toFixed(2);
-    const discount = totalDiscountableAmt.toFixed(2);
+    const discount = givenDiscount.toFixed(2);
     const amountDue = (parseFloat(subtotal) - discount - selectedRefundAmount).toFixed(2);
     const amountPaid = parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g, "")).toFixed(2);
     const change = (amountPaid - amountDue).toFixed(2);
@@ -1064,8 +1064,8 @@ ${'-'.repeat(maxWidth)}
     content += formatLine(`Total Items:`, `${totalItems}\n`);
     content += formatLine(`Subtotal:`, `P${formatPrice(subtotal)}\n`);
     content += formatLine(`Tax 12%:`, `P${formatPrice(tax)}\n`);
-    if (discount > 0) {
-        content += formatLine(`Discount:`, `P${formatPrice(discount)}\n`);
+    if (givenDiscount > 0) {
+        content += formatLine(`Discount:`, `P${formatPrice(givenDiscount)}\n`);
     }
     content += formatLine(`Refund Amount:`, `P${formatPrice(selectedRefundAmount)}\n`);
     content += formatLine(`Amount Due:`, `P${formatPrice(amountDue)}\n`);

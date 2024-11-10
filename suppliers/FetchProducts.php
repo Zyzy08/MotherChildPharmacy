@@ -6,7 +6,7 @@ $host = 'localhost';
 $db = 'motherchildpharmacy';
 $user = 'root';
 $pass = '';
-
+    
 header('Content-Type: application/json'); // Set content type to JSON
 
 try {
@@ -27,6 +27,7 @@ try {
     // Process the products to ensure consistent values
     foreach ($products as &$product) {
         // Set values to null or default if they are empty
+        $product['ItemID'] = !empty($product['ItemID']) ? $product['ItemID'] : null;
         $product['GenericName'] = !empty($product['GenericName']) ? $product['GenericName'] : null;
         $product['BrandName'] = !empty($product['BrandName']) ? $product['BrandName'] : null;
 

@@ -17,22 +17,50 @@ if ($conn->connect_error) {
 $period = $_GET['period'] ?? 'today';
 
 // Define the queries based on the period
+// Define the queries based on the period
 switch ($period) {
     case 'today':
-        $currentQuery = "SELECT COUNT(DISTINCT InvoiceID) as total FROM sales WHERE DATE(SaleDate) = CURDATE()";
-        $previousQuery = "SELECT COUNT(DISTINCT InvoiceID) as total FROM sales WHERE DATE(SaleDate) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)";
+        $currentQuery = "SELECT COUNT(DISTINCT InvoiceID) as total 
+                         FROM sales 
+                         WHERE DATE(SaleDate) = CURDATE() 
+                         AND Status IN ('Sales', 'Return/Exchange')";
+
+        $previousQuery = "SELECT COUNT(DISTINCT InvoiceID) as total 
+                          FROM sales 
+                          WHERE DATE(SaleDate) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) 
+                          AND Status IN ('Sales', 'Return/Exchange')";
         break;
+
     case 'month':
-        $currentQuery = "SELECT COUNT(DISTINCT InvoiceID) as total FROM sales WHERE YEAR(SaleDate) = YEAR(CURDATE()) AND MONTH(SaleDate) = MONTH(CURDATE())";
-        $previousQuery = "SELECT COUNT(DISTINCT InvoiceID) as total FROM sales WHERE YEAR(SaleDate) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AND MONTH(SaleDate) = MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))";
+        $currentQuery = "SELECT COUNT(DISTINCT InvoiceID) as total 
+                         FROM sales 
+                         WHERE YEAR(SaleDate) = YEAR(CURDATE()) 
+                         AND MONTH(SaleDate) = MONTH(CURDATE()) 
+                         AND Status IN ('Sales', 'Return/Exchange')";
+
+        $previousQuery = "SELECT COUNT(DISTINCT InvoiceID) as total 
+                          FROM sales 
+                          WHERE YEAR(SaleDate) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) 
+                          AND MONTH(SaleDate) = MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) 
+                          AND Status IN ('Sales', 'Return/Exchange')";
         break;
+
     case 'year':
-        $currentQuery = "SELECT COUNT(DISTINCT InvoiceID) as total FROM sales WHERE YEAR(SaleDate) = YEAR(CURDATE())";
-        $previousQuery = "SELECT COUNT(DISTINCT InvoiceID) as total FROM sales WHERE YEAR(SaleDate) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 YEAR))";
+        $currentQuery = "SELECT COUNT(DISTINCT InvoiceID) as total 
+                         FROM sales 
+                         WHERE YEAR(SaleDate) = YEAR(CURDATE()) 
+                         AND Status IN ('Sales', 'Return/Exchange')";
+
+        $previousQuery = "SELECT COUNT(DISTINCT InvoiceID) as total 
+                          FROM sales 
+                          WHERE YEAR(SaleDate) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 YEAR)) 
+                          AND Status IN ('Sales', 'Return/Exchange')";
         break;
+
     default:
         die("Invalid period specified");
 }
+
 
 $currentResult = $conn->query($currentQuery);
 $previousResult = $conn->query($previousQuery);

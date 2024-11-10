@@ -829,7 +829,7 @@ function fetchAccountID() {
         .catch(error => console.error('Error fetching AccountID:', error));
 }
 
-// document.addEventListener('DOMContentLoaded', fetchAccountID);
+document.addEventListener('DOMContentLoaded', fetchAccountID);
 
 function getCurrentDateTime() {
     const now = new Date();
@@ -939,7 +939,7 @@ document.getElementById('print-button').addEventListener('click', async function
 
     } catch (error) {
         console.error('Error:', error);
-        showToast('An error occurred. Please try again.');
+        alert('An error occurred. Please try again.');
     }
 });
 
@@ -1041,7 +1041,7 @@ ${'-'.repeat(maxWidth)}
     const totalItems = receiptItems.reduce((sum, item) => sum + item.quantity, 0);
     const subtotal = parseFloat(receiptItems.reduce((sum, item) => sum + parseFloat(item.total_item_price), 0)).toFixed(2);
     const tax = VATamt.toFixed(2);
-    const discount = totalDiscountableAmt.toFixed(2);
+    const discount = givenDiscount.toFixed(2);
     const amountDue = (parseFloat(subtotal) - discount).toFixed(2);
     const amountPaid = parseFloat(document.getElementById("payment").textContent.replace(/[^0-9.-]+/g, "")).toFixed(2);
     const change = (amountPaid - amountDue).toFixed(2);

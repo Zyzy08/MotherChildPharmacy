@@ -527,11 +527,32 @@
         </div>
         <br>
 
-        <div class="modal-footer">
+        <div class="modal-footer justify-content-between">
+          <button id="returnOrderButton" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD">
+            Return Order</button>
           <div class="d-grid gap-2">
             <button id="select-order-button" type="button" class="btn btn-primary">
-              Select
+              Select Order
             </button>
+          </div>
+        </div>
+
+        <div class="modal" id="disablebackdrop-AD" tabindex="-1" data-bs-backdrop="false">
+          <div class="modal-dialog">
+            <div class="modal-content" style="margin: 50% auto;">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalVerifyTitle-AD">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                  id="modalClose-AD"></button>
+              </div>
+              <div class="modal-body" id="modalVerifyText-AD">
+                Are you sure you want to directly return this without any exchanged products?
+              </div>
+              <div class="modal-footer" id="modal-footer-AD">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-primary" id="modalYes">Yes</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -671,12 +692,15 @@
     const ordernum = document.getElementById('order-num');
     const status = document.getElementById('status');
 
+    let selectedOrder = '';
+
     function fetchDetails(identifier) {
       fetch(`../../transactions/getData.php?InvoiceID=${encodeURIComponent(identifier)}`)
         .then(response => response.json())
         .then(data => {
           if (data) {
             displayReceiptItems(data.listItems);
+            selectedOrder = identifier;
             totalitems.textContent = data.TotalItems;
             tax.textContent = '₱' + data.Tax;
             discount.textContent = '₱' + data.Discount;

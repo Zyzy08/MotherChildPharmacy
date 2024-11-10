@@ -55,10 +55,8 @@ function hideOverlay() {
 function closeOverlay() {
     const isFormFilled = companyName.value.trim() !== '' || ContactNo.value.trim() !== '' || Email.value.trim() !== '';
     if (isFormFilled) {
-        if (confirm("Are you sure you want to close the form? Any unsaved changes will be lost.")) {
-            document.getElementById('userForm').reset();
-            hideOverlay();
-        }
+        document.getElementById('userForm').reset();
+        hideOverlay();
     } else {
         hideOverlay();
     }
@@ -180,6 +178,10 @@ document.addEventListener('DOMContentLoaded', () => {
 let VnewID = 0;
 const newID = document.getElementById('newID');
 addUserBtn.addEventListener('click', function (event) {
+    const checkboxes = document.querySelectorAll('.product-checkbox:checked'); // Select checked checkboxes
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false; // Uncheck the checkbox
+    });
     showOverlay();
     fetch('getNewID.php')
         .then(response => response.json())
@@ -325,9 +327,16 @@ function handleFormSubmit(event) {
 
     // Collect selected products
     const selectedProducts = []; // Reset the array
-    const checkboxes = document.querySelectorAll('.product-checkbox:checked'); // Select checked checkboxes
+    const checkboxes = document.querySelectorAll('.product-checkbox'); // Select all checkboxes
     checkboxes.forEach(checkbox => {
-        selectedProducts.push({ productId: checkbox.getAttribute('data-id') }); // Push selected product IDs
+        const productId = checkbox.getAttribute('data-id');
+        // Check if the checkbox is checked
+        if (checkbox.checked) {
+            // Push selected product IDs with value 1 if checked
+            selectedProducts.push({ productId: productId, value: 1 });
+        } else {
+
+        }
     });
 
     const formData = new FormData(event.target);
@@ -420,7 +429,12 @@ function fetchProductData() {
                 $('#productTable').DataTable({
                     "data": products,
                     "columns": [
-                        { "data": null, render: () => '<input type="checkbox" class="product-checkbox" />' }, // Checkbox
+                        {
+                            "data": "ItemID",
+                            "render": function (data) {
+                                return `<input type="checkbox" class="product-checkbox" data-id="${data}" />`;
+                            }
+                        }, // Checkbox
                         { "data": "BrandName", render: data => data.length > 20 ? data.substring(0, 20) + '...' : data },
                         { "data": "GenericName", render: data => data.length > 20 ? data.substring(0, 20) + '...' : data },
                         { "data": "PricePerUnit", render: data => data.toFixed(2) }

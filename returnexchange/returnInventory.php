@@ -10,6 +10,21 @@ $username = "root";
 $password = "";
 $dbname = "motherchildpharmacy";
 
+// Get the current user's AccountID from the session or other source
+session_start();
+$sessionAccountID = $_SESSION['AccountID'] ?? null;
+
+// Function to log actions
+function logAction($conn, $userId, $action, $description, $status)
+{
+    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address, status) VALUES (?, ?, ?, ?, ?)";
+    $logStmt = $conn->prepare($logSql);
+    $logStmt->bind_param("ssssi", $userId, $action, $description, $ipAddress, $status);
+    $logStmt->execute();
+    $logStmt->close();
+}
+
 try {
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
@@ -18,28 +33,17 @@ try {
     if ($conn->connect_error) {
         throw new Exception("Connection failed: " . $conn->connect_error);
     }
+    $selectedOrder = $_POST['selectedOrder'];
 
-    // Get the JSON data from the request
-    $jsonData = file_get_contents('php://input');
-    $data = json_decode($jsonData, true);
-
-    if (!isset($data['orderNumber']) || !is_numeric($data['orderNumber'])) {
+    if (!isset($_POST['selectedOrder'])) {
         throw new Exception("Order number is required");
     }
-
-    // Extract the order number
-    $selectedOrder = $data['orderNumber'];
-
-    if (!isset($data['items']) || !is_array($data['items'])) {
-        throw new Exception("Invalid data format");
-    }
-
     // Start transaction
     $conn->begin_transaction();
 
     try {
-        //Update the inventory status where the InvoiceID matches the selectedOrder
-        $stmtUpdateStatus = $conn->prepare("UPDATE sales SET Status = 'ReturnedForExchange' WHERE InvoiceID = ?");
+        // Update the inventory status where the InvoiceID matches the selectedOrder
+        $stmtUpdateStatus = $conn->prepare("UPDATE sales SET Status = 'Returned' WHERE InvoiceID = ?");
         $stmtUpdateStatus->bind_param("i", $selectedOrder);
         if (!$stmtUpdateStatus->execute()) {
             throw new Exception("Error updating status for order " . $selectedOrder);
@@ -58,14 +62,13 @@ try {
             exit;
         }
 
-
         // Decode the SalesDetails JSON
         $salesDetails = json_decode($salesDetailsJson, true);
 
         // Restore stock for each item in the inventory
         foreach ($salesDetails as $detail) {
-            $itemID = $detail['itemID'];
-            $qty = $detail['qty'];
+            $itemID = intval($detail['itemID']);
+            $qty = intval($detail['qty']);
 
             // Prepare to update InStock in the inventory table
             $updateStmt = $conn->prepare("UPDATE inventory SET InStock = InStock + ? WHERE ItemID = ?");
@@ -98,59 +101,15 @@ try {
             }
         }
 
-        foreach ($data['items'] as $item) {
-            if (!isset($item['ItemID']) || !isset($item['quantity'])) {
-                throw new Exception("Missing required item data");
-            }
-
-            $itemId = $item['ItemID'];
-            $quantityToDeduct = $item['quantity'];
-
-            // Fetch lot data ordered by ExpiryDate for the given ItemID
-            $stmtSelect = $conn->prepare("SELECT LotNumber, QuantityRemaining FROM delivery_items WHERE ItemID = ? AND QuantityRemaining > 0 ORDER BY ExpiryDate ASC");
-            $stmtSelect->bind_param("i", $itemId);
-            $stmtSelect->execute();
-            $lotResults = $stmtSelect->get_result();
-
-            if ($lotResults->num_rows === 0) {
-                throw new Exception("No available stock in lots for item " . $itemId);
-            }
-
-            // Iterate through the lots and reduce the quantity
-            while ($quantityToDeduct > 0 && $lotRow = $lotResults->fetch_assoc()) {
-                $lotNumber = $lotRow['LotNumber'];
-                $quantityRemaining = $lotRow['QuantityRemaining'];
-
-                // Calculate the quantity to reduce from this lot
-                $quantityToReduce = min($quantityToDeduct, $quantityRemaining);
-                $newQuantityRemaining = $quantityRemaining - $quantityToReduce;
-
-                // Update the lot with the new QuantityRemaining
-                $stmtUpdateLot = $conn->prepare("UPDATE delivery_items SET QuantityRemaining = ? WHERE ItemID = ? AND LotNumber = ?");
-                $stmtUpdateLot->bind_param("iis", $newQuantityRemaining, $itemId, $lotNumber);
-                if (!$stmtUpdateLot->execute()) {
-                    throw new Exception("Error updating lot " . $lotNumber . " for item " . $itemId);
-                }
-
-                // Reduce the remaining quantity to deduct
-                $quantityToDeduct -= $quantityToReduce;
-            }
-
-            // If there's still quantity left to deduct after all lots, throw an error
-            if ($quantityToDeduct > 0) {
-                throw new Exception("Not enough stock in lots for item " . $itemId);
-            }
-
-            // After updating lots, update the inventory table
-            $stmtUpdateInventory = $conn->prepare("UPDATE inventory SET InStock = InStock - ? WHERE ItemID = ?");
-            $stmtUpdateInventory->bind_param("ii", $item['quantity'], $itemId);
-            if (!$stmtUpdateInventory->execute()) {
-                throw new Exception("Error updating inventory for item " . $itemId);
-            }
-        }
 
         // Commit transaction
         $conn->commit();
+
+        $updatedetails = "(Invoice ID: IN-0" . $_POST['selectedOrder'] . ")";
+
+        //Log if Success
+        $description = "User successfully processed a return $updatedetails.";
+        logAction($conn, $sessionAccountID, 'Process Return', $description, 1);
 
         echo json_encode(['success' => true, 'message' => 'Inventory updated successfully']);
     } catch (Exception $e) {

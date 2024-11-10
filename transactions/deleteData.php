@@ -38,10 +38,10 @@ if (empty($selectedID)) {
 }
 
 // Prepare to get the SalesDetails first
-$stmt = $conn->prepare("SELECT SalesDetails FROM sales WHERE InvoiceID = ?");
+$stmt = $conn->prepare("SELECT SalesDetails, Status FROM sales WHERE InvoiceID = ?");
 $stmt->bind_param("s", $selectedID);
 $stmt->execute();
-$stmt->bind_result($salesDetailsJson);
+$stmt->bind_result($salesDetailsJson, $status);
 $stmt->fetch();
 $stmt->close();
 
@@ -53,41 +53,43 @@ if (!$salesDetailsJson) {
 // Decode the SalesDetails JSON
 $salesDetails = json_decode($salesDetailsJson, true);
 
-// Restore stock for each item in the inventory
-foreach ($salesDetails as $detail) {
-    $itemID = $detail['itemID'];
-    $qty = $detail['qty'];
+if ($status === 'Sales' || $status === 'Return/Exchange') {
+    // Restore stock for each item in the inventory
+    foreach ($salesDetails as $detail) {
+        $itemID = $detail['itemID'];
+        $qty = $detail['qty'];
 
-    // Prepare to update InStock in the inventory table
-    $updateStmt = $conn->prepare("UPDATE inventory SET InStock = InStock + ? WHERE ItemID = ?");
-    $updateStmt->bind_param("is", $qty, $itemID);
-    $updateStmt->execute();
-    $updateStmt->close();
+        // Prepare to update InStock in the inventory table
+        $updateStmt = $conn->prepare("UPDATE inventory SET InStock = InStock + ? WHERE ItemID = ?");
+        $updateStmt->bind_param("is", $qty, $itemID);
+        $updateStmt->execute();
+        $updateStmt->close();
 
-    // Get the latest DeliveryID for the given ItemID
-    $latestDeliveryStmt = $conn->prepare("
+        // Get the latest DeliveryID for the given ItemID
+        $latestDeliveryStmt = $conn->prepare("
         SELECT DeliveryID 
         FROM delivery_items 
         WHERE ItemID = ? 
         ORDER BY DeliveryID DESC 
         LIMIT 1
     ");
-    $latestDeliveryStmt->bind_param("i", $itemID);
-    $latestDeliveryStmt->execute();
-    $latestDeliveryStmt->bind_result($latestDeliveryID);
-    $latestDeliveryStmt->fetch();
-    $latestDeliveryStmt->close();
+        $latestDeliveryStmt->bind_param("i", $itemID);
+        $latestDeliveryStmt->execute();
+        $latestDeliveryStmt->bind_result($latestDeliveryID);
+        $latestDeliveryStmt->fetch();
+        $latestDeliveryStmt->close();
 
-    if ($latestDeliveryID) {
-        // Update the QuantityRemaining in the latest DeliveryID record
-        $updateDeliveryStmt = $conn->prepare("
+        if ($latestDeliveryID) {
+            // Update the QuantityRemaining in the latest DeliveryID record
+            $updateDeliveryStmt = $conn->prepare("
             UPDATE delivery_items 
-            SET QuantityDelivered = QuantityDelivered + ? 
+            SET QuantityRemaining = QuantityRemaining + ? 
             WHERE DeliveryID = ? AND ItemID = ?
         ");
-        $updateDeliveryStmt->bind_param("iii", $qty, $latestDeliveryID, $itemID);
-        $updateDeliveryStmt->execute();
-        $updateDeliveryStmt->close();
+            $updateDeliveryStmt->bind_param("iii", $qty, $latestDeliveryID, $itemID);
+            $updateDeliveryStmt->execute();
+            $updateDeliveryStmt->close();
+        }
     }
 }
 
