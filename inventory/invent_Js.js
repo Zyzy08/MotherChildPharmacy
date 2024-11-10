@@ -178,7 +178,7 @@ document.getElementById('PurchaseForm').addEventListener('submit', function (eve
             }
         })
         .catch(error => {
-            alert('An error occurred: ' + error.message);
+            console.log('An error occurred: ' + error.message);
         });
 });
 
@@ -460,7 +460,7 @@ function handleDelete(itemId) {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert(data.message);
+                    console.log(data.message);
                     loadInventory(); // Reload the inventory table
                     location.reload();
                 } else {
@@ -523,7 +523,7 @@ archiveUserBtn.addEventListener('click', function () {
 modalYes.addEventListener('click', function () {
     if (modalStatus === 'archive') {
         if (!selectedItemID || selectedItemID.trim() === '') {
-            alert('No product selected.');
+            console.log('No product selected.');
             return;
         }
 
@@ -560,7 +560,7 @@ modalYes.addEventListener('click', function () {
                 }, 1000);
             })
             .catch(error => {
-                alert('Error: ' + error.message);
+                console.log('Error: ' + error.message);
             });
     }
 });

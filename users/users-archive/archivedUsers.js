@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('getArchivedUsers.php')
         .then(response => response.json())
         .then(data => updateTable(data))
-        .catch(error => alert('Error fetching users data:', error));
+        .catch(error => console.log('Error fetching users data:', error));
     setDataTables();
 });
 
@@ -109,7 +109,7 @@ unarchiveUserBtn.addEventListener('click', function () {
 modalYes.addEventListener('click', function () {
     if (modalStatus === 'archive') {
         if (!selectedUser || selectedUser.trim() === '') {
-            alert('No user selected.');
+            console.log('No user selected.');
             return;
         }
         const xhr = new XMLHttpRequest();
@@ -121,7 +121,7 @@ modalYes.addEventListener('click', function () {
             if (xhr.status >= 200 && xhr.status < 300) {
                 const response = JSON.parse(xhr.responseText);
             } else {
-                alert('Error: ' + xhr.status);
+                console.log('Error: ' + xhr.status);
             }
         };
 

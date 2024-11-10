@@ -52,6 +52,15 @@
   <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
 
+  <!-- PERMISSION CHECK -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      <?php if ($_SESSION['REPerms'] === 'off'): ?>
+        window.location.href = '../../dashboard/dashboard.php';
+      <?php endif; ?>
+    });
+  </script>
+
 </head>
 
 <body>
@@ -528,7 +537,8 @@
         <br>
 
         <div class="modal-footer justify-content-between">
-          <button id="returnOrderButton" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#disablebackdrop-AD">
+          <button id="returnOrderButton" type="button" class="btn btn-success" data-bs-toggle="modal"
+            data-bs-target="#disablebackdrop-AD">
             Return Order</button>
           <div class="d-grid gap-2">
             <button id="select-order-button" type="button" class="btn btn-primary">
@@ -626,7 +636,7 @@
       fetch('../../transactions/getTransactions.php')
         .then(response => response.json())
         .then(data => updateTable(data))
-        .catch(error => alert('Error fetching transactions data:', error));
+        .catch(error => console.log('Error fetching transactions data:', error));
       setDataTables();
     });
 

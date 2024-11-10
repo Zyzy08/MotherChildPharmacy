@@ -5,19 +5,18 @@
 --------------------------------
 
 Qty Item                   Price
-1   Paracetamol Biogesic   P9.00
+2   Paracetamol Biogesic  P18.00
 --------------------------------
-Total Items:                 1
-Subtotal:                P9.00
-Tax 12%:                 P0.96
-Refund Amount:           P7.35
-Amount Due:              P1.65
-Payment:                 P2.00
-Change:                  P0.35
+Total Items:                 2
+Subtotal:               P18.00
+Tax 12%:                 P1.93
+Amount Due:             P18.00
+Payment:                P19.00
+Change:                  P1.00
 --------------------------------
 Order No.:                  #7
-Date:      2024-11-10 21:10:22
-Status:        Return/Exchange
+Date:      2024-11-11 02:14:56
+Status:                  Sales
 Staff:           Lance Tiangco
                                 
   Thank you for your purchase!

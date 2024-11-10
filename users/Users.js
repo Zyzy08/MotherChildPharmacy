@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('getUsers.php')
         .then(response => response.json())
         .then(data => updateTable(data))
-        .catch(error => alert('Error fetching users data:', error));
+        .catch(error => console.log('Error fetching users data:', error));
     setDataTables();
 });
 
@@ -256,7 +256,7 @@ function fetchUserDetails(accountName) {
 
 //         // }
 //         if (!selectedUser || selectedUser.trim() === '') {
-//             alert('No user selected.');
+//             console.log('No user selected.');
 //             return;
 //         }
 
@@ -270,13 +270,13 @@ function fetchUserDetails(accountName) {
 //                 const response = JSON.parse(xhr.responseText);
 //                 document.getElementById('modalMessage').textContent = response.message;
 //             } else {
-//                 alert('Error: ' + xhr.status);
+//                 console.log('Error: ' + xhr.status);
 //             }
 //         };
 
 
 //         xhr.send(JSON.stringify({ accountName: selectedUser }));
-//         alert("User deleted successfully!");
+//         console.log("User deleted successfully!");
 //         setTimeout(() => {
 //             window.location.href = 'users.php'; // Redirect on success
 //         }, 100);
@@ -321,7 +321,7 @@ document.getElementById('userForm').addEventListener('submit', function (event) 
             }
         })
         .catch(error => {
-            alert('An error occurred: ' + error.message);
+            console.log('An error occurred: ' + error.message);
         });
 });
 
@@ -358,7 +358,7 @@ document.getElementById('userFormEdit').addEventListener('submit', function (eve
         })
         .catch(error => {
 
-            alert('An error occurred: ' + error.message);
+            console.log('An error occurred: ' + error.message);
         });
 });
 
@@ -378,12 +378,12 @@ function fetchData(query) {
             if (data.success) {
                 updateTable(data.results);
             } else {
-                alert(data.message);
+                console.log(data.message);
             }
         })
         .catch(error => {
-            alert('Error:', error);
-            alert("There was an error with your request.");
+            console.log('Error:', error);
+            console.log("There was an error with your request.");
         });
 }
 
@@ -668,7 +668,7 @@ const modalYes = document.getElementById('modalYes');
 modalYes.addEventListener('click', function () {
     if (modalStatus === 'archive') {
         if (!selectedUser || selectedUser.trim() === '') {
-            alert('No user selected.');
+            console.log('No user selected.');
             return;
         }
         const xhr = new XMLHttpRequest();
@@ -681,7 +681,7 @@ modalYes.addEventListener('click', function () {
                 const response = JSON.parse(xhr.responseText);
                 document.getElementById('modalMessage').textContent = response.message;
             } else {
-                alert('Error: ' + xhr.status);
+                console.log('Error: ' + xhr.status);
             }
         };
 
@@ -697,7 +697,7 @@ modalYes.addEventListener('click', function () {
     }
     else if (modalStatus === 'resetPass') {
         if (!selectedUser || selectedUser.trim() === '') {
-            alert('No user selected.');
+            console.log('No user selected.');
             return;
         }
         const xhr = new XMLHttpRequest();
@@ -709,7 +709,7 @@ modalYes.addEventListener('click', function () {
             if (xhr.status >= 200 && xhr.status < 300) {
                 const response = JSON.parse(xhr.responseText);
             } else {
-                alert('Error: ' + xhr.status);
+                console.log('Error: ' + xhr.status);
             }
         };
 

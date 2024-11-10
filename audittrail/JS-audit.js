@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('getAudits.php')
         .then(response => response.json())
         .then(data => updateTable(data))
-        .catch(error => alert('Error fetching users data:', error));
+        .catch(error => console.log('Error fetching users data:', error));
     setDataTables();
 });
 
@@ -66,7 +66,7 @@ function fetchAuditDetails(auditID) {
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                alert(data.error);
+                console.log(data.error);
             } else {
                 // Update the table with the fetched data
                 document.getElementById('identifierID').innerText = "AU-0" + data.auditID;

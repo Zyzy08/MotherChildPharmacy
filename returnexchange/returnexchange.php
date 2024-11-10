@@ -33,6 +33,15 @@
   <!-- Return and Exchange CSS File -->
   <link href="returnexchange.css" rel="stylesheet">
 
+  <!-- PERMISSION CHECK -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      <?php if ($_SESSION['REPerms'] === 'off'): ?>
+        window.location.href = '../dashboard/dashboard.php';
+      <?php endif; ?>
+    });
+  </script>
+
 </head>
 
 <body>

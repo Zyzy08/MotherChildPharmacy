@@ -54,6 +54,15 @@
     <!-- Template Main CSS File -->
     <link href="../style.css" rel="stylesheet">
 
+    <!-- PERMISSION CHECK -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            <?php if ($_SESSION['POPerms'] === 'off'): ?>
+                window.location.href = '../dashboard/dashboard.php';
+            <?php endif; ?>
+        });
+    </script>
+
 </head>
 
 <body>

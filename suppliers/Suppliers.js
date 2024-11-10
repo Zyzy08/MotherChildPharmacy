@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('getAllData.php')
         .then(response => response.json())
         .then(data => updateTable(data))
-        .catch(error => alert('Error fetching users data:', error));
+        .catch(error => console.log('Error fetching users data:', error));
     setDataTables();
 });
 

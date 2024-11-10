@@ -42,6 +42,15 @@
 
     <link rel="stylesheet" href="ArchiveSuppliers.css">
 
+    <!-- PERMISSION CHECK -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            <?php if ($_SESSION['SuppliersPerms'] === 'off'): ?>
+                window.location.href = '../../dashboard/dashboard.php';
+            <?php endif; ?>
+        });
+    </script>
+
 </head>
 
 <body>

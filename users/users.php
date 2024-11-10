@@ -39,6 +39,15 @@
     <!-- Template Main CSS File -->
     <link href="../style.css" rel="stylesheet">
 
+    <!-- PERMISSION CHECK -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            <?php if ($_SESSION['UsersPerms'] === 'off'): ?>
+                window.location.href = '../dashboard/dashboard.php';
+            <?php endif; ?>
+        });
+    </script>
+
 </head>
 
 <body>
@@ -301,7 +310,8 @@
                         <div class="label">
                             <label for="employeeName">Employee First Name</label><br>
                         </div>
-                        <input type="text" id="employeeName" name="employeeName" required placeholder="Enter First Name">
+                        <input type="text" id="employeeName" name="employeeName" required
+                            placeholder="Enter First Name">
                     </div>
                     <!-- <div class="textbox">
                         <div class="label">
@@ -313,7 +323,8 @@
                         <div class="label">
                             <label for="employeeLName">Employee Last Name</label><br>
                         </div>
-                        <input type="text" id="employeeLName" name="employeeLName" required placeholder="Enter Last Name">
+                        <input type="text" id="employeeLName" name="employeeLName" required
+                            placeholder="Enter Last Name">
                     </div>
                 </div>
                 <div class="container">

@@ -44,6 +44,15 @@
 
     <link rel="stylesheet" href="ArchiveProd.css">
 
+    <!-- PERMISSION CHECK -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            <?php if ($_SESSION['InventoryPerms'] === 'off'): ?>
+                window.location.href = '../../dashboard/dashboard.php';
+            <?php endif; ?>
+        });
+    </script>
+
 </head>
 
 <body>

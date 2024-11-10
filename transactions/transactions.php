@@ -51,6 +51,15 @@
     <!-- Template Main CSS File -->
     <link href="../style.css" rel="stylesheet">
 
+    <!-- PERMISSION CHECK -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            <?php if ($_SESSION['TransactionsPerms'] === 'off'): ?>
+                window.location.href = '../dashboard/dashboard.php';
+            <?php endif; ?>
+        });
+    </script>
+
 </head>
 
 <body>
@@ -692,7 +701,7 @@
             fetch('getTransactions.php')
                 .then(response => response.json())
                 .then(data => updateTable(data))
-                .catch(error => alert('Error fetching transactions data:', error));
+                .catch(error => console.log('Error fetching transactions data:', error));
             setDataTables();
         });
 
@@ -870,7 +879,7 @@
         modalYes.addEventListener('click', function () {
             if (true) {
                 if (!selectedID || selectedID.trim() === '') {
-                    alert('No data selected.');
+                    console.log('No data selected.');
                     return;
                 }
 
@@ -884,7 +893,7 @@
                         const response = JSON.parse(xhr.responseText);
                         document.getElementById('modalMessage').textContent = response.message;
                     } else {
-                        alert('Error: ' + xhr.status);
+                        console.log('Error: ' + xhr.status);
                     }
                 };
 

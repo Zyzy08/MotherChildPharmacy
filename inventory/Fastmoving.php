@@ -39,6 +39,15 @@
   <link href="../style.css" rel="stylesheet">
   <link href="../inventory/invent_style.css" rel="stylesheet">
 
+  <!-- PERMISSION CHECK -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      <?php if ($_SESSION['InventoryPerms'] === 'off'): ?>
+        window.location.href = '../dashboard/dashboard.php';
+      <?php endif; ?>
+    });
+  </script>
+
 </head>
 
 <body>

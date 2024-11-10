@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('getDelis.php')
         .then(response => response.json())
         .then(data => updateTable(data))
-        .catch(error => alert('Error fetching deliveries data:', error));
+        .catch(error => console.log('Error fetching deliveries data:', error));
     setDataTables();
 });
 

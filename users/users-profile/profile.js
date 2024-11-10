@@ -89,6 +89,6 @@ document.getElementById('profileEditForm').addEventListener('submit', function (
             }
         })
         .catch(error => {
-            alert('Error: ' + error.message);
+            console.log('Error: ' + error.message);
         });
 });

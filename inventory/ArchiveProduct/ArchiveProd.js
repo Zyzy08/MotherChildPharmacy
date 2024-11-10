@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateTable(data);
             setDataTables(); // Move this inside to ensure table is updated first
         })
-        .catch(error => alert('Error fetching data: ' + error));
+        .catch(error => console.log('Error fetching data: ' + error));
 });
 
 
@@ -126,7 +126,7 @@ unarchiveUserBtn.addEventListener('click', function () {
 modalYes.addEventListener('click', function () {
     if (modalStatus === 'archive') {
         if (!selectedItemID || selectedItemID.trim() === '') {
-            alert('No product selected.');
+            console.log('No product selected.');
             return;
         }
 
@@ -167,7 +167,7 @@ modalYes.addEventListener('click', function () {
                     }, 1000); // Optional delay for user feedback
                 }
             } else {
-                alert('Error: ' + xhr.status);
+                console.log('Error: ' + xhr.status);
             }
         };
 
