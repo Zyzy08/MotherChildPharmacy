@@ -179,6 +179,15 @@ if (is_dir($backupDir)) {
   <!-- Template Main JS File -->
   <script src="main.js"></script>
 
+  <!-- SESSION CHECK -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      <?php if (isset($_SESSION['AccountID'])): ?>
+        window.location.href = 'dashboard/dashboard.php';
+      <?php endif; ?>
+    });
+  </script>
+
 </body>
 
 </html>
