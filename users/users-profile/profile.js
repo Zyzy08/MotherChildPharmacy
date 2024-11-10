@@ -50,6 +50,7 @@ function previewFile() {
 
     reader.onloadend = function () {
         preview.src = reader.result;
+        submitButton.disabled = false;
     }
 
     if (file) {

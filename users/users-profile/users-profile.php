@@ -481,6 +481,7 @@
       // Reset to original image
       previewImage.src = originalImageSrc;
       document.getElementById('upload-input').value = ''; // Clear the file input
+      submitButton.disabled = true;
     });
   </script>
   <script>
