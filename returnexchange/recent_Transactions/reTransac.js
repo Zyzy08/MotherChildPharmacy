@@ -1,63 +1,42 @@
-document.addEventListener("DOMContentLoaded", () => {
-  fetchOrders();
-});
-
-async function fetchOrders() {
-  try {
-    // Replace the URL with your actual endpoint
-    const response = await fetch('https://example.com/api/orders');
-    const orders = await response.json();
-
-    const accordionContainer = document.getElementById('accordionExample');
-    accordionContainer.innerHTML = ''; // Clear any existing content
-
-    orders.forEach((order, index) => {
-      const itemsHtml = order.SalesDetails.map(item => `
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <div>
-            <img src="${item.imageUrl}" alt="${item.name}" width="50">
-            <strong>${item.name}</strong>
-            <p>${item.quantity} ${item.unit}</p>
-            <p>₱${item.price}</p>
+function displayReceiptItems() {
+  const receiptContainer = document.getElementById('receiptItems');
+  receiptContainer.innerHTML = '';
+  
+  const headerHTML = `
+      <div class="row text-center mb-2">
+          <div class="col-4"><small><strong>Qty</strong></small></div>
+          <div class="col-4"><small><strong>Item</strong></small></div>
+      </div>
+  `;
+  receiptContainer.insertAdjacentHTML('beforeend', headerHTML);
+  
+  receiptItems.forEach(item => {
+      const itemHTML = `
+          <div class="row text-center">
+              <div class="col-4"><small>${item.quantity}</small></div>
+              <div class="col-4"><small>${item.item_name}</small></div>
           </div>
-          <div class="text-end">
-            <span>₱${item.totalPrice}</span>
-            <input type="checkbox" ${item.returned ? 'checked' : ''}> Return
-          </div>
-        </div>
-      `).join('');
-
-      const orderHtml = `
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading${index}">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">
-              <div style="position: relative; width: 100%;">
-                <div style="position: absolute; left: 0;">
-                  <strong>Order #${order.InvoiceID}</strong>&nbsp;
-                  <span>${order.SaleDate}</span>
-                </div>
-                <div style="position: absolute; right: 0; margin-right: 50px;">
-                  <span style="text-decoration: underline;">${order.TotalItems} item/s</span>&nbsp;
-                  <span>|</span>&nbsp;
-                  <span style="text-decoration: underline;">₱${order.NetAmount}</span>
-                </div>
-              </div>
-            </button>
-          </h2>
-          <div id="collapse${index}" class="accordion-collapse collapse" aria-labelledby="heading${index}" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
-              ${itemsHtml}
-              <div class="text-end">
-                <button class="btn btn-success">Select Order</button>
-              </div>
-            </div>
-          </div>
-        </div>
       `;
+      receiptContainer.insertAdjacentHTML('beforeend', itemHTML);
+  });
+}
 
-      accordionContainer.insertAdjacentHTML('beforeend', orderHtml);
-    });
-  } catch (error) {
-    console.error("Error fetching orders:", error);
-  }
+document.getElementById('select-order-button').addEventListener('click', function(event){
+    goToReturnExchange();
+})
+
+//Selecting Order
+function goToReturnExchange() {
+    // Get the order number element and its text content
+    const orderNumElement = document.getElementById("order-num");
+    let orderNum = orderNumElement.textContent;
+
+    // Remove the "#" from the order number
+    orderNum = orderNum.replace("#", "");
+
+    // Construct the URL with the order number as a query parameter
+    const url = `../returnexchange.php?orderNum=${orderNum}`;
+
+    // Navigate to the new URL
+    window.location.href = url;
 }

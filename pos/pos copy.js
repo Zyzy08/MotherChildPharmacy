@@ -829,7 +829,7 @@ function fetchAccountID() {
         .catch(error => console.error('Error fetching AccountID:', error));
 }
 
-document.addEventListener('DOMContentLoaded', fetchAccountID);
+// document.addEventListener('DOMContentLoaded', fetchAccountID);
 
 function getCurrentDateTime() {
     const now = new Date();

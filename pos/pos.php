@@ -1,6 +1,5 @@
 <?php include '../fetchUser.php'; ?>
-<?php include 'fetchProductData.php'; ?>
-<?php include 'fetchOrderNumber.php'; ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,6 +37,8 @@
 </head>
 
 <body>
+  <?php include 'fetchOrderNumber.php'; ?>
+  <?php include 'fetchProductData.php'; ?>
 
   <!-- ======= Header ======= -->
   <header id="header" class="header fixed-top d-flex align-items-center">

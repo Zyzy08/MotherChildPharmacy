@@ -333,7 +333,7 @@
                 <div class="container">
                     <div class="textbox">
                         <div class="label">
-                            <label for="profilePicture">Profile Picture</label><br>
+                            <label for="profilePicture">Profile Picture (Optional)</label><br>
                         </div>
                         <input type="file" id="profilePicture" name="profilePicture" accept="image/*">
                     </div>
