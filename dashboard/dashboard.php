@@ -321,6 +321,7 @@
             <div class="col-12">
               <div class="card" style="height: 716px;">
                 <div class="filter">
+                  <button id="generate_PDF" style="margin-right: 15px" type="button" class="btn btn-info"><i class="bi bi-file-earmark-pdf"> Generate PDF</i></button>
                   <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                     <li class="dropdown-header text-start">
