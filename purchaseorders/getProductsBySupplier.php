@@ -25,13 +25,16 @@ if (isset($_GET['ID'])) {
         iv.GenericName,
         iv.BrandName,
         iv.Mass,
-        iv.UnitOfMeasure
+        iv.UnitOfMeasure,
+        ps.SupplierID  -- Added SupplierID from product_suppliers table
     FROM 
         inventory iv
     JOIN 
-        suppliers s ON iv.SupplierID = s.SupplierID
+        product_suppliers ps ON iv.ItemID = ps.ItemID  -- Join with product_suppliers table to get the SupplierID
+    JOIN 
+        suppliers s ON ps.SupplierID = s.SupplierID  -- Join with suppliers table to get the supplier details
     WHERE 
-        s.SupplierName = '$ID';
+        s.SupplierName = '$ID';  -- Filter based on the SupplierName passed in the URL
     ";
     
     

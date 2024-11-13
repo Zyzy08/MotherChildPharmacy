@@ -13,6 +13,7 @@ function logAction($pdo, $userId, $action, $description, $status)
     $ipAddress = $_SERVER['REMOTE_ADDR'];
     $stmt2->execute([$userId, $action, $description, $ipAddress, $status]);
 }
+
 session_start(); // Start the session
 $sessionAccountID = $_SESSION['AccountID'] ?? null;
 
@@ -45,6 +46,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $pdo = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+        // Start transaction
+        $pdo->beginTransaction();
+
         // Insert new supplier
         $sql = "INSERT INTO suppliers (SupplierName, AgentName, Phone, Email, Notes) VALUES (?, ?, ?, ?, ?)";
         $stmt = $pdo->prepare($sql);
@@ -53,59 +57,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Get the last inserted SupplierID
         $supplierId = $pdo->lastInsertId();
 
-        // Log the new SupplierID
-        error_log('New SupplierID: ' . $supplierId);
-
-        // Check if supplierId is valid
         if ($supplierId) {
-            // Update SupplierID for selected products
+            // Insert products-supplier relationships
             if (!empty($selectedProducts)) {
-                $updateSql = "UPDATE inventory SET SupplierID = ? WHERE ItemID = ?";
-                $updateStmt = $pdo->prepare($updateSql);
-
+                $insertSql = "INSERT INTO product_suppliers (ItemID, SupplierID) VALUES (?, ?)";
+                $insertStmt = $pdo->prepare($insertSql);
                 foreach ($selectedProducts as $product) {
                     if (isset($product['productId'])) {
-                        $result = $updateStmt->execute([$supplierId, $product['productId']]);
-                        if (!$result) {
-                            error_log('Update failed for ItemID: ' . $product['productId']);
-                            $errorInfo = $updateStmt->errorInfo();
-                            error_log('SQLSTATE: ' . $errorInfo[0] . ', Error Code: ' . $errorInfo[1] . ', Message: ' . $errorInfo[2]);
-                        } else {
-                            error_log('Successfully updated ItemID: ' . $product['productId'] . ' with SupplierID: ' . $supplierId);
-                        }
-                    } else {
-                        error_log('Product ID is not set in selectedProducts: ' . print_r($product, true));
+                        $insertStmt->execute([$product['productId'], $supplierId]);
                     }
                 }
-            } else {
-                error_log('No products selected for updating SupplierID.');
             }
+
+            // Commit transaction if all operations succeed
+            $pdo->commit();
+            // Log success and send response
+            $description = "User added a new supplier with SupplierID: $supplierId.";
+            logAction($pdo, $sessionAccountID, 'Add Supplier', $description, 1);
+            $response['success'] = true;
+            $response['message'] = 'Supplier has been added and products updated successfully.';
         } else {
+            $pdo->rollBack(); // Rollback transaction if SupplierID is not valid
             $response['message'] = 'Failed to retrieve SupplierID after insert.';
         }
-
-        // Return success response
-        $updatedetails = "(SupplierID: " . $supplierId . ")";
-
-        $description = "User added a new supplier $updatedetails.";
-        // Log success
-        logAction($pdo, $sessionAccountID, 'Add Supplier', $description, 1);
-
-        $response['success'] = true;
-        $response['message'] = 'Supplier has been added and products updated successfully.';
     } catch (PDOException $e) {
-        // Log the error
+        $pdo->rollBack(); // Rollback transaction on failure
         error_log('Database query failed: ' . $e->getMessage());
-        // Log failure
-        $description = "Failed to add new supplier. Error: " . $e->getMessage();
-        logAction($pdo, $sessionAccountID, 'Add Supplier', $description, 0);
+        logAction($pdo, $sessionAccountID, 'Add Supplier', "Failed to add new supplier. Error: " . $e->getMessage(), 0);
         $response['message'] = 'Data was not added due to an error.';
     } catch (Exception $e) {
-        // Log the unexpected error
+        $pdo->rollBack(); // Rollback transaction on unexpected error
         error_log('Unexpected error: ' . $e->getMessage());
-        // Log failure
-        $description = "Failed to add new supplier. Error: " . $e->getMessage();
-        logAction($pdo, $sessionAccountID, 'Add Supplier', $description, 0);
+        logAction($pdo, $sessionAccountID, 'Add Supplier', "Failed to add new supplier. Error: " . $e->getMessage(), 0);
         $response['message'] = 'An unexpected error occurred.';
     }
 } else {

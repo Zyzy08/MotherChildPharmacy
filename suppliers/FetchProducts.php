@@ -14,10 +14,13 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Prepare and execute the SQL statement to fetch products with SupplierID as NULL or 0, excluding archived products
-    $sql = "SELECT ItemID, GenericName, BrandName, PricePerUnit 
-            FROM inventory 
-            WHERE (SupplierID IS NULL OR SupplierID = 0) AND Status != 'Archived'"; // Exclude archived products
+    // Prepare and execute the SQL statement to fetch products with SupplierID not NULL or 0, excluding archived products
+    $sql = "SELECT i.ItemID, i.GenericName, i.BrandName, i.PricePerUnit, 
+               IFNULL(GROUP_CONCAT(ps.SupplierID), '') AS SupplierIDs
+        FROM inventory i
+        LEFT JOIN product_suppliers ps ON i.ItemID = ps.ItemID
+        WHERE i.Status != 'Archived'
+        GROUP BY i.ItemID, i.GenericName, i.BrandName, i.PricePerUnit";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
 

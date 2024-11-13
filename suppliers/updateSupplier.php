@@ -8,6 +8,7 @@ function logAction($pdo, $userId, $action, $description, $status)
     $ipAddress = $_SERVER['REMOTE_ADDR'];
     $stmt2->execute([$userId, $action, $description, $ipAddress, $status]);
 }
+
 session_start(); // Start the session
 $sessionAccountID = $_SESSION['AccountID'] ?? null;
 
@@ -36,25 +37,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$companyName, $agentName, $ContactNo, $Email, $Notes, $supplierID]);
 
-        // Update product SupplierID based on selected products
+        // Update product SupplierID in product_suppliers table based on selected products
         if (!empty($selectedProducts)) {
             foreach ($selectedProducts as $product) {
                 $productId = $product['productId'];
                 $value = $product['value']; // 1 if checked, 0 if unchecked
 
-                // Prepare the SQL UPDATE for each product
-                $updateProductsSql = "UPDATE inventory SET SupplierID = ? WHERE ItemID = ?";
-                $updateProductsStmt = $pdo->prepare($updateProductsSql);
-
-                // Set SupplierID to supplierID if checked, otherwise set it to NULL
-                $updateProductsStmt->execute([$value ? $supplierID : null, $productId]);
+                // Check if the product is checked (i.e., associate with supplier)
+                if ($value == 1) {
+                    // Insert into the product_suppliers table
+                    $insertSql = "INSERT INTO product_suppliers (ItemID, SupplierID) VALUES (?, ?) 
+                                  ON DUPLICATE KEY UPDATE SupplierID = ?";
+                    $insertStmt = $pdo->prepare($insertSql);
+                    $insertStmt->execute([$productId, $supplierID, $supplierID]);
+                } else {
+                    // Remove from the product_suppliers table (unchecked)
+                    $deleteSql = "DELETE FROM product_suppliers WHERE ItemID = ? AND SupplierID = ?";
+                    $deleteStmt = $pdo->prepare($deleteSql);
+                    $deleteStmt->execute([$productId, $supplierID]);
+                }
             }
         }
 
         // Return success if all updates were executed without errors
         $updatedetails = "(SupplierID: " . $supplierID . ")";
-
         $description = "User updated a supplier $updatedetails.";
+
         // Log success
         logAction($pdo, $sessionAccountID, 'Update Supplier', $description, 1);
 
@@ -62,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     } catch (PDOException $e) {
         // Log failure
-        $description = "Failed to updated a supplier. Error: " . $e->getMessage();
+        $description = "Failed to update a supplier. Error: " . $e->getMessage();
         logAction($pdo, $sessionAccountID, 'Update Supplier', $description, 0);
         echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
         exit();
@@ -71,3 +79,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
     exit();
 }
+?>
