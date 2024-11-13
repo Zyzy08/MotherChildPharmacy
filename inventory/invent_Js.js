@@ -627,19 +627,35 @@ function setTableHeaders(selectedView, tableHeader) {
             <th>Ordered</th>
             <th>Reorder Level</th>
         `;
-    } else {
+    } else if (selectedView === 'nearExpiry') {
         tableHeader.innerHTML = `
             <th>Brand Name</th>
             <th>Generic Name</th>
             <th>Expiry Date</th>
             <th>Days to Expiry</th>
         `;
+    } else if (selectedView === 'Overstock') { // Third block for 'Overstock'
+        tableHeader.innerHTML = `
+            <th>Brand Name</th>
+            <th>Generic Name</th>
+            <th>In Stock</th>
+            <th>Excess Stock</th>
+        `;
     }
 }
 
 function fetchData(selectedView, lowStockItemsBody) {
+    let endpoint;
+    if (selectedView === 'lowStock') {
+        endpoint = 'checkLowStock.php';
+    } else if (selectedView === 'nearExpiry') {
+        endpoint = 'checkNearExpiry.php';
+    } else if (selectedView === 'Overstock') {
+        endpoint = 'checkOverstock.php'; // Add this endpoint
+    }
+
     $.ajax({
-        url: selectedView === 'lowStock' ? 'checkLowStock.php' : 'checkNearExpiry.php',
+        url: endpoint,
         method: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -663,23 +679,25 @@ function processFetchedData(data, selectedView, lowStockItemsBody) {
         let hasItems = false;
 
         data.forEach(item => {
-            const { ItemID, BrandName, GenericName, InStock = 0, Ordered = 0, ReorderLevel = 0, ExpiryDate, DaysToExpiry } = item;
+            const { ItemID, BrandName, GenericName, InStock = 0, Ordered = 0, ReorderLevel = 0, ExcessStock = 0, ExpiryDate, DaysToExpiry } = item;
 
-            // Process item and display in the table
             if (selectedView === 'lowStock') {
                 hasItems = true;
                 appendLowStockRow(lowStockItemsBody, BrandName, GenericName, InStock, Ordered, ReorderLevel);
             } else if (selectedView === 'nearExpiry') {
                 hasItems = true;
                 appendNearExpiryRow(lowStockItemsBody, BrandName, GenericName, ExpiryDate, DaysToExpiry);
+            } else if (selectedView === 'Overstock') {
+                hasItems = true;
+                appendOverStock(lowStockItemsBody, BrandName, GenericName, InStock, ExcessStock);
             }
         });
 
         if (!hasItems) {
-            lowStockItemsBody.innerHTML = `<tr><td colspan="${selectedView === 'lowStock' ? '6' : '4'}">All items are sufficiently stocked or not near expiry.</td></tr>`;
+            lowStockItemsBody.innerHTML = `<tr><td colspan="${selectedView === 'lowStock' || selectedView === 'Overstock' ? '6' : '4'}">All items are sufficiently stocked or not near expiry.</td></tr>`;
         }
     } else {
-        lowStockItemsBody.innerHTML = `<tr><td colspan="${selectedView === 'lowStock' ? '6' : '4'}">No items found.</td></tr>`;
+        lowStockItemsBody.innerHTML = `<tr><td colspan="${selectedView === 'lowStock' || selectedView === 'Overstock' ? '6' : '4'}">No items found.</td></tr>`;
     }
 }
 function checkNearExpiry() {
@@ -723,6 +741,48 @@ function checkNearExpiry() {
     });
 }
 
+function checkOverStock() {
+    $.ajax({
+        url: 'checkOverStock.php',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            const lowStockItemsBody = document.getElementById('lowStockItemsBody');
+            lowStockItemsBody.innerHTML = ''; // Clear previous items
+
+            // Check for errors in the response
+            if (data.error) {
+                console.error("Error: " + data.error);
+                lowStockItemsBody.innerHTML = `<tr><td colspan="4">Error retrieving overstock items.</td></tr>`;
+                return;
+            }
+
+            // Populate overstock items
+            if (data.length > 0) {
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="table-row" style="padding-left: 10px">${truncateText(item.BrandName, 20)}</td>
+                        <td class="table-row" style="padding-left: 20px;">${truncateText(item.GenericName, 20)}</td>
+                        <td class="table-row" style="padding-left: 10px;">${item.InStock}</td>
+                        <td class="table-row" style="padding-left: 10px;">${item.ExcessStock}</td>
+                    `;
+                    lowStockItemsBody.appendChild(row);
+                });
+            } else {
+                lowStockItemsBody.innerHTML = `<tr><td colspan="4">No items with excess stock.</td></tr>`;
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error: " + error);
+            const lowStockItemsBody = document.getElementById('lowStockItemsBody');
+            lowStockItemsBody.innerHTML = `<tr><td colspan="4">Error connecting to server.</td></tr>`;
+            openModal(); // Ensure the modal opens even on error
+        }
+    });
+}
+
+
 function shouldDisplayLowStock(inStock, ordered) {
     const reorderLevel = Math.floor(ordered / 2); // Set reorder level to half of the ordered amount
     return parseInt(inStock, 10) <= reorderLevel; // Returns true if in stock is below or equal to reorder level
@@ -750,6 +810,18 @@ function appendNearExpiryRow(lowStockItemsBody, BrandName, GenericName, ExpiryDa
     `;
     lowStockItemsBody.appendChild(row);
 }
+
+function appendOverStock(overStockItemsBody, BrandName, GenericName, InStock, ExcessStock) {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td class="table-row">${truncateText(BrandName, 20)}</td>
+        <td class="table-row">${truncateText(GenericName, 20)}</td>
+        <td class="table-row">${InStock}</td>
+        <td class="table-row">${ExcessStock}</td>
+    `;
+    overStockItemsBody.appendChild(row);
+}
+
 
 // function calculateEOQ(totalSold) {
 //     if (totalSold <= 0) return 0; // Return 0 if no sales
@@ -828,6 +900,16 @@ function updateTableView() {
 
         // Populate table with near expiry data
         checkNearExpiry();
+    } else if (selectedView === "Overstock") {
+        // Set headers for Overstock Items view
+        tableHeader.innerHTML = `
+            <th style="text-align: left; padding: 8px;">Brand Name</th>
+            <th style="text-align: left; padding: 8px;">Generic Name</th>
+            <th style="text-align: left; padding: 8px;">In Stock</th>
+            <th style="text-align: left; padding: 8px;">Excess Stock</th>
+        `;
+        // Populate table with overstock data via AJAX
+        checkOverStock(); // Make sure you have a function for this
     }
 }
 
