@@ -421,7 +421,7 @@ function updateBasketDisplay() {
     vatExemptSales = 0;
     vatableSalesDiscountable = 0;
     vatExemptSalesDiscountable = 0;
-    
+
     //Example 75 pesos jollibee
     basket.forEach(item => {
         const itemTotal = item.PricePerUnit * item.quantity;
@@ -429,17 +429,17 @@ function updateBasketDisplay() {
         if (item.VAT_exempted == 0) {
             VATamt += item.quantity * (item.PricePerUnit - (item.PricePerUnit / 1.12));
             vatableSales += item.quantity * (item.PricePerUnit / 1.12);
-        } else if (item.VAT_exempted == 1){
+        } else if (item.VAT_exempted == 1) {
             vatExemptSales += item.quantity * item.PricePerUnit;
         }
         // Get total amount for discountable products
         if (item.Discount == 1 && item.VAT_exempted == 0) {
             totalDiscountableAmt += item.quantity * ((item.PricePerUnit - (item.PricePerUnit / 1.12)) + (item.PricePerUnit / 1.12) * 0.20);
-            vatExemptSalesDiscountable += item.quantity * (((item.PricePerUnit / 1.12)) - (item.PricePerUnit / 1.12) * 0.20);            
+            vatExemptSalesDiscountable += item.quantity * (((item.PricePerUnit / 1.12)) - (item.PricePerUnit / 1.12) * 0.20);
         } else if (item.Discount == 1 && item.VAT_exempted == 1) {
             totalDiscountableAmt += item.quantity * (item.PricePerUnit * 0.20);
             vatExemptSalesDiscountable += item.quantity * (item.PricePerUnit * 0.80);
-        } else if (item.Discount == 0 && item.VAT_exempted == 0){
+        } else if (item.Discount == 0 && item.VAT_exempted == 0) {
             vatableSalesDiscountable += item.quantity * (item.PricePerUnit / 1.12);
             VATamtDiscountable += item.quantity * (item.PricePerUnit - (item.PricePerUnit / 1.12));
         }
@@ -579,9 +579,15 @@ function updateSubtotalDisplay() {
 function updateTaxDisplay() {
     const subtotal = receiptItems.reduce((total, item) => total + parseFloat(item.total_item_price), 0);
     const tax = VATamt.toFixed(2);
-    document.getElementById('vatableSales').textContent = `₱${vatableSales.toFixed(2)}`;
-    document.getElementById('vatExemptSales').textContent = `₱${vatExemptSales.toFixed(2)}`;
-    document.getElementById('tax').textContent = `₱${tax}`;
+    if (document.getElementById('seniorCitizenCheckbox').checked) {
+        document.getElementById('vatableSales').textContent = `₱${vatableSalesDiscountable.toFixed(2)}`;
+        document.getElementById('vatExemptSales').textContent = `₱${vatExemptSalesDiscountable.toFixed(2)}`;
+        document.getElementById('tax').textContent = `₱${VATamtDiscountable.toFixed(2)}`;
+    } else {
+        document.getElementById('vatableSales').textContent = `₱${vatableSales.toFixed(2)}`;
+        document.getElementById('vatExemptSales').textContent = `₱${vatExemptSales.toFixed(2)}`;
+        document.getElementById('tax').textContent = `₱${tax}`;
+    }
 }
 
 function updateAmountDueDisplay() {
@@ -606,13 +612,13 @@ function displayReceiptItems() {
     receiptItems.forEach(item => {
         const itemHTML = `
             <div class="row text-center">
-                <div class="col-2"><small>${item.quantity}</small></div>
-                <div class="col-4"><small>${item.item_name}</small></div>
+                <div class="col-2"><small>${item.quantity}</small></div>                
+                <div class="col-4"><small>${item.item_name.length > 20 ? item.item_name.slice(0, 18) + '...' : item.item_name}</small></div>
                 <div class="col-3"><small>₱${formatPrice(item.total_item_price)}</small></div>
             </div>
             <div class="row text-center">
                 <div class="col-2"><small></small></div>
-                <div class="col-4"><small> &nbsp;&nbsp;&nbsp;${item.quantity} @ ₱${formatPrice(item.PricePerUnit)}</small></div>
+                <div class="col-4"><small> &nbsp;&nbsp;&nbsp;${item.quantity} &nbsp;@&nbsp; ₱${formatPrice(item.PricePerUnit)}</small></div>
                 <div class="col-3"><small></small></div>
             </div>
         `;
@@ -881,7 +887,7 @@ function getSalesDetails() {
         salesDetails[index + 1] = {
             itemID: item.ItemID,
             qty: item.quantity,
-            price :item.PricePerUnit
+            price: item.PricePerUnit
         };
     });
 
@@ -1060,6 +1066,14 @@ function generateReceiptContent() {
         return `${formattedQty}${formattedItem} ${priceStr}`;  // Add a single space between item and price
     }
 
+    function formatQtyPPULine(itemqty, itemprice) {
+        const priceStr = ` `;  
+        const formattedQty = '      ';
+        const formattedQtyPPU = itemqty + ' @ P' + itemprice;
+
+        return `${formattedQty}${formattedQtyPPU} ${priceStr}`;  // Add a single space between item and price
+    }
+
     let content =
         `${centerText('Mother & Child')}
 ${centerText('Pharmacy and Medical Supplies')}
@@ -1073,6 +1087,7 @@ ${'-'.repeat(maxWidth)}
         const itemName = item.item_name;
         const price = parseFloat(item.total_item_price);
         content += formatItemLine(item.quantity, itemName, price) + '\n';
+        content += formatQtyPPULine(item.quantity, item.PricePerUnit) + '\n';
     });
 
     const totalItems = receiptItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -1115,7 +1130,7 @@ document.getElementById('seniorCitizenCheckbox').addEventListener('change', func
     const accordion = document.getElementById('seniorPwdAccordion');
     if (this.checked) {
         accordion.style.display = 'block';
-        
+
     } else {
         accordion.style.display = 'none';
     }

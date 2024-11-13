@@ -263,6 +263,11 @@
           Fast Moving Items
         </div>
 
+        <div class="button" id="MarkupBtn">
+          <img src="../resources/img/markup.png" alt="Adjust Markup">
+          Adjust Markup
+        </div>
+
         <div class="archived-users" id="toArchivedUsers">
           Archived Product<img src="../resources/img/right-arrow-3.png" alt="Archive Button">
         </div>
@@ -530,10 +535,10 @@
 
       <div class="modal" id="disablebackdrop" tabindex="-1" data-bs-backdrop="false" style="z-index: 1000;">
         <div class="modal-dialog">
-          <div class="modal-content">
+          <div class="modal-content" id="modalPrompt-content">
             <div class="modal-header">
               <h5 class="modal-title" id="modalVerifyTitle">Success</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="btnmodalclosedisappearpls"></button>
             </div>
             <div class="modal-body" id="modalVerifyText">
               The product quantity is successfully updated
@@ -631,6 +636,36 @@
       </div>
 
       <!-- End of Goods Issue -->
+
+      <!--Adjust Markup Modal-->
+
+      <div id="overlayMarkup" class="modal">
+        <div class="overlay-content" id="overlayMU-content">
+          <span id="MUcloseBtn" class="close-btn" onclick="closeMU()">&times;</span>
+          <h2>Adjust Markup</h2>
+          <hr>
+          <form id="muEdit" method="post" enctype="multipart/form-data">
+            <div class="container">
+              <div class="textbox">
+                <div class="label">
+                  <label for="markupInput">Markup %</label><br>
+                </div>
+                <input type="number" id="markupInput" name="markupInput" required step="1" min="1"  max="100" style="width: 92%;"
+                  onkeydown="return event.key >= '0' && event.key <= '9' || event.key === 'Backspace' || event.key === 'Tab';">
+              </div>
+            </div>
+            <hr>
+            <!-- Button of update -->
+            <div class="button-container">
+              <button id="cancelBtn" type="button" onclick="closeMU()">Cancel</button>
+              <button class="submit" type="button" id="confirmMU" disabled>Confirm</button>
+
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- End of Adjust Markup -->
 
 
 

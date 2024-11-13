@@ -215,9 +215,18 @@ try {
             }
             $updateInventoryStmt->close();
 
-            // Calculate the PricePerUnit with a 5% markup, rounded to 2 decimal places
+            // Retrieve the Markup for the item
+            $getMarkupSQL = "SELECT Markup FROM inventory WHERE ItemID = ?";
+            $getMarkupStmt = $conn->prepare($getMarkupSQL);
+            $getMarkupStmt->bind_param("i", $itemID);
+            $getMarkupStmt->execute();
+            $getMarkupStmt->bind_result($markup);
+            $getMarkupStmt->fetch();
+            $getMarkupStmt->close();
+
+            // Calculate the PricePerUnit with the retrieved markup, rounded to 2 decimal places
             $basePricePerUnit = $netAmt / $quantityDelivered;
-            $pricePerUnitWithMarkup = round($basePricePerUnit * 1.05, 2); // Apply 5% markup and round to 2 decimal places
+            $pricePerUnitWithMarkup = round($basePricePerUnit * (1 + $markup), 2); // Apply retrieved markup and round to 2 decimal places
 
             // Update PricePerUnit in the inventory table
             $updatePriceSQL = "UPDATE inventory SET PricePerUnit = ? WHERE ItemID = ?";

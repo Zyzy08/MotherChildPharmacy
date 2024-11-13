@@ -1526,3 +1526,89 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
+
+//Markup Adjust
+const overlayMarkup = document.getElementById('overlayMarkup');
+
+function closeMU() {
+    overlayMarkup.style.display = 'none';
+}
+
+document.getElementById('MarkupBtn').addEventListener('click', function () {
+    openMarkupModal(1);
+    overlayMarkup.style.display = 'flex';
+})
+
+let originalMarkup = 0; // Store the original markup for comparison
+
+// Function to open the modal and load current markup
+function openMarkupModal(itemID) {
+    // Fetch current markup from the server
+    fetch(`getsetMarkup.php?itemID=${itemID}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                originalMarkup = data.markup * 100; // Convert to percentage form
+                document.getElementById('markupInput').value = originalMarkup;
+                document.getElementById('confirmMU').disabled = true; // Initially disable confirm button
+            } else {
+                const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+                document.getElementById('modalVerifyTitle').textContent = 'Error';
+                document.getElementById('modalVerifyText').textContent = 'Failed to retrieve markup.';
+                confirmationModal.show();
+            }
+        })
+        .catch(error => console.error('Error:', error));
+
+    document.getElementById('overlayMarkup').style.display = 'block';
+}
+
+// Function to close the modal
+function closeMU() {
+    document.getElementById('overlayMarkup').style.display = 'none';
+}
+
+// Enable confirm button only if the input is valid and changed
+document.getElementById('markupInput').addEventListener('input', function () {
+    const markupValue = parseInt(this.value, 10);
+    const isValidMarkup = markupValue >= 1 && markupValue <= 100 && markupValue !== originalMarkup;
+    document.getElementById('confirmMU').disabled = !isValidMarkup;
+});
+
+// Confirm button click event
+document.getElementById('confirmMU').addEventListener('click', function () {
+    const newMarkup = parseFloat(document.getElementById('markupInput').value) / 100; // Convert to decimal
+
+    // Update markup in the server
+    fetch('getsetMarkup.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemID: itemID, markup: newMarkup, oldmarkup: originalMarkup})
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+                document.getElementById('btnmodalclosedisappearpls').style.display = 'none';
+                document.getElementById('modalVerifyTitle').textContent = 'Success';
+                document.getElementById('modalVerifyText').textContent = 'Prices successfully updated.';
+                confirmationModal.show();
+                closeMU();
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = 'inventory.php'; // Redirect to inventory.php
+                }, 1000);
+            } else {
+                const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+                document.getElementById('btnmodalclosedisappearpls').style.display = 'none';
+                document.getElementById('modalVerifyTitle').textContent = 'Error';
+                document.getElementById('modalVerifyText').textContent = 'Failed to update markup.';
+                confirmationModal.show();
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = 'inventory.php'; // Redirect to inventory.php
+                }, 1000);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 13, 2024 at 05:48 PM
+-- Generation Time: Nov 13, 2024 at 10:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -311,7 +311,19 @@ INSERT INTO `audittrail` (`auditID`, `AccountID`, `action`, `description`, `crea
 (267, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-11-10 21:57:11', '::1', '1'),
 (268, 3, 'Logout', 'User logged out successfully.', '2024-11-10 21:57:28', '::1', '1'),
 (269, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-10 21:57:28', '::1', '1'),
-(270, 3, 'Login', 'User logged in successfully.', '2024-11-13 16:41:41', '::1', '1');
+(270, 3, 'Login', 'User logged in successfully.', '2024-11-13 16:41:41', '::1', '1'),
+(271, 3, 'Database Backup', 'Backup initiated for database \'motherchildpharmacy\' by user.', '2024-11-13 16:48:45', '::1', '1'),
+(272, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-11-13 19:35:06', '::1', '1'),
+(273, 3, 'Product Update', 'User updated the details of a product. (ItemID: 2).', '2024-11-13 19:55:26', '::1', '1'),
+(274, 3, 'Process Sales', 'User successfully processed a transaction (Invoice ID: IN-07).', '2024-11-13 19:55:38', '::1', '1'),
+(275, 3, 'Database Backup', 'Backup initiated for database \'motherchildpharmacy\' by user.', '2024-11-13 20:40:35', '::1', '1'),
+(276, 3, 'Product Update', 'User updated the details of a product. (ItemID: 2).', '2024-11-13 20:41:03', '::1', '1'),
+(277, 3, 'Update Supplier', 'User updated a supplier (SupplierID: 1).', '2024-11-13 20:44:56', '::1', '1'),
+(278, 3, 'Update Supplier', 'User updated a supplier (SupplierID: 1).', '2024-11-13 20:44:56', '::1', '1'),
+(279, 3, 'Update Supplier', 'User updated a supplier (SupplierID: 2).', '2024-11-13 20:45:01', '::1', '1'),
+(280, 3, 'Update Supplier', 'User updated a supplier (SupplierID: 2).', '2024-11-13 20:45:01', '::1', '1'),
+(281, 3, 'Database Backup', 'Backup initiated for database \'motherchildpharmacy\' by user.', '2024-11-13 21:10:55', '::1', '1'),
+(282, 3, 'Database Backup', 'Backup initiated for database \'motherchildpharmacy\' by user.', '2024-11-13 21:56:08', '::1', '1');
 
 -- --------------------------------------------------------
 
@@ -362,7 +374,7 @@ CREATE TABLE `delivery_items` (
 --
 
 INSERT INTO `delivery_items` (`ItemID`, `DeliveryID`, `LotNumber`, `ExpiryDate`, `QuantityDelivered`, `Bonus`, `QuantityRemaining`, `NetAmount`, `isExpired`) VALUES
-(2, 1, '1H17359', '2025-03-28', 50, 5, 54, 400, '0'),
+(2, 1, '1H17359', '2025-03-28', 50, 5, 49, 400, '0'),
 (2, 2, 'GG', '2026-11-05', 100, 0, 100, 900, '0'),
 (2, 3, '123GG', '2025-11-06', 90, 5, 92, 1000, '0'),
 (3, 4, 'NFP11127', '2027-11-11', 30, 5, 8, 210, '0');
@@ -425,24 +437,25 @@ CREATE TABLE `inventory` (
   `Status` enum('Active','Inactive','Archived') NOT NULL DEFAULT 'Active',
   `ProductIcon` varchar(255) DEFAULT NULL,
   `ProductCode` varchar(50) DEFAULT NULL,
-  `ExcessStock` int(10) NOT NULL DEFAULT 0
+  `ExcessStock` int(10) NOT NULL DEFAULT 0,
+  `Markup` decimal(10,2) NOT NULL DEFAULT 0.05
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `inventory`
 --
 
-INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `Discount`, `VAT_exempted`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`, `ExcessStock`) VALUES
-(2, 'Biogesic', 'Paracetamol', 'Medicine', '500', 'Mg', 237, 50, 7, 9.00, 1, 0, 1, '', 'Active', 'products-icon/biogesic.png', '', 0),
-(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Mg', 5, 20, 10, 7.35, 1, 0, 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg', 0),
-(4, 'Ibuprofen', 'Advil', 'Medicine', '200', 'Mg', 0, 0, 0, 9.00, 1, 0, 1, '', 'Active', 'products-icon/Advil.png', 'AdvilIbuprofen200mg', 0),
-(5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Mg', 0, 0, 0, 40.00, 1, 0, 2, '', 'Active', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg', 0),
-(6, 'Loperamide', 'Diatabs', 'Medicine', '2', 'Mg', 0, 0, 0, 7.50, 1, 0, NULL, '', 'Active', 'products-icon/Diatabs.png', 'DiatabsLoperamide2mg', 0),
-(7, 'Loperamide', 'Imodium', 'Medicine', '2', 'Mg', 0, 0, 0, 19.00, 1, 0, NULL, '', 'Active', 'products-icon/Imodium.png', 'ImodiumLoperamide2mg', 0),
-(8, 'Aluminum Hydroxide Magnesium Hydroxide Simeticone', 'Kremil-S', 'Medicine', '441', 'Mg', 0, 0, 0, 9.70, 1, 0, NULL, '', 'Archived', 'products-icon/kremilS.png', 'KremilS30mg', 0),
-(10, 'Bisacodyl', 'Dulcolax', 'Medicine', '5', 'Mg', 0, 0, 0, 25.70, 1, 0, NULL, '', 'Archived', 'products-icon/dulcolax.png', 'Dulcolax5mg', 0),
-(11, 'Ibuprofen', 'Medicol Advance', 'Medicine', '200', 'Mg', 0, 0, 0, 6.75, 1, 0, NULL, '', 'Archived', 'products-icon/medicol.png', 'MedicolAdvance200mg', 0),
-(12, 'Product', 'Sample', 'Medicine', '500', 'Mg', 0, 0, 0, 5.50, 1, 1, NULL, '', 'Archived', '../resources/img/default_Icon.png', 'ALGN5829921', 0);
+INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `Discount`, `VAT_exempted`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`, `ExcessStock`, `Markup`) VALUES
+(2, 'Biogesic', 'Paracetamol', 'Medicine', '500', 'Mg', 232, 50, 9, 9.45, 1, 0, 1, '', 'Active', 'products-icon/biogesic.png', '', 0, 0.05),
+(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Mg', 5, 20, 10, 7.35, 1, 0, 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg', 0, 0.05),
+(4, 'Ibuprofen', 'Advil', 'Medicine', '200', 'Mg', 0, 0, 0, 9.00, 1, 0, 1, '', 'Active', 'products-icon/Advil.png', 'AdvilIbuprofen200mg', 0, 0.05),
+(5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Mg', 0, 0, 0, 40.00, 1, 0, 2, '', 'Active', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg', 0, 0.05),
+(6, 'Loperamide', 'Diatabs', 'Medicine', '2', 'Mg', 0, 0, 0, 7.50, 1, 0, NULL, '', 'Active', 'products-icon/Diatabs.png', 'DiatabsLoperamide2mg', 0, 0.05),
+(7, 'Loperamide', 'Imodium', 'Medicine', '2', 'Mg', 0, 0, 0, 19.00, 1, 0, NULL, '', 'Active', 'products-icon/Imodium.png', 'ImodiumLoperamide2mg', 0, 0.05),
+(8, 'Aluminum Hydroxide Magnesium Hydroxide Simeticone', 'Kremil-S', 'Medicine', '441', 'Mg', 0, 0, 0, 9.70, 1, 0, NULL, '', 'Archived', 'products-icon/kremilS.png', 'KremilS30mg', 0, 0.05),
+(10, 'Bisacodyl', 'Dulcolax', 'Medicine', '5', 'Mg', 0, 0, 0, 25.70, 1, 0, NULL, '', 'Archived', 'products-icon/dulcolax.png', 'Dulcolax5mg', 0, 0.05),
+(11, 'Ibuprofen', 'Medicol Advance', 'Medicine', '200', 'Mg', 0, 0, 0, 6.75, 1, 0, NULL, '', 'Archived', 'products-icon/medicol.png', 'MedicolAdvance200mg', 0, 0.05),
+(12, 'Product', 'Sample', 'Medicine', '500', 'Mg', 0, 0, 0, 5.50, 1, 1, NULL, '', 'Archived', '../resources/img/default_Icon.png', 'ALGN5829921', 0, 0.05);
 
 -- --------------------------------------------------------
 
@@ -468,6 +481,16 @@ CREATE TABLE `product_suppliers` (
   `ItemID` int(11) NOT NULL,
   `SupplierID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product_suppliers`
+--
+
+INSERT INTO `product_suppliers` (`ItemID`, `SupplierID`) VALUES
+(2, 1),
+(3, 1),
+(4, 2),
+(5, 2);
 
 -- --------------------------------------------------------
 
@@ -530,12 +553,13 @@ CREATE TABLE `sales` (
 --
 
 INSERT INTO `sales` (`InvoiceID`, `SaleDate`, `AccountID`, `SalesDetails`, `TotalItems`, `Subtotal`, `Tax`, `vatable_sales`, `vat_exempt_sales`, `Discount`, `AmountPaid`, `PaymentMethod`, `Status`, `RefundAmount`) VALUES
-(1, '2024-09-29 01:34:29', 3, '{\n	\"1\":{\n		\"itemID\":\"2\",\n		\"qty\":5\n	},\n	\"2\":{\n		\"itemID\":\"3\",\n		\"qty\":3\n	}\n}', 8, 67.05, 7.18, 0.00, 0.00, 0.00, 70.00, 'Cash', 'Sales', 0.00),
-(2, '2024-10-05 23:06:36', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":9}}', 9, 85.05, 9.11, 0.00, 0.00, 0.00, 100.00, 'Cash', 'Sales', 0.00),
-(3, '2024-11-09 01:49:59', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":1}}', 1, 9.00, 1.08, 0.00, 0.00, 0.00, 11.00, 'Cash', 'Sales', 0.00),
-(4, '2024-11-09 17:28:12', 3, '{\"1\":{\"itemID\":\"3\",\"qty\":1}}', 1, 7.35, 0.88, 0.00, 0.00, 0.00, 8.00, 'Cash', 'Sales', 0.00),
-(5, '2024-11-09 20:12:43', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":2},\"2\":{\"itemID\":\"3\",\"qty\":1}}', 3, 25.35, 2.72, 0.00, 0.00, 7.24, 19.00, 'Cash', 'Sales', 0.00),
-(6, '2024-11-10 02:45:09', 3, '{\"1\":{\"itemID\":\"3\",\"qty\":25}}', 25, 183.75, 19.69, 0.00, 0.00, 0.00, 184.00, 'Cash', 'Sales', 0.00);
+(1, '2024-09-29 01:34:29', 3, '{\r\n	\"1\":{\r\n		\"itemID\":\"2\",\r\n		\"qty\":5,\r\n		\"price\":\"9.00\"\r\n	},\r\n	\"2\":{\r\n		\"itemID\":\"3\",\r\n		\"qty\":3,\r\n		\"price\":\"7.35\"\r\n	}\r\n}', 8, 67.05, 7.18, 0.00, 0.00, 0.00, 70.00, 'Cash', 'Sales', 0.00),
+(2, '2024-10-05 23:06:36', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":9,\"price\":\"9.45\"}}\r\n', 9, 85.05, 9.11, 0.00, 0.00, 0.00, 100.00, 'Cash', 'Sales', 0.00),
+(3, '2024-11-09 01:49:59', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":1,\"price\":\"9.00\"}}\r\n', 1, 9.00, 1.08, 0.00, 0.00, 0.00, 11.00, 'Cash', 'Sales', 0.00),
+(4, '2024-11-09 17:28:12', 3, '{\"1\":{\"itemID\":\"3\",\"qty\":1,\"price\":\"7.35\"}}\r\n', 1, 7.35, 0.88, 0.00, 0.00, 0.00, 8.00, 'Cash', 'Sales', 0.00),
+(5, '2024-11-09 20:12:43', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":2,\"price\":\"9.00\"}, \"2\":{\"itemID\":\"3\",\"qty\":1,\"price\":\"7.35\"}}\r\n', 3, 25.35, 2.72, 0.00, 0.00, 7.24, 19.00, 'Cash', 'Sales', 0.00),
+(6, '2024-11-10 02:45:09', 3, '{\"1\":{\"itemID\":\"3\",\"qty\":25,\"price\":\"7.35\"}}', 25, 183.75, 19.69, 0.00, 0.00, 0.00, 184.00, 'Cash', 'Sales', 0.00),
+(7, '2024-11-14 03:55:38', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":5,\"price\":\"75.00\"}}', 5, 375.00, 40.18, 334.82, 0.00, 0.00, 400.00, 'Cash', 'Sales', 0.00);
 
 -- --------------------------------------------------------
 
@@ -718,7 +742,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `audittrail`
 --
 ALTER TABLE `audittrail`
-  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=271;
+  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=283;
 
 --
 -- AUTO_INCREMENT for table `deliveries`
@@ -748,7 +772,7 @@ ALTER TABLE `purchaseorders`
 -- AUTO_INCREMENT for table `sales`
 --
 ALTER TABLE `sales`
-  MODIFY `InvoiceID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `InvoiceID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `suppliers`
