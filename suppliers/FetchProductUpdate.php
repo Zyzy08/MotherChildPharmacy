@@ -25,16 +25,25 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Prepare and execute the SQL statement to fetch products with the given SupplierID, prioritizing those with matching SupplierID
+    // Prepare and execute the SQL statement to fetch products, including those without a SupplierID
     $sql = "
-        SELECT ItemID, GenericName, BrandName, PricePerUnit, SupplierID 
-        FROM inventory 
-        WHERE SupplierID = :supplierID AND Status != 'Archived'
-        UNION ALL
-        SELECT ItemID, GenericName, BrandName, PricePerUnit, SupplierID 
-        FROM inventory 
-        WHERE SupplierID IS NULL AND Status != 'Archived'
-    ";
+    SELECT 
+        i.ItemID, 
+        i.GenericName, 
+        i.BrandName, 
+        i.PricePerUnit, 
+        ps.SupplierID,
+        -- Check if the product has a supplierID matching the provided supplier, otherwise NULL (unchecked)
+        CASE 
+            WHEN ps.SupplierID = :supplierID THEN 1 
+            ELSE 0 
+        END AS isChecked
+    FROM inventory i
+    LEFT JOIN product_suppliers ps ON i.ItemID = ps.ItemID 
+    AND ps.SupplierID = :supplierID -- Only look for matching SupplierID
+    WHERE i.Status != 'Archived'
+    ORDER BY isChecked DESC, i.ItemID; -- Prioritize checked items first, then order by ItemID
+";
     
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':supplierID', $supplierID, PDO::PARAM_INT);
@@ -64,9 +73,11 @@ try {
         throw new Exception('JSON encoding error: ' . json_last_error_msg());
     }
 } catch (PDOException $e) {
+    // Log or handle PDO-specific errors
     error_log('Database query failed: ' . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Database query failed.']);
 } catch (Exception $e) {
+    // General error handling
     error_log('Error: ' . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'An error occurred.']);
 }
