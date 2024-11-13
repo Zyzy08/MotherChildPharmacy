@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 10, 2024 at 05:20 PM
+-- Generation Time: Nov 13, 2024 at 05:48 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -306,9 +306,12 @@ INSERT INTO `audittrail` (`auditID`, `AccountID`, `action`, `description`, `crea
 (262, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-11-10 13:46:52', '::1', '1'),
 (263, 3, 'Database Backup', 'Backup initiated for database \'motherchildpharmacy\' by user.', '2024-11-10 13:47:32', '::1', '1'),
 (264, 3, 'Database Backup', 'Backup initiated for database \'motherchildpharmacy\' by user.', '2024-11-10 13:51:39', '::1', '1'),
-(265, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-11-10 16:03:33', '::1', '1'),
-(266, 3, 'Logout', 'User logged out successfully.', '2024-11-10 16:18:54', '::1', '1'),
-(267, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-10 16:18:55', '::1', '1');
+(265, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-11-10 21:56:01', '::1', '1'),
+(266, 3, 'Database Backup', 'Backup initiated for database \'motherchildpharmacy\' by user.', '2024-11-10 21:56:30', '::1', '1'),
+(267, 3, 'Database Restore', 'Database \'motherchildpharmacy\' restored by user.', '2024-11-10 21:57:11', '::1', '1'),
+(268, 3, 'Logout', 'User logged out successfully.', '2024-11-10 21:57:28', '::1', '1'),
+(269, 3, 'Automatic Backup', 'As the user was the last to log off, automatic database backup creation was executed successfully.', '2024-11-10 21:57:28', '::1', '1'),
+(270, 3, 'Login', 'User logged in successfully.', '2024-11-13 16:41:41', '::1', '1');
 
 -- --------------------------------------------------------
 
@@ -421,24 +424,25 @@ CREATE TABLE `inventory` (
   `Notes` text DEFAULT NULL,
   `Status` enum('Active','Inactive','Archived') NOT NULL DEFAULT 'Active',
   `ProductIcon` varchar(255) DEFAULT NULL,
-  `ProductCode` varchar(50) DEFAULT NULL
+  `ProductCode` varchar(50) DEFAULT NULL,
+  `ExcessStock` int(10) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `inventory`
 --
 
-INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `Discount`, `VAT_exempted`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`) VALUES
-(2, 'Biogesic', 'Paracetamol', 'Medicine', '500', 'Mg', 237, 50, 7, 9.00, 1, 0, 1, '', 'Active', 'products-icon/biogesic.png', ''),
-(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Mg', 5, 20, 10, 7.35, 1, 0, 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg'),
-(4, 'Ibuprofen', 'Advil', 'Medicine', '200', 'Mg', 0, 0, 0, 9.00, 1, 0, 1, '', 'Active', 'products-icon/Advil.png', 'AdvilIbuprofen200mg'),
-(5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Mg', 0, 0, 0, 40.00, 1, 0, 2, '', 'Active', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg'),
-(6, 'Loperamide', 'Diatabs', 'Medicine', '2', 'Mg', 0, 0, 0, 7.50, 1, 0, NULL, '', 'Active', 'products-icon/Diatabs.png', 'DiatabsLoperamide2mg'),
-(7, 'Loperamide', 'Imodium', 'Medicine', '2', 'Mg', 0, 0, 0, 19.00, 1, 0, NULL, '', 'Active', 'products-icon/Imodium.png', 'ImodiumLoperamide2mg'),
-(8, 'Aluminum Hydroxide Magnesium Hydroxide Simeticone', 'Kremil-S', 'Medicine', '441', 'Mg', 0, 0, 0, 9.70, 1, 0, NULL, '', 'Archived', 'products-icon/kremilS.png', 'KremilS30mg'),
-(10, 'Bisacodyl', 'Dulcolax', 'Medicine', '5', 'Mg', 0, 0, 0, 25.70, 1, 0, NULL, '', 'Archived', 'products-icon/dulcolax.png', 'Dulcolax5mg'),
-(11, 'Ibuprofen', 'Medicol Advance', 'Medicine', '200', 'Mg', 0, 0, 0, 6.75, 1, 0, NULL, '', 'Archived', 'products-icon/medicol.png', 'MedicolAdvance200mg'),
-(12, 'Product', 'Sample', 'Medicine', '500', 'Mg', 0, 0, 0, 5.50, 1, 1, NULL, '', 'Archived', '../resources/img/default_Icon.png', 'ALGN5829921');
+INSERT INTO `inventory` (`ItemID`, `GenericName`, `BrandName`, `ItemType`, `Mass`, `UnitOfMeasure`, `InStock`, `Ordered`, `ReorderLevel`, `PricePerUnit`, `Discount`, `VAT_exempted`, `SupplierID`, `Notes`, `Status`, `ProductIcon`, `ProductCode`, `ExcessStock`) VALUES
+(2, 'Biogesic', 'Paracetamol', 'Medicine', '500', 'Mg', 237, 50, 7, 9.00, 1, 0, 1, '', 'Active', 'products-icon/biogesic.png', '', 0),
+(3, 'Phenylephrine', 'Neozep Forte', 'Medicine', '500', 'Mg', 5, 20, 10, 7.35, 1, 0, 2, '', 'Active', 'products-icon/neozep.png', 'NeozepForte500mg', 0),
+(4, 'Ibuprofen', 'Advil', 'Medicine', '200', 'Mg', 0, 0, 0, 9.00, 1, 0, 1, '', 'Active', 'products-icon/Advil.png', 'AdvilIbuprofen200mg', 0),
+(5, 'Hyoscine Paracetamol', 'Buscopan Venus', 'Medicine', '500', 'Mg', 0, 0, 0, 40.00, 1, 0, 2, '', 'Active', 'products-icon/buscopanVenus.png', 'BuscopanVenus500Mg', 0),
+(6, 'Loperamide', 'Diatabs', 'Medicine', '2', 'Mg', 0, 0, 0, 7.50, 1, 0, NULL, '', 'Active', 'products-icon/Diatabs.png', 'DiatabsLoperamide2mg', 0),
+(7, 'Loperamide', 'Imodium', 'Medicine', '2', 'Mg', 0, 0, 0, 19.00, 1, 0, NULL, '', 'Active', 'products-icon/Imodium.png', 'ImodiumLoperamide2mg', 0),
+(8, 'Aluminum Hydroxide Magnesium Hydroxide Simeticone', 'Kremil-S', 'Medicine', '441', 'Mg', 0, 0, 0, 9.70, 1, 0, NULL, '', 'Archived', 'products-icon/kremilS.png', 'KremilS30mg', 0),
+(10, 'Bisacodyl', 'Dulcolax', 'Medicine', '5', 'Mg', 0, 0, 0, 25.70, 1, 0, NULL, '', 'Archived', 'products-icon/dulcolax.png', 'Dulcolax5mg', 0),
+(11, 'Ibuprofen', 'Medicol Advance', 'Medicine', '200', 'Mg', 0, 0, 0, 6.75, 1, 0, NULL, '', 'Archived', 'products-icon/medicol.png', 'MedicolAdvance200mg', 0),
+(12, 'Product', 'Sample', 'Medicine', '500', 'Mg', 0, 0, 0, 5.50, 1, 1, NULL, '', 'Archived', '../resources/img/default_Icon.png', 'ALGN5829921', 0);
 
 -- --------------------------------------------------------
 
@@ -452,6 +456,17 @@ CREATE TABLE `productlot` (
   `Quantity` int(11) NOT NULL,
   `ExpirationDate` date NOT NULL,
   `isExpired` enum('1','0') NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_suppliers`
+--
+
+CREATE TABLE `product_suppliers` (
+  `ItemID` int(11) NOT NULL,
+  `SupplierID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -499,6 +514,8 @@ CREATE TABLE `sales` (
   `TotalItems` int(11) NOT NULL,
   `Subtotal` decimal(10,2) DEFAULT 0.00,
   `Tax` decimal(10,2) DEFAULT 0.00,
+  `vatable_sales` decimal(10,2) NOT NULL,
+  `vat_exempt_sales` decimal(10,2) NOT NULL,
   `Discount` decimal(10,2) DEFAULT 0.00,
   `NetAmount` decimal(10,2) GENERATED ALWAYS AS (`Subtotal` - `Discount` - `RefundAmount`) STORED,
   `AmountPaid` decimal(10,2) DEFAULT 0.00,
@@ -512,13 +529,13 @@ CREATE TABLE `sales` (
 -- Dumping data for table `sales`
 --
 
-INSERT INTO `sales` (`InvoiceID`, `SaleDate`, `AccountID`, `SalesDetails`, `TotalItems`, `Subtotal`, `Tax`, `Discount`, `AmountPaid`, `PaymentMethod`, `Status`, `RefundAmount`) VALUES
-(1, '2024-09-29 01:34:29', 3, '{\n	\"1\":{\n		\"itemID\":\"2\",\n		\"qty\":5\n	},\n	\"2\":{\n		\"itemID\":\"3\",\n		\"qty\":3\n	}\n}', 8, 67.05, 7.18, 0.00, 70.00, 'Cash', 'Sales', 0.00),
-(2, '2024-10-05 23:06:36', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":9}}', 9, 85.05, 9.11, 0.00, 100.00, 'Cash', 'Sales', 0.00),
-(3, '2024-11-09 01:49:59', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":1}}', 1, 9.00, 1.08, 0.00, 11.00, 'Cash', 'Sales', 0.00),
-(4, '2024-11-09 17:28:12', 3, '{\"1\":{\"itemID\":\"3\",\"qty\":1}}', 1, 7.35, 0.88, 0.00, 8.00, 'Cash', 'Sales', 0.00),
-(5, '2024-11-09 20:12:43', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":2},\"2\":{\"itemID\":\"3\",\"qty\":1}}', 3, 25.35, 2.72, 7.24, 19.00, 'Cash', 'Sales', 0.00),
-(6, '2024-11-10 02:45:09', 3, '{\"1\":{\"itemID\":\"3\",\"qty\":25}}', 25, 183.75, 19.69, 0.00, 184.00, 'Cash', 'Sales', 0.00);
+INSERT INTO `sales` (`InvoiceID`, `SaleDate`, `AccountID`, `SalesDetails`, `TotalItems`, `Subtotal`, `Tax`, `vatable_sales`, `vat_exempt_sales`, `Discount`, `AmountPaid`, `PaymentMethod`, `Status`, `RefundAmount`) VALUES
+(1, '2024-09-29 01:34:29', 3, '{\n	\"1\":{\n		\"itemID\":\"2\",\n		\"qty\":5\n	},\n	\"2\":{\n		\"itemID\":\"3\",\n		\"qty\":3\n	}\n}', 8, 67.05, 7.18, 0.00, 0.00, 0.00, 70.00, 'Cash', 'Sales', 0.00),
+(2, '2024-10-05 23:06:36', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":9}}', 9, 85.05, 9.11, 0.00, 0.00, 0.00, 100.00, 'Cash', 'Sales', 0.00),
+(3, '2024-11-09 01:49:59', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":1}}', 1, 9.00, 1.08, 0.00, 0.00, 0.00, 11.00, 'Cash', 'Sales', 0.00),
+(4, '2024-11-09 17:28:12', 3, '{\"1\":{\"itemID\":\"3\",\"qty\":1}}', 1, 7.35, 0.88, 0.00, 0.00, 0.00, 8.00, 'Cash', 'Sales', 0.00),
+(5, '2024-11-09 20:12:43', 3, '{\"1\":{\"itemID\":\"2\",\"qty\":2},\"2\":{\"itemID\":\"3\",\"qty\":1}}', 3, 25.35, 2.72, 0.00, 0.00, 7.24, 19.00, 'Cash', 'Sales', 0.00),
+(6, '2024-11-10 02:45:09', 3, '{\"1\":{\"itemID\":\"3\",\"qty\":25}}', 25, 183.75, 19.69, 0.00, 0.00, 0.00, 184.00, 'Cash', 'Sales', 0.00);
 
 -- --------------------------------------------------------
 
@@ -589,7 +606,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`AccountID`, `employeeName`, `employeeLName`, `role`, `accountName`, `password`, `picture`, `dateCreated`, `status`, `connected`, `SuppliersPerms`, `TransactionsPerms`, `InventoryPerms`, `POSPerms`, `REPerms`, `POPerms`, `UsersPerms`) VALUES
 (2, 'Sayra', 'Jackson', 'Admin', 'E002_sjackson', 'jackson-e002', 'Chichi.jpg', '2024-09-22 21:27:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
-(3, 'Lance', 'Tiangco', 'Admin', 'E003_ltiangco', 'lancetiangco26!!', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
+(3, 'Lance', 'Tiangco', 'Admin', 'E003_ltiangco', 'lancetiangco26!!', 'dubu2.jpg', '2024-09-01 23:42:57', 'Active', '1', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
 (4, 'Aileen', 'Castro', 'Admin', 'E004_acastro', 'castro-e004', 'owner.png', '2024-10-14 14:44:48', 'Active', '0', 'on', 'on', 'on', 'on', 'on', 'on', 'on'),
 (5, 'The', 'Shrek', 'Pharmacy Assistant', 'E005_tshrek', 'test-e005', 'Shrek.png', '2024-10-14 18:59:03', 'Inactive', '0', 'off', 'on', 'off', 'on', 'on', 'off', 'off'),
 (6, 'Cashier', 'Ashiera', 'Pharmacy Assistant', 'E006_cashiera', 'ashiera-e006', 'cashier.png', '2024-10-29 22:13:40', 'Active', '0', 'off', 'on', 'off', 'on', 'on', 'off', 'off');
@@ -619,6 +636,7 @@ ALTER TABLE `deliveries`
 --
 ALTER TABLE `delivery_items`
   ADD PRIMARY KEY (`ItemID`,`DeliveryID`,`LotNumber`),
+  ADD UNIQUE KEY `LotNumber` (`LotNumber`),
   ADD KEY `FK_DeliveryID` (`DeliveryID`);
 
 --
@@ -649,6 +667,13 @@ ALTER TABLE `productlot`
   ADD KEY `PL_ForeignKey_ItemID` (`ItemID`);
 
 --
+-- Indexes for table `product_suppliers`
+--
+ALTER TABLE `product_suppliers`
+  ADD PRIMARY KEY (`ItemID`,`SupplierID`),
+  ADD KEY `SupplierID` (`SupplierID`);
+
+--
 -- Indexes for table `purchaseorders`
 --
 ALTER TABLE `purchaseorders`
@@ -674,7 +699,9 @@ ALTER TABLE `seniorlog`
 --
 ALTER TABLE `suppliers`
   ADD PRIMARY KEY (`SupplierID`),
-  ADD UNIQUE KEY `SupplierName` (`SupplierName`);
+  ADD UNIQUE KEY `SupplierName` (`SupplierName`),
+  ADD UNIQUE KEY `Phone` (`Phone`),
+  ADD UNIQUE KEY `Email` (`Email`);
 
 --
 -- Indexes for table `users`
@@ -691,7 +718,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `audittrail`
 --
 ALTER TABLE `audittrail`
-  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=268;
+  MODIFY `auditID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=271;
 
 --
 -- AUTO_INCREMENT for table `deliveries`
@@ -782,6 +809,13 @@ ALTER TABLE `inventory`
 --
 ALTER TABLE `productlot`
   ADD CONSTRAINT `PL_ForeignKey_ItemID` FOREIGN KEY (`ItemID`) REFERENCES `inventory` (`ItemID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `product_suppliers`
+--
+ALTER TABLE `product_suppliers`
+  ADD CONSTRAINT `product_suppliers_ibfk_1` FOREIGN KEY (`ItemID`) REFERENCES `inventory` (`ItemID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `product_suppliers_ibfk_2` FOREIGN KEY (`SupplierID`) REFERENCES `suppliers` (`SupplierID`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `purchaseorders`

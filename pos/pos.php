@@ -344,7 +344,7 @@
             </div>
             <div>
               <div class="card-footer">
-                <div class="d-flex w-100 justify-content-between">
+                <div class="d-flex w-100 justify-content-between" style="display: none!important;">
                   <small>VAT Amount (12%):</small>
                   <p id="basket-tax">₱0.00</p>
                 </div>
@@ -501,21 +501,12 @@
             </div>
           </div>
 
-          <div class="row text-center justify-content-between">
+          <div class="row text-center justify-content-between" id="receiptModal-subtotalRow" style="display: none;">
             <div class="col-xl-5 firstxl5">
               <small>Subtotal:</small>
             </div>
             <div class="col-xl-5 secondxl5">
               <small id="sub-total">₱0.00</small>
-            </div>
-          </div>
-
-          <div class="row text-center justify-content-between">
-            <div class="col-xl-5 firstxl5">
-              <small>VAT (12%):</small>
-            </div>
-            <div class="col-xl-5 secondxl5">
-              <small id="tax">₱0.00</small>
             </div>
           </div>
 
@@ -561,6 +552,37 @@
             </div>
             <div class="col-xl-5 secondxl5">
               <small id="change">₱0.00</small>
+            </div>
+          </div>
+
+          <h6 style="text-align: center;">
+            --------------------------------------------------------
+          </h6>
+
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5 firstxl5">
+              <small>Vatable Sales:</small>
+            </div>
+            <div class="col-xl-5 secondxl5">
+              <small id="vatableSales">₱0.00</small>
+            </div>
+          </div>
+
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5 firstxl5">
+              <small>VAT-Exempt Sales:</small>
+            </div>
+            <div class="col-xl-5 secondxl5">
+              <small id="vatExemptSales">₱0.00</small>
+            </div>
+          </div>
+
+          <div class="row text-center justify-content-between">
+            <div class="col-xl-5 firstxl5">
+              <small>VAT (12%):</small>
+            </div>
+            <div class="col-xl-5 secondxl5">
+              <small id="tax">₱0.00</small>
             </div>
           </div>
 
