@@ -505,6 +505,7 @@
           <!-- Dropdown to choose between Low Stock or EOQ and Near Expiry -->
           <select id="modalSelect" onchange="updateTableView()">
             <option value="lowStock">Low Stock Items</option>
+            <option value="Overstock">Overstock Items</option>
             <option value="nearExpiry">Near Expiry Items</option>
           </select>
 
