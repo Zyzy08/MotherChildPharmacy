@@ -26,18 +26,58 @@ function formatUnitOfMeasure($unit) {
     return isset($unitMap[strtolower($unit)]) ? $unitMap[strtolower($unit)] : $unit;
 }
 
-// SQL query to fetch sales with items and quantities separately
-$sql = "SELECT 
-    s.InvoiceID,
-    s.SaleDate,
-    JSON_UNQUOTE(s.SalesDetails) AS SalesDetails,
-    s.NetAmount
-FROM 
-    sales s
-WHERE 
-    DATE(s.SaleDate) = CURDATE() AND Status IN ('Sales', 'Return/Exchange')
-ORDER BY 
-    s.SaleDate DESC";
+// Get the period from the request
+$period = isset($_GET['period']) ? $_GET['period'] : 'today';
+
+// Define the SQL query based on the period
+switch ($period) {
+    case 'today':
+        $sql = "SELECT 
+            s.InvoiceID,
+            s.SaleDate,
+            s.Status AS TransactionType,
+            JSON_UNQUOTE(s.SalesDetails) AS SalesDetails,
+            s.NetAmount
+        FROM 
+            sales s
+        WHERE 
+            DATE(s.SaleDate) = CURDATE() AND s.Status IN ('Sales', 'Return/Exchange', 'ReturnedForExchange')
+        ORDER BY 
+            s.SaleDate DESC";
+        break;
+    case 'month':
+        $sql = "SELECT 
+            s.InvoiceID,
+            s.SaleDate,
+            s.Status AS TransactionType,
+            JSON_UNQUOTE(s.SalesDetails) AS SalesDetails,
+            s.NetAmount
+        FROM 
+            sales s
+        WHERE 
+            YEAR(s.SaleDate) = YEAR(CURDATE()) AND MONTH(s.SaleDate) = MONTH(CURDATE()) AND s.Status IN ('Sales', 'Return/Exchange', 'ReturnedForExchange')
+        ORDER BY 
+            s.SaleDate DESC";
+        break;
+    case 'year':
+        $sql = "SELECT 
+            s.InvoiceID,
+            s.SaleDate,
+            s.Status AS TransactionType,
+            JSON_UNQUOTE(s.SalesDetails) AS SalesDetails,
+            s.NetAmount
+        FROM 
+            sales s
+        WHERE 
+            YEAR(s.SaleDate) = YEAR(CURDATE()) AND s.Status IN ('Sales', 'Return/Exchange', 'ReturnedForExchange')
+        ORDER BY 
+            s.SaleDate DESC";
+        break;
+    default:
+        die(json_encode(array(
+            "error" => "Invalid period specified"
+        )));
+}
 
 $result = $conn->query($sql);
 
@@ -85,6 +125,7 @@ while ($row = $result->fetch_assoc()) {
     $salesData[] = array(
         'InvoiceID' => $row['InvoiceID'],
         'SaleDate' => $row['SaleDate'],
+        'TransactionType' => $row['TransactionType'],
         'Items' => implode('<br /><br />', $items),
         'Quantities' => implode('<br /><br /><br />', $quantities),
         'NetAmount' => floatval($row['NetAmount'])

@@ -321,6 +321,9 @@
             <div class="col-12">
               <div class="card" style="height: 716px;">
                 <div class="filter">
+                  <button id="Table View" style="margin-right: 15px" type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">
+                    <i class="bi bi-file-earmark-pdf"> Table View</i>
+                  </button>
                   <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                   <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                     <li class="dropdown-header text-start">
@@ -608,6 +611,196 @@
       </div>
     </section>
 
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+    <style>
+      .text-wrap {
+        white-space: normal;
+      }
+      .datatable_report {
+        max-height: 500px; 
+        overflow-y: auto; 
+      }
+    </style>
+    
+    <!-- Reports Table Modal -->
+    <div class="modal fade" id="ExtralargeModal" tabindex="-1">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Reports Data</h5>
+          </div>
+          <div class="modal-body">
+
+            <div class="container datatable_report">
+              <h2>Today's Sales</h2>
+              <div class="card">
+                <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
+                  <table id="today-example" class="display" style="width:100%">
+                    <thead>
+                      <tr class="highlight-row">
+                        <th>Invoice ID</th>
+                        <th>Sale Date</th>
+                        <th>Transaction Type</th>
+                        <th>Items</th>
+                        <th>Quantities</th>
+                        <th>Net Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody id="today-tableBody">
+                      <!-- Data rows will be inserted here by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <h2>This Month's Sales</h2>
+              <div class="card">
+                <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
+                  <table id="month-example" class="display" style="width:100%">
+                    <thead>
+                      <tr class="highlight-row">
+                        <th>Invoice ID</th>
+                        <th>Sale Date</th>
+                        <th>Transaction Type</th>
+                        <th>Items</th>
+                        <th>Quantities</th>
+                        <th>Net Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody id="month-tableBody">
+                      <!-- Data rows will be inserted here by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <h2>This Year's Sales</h2>
+              <div class="card">
+                <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
+                  <table id="year-example" class="display" style="width:100%">
+                    <thead>
+                      <tr class="highlight-row">
+                        <th>Invoice ID</th>
+                        <th>Sale Date</th>
+                        <th>Transaction Type</th>
+                        <th>Items</th>
+                        <th>Quantities</th>
+                        <th>Net Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody id="year-tableBody">
+                      <!-- Data rows will be inserted here by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+            <script>
+              $(document).ready(function() {
+                // Today's Sales
+                $('#today-example').DataTable({
+                  "ajax": {
+                    "url": "fetchTodaySales.php?period=today",
+                    "dataSrc": ""
+                  },
+                  "columns": [
+                    { "data": "InvoiceID" },
+                    { "data": "SaleDate" },
+                    { "data": "TransactionType" },
+                    { "data": "Items" },
+                    { "data": "Quantities" },
+                    { "data": "NetAmount" }
+                  ],
+                  "columnDefs": [
+                    {
+                      "targets": [3, 4],
+                      "className": "text-wrap"
+                    },
+                    {
+                      "targets": 5,
+                      "render": function(data, type, row) {
+                        return "₱" + data.toFixed(2);
+                      }
+                    }
+                  ],
+                  "paging": false, // Disable pagination
+                  "searching": false // Disable search
+                });
+
+                // This Month's Sales
+                $('#month-example').DataTable({
+                  "ajax": {
+                    "url": "fetchTodaySales.php?period=month",
+                    "dataSrc": ""
+                  },
+                  "columns": [
+                    { "data": "InvoiceID" },
+                    { "data": "SaleDate" },
+                    { "data": "TransactionType" },
+                    { "data": "Items" },
+                    { "data": "Quantities" },
+                    { "data": "NetAmount" }
+                  ],
+                  "columnDefs": [
+                    {
+                      "targets": [3, 4],
+                      "className": "text-wrap"
+                    },
+                    {
+                      "targets": 5,
+                      "render": function(data, type, row) {
+                        return "₱" + data.toFixed(2);
+                      }
+                    }
+                  ],
+                  "paging": false, // Disable pagination
+                  "searching": false // Disable search
+                });
+
+                // This Year's Sales
+                $('#year-example').DataTable({
+                  "ajax": {
+                    "url": "fetchTodaySales.php?period=year",
+                    "dataSrc": ""
+                  },
+                  "columns": [
+                    { "data": "InvoiceID" },
+                    { "data": "SaleDate" },
+                    { "data": "TransactionType" },
+                    { "data": "Items" },
+                    { "data": "Quantities" },
+                    { "data": "NetAmount" }
+                  ],
+                  "columnDefs": [
+                    {
+                      "targets": [3, 4],
+                      "className": "text-wrap"
+                    },
+                    {
+                      "targets": 5,
+                      "render": function(data, type, row) {
+                        return "₱" + data.toFixed(2);
+                      }
+                    }
+                  ],
+                  "paging": false, // Disable pagination
+                  "searching": false // Disable search
+                });
+              });
+            </script>
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button id="export_PDF" type="button" class="btn btn-primary">Export to PDF</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
@@ -631,6 +824,18 @@
   <script src="../resources/vendor/simple-datatables/simple-datatables.js"></script>
   <script src="../resources/vendor/tinymce/tinymce.min.js"></script>
   <script src="../resources/vendor/php-email-form/validate.js"></script>
+  
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+  <!-- jsPDF JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+
+
 
   <!-- Template Main JS File -->
   <script src="../main.js"></script>

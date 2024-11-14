@@ -312,3 +312,58 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error calling PHP script:', error);
         });
 });
+
+document.getElementById("export_PDF").addEventListener("click", function() {
+    // Create a temporary container to hold all the tables
+    const container = document.createElement('div');
+    
+    // Grab all the tables inside the container
+    const tables = document.querySelectorAll('.datatable_report table');
+    
+    // Define custom titles for each section
+    const titles = [
+        "Today's Sales",  // Title for the first table (Today's Sales)
+        "This Month's Sales",  // Title for the second table (This Month's Sales)
+        "This Year's Sales"  // Title for the third table (This Year's Sales)
+    ];
+
+    // Add a title for each table
+    tables.forEach(function(table, index) {
+        // Create a title for each table (using the defined titles array)
+        const title = document.createElement('h2');
+        title.textContent = titles[index];  // Use the title from the array
+        title.style.textAlign = 'center';  // Center align the title
+        title.style.marginBottom = '10px';  // Space below the title
+        container.appendChild(title);
+        
+        // Clone the table to avoid affecting the DOM and append it
+        const clone = table.cloneNode(true);
+        
+        // Apply table styling to shrink it slightly
+        clone.style.width = '90%';  // Reduce the width to 90% of the container
+        clone.style.margin = '0 auto';  // Center the table horizontally
+        clone.style.fontSize = '0.9em';  // Reduce the font size slightly
+        clone.style.borderCollapse = 'collapse';  // Collapse borders for a more compact look
+        
+        // Apply padding to cells to reduce spacing
+        const cells = clone.querySelectorAll('td, th');
+        cells.forEach(cell => {
+            cell.style.padding = '8px';  // Reduce padding for a smaller table
+        });
+
+        container.appendChild(clone);
+        
+        // Add a separator after each table, except the last one
+        if (index < tables.length - 1) {
+            const separator = document.createElement('hr');
+            separator.style.border = '1px solid #ccc';  // Style the separator
+            separator.style.margin = '20px 0';  // Space above and below the separator
+            container.appendChild(separator);
+        }
+    });
+
+    // Use html2pdf to generate the PDF from the temporary container
+    html2pdf()
+        .from(container)
+        .save('Sales_Report.pdf');  // You can specify the file name here
+});
