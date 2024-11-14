@@ -468,21 +468,13 @@
                     </div>
                 </div>
 
-                <div class="row text-center justify-content-between">
+                <div class="row text-center justify-content-between" id="receiptModal-subtotalRow"
+                    style="display: none;">
                     <div class="col-xl-5 firstxl5">
                         <small>Subtotal:</small>
                     </div>
                     <div class="col-xl-5 secondxl5">
                         <small id="sub-total">₱0.00</small>
-                    </div>
-                </div>
-
-                <div class="row text-center justify-content-between">
-                    <div class="col-xl-5 firstxl5">
-                        <small>VAT (12%):</small>
-                    </div>
-                    <div class="col-xl-5 secondxl5">
-                        <small id="tax">₱0.00</small>
                     </div>
                 </div>
 
@@ -529,6 +521,37 @@
                     </div>
                     <div class="col-xl-5 secondxl5">
                         <small id="change">₱0.00</small>
+                    </div>
+                </div>
+
+                <h6 style="text-align: center;">
+                    --------------------------------------------------------
+                </h6>
+
+                <div class="row text-center justify-content-between">
+                    <div class="col-xl-5 firstxl5">
+                        <small>Vatable Sales:</small>
+                    </div>
+                    <div class="col-xl-5 secondxl5">
+                        <small id="vatableSales">₱0.00</small>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-between">
+                    <div class="col-xl-5 firstxl5">
+                        <small>VAT-Exempt Sales:</small>
+                    </div>
+                    <div class="col-xl-5 secondxl5">
+                        <small id="vatExemptSales">₱0.00</small>
+                    </div>
+                </div>
+
+                <div class="row text-center justify-content-between">
+                    <div class="col-xl-5 firstxl5">
+                        <small>VAT (12%):</small>
+                    </div>
+                    <div class="col-xl-5 secondxl5">
+                        <small id="tax">₱0.00</small>
                     </div>
                 </div>
 
@@ -767,6 +790,8 @@
         const datetime = document.getElementById('date-time');
         const ordernum = document.getElementById('order-num');
         const status = document.getElementById('status');
+        const vatExemptSales = document.getElementById('vatExemptSales');
+        const vatableSales = document.getElementById('vatableSales');
 
         function fetchDetails(identifier) {
             fetch(`getData.php?InvoiceID=${encodeURIComponent(identifier)}`)
@@ -776,6 +801,8 @@
                         displayReceiptItems(data.listItems);
                         totalitems.textContent = data.TotalItems;
                         tax.textContent = '₱' + data.Tax;
+                        vatExemptSales.textContent = '₱' + data.vat_exempt_sales;
+                        vatableSales.textContent = '₱' + data.vatable_sales;
                         discount.textContent = '₱' + data.Discount;
                         subtotal.textContent = '₱' + data.Subtotal;
                         amountdue.textContent = '₱' + data.NetAmount;
@@ -916,17 +943,26 @@
             receiptContainer.innerHTML = '';
 
             const headerHTML = `
-        <div class="row mb-2">
+            <div class="row text-center mb-2">
             <div class="col-2"><small><strong>Qty</strong></small></div>
-            <div class="col-4" style="text-align: right;"><small><strong>Item Description</strong></small></div>
+            <div class="col-4"><small><strong>Item Description</strong></small></div>
+            <div class="col-3"><small><strong>Price</strong></small></div>
         </div>`;
             receiptContainer.insertAdjacentHTML('beforeend', headerHTML);
 
             orderDetails.forEach(item => {
                 const itemHTML = `
-            <div class="row">
-                <div class="col-2"><small>${item.qty}</small></div>
-                <div class="col-4" style="text-align: right;"><small>${item.description}</small></div>
+            <div class="row text-center">
+                <div class="col-2"><small>${item.qty}</small></div>                
+                <div class="col-4"><small>${item.description.length > 20 ? item.description.slice(0, 18) + '...' : item.description}</small></div>
+                <div class="col-3"><small>₱${(item.qty * item.PricePerUnit).toFixed(2)}</small></div>
+
+
+            </div>
+            <div class="row text-center">
+                <div class="col-2"><small></small></div>
+                <div class="col-4"><small> &nbsp;&nbsp;&nbsp;${item.qty} &nbsp;@&nbsp; ₱${item.PricePerUnit}</small></div>
+                <div class="col-3"><small></small></div>
             </div>`;
                 receiptContainer.insertAdjacentHTML('beforeend', itemHTML);
             });

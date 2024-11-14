@@ -42,6 +42,8 @@ if (isset($_GET['InvoiceID'])) {
             s.NetAmount, 
             s.PaymentMethod,
             s.Tax,
+            s.vatable_sales,
+            s.vat_exempt_sales,
             s.Discount, 
             s.AmountPaid,
             s.AmountChange,
@@ -70,6 +72,7 @@ if (isset($_GET['InvoiceID'])) {
         foreach ($salesDetails as $detail) {
             $itemID = $detail['itemID'];
             $qty = $detail['qty'];
+            $PricePerUnit = $detail['price'];
 
             // Fetch the item details from the inventory
             $sqlItem = "SELECT * FROM inventory WHERE ItemID = '$itemID'";
@@ -86,7 +89,7 @@ if (isset($_GET['InvoiceID'])) {
                 $listItems[] = [
                     'qty' => $qty,
                     'description' => $brandName ? $brandName . " " . $mass . $unitofmeasure : $genericName . " " . $mass . $unitofmeasure,
-                    'price' => $pricePerUnit                    
+                    'PricePerUnit' => $PricePerUnit
                 ];
             }
         }

@@ -68,8 +68,8 @@ try {
     }
 
     // Prepare the SQL statement
-    $sql = "INSERT INTO sales (InvoiceID, SaleDate, AccountID, SalesDetails, TotalItems, Subtotal, Tax, Discount, AmountPaid, PaymentMethod, Status, RefundAmount) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO sales (InvoiceID, SaleDate, AccountID, SalesDetails, TotalItems, Subtotal, Tax, vatable_sales, vat_exempt_sales, Discount, AmountPaid, PaymentMethod, Status, RefundAmount) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
 
@@ -79,7 +79,7 @@ try {
 
     // Bind parameters
     $stmt->bind_param(
-        "isisiddddssd",
+        "isisiddddddssd",
         $data['invoiceID'],
         $data['saleDate'],
         $data['accountID'],
@@ -87,6 +87,8 @@ try {
         $data['totalItems'],
         $data['subtotal'],
         $data['tax'],
+        $data['vatableSales'],
+        $data['vatExemptSales'],
         $data['discount'],
         $data['amountPaid'],
         $data['paymentMethod'],

@@ -182,7 +182,7 @@
   margin-left: 12px;
 }
 
-#checkLowStockButton img {
+#MarkupBtn img, #checkLowStockButton img {
   width: 20px;
   /* Set the size of the image */
   height: auto;
@@ -225,6 +225,33 @@
   /* Keep the aspect ratio */
   margin-right: 6px;
   /* Space between the image and text */
+}
+
+#MarkupBtn {
+  cursor: pointer;
+  height: 36px;
+  width: auto;
+  /* Adjust width if needed */
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  /* Center align vertically */
+  justify-content: flex-start;
+  /* Align items to the start (left) */
+  font-size: 13px;
+  line-height: 22px;
+  font-weight: 400;
+  color: #FFFFFFFF;
+  /* white */
+  background: #005500FF;
+  /* primary-500 */
+  opacity: 1;
+  border: none;
+  border-radius: 12px;
+  gap: 6px;
+  /* Space between the icon and text */
+  margin-bottom: 10px;
+  margin-left: 12px;
 }
 
 
@@ -1402,4 +1429,23 @@ select option:disabled {
 
 select option {
   color: black;
+}
+
+#overlayMU-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 20%;
+  position: relative;
+  margin: 15% auto;
+  height: fit-content;
+}
+
+button[type="button"]:disabled, button[type="button"]:hover:disabled {
+  background-color: #7c8d7d;
+  cursor: not-allowed;
+}
+
+#modalPrompt-content{
+  margin: 50% auto;
 }

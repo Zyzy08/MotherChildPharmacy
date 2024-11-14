@@ -627,19 +627,35 @@ function setTableHeaders(selectedView, tableHeader) {
             <th>Ordered</th>
             <th>Reorder Level</th>
         `;
-    } else {
+    } else if (selectedView === 'nearExpiry') {
         tableHeader.innerHTML = `
             <th>Brand Name</th>
             <th>Generic Name</th>
             <th>Expiry Date</th>
             <th>Days to Expiry</th>
         `;
+    } else if (selectedView === 'Overstock') { // Third block for 'Overstock'
+        tableHeader.innerHTML = `
+            <th>Brand Name</th>
+            <th>Generic Name</th>
+            <th>In Stock</th>
+            <th>Excess Stock</th>
+        `;
     }
 }
 
 function fetchData(selectedView, lowStockItemsBody) {
+    let endpoint;
+    if (selectedView === 'lowStock') {
+        endpoint = 'checkLowStock.php';
+    } else if (selectedView === 'nearExpiry') {
+        endpoint = 'checkNearExpiry.php';
+    } else if (selectedView === 'Overstock') {
+        endpoint = 'checkOverstock.php'; // Add this endpoint
+    }
+
     $.ajax({
-        url: selectedView === 'lowStock' ? 'checkLowStock.php' : 'checkNearExpiry.php',
+        url: endpoint,
         method: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -663,23 +679,25 @@ function processFetchedData(data, selectedView, lowStockItemsBody) {
         let hasItems = false;
 
         data.forEach(item => {
-            const { ItemID, BrandName, GenericName, InStock = 0, Ordered = 0, ReorderLevel = 0, ExpiryDate, DaysToExpiry } = item;
+            const { ItemID, BrandName, GenericName, InStock = 0, Ordered = 0, ReorderLevel = 0, ExcessStock = 0, ExpiryDate, DaysToExpiry } = item;
 
-            // Process item and display in the table
             if (selectedView === 'lowStock') {
                 hasItems = true;
                 appendLowStockRow(lowStockItemsBody, BrandName, GenericName, InStock, Ordered, ReorderLevel);
             } else if (selectedView === 'nearExpiry') {
                 hasItems = true;
                 appendNearExpiryRow(lowStockItemsBody, BrandName, GenericName, ExpiryDate, DaysToExpiry);
+            } else if (selectedView === 'Overstock') {
+                hasItems = true;
+                appendOverStock(lowStockItemsBody, BrandName, GenericName, InStock, ExcessStock);
             }
         });
 
         if (!hasItems) {
-            lowStockItemsBody.innerHTML = `<tr><td colspan="${selectedView === 'lowStock' ? '6' : '4'}">All items are sufficiently stocked or not near expiry.</td></tr>`;
+            lowStockItemsBody.innerHTML = `<tr><td colspan="${selectedView === 'lowStock' || selectedView === 'Overstock' ? '6' : '4'}">All items are sufficiently stocked or not near expiry.</td></tr>`;
         }
     } else {
-        lowStockItemsBody.innerHTML = `<tr><td colspan="${selectedView === 'lowStock' ? '6' : '4'}">No items found.</td></tr>`;
+        lowStockItemsBody.innerHTML = `<tr><td colspan="${selectedView === 'lowStock' || selectedView === 'Overstock' ? '6' : '4'}">No items found.</td></tr>`;
     }
 }
 function checkNearExpiry() {
@@ -723,6 +741,48 @@ function checkNearExpiry() {
     });
 }
 
+function checkOverStock() {
+    $.ajax({
+        url: 'checkOverStock.php',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            const lowStockItemsBody = document.getElementById('lowStockItemsBody');
+            lowStockItemsBody.innerHTML = ''; // Clear previous items
+
+            // Check for errors in the response
+            if (data.error) {
+                console.error("Error: " + data.error);
+                lowStockItemsBody.innerHTML = `<tr><td colspan="4">Error retrieving overstock items.</td></tr>`;
+                return;
+            }
+
+            // Populate overstock items
+            if (data.length > 0) {
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="table-row" style="padding-left: 10px">${truncateText(item.BrandName, 20)}</td>
+                        <td class="table-row" style="padding-left: 20px;">${truncateText(item.GenericName, 20)}</td>
+                        <td class="table-row" style="padding-left: 10px;">${item.InStock}</td>
+                        <td class="table-row" style="padding-left: 10px;">${item.ExcessStock}</td>
+                    `;
+                    lowStockItemsBody.appendChild(row);
+                });
+            } else {
+                lowStockItemsBody.innerHTML = `<tr><td colspan="4">No items with excess stock.</td></tr>`;
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("AJAX Error: " + error);
+            const lowStockItemsBody = document.getElementById('lowStockItemsBody');
+            lowStockItemsBody.innerHTML = `<tr><td colspan="4">Error connecting to server.</td></tr>`;
+            openModal(); // Ensure the modal opens even on error
+        }
+    });
+}
+
+
 function shouldDisplayLowStock(inStock, ordered) {
     const reorderLevel = Math.floor(ordered / 2); // Set reorder level to half of the ordered amount
     return parseInt(inStock, 10) <= reorderLevel; // Returns true if in stock is below or equal to reorder level
@@ -750,6 +810,18 @@ function appendNearExpiryRow(lowStockItemsBody, BrandName, GenericName, ExpiryDa
     `;
     lowStockItemsBody.appendChild(row);
 }
+
+function appendOverStock(overStockItemsBody, BrandName, GenericName, InStock, ExcessStock) {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td class="table-row">${truncateText(BrandName, 20)}</td>
+        <td class="table-row">${truncateText(GenericName, 20)}</td>
+        <td class="table-row">${InStock}</td>
+        <td class="table-row">${ExcessStock}</td>
+    `;
+    overStockItemsBody.appendChild(row);
+}
+
 
 // function calculateEOQ(totalSold) {
 //     if (totalSold <= 0) return 0; // Return 0 if no sales
@@ -828,6 +900,16 @@ function updateTableView() {
 
         // Populate table with near expiry data
         checkNearExpiry();
+    } else if (selectedView === "Overstock") {
+        // Set headers for Overstock Items view
+        tableHeader.innerHTML = `
+            <th style="text-align: left; padding: 8px;">Brand Name</th>
+            <th style="text-align: left; padding: 8px;">Generic Name</th>
+            <th style="text-align: left; padding: 8px;">In Stock</th>
+            <th style="text-align: left; padding: 8px;">Excess Stock</th>
+        `;
+        // Populate table with overstock data via AJAX
+        checkOverStock(); // Make sure you have a function for this
     }
 }
 
@@ -1443,4 +1525,90 @@ document.addEventListener('DOMContentLoaded', function () {
             lowStockButton.click();
         }
     }
+});
+
+//Markup Adjust
+const overlayMarkup = document.getElementById('overlayMarkup');
+
+function closeMU() {
+    overlayMarkup.style.display = 'none';
+}
+
+document.getElementById('MarkupBtn').addEventListener('click', function () {
+    openMarkupModal(1);
+    overlayMarkup.style.display = 'flex';
+})
+
+let originalMarkup = 0; // Store the original markup for comparison
+
+// Function to open the modal and load current markup
+function openMarkupModal(itemID) {
+    // Fetch current markup from the server
+    fetch(`getsetMarkup.php?itemID=${itemID}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                originalMarkup = data.markup * 100; // Convert to percentage form
+                document.getElementById('markupInput').value = originalMarkup;
+                document.getElementById('confirmMU').disabled = true; // Initially disable confirm button
+            } else {
+                const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+                document.getElementById('modalVerifyTitle').textContent = 'Error';
+                document.getElementById('modalVerifyText').textContent = 'Failed to retrieve markup.';
+                confirmationModal.show();
+            }
+        })
+        .catch(error => console.error('Error:', error));
+
+    document.getElementById('overlayMarkup').style.display = 'block';
+}
+
+// Function to close the modal
+function closeMU() {
+    document.getElementById('overlayMarkup').style.display = 'none';
+}
+
+// Enable confirm button only if the input is valid and changed
+document.getElementById('markupInput').addEventListener('input', function () {
+    const markupValue = parseInt(this.value, 10);
+    const isValidMarkup = markupValue >= 1 && markupValue <= 100 && markupValue !== originalMarkup;
+    document.getElementById('confirmMU').disabled = !isValidMarkup;
+});
+
+// Confirm button click event
+document.getElementById('confirmMU').addEventListener('click', function () {
+    const newMarkup = parseFloat(document.getElementById('markupInput').value) / 100; // Convert to decimal
+
+    // Update markup in the server
+    fetch('getsetMarkup.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemID: itemID, markup: newMarkup, oldmarkup: originalMarkup})
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+                document.getElementById('btnmodalclosedisappearpls').style.display = 'none';
+                document.getElementById('modalVerifyTitle').textContent = 'Success';
+                document.getElementById('modalVerifyText').textContent = 'Prices successfully updated.';
+                confirmationModal.show();
+                closeMU();
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = 'inventory.php'; // Redirect to inventory.php
+                }, 1000);
+            } else {
+                const confirmationModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+                document.getElementById('btnmodalclosedisappearpls').style.display = 'none';
+                document.getElementById('modalVerifyTitle').textContent = 'Error';
+                document.getElementById('modalVerifyText').textContent = 'Failed to update markup.';
+                confirmationModal.show();
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = 'inventory.php'; // Redirect to inventory.php
+                }, 1000);
+            }
+        })
+        .catch(error => console.error('Error:', error));
 });
