@@ -229,14 +229,19 @@
             <div class="col-xxl-6 col-md-6">
                 <div class="card info-card sales-card">
                     <div class="filter">
+                        <button id="Table View" style="margin-right: 15px" type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#InventoryReportModal">
+                            <i class="bi bi-file-earmark-pdf"> Table View</i>
+                        </button>
                         <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                             <li class="dropdown-header text-start">
                                 <h6>Filter</h6>
                             </li>
-                            <li><a class="dropdown-item-inv" href="#" data-status="low-stock">Low Stock</a></li>                                                        
-                            <li><a class="dropdown-item-inv" href="#" data-status="out-of-stock">Out of Stock</a></li>
                             <li><a class="dropdown-item-inv" href="#" data-status="in-stock">In Stock</a></li>
+                            <li><a class="dropdown-item-inv" href="#" data-status="low-stock">Low Stock</a></li> 
+                            <li><a class="dropdown-item-inv" href="#" data-status="overstock">Overstock</a></li>                                                       
+                            <li><a class="dropdown-item-inv" href="#" data-status="out-of-stock">Out of Stock</a></li>
+                            <li><a class="dropdown-item-inv" href="#" data-status="near-expiry">Near Expiry</a></li>
                         </ul>
                     </div>
 
@@ -620,6 +625,10 @@
         max-height: 500px; 
         overflow-y: auto; 
       }
+      .datatable_report_inv {
+        max-height: 500px; 
+        overflow-y: auto; 
+      }
     </style>
     
     <!-- Reports Table Modal -->
@@ -643,7 +652,7 @@
                         <th>Transaction Type</th>
                         <th>Items</th>
                         <th>Quantities</th>
-                        <th>Net Amount</th>
+                        <th>Total Price</th>
                       </tr>
                     </thead>
                     <tbody id="today-tableBody">
@@ -664,7 +673,7 @@
                         <th>Transaction Type</th>
                         <th>Items</th>
                         <th>Quantities</th>
-                        <th>Net Amount</th>
+                        <th>Total Price</th>
                       </tr>
                     </thead>
                     <tbody id="month-tableBody">
@@ -685,7 +694,7 @@
                         <th>Transaction Type</th>
                         <th>Items</th>
                         <th>Quantities</th>
-                        <th>Net Amount</th>
+                        <th>Total Price</th>
                       </tr>
                     </thead>
                     <tbody id="year-tableBody">
@@ -800,6 +809,219 @@
         </div>
       </div>
     </div>
+
+    <!-- Inventory Reports Modal -->
+    <div class="modal fade" id="InventoryReportModal" tabindex="-1">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Inventory Reports</h5>
+          </div>
+          <div class="modal-body">
+
+            <div class="container datatable_report_inv">
+              
+              <!-- In Stock Items Report -->
+              <h2>In Stock Items</h2>
+              <div class="card">
+                <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
+                  <table id="in-stock-example" class="display" style="width:100%">
+                    <thead>
+                      <tr class="highlight-row">
+                        <th>Item ID</th>
+                        <th>Brand Name</th>
+                        <th>Generic Name</th>
+                        <th>In Stock</th>
+                      </tr>
+                    </thead>
+                    <tbody id="in-stock-tableBody">
+                      <!-- Data rows will be inserted here by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Low Stock Items Report -->
+              <h2>Low Stock Items</h2>
+              <div class="card">
+                <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
+                  <table id="low-stock-example" class="display" style="width:100%">
+                    <thead>
+                      <tr class="highlight-row">
+                        <th>Item ID</th>
+                        <th>Brand Name</th>
+                        <th>Generic Name</th>
+                        <th>In Stock</th>
+                        <th>Reorder Level</th>
+                      </tr>
+                    </thead>
+                    <tbody id="low-stock-tableBody">
+                      <!-- Data rows will be inserted here by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Overstock Items Report -->
+              <h2>Overstock Items</h2>
+              <div class="card">
+                <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
+                  <table id="overstock-example" class="display" style="width:100%">
+                    <thead>
+                      <tr class="highlight-row">
+                        <th>Item ID</th>
+                        <th>Brand Name</th>
+                        <th>Generic Name</th>
+                        <th>In Stock</th>
+                        <th>Reorder Level</th>
+                        <th>Excess Stock</th>
+                      </tr>
+                    </thead>
+                    <tbody id="overstock-tableBody">
+                      <!-- Data rows will be inserted here by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Out of Stock Items Report -->
+              <h2>Out of Stock Items</h2>
+              <div class="card">
+                <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
+                  <table id="out-of-stock-example" class="display" style="width:100%">
+                    <thead>
+                      <tr class="highlight-row">
+                        <th>Item ID</th>
+                        <th>Brand Name</th>
+                        <th>Generic Name</th>
+                      </tr>
+                    </thead>
+                    <tbody id="out-of-stock-tableBody">
+                      <!-- Data rows will be inserted here by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Near Expiry Items Report -->
+              <h2>Near Expiry Items</h2>
+              <div class="card">
+                <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
+                  <table id="near-expiry-example" class="display" style="width:100%">
+                    <thead>
+                      <tr class="highlight-row">
+                        <th>Item ID</th>
+                        <th>Brand Name</th>
+                        <th>Generic Name</th>
+                        <th>Expiry Date</th>
+                        <th>Lot Number</th>
+                      </tr>
+                    </thead>
+                    <tbody id="near-expiry-tableBody">
+                      <!-- Data rows will be inserted here by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button id="export_PDF_inv" type="button" class="btn btn-primary">Export to PDF</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function() {
+
+        // Fetch and display In Stock Items
+        $('#in-stock-example').DataTable({
+          "ajax": {
+            "url": "fetchInventoryReports.php?report=in-stock", // Fetch In Stock Items from the PHP file
+            "dataSrc": ""
+          },
+          "columns": [
+            { "data": "ItemID" },
+            { "data": "BrandName" },
+            { "data": "GenericName" },
+            { "data": "InStock" }  // InStock column
+          ],
+          "paging": false,
+          "searching": false
+        });
+
+        // Fetch and display Low Stock Items
+        $('#low-stock-example').DataTable({
+          "ajax": {
+            "url": "fetchInventoryReports.php?report=low-stock",
+            "dataSrc": ""
+          },
+          "columns": [
+            { "data": "ItemID" },
+            { "data": "BrandName" },
+            { "data": "GenericName" },
+            { "data": "InStock" },
+            { "data": "ReorderLevel" }
+          ],
+          "paging": false, // Disable pagination
+          "searching": false // Disable search
+        });
+
+        // Fetch and display Overstock Items
+        $('#overstock-example').DataTable({
+          "ajax": {
+            "url": "fetchInventoryReports.php?report=overstock",
+            "dataSrc": ""
+          },
+          "columns": [
+            { "data": "ItemID" },
+            { "data": "BrandName" },
+            { "data": "GenericName" },
+            { "data": "InStock" },
+            { "data": "ReorderLevel" },
+            { "data": "ExcessStock" }
+          ],
+          "paging": false, // Disable pagination
+          "searching": false // Disable search
+        });
+
+        // Fetch and display Out of Stock Items
+        $('#out-of-stock-example').DataTable({
+          "ajax": {
+            "url": "fetchInventoryReports.php?report=out-of-stock",
+            "dataSrc": ""
+          },
+          "columns": [
+            { "data": "ItemID" },
+            { "data": "BrandName" },
+            { "data": "GenericName" }
+          ],
+          "paging": false, // Disable pagination
+          "searching": false // Disable search
+        });
+
+        // Fetch and display Near Expiry Items
+        $('#near-expiry-example').DataTable({
+          "ajax": {
+            "url": "fetchInventoryReports.php?report=near-expiry",
+            "dataSrc": ""
+          },
+          "columns": [
+            { "data": "ItemID" },
+            { "data": "BrandName" },
+            { "data": "GenericName" },
+            { "data": "ExpiryDate" },
+            { "data": "LotNumber" }
+          ],
+          "paging": false, // Disable pagination
+          "searching": false // Disable search
+        });
+      });
+    </script>
 
   </main><!-- End #main -->
 

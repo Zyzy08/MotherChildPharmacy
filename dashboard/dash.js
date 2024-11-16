@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const statusText = document.getElementById('status-text');
     const statusIcon = document.getElementById('status-icon');
     const statusDescription = document.getElementById('status-description');
-    let currentStatus = 'low-stock';
+    let currentStatus = 'in-stock';
 
     const statusConfigs = {
         'in-stock': {
@@ -128,21 +128,35 @@ document.addEventListener('DOMContentLoaded', function () {
             textClass: 'text-warning',
             description: 'Low-Stock Items'
         },
+        'overstock': {
+            icon: 'bi-arrow-up-circle',
+            iconClass: 'text-info',
+            bgClass: 'bg-info-light',
+            textClass: 'text-info',
+            description: 'Overstock Items'
+        },
         'out-of-stock': {
             icon: 'bi-x-circle',
             iconClass: 'text-danger',
             bgClass: 'bg-danger-light',
             textClass: 'text-danger',
             description: 'Out-of-Stock Items'
+        },
+        'near-expiry': {
+            icon: 'bi-clock',
+            iconClass: 'text-secondary',
+            bgClass: 'bg-secondary-light',
+            textClass: 'text-secondary',
+            description: 'Near Expiry Items'
         }
     };
 
     function updateCardAppearance(status) {
         const config = statusConfigs[status];
+        let inventoryLink = "../inventory/inventory.php";
+
         if (status === 'low-stock') {
             inventoryLink = "../inventory/inventory.php?trigger=lowStock";
-        } else {
-            inventoryLink = "../inventory/inventory.php";
         }
 
         // Update icon
@@ -362,8 +376,74 @@ document.getElementById("export_PDF").addEventListener("click", function() {
         }
     });
 
+    // Get today's date in the format YYYY-MM-DD
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0]; // Formats date as YYYY-MM-DD
+
     // Use html2pdf to generate the PDF from the temporary container
     html2pdf()
         .from(container)
-        .save('Sales_Report.pdf');  // You can specify the file name here
+        .save(`Sales_Report_${formattedDate}.pdf`);  // File name with today's date
+
+});
+
+document.getElementById("export_PDF_inv").addEventListener("click", function() {
+    // Create a temporary container to hold all the tables
+    const container = document.createElement('div');
+    
+    // Grab all the tables inside the container
+    const tables = document.querySelectorAll('.datatable_report_inv table');
+    
+    // Define custom titles for each section
+    const titles = [
+        "In Stock Items",
+        "Low Stock Items",  
+        "Overstock Items", 
+        "Out of Stock Items",
+        "Near Expiry Items"
+    ];
+
+    // Add a title for each table
+    tables.forEach(function(table, index) {
+        // Create a title for each table (using the defined titles array)
+        const title = document.createElement('h2');
+        title.textContent = titles[index];  // Use the title from the array
+        title.style.textAlign = 'center';  // Center align the title
+        title.style.marginBottom = '10px';  // Space below the title
+        container.appendChild(title);
+        
+        // Clone the table to avoid affecting the DOM and append it
+        const clone = table.cloneNode(true);
+        
+        // Apply table styling to shrink it slightly
+        clone.style.width = '90%';  // Reduce the width to 90% of the container
+        clone.style.margin = '0 auto';  // Center the table horizontally
+        clone.style.fontSize = '0.9em';  // Reduce the font size slightly
+        clone.style.borderCollapse = 'collapse';  // Collapse borders for a more compact look
+        
+        // Apply padding to cells to reduce spacing
+        const cells = clone.querySelectorAll('td, th');
+        cells.forEach(cell => {
+            cell.style.padding = '8px';  // Reduce padding for a smaller table
+        });
+
+        container.appendChild(clone);
+        
+        // Add a separator after each table, except the last one
+        if (index < tables.length - 1) {
+            const separator = document.createElement('hr');
+            separator.style.border = '1px solid #ccc';  // Style the separator
+            separator.style.margin = '20px 0';  // Space above and below the separator
+            container.appendChild(separator);
+        }
+    });
+
+    // Get today's date in the format YYYY-MM-DD
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0]; // Formats date as YYYY-MM-DD
+
+    // Use html2pdf to generate the PDF from the temporary container
+    html2pdf()
+        .from(container)
+        .save(`Inventory_Report_${formattedDate}.pdf`);  // File name with today's date
 });

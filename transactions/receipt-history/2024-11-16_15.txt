@@ -1,0 +1,27 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+2   Neozep Forte Pheny... P14.70
+--------------------------------
+Total Items:                 2
+Subtotal:               P14.70
+Tax 12%:                 P1.58
+Refund Amount:           P7.35
+Amount Due:              P7.35
+Payment:                 P8.00
+Change:                  P0.65
+--------------------------------
+Order No.:                 #15
+Date:      2024-11-16 23:37:42
+Status:        Return/Exchange
+Staff:           Sayra Jackson
+                                
+  Thank you for your purchase!
+
+                                
+
+                                
