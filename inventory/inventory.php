@@ -591,40 +591,36 @@
             </div>
 
             <div class="textbox" style="margin-top: 10px;">
-              <label class="label" style="margin-right: 182px;" for="QuantityRemaining">Lot Stock</label>
-              <label class="label" for="Orderedd">Total Ordered</label>
-            </div>
-
-            <div class="textbox" style="margin-bottom: 15px;">
-
-
-              <input style="margin-right: 25px;" type="text" id="QuantityRemaining" name="QuantityRemaining" disabled
-                autocomplete="off">
-              <input type="text" id="orderedAmount" name="orderedAmount" disabled autocomplete="off">
-            </div>
-
-            <hr style="margin-bottom: 10px;">
-
-            <div class="textbox" style="margin-bottom: 10px;">
+              <label class="label" style="margin-right: 180px;" for="QuantityRemaining">Lot Stock</label>
               <label class="label" for="Quantity">Quantity: </label>
-              <input style="margin-right: 10px;" type="text" id="Quantity" name="Quantity" placeholder="Enter Quantity"
+             
+            </div>
+
+            <div class="textbox" style="margin-bottom: 15px; display: flex; align-items: center; margin-bottom: 30px">
+              <input style="width: 150px; margin-right: 10px;" 
+                    type="text" 
+                    id="QuantityRemaining" 
+                    name="QuantityRemaining" 
+                    disabled>
+
+              <input type="text" 
+                id="Quantity" 
+                name="Quantity" 
+                placeholder="Enter Quantity"
+                pattern="[0-9]*" 
+                inputmode="numeric"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
                 required>
-              <button style="margin-right: 5px;" class="add" id="ToggleAdd" type="button">+</button>
-              <button class="sub" id="ToggleSub" type="button">-</button>
             </div>
+            
 
-            <div class="textbox" style="margin-bottom: 10px;">
-              <label class="label" for="Reason">Reason</label>
-            </div>
+            <hr style="margin-bottom: 20px;">
 
-            <div class="textbox" style="margin-bottom: 15px;">
-              <textarea id="Reason" name="Reason" placeholder="Enter reason here..."
-                style="width: 100%; box-sizing: border-box; height: 100px; resize: none; vertical-align: top;"
-                required></textarea>
-            </div>
+     
 
-            <hr>
-
+            
+      
+          
             <!-- Button of update -->
             <div class="button-container">
               <button id="cancelBtn" type="button" onclick="closeEditOverlay()">Cancel</button>
