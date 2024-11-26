@@ -270,6 +270,7 @@
                       <h6>Filter</h6>
                     </li>
                     <li><a class="dropdown-item" href="#" data-period="today">Today</a></li>
+                    <li><a class="dropdown-item" href="#" data-period="week">This Week</a></li>
                     <li><a class="dropdown-item" href="#" data-period="month">This Month</a></li>
                     <li><a class="dropdown-item" href="#" data-period="year">This Year</a></li>
                   </ul>
@@ -301,6 +302,7 @@
                       <h6>Filter</h6>
                     </li>
                     <li><a class="dropdown-item" href="#" data-period="today">Today</a></li>
+                    <li><a class="dropdown-item" href="#" data-period="week">This Week</a></li>
                     <li><a class="dropdown-item" href="#" data-period="month">This Month</a></li>
                     <li><a class="dropdown-item" href="#" data-period="year">This Year</a></li>
                   </ul>
@@ -335,6 +337,7 @@
                       <h6>Filter</h6>
                     </li>
                     <li><a class="dropdown-item" href="#" data-period="today">Today</a></li>
+                    <li><a class="dropdown-item" href="#" data-period="week">This Week</a></li>
                     <li><a class="dropdown-item" href="#" data-period="month">This Month</a></li>
                     <li><a class="dropdown-item" href="#" data-period="year">This Year</a></li>
                   </ul>
@@ -639,10 +642,24 @@
             <h5 class="modal-title">Reports Data</h5>
           </div>
           <div class="modal-body">
-
             <div class="container datatable_report">
-              <h2>Today's Sales</h2>
-              <div class="card">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex gap-2">
+                  <select id="firstFilter" class="form-select w-25">
+                    <option value="all">All</option>
+                    <option value="today">Today</option>
+                    <option value="week">Week</option>
+                    <option value="month">Month</option>
+                    <option value="year">Year</option>
+                  </select>
+                  <select id="secondFilter" class="form-select w-25">
+                    <option value="--:--">--:--</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="card" id="today-card">
+                <h2>Today's Sales</h2>
                 <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
                   <table id="today-example" class="display" style="width:100%">
                     <thead>
@@ -662,8 +679,29 @@
                 </div>
               </div>
 
-              <h2>This Month's Sales</h2>
-              <div class="card">
+              <div class="card" id="week-card">
+                <h2>This Week's Sales</h2>
+                <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
+                  <table id="week-example" class="display" style="width:100%">
+                    <thead>
+                      <tr class="highlight-row">
+                        <th>Invoice ID</th>
+                        <th>Sale Date</th>
+                        <th>Transaction Type</th>
+                        <th>Items</th>
+                        <th>Quantities</th>
+                        <th>Total Price</th>
+                      </tr>
+                    </thead>
+                    <tbody id="week-tableBody">
+                      <!-- Data rows will be inserted here by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="card" id="month-card">
+                <h2>This Month's Sales</h2>
                 <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
                   <table id="month-example" class="display" style="width:100%">
                     <thead>
@@ -683,8 +721,8 @@
                 </div>
               </div>
 
-              <h2>This Year's Sales</h2>
-              <div class="card">
+              <div class="card" id="year-card">
+                <h2>This Year's Sales</h2>
                 <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
                   <table id="year-example" class="display" style="width:100%">
                     <thead>
@@ -703,104 +741,166 @@
                   </table>
                 </div>
               </div>
+
             </div>
 
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
             <script>
-              $(document).ready(function() {
-                // Today's Sales
-                $('#today-example').DataTable({
-                  "ajax": {
-                    "url": "fetchTodaySales.php?period=today",
-                    "dataSrc": ""
-                  },
-                  "columns": [
-                    { "data": "InvoiceID" },
-                    { "data": "SaleDate" },
-                    { "data": "TransactionType" },
-                    { "data": "Items" },
-                    { "data": "Quantities" },
-                    { "data": "NetAmount" }
-                  ],
-                  "columnDefs": [
-                    {
-                      "targets": [3, 4],
-                      "className": "text-wrap"
-                    },
-                    {
-                      "targets": 5,
-                      "render": function(data, type, row) {
-                        return "₱" + data.toFixed(2);
-                      }
-                    }
-                  ],
-                  "paging": false, // Disable pagination
-                  "searching": false // Disable search
+              $(document).ready(function () {
+                const filterTables = {
+                  today: '#today-example',
+                  week: '#week-example',
+                  month: '#month-example',
+                  year: '#year-example'
+                };
+
+                const secondFilterOptions = {
+                  today: ["--:--"], 
+                  week: ["--:--", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                  month: ["--:--", "January", "February", "March", "April", "May", "June", 
+                          "July", "August", "September", "October", "November", "December"],
+                  year: ["--:--", new Date().getFullYear(), new Date().getFullYear() - 1, new Date().getFullYear() - 2]
+                };
+
+                // Change first filter
+                $('#firstFilter').on('change', function () {
+                  const selectedFilter = $(this).val();
+                  const secondFilter = $('#secondFilter');
+
+                  // Update second filter options
+                  secondFilter.empty(); // Clear existing options
+                  const options = secondFilterOptions[selectedFilter] || ["--:--"];
+                  options.forEach(option => {
+                    secondFilter.append(new Option(option, option));
+                  });
+
+                  // Hide all cards initially
+                  Object.keys(filterTables).forEach(key => {
+                    $(`#${key}-card`).hide();
+                  });
+
+                  // Show all cards if 'all' is selected
+                  if (selectedFilter === 'all') {
+                    Object.keys(filterTables).forEach(key => {
+                      $(`#${key}-card`).show();
+                      $(`#${key}-card h2`).show(); // Show all h2 titles
+                    });
+
+                    // Load data for all tables
+                    loadTableData('today');
+                    loadTableData('week');
+                    loadTableData('month');
+                    loadTableData('year');
+                  } else {
+                    $(`#${selectedFilter}-card`).show();
+                    loadTableData(selectedFilter);
+                  }
                 });
 
-                // This Month's Sales
-                $('#month-example').DataTable({
-                  "ajax": {
-                    "url": "fetchTodaySales.php?period=month",
-                    "dataSrc": ""
-                  },
-                  "columns": [
-                    { "data": "InvoiceID" },
-                    { "data": "SaleDate" },
-                    { "data": "TransactionType" },
-                    { "data": "Items" },
-                    { "data": "Quantities" },
-                    { "data": "NetAmount" }
-                  ],
-                  "columnDefs": [
-                    {
-                      "targets": [3, 4],
-                      "className": "text-wrap"
-                    },
-                    {
-                      "targets": 5,
-                      "render": function(data, type, row) {
-                        return "₱" + data.toFixed(2);
-                      }
+                // Change second filter
+                $('#secondFilter').on('change', function () {
+                  const selectedFilter = $('#firstFilter').val();
+                  const selectedSecondFilter = $(this).val();
+
+                  // Toggle h2 visibility based on second filter
+                  const periodCardSelector = `#${selectedFilter}-card h2`;
+                  if (selectedSecondFilter === "--:--") {
+                    $(periodCardSelector).show();
+                  } else {
+                    $(periodCardSelector).hide();
+                  }
+
+                  // Only apply additional filtering if a specific value is selected (not "--:--")
+                  if (selectedSecondFilter !== "--:--") {
+                    if (selectedFilter === 'week') {
+                      // For week, filter by specific day
+                      loadTableData(selectedFilter, selectedSecondFilter);
+                    } else if (selectedFilter === 'month') {
+                      // For month, filter by specific month
+                      loadTableData(selectedFilter, selectedSecondFilter);
+                    } else if (selectedFilter === 'year') {
+                      // For year, filter by specific year
+                      loadTableData(selectedFilter, selectedSecondFilter);
                     }
-                  ],
-                  "paging": false, // Disable pagination
-                  "searching": false // Disable search
+                  } else {
+                    // If "--:--" is selected, reload the default data for the period
+                    loadTableData(selectedFilter);
+                  }
                 });
 
-                // This Year's Sales
-                $('#year-example').DataTable({
-                  "ajax": {
-                    "url": "fetchTodaySales.php?period=year",
-                    "dataSrc": ""
-                  },
-                  "columns": [
-                    { "data": "InvoiceID" },
-                    { "data": "SaleDate" },
-                    { "data": "TransactionType" },
-                    { "data": "Items" },
-                    { "data": "Quantities" },
-                    { "data": "NetAmount" }
-                  ],
-                  "columnDefs": [
-                    {
-                      "targets": [3, 4],
-                      "className": "text-wrap"
-                    },
-                    {
-                      "targets": 5,
-                      "render": function(data, type, row) {
-                        return "₱" + data.toFixed(2);
+                // Initially trigger first filter change
+                $('#firstFilter').trigger('change');
+
+                // Function to load table data based on selected filter
+                function loadTableData(period, secondFilterValue = null) {
+                  const tableConfig = {
+                    today: 'fetchTodaySales.php?period=today',
+                    week: 'fetchTodaySales.php?period=week' + (secondFilterValue && secondFilterValue !== "--:--" ? `&day=${secondFilterValue}` : ''),
+                    month: 'fetchTodaySales.php?period=month' + (secondFilterValue && secondFilterValue !== "--:--" ? `&month=${secondFilterValue}` : ''),
+                    year: 'fetchTodaySales.php?period=year' + (secondFilterValue && secondFilterValue !== "--:--" ? `&year=${secondFilterValue}` : '')
+                  };
+
+                  const selectedTable = filterTables[period];
+                  const selectedTableBody = `${selectedTable} tbody`;
+                  const totalRowId = `${period}-total-row`;
+
+                  // Destroy DataTable if it exists
+                  if ($.fn.DataTable.isDataTable(selectedTable)) {
+                    $(selectedTable).DataTable().clear().destroy();
+                  }
+
+                  // Initialize DataTable for the selected table
+                  const dataTable = $(selectedTable).DataTable({
+                    "ajax": {
+                      "url": tableConfig[period],
+                      "dataSrc": "",
+                      "complete": function(xhr) {
+                        // Calculate total after data is loaded
+                        const data = xhr.responseJSON;
+                        const total = data.reduce((sum, row) => sum + row.NetAmount, 0);
+                        
+                        // Remove existing total row if it exists
+                        $(`#${totalRowId}`).remove();
+                        
+                        // Append total row
+                        $(selectedTableBody).append(`
+                          <tr id="${totalRowId}" style="font-weight: bold; background-color: #f2f2f2;">
+                            <td colspan="4">Total Sales</td>
+                            <td></td>
+                            <td>₱${total.toFixed(2)}</td>
+                          </tr>
+                        `);
                       }
-                    }
-                  ],
-                  "paging": false, // Disable pagination
-                  "searching": false // Disable search
-                });
+                    },
+                    "columns": [
+                      { "data": "InvoiceID" },
+                      { "data": "SaleDate" },
+                      { "data": "TransactionType" },
+                      { "data": "Items" },
+                      { "data": "Quantities" },
+                      { "data": "NetAmount" }
+                    ],
+                    "columnDefs": [
+                      {
+                        "targets": [3, 4],
+                        "className": "text-wrap"
+                      },
+                      {
+                        "targets": 5,
+                        "render": function (data) {
+                          return "₱" + data.toFixed(2);
+                        }
+                      }
+                    ],
+                    "paging": false,
+                    "searching": false,
+                    "ordering": false
+                  });
+                }
               });
             </script>
-            
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -818,12 +918,21 @@
             <h5 class="modal-title">Inventory Reports</h5>
           </div>
           <div class="modal-body">
-
             <div class="container datatable_report_inv">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex gap-2">
+                  <select id="firstFilter" class="form-select w-25">
+                    <option value="today">Today</option>
+                    <option value="week">Week</option>
+                    <option value="month">Month</option>
+                    <option value="year">Year</option>
+                  </select>
+                </div>
+              </div>
               
               <!-- In Stock Items Report -->
-              <h2>In Stock Items</h2>
               <div class="card">
+                <h2>In Stock Items</h2>
                 <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
                   <table id="in-stock-example" class="display" style="width:100%">
                     <thead>
@@ -842,8 +951,8 @@
               </div>
 
               <!-- Low Stock Items Report -->
-              <h2>Low Stock Items</h2>
               <div class="card">
+                <h2>Low Stock Items</h2>
                 <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
                   <table id="low-stock-example" class="display" style="width:100%">
                     <thead>
@@ -863,8 +972,8 @@
               </div>
 
               <!-- Overstock Items Report -->
-              <h2>Overstock Items</h2>
               <div class="card">
+                <h2>Overstock Items</h2>
                 <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
                   <table id="overstock-example" class="display" style="width:100%">
                     <thead>
@@ -885,8 +994,8 @@
               </div>
 
               <!-- Out of Stock Items Report -->
-              <h2>Out of Stock Items</h2>
               <div class="card">
+                <h2>Out of Stock Items</h2>
                 <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
                   <table id="out-of-stock-example" class="display" style="width:100%">
                     <thead>
@@ -904,8 +1013,8 @@
               </div>
 
               <!-- Near Expiry Items Report -->
-              <h2>Near Expiry Items</h2>
               <div class="card">
+                <h2>Near Expiry Items</h2>
                 <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
                   <table id="near-expiry-example" class="display" style="width:100%">
                     <thead>
@@ -923,8 +1032,95 @@
                   </table>
                 </div>
               </div>
-
             </div>
+
+            <script>
+              $(document).ready(function() {
+
+                // Fetch and display In Stock Items
+                $('#in-stock-example').DataTable({
+                  "ajax": {
+                    "url": "fetchInventoryReports.php?report=in-stock", // Fetch In Stock Items from the PHP file
+                    "dataSrc": ""
+                  },
+                  "columns": [
+                    { "data": "ItemID" },
+                    { "data": "BrandName" },
+                    { "data": "GenericName" },
+                    { "data": "InStock" }  // InStock column
+                  ],
+                  "paging": false,
+                  "searching": false
+                });
+
+                // Fetch and display Low Stock Items
+                $('#low-stock-example').DataTable({
+                  "ajax": {
+                    "url": "fetchInventoryReports.php?report=low-stock",
+                    "dataSrc": ""
+                  },
+                  "columns": [
+                    { "data": "ItemID" },
+                    { "data": "BrandName" },
+                    { "data": "GenericName" },
+                    { "data": "InStock" },
+                    { "data": "ReorderLevel" }
+                  ],
+                  "paging": false, // Disable pagination
+                  "searching": false // Disable search
+                });
+
+                // Fetch and display Overstock Items
+                $('#overstock-example').DataTable({
+                  "ajax": {
+                    "url": "fetchInventoryReports.php?report=overstock",
+                    "dataSrc": ""
+                  },
+                  "columns": [
+                    { "data": "ItemID" },
+                    { "data": "BrandName" },
+                    { "data": "GenericName" },
+                    { "data": "InStock" },
+                    { "data": "ReorderLevel" },
+                    { "data": "ExcessStock" }
+                  ],
+                  "paging": false, // Disable pagination
+                  "searching": false // Disable search
+                });
+
+                // Fetch and display Out of Stock Items
+                $('#out-of-stock-example').DataTable({
+                  "ajax": {
+                    "url": "fetchInventoryReports.php?report=out-of-stock",
+                    "dataSrc": ""
+                  },
+                  "columns": [
+                    { "data": "ItemID" },
+                    { "data": "BrandName" },
+                    { "data": "GenericName" }
+                  ],
+                  "paging": false, // Disable pagination
+                  "searching": false // Disable search
+                });
+
+                // Fetch and display Near Expiry Items
+                $('#near-expiry-example').DataTable({
+                  "ajax": {
+                    "url": "fetchInventoryReports.php?report=near-expiry",
+                    "dataSrc": ""
+                  },
+                  "columns": [
+                    { "data": "ItemID" },
+                    { "data": "BrandName" },
+                    { "data": "GenericName" },
+                    { "data": "ExpiryDate" },
+                    { "data": "LotNumber" }
+                  ],
+                  "paging": false, // Disable pagination
+                  "searching": false // Disable search
+                });
+              });
+            </script>
 
           </div>
           <div class="modal-footer">
@@ -934,94 +1130,6 @@
         </div>
       </div>
     </div>
-
-    <script>
-      $(document).ready(function() {
-
-        // Fetch and display In Stock Items
-        $('#in-stock-example').DataTable({
-          "ajax": {
-            "url": "fetchInventoryReports.php?report=in-stock", // Fetch In Stock Items from the PHP file
-            "dataSrc": ""
-          },
-          "columns": [
-            { "data": "ItemID" },
-            { "data": "BrandName" },
-            { "data": "GenericName" },
-            { "data": "InStock" }  // InStock column
-          ],
-          "paging": false,
-          "searching": false
-        });
-
-        // Fetch and display Low Stock Items
-        $('#low-stock-example').DataTable({
-          "ajax": {
-            "url": "fetchInventoryReports.php?report=low-stock",
-            "dataSrc": ""
-          },
-          "columns": [
-            { "data": "ItemID" },
-            { "data": "BrandName" },
-            { "data": "GenericName" },
-            { "data": "InStock" },
-            { "data": "ReorderLevel" }
-          ],
-          "paging": false, // Disable pagination
-          "searching": false // Disable search
-        });
-
-        // Fetch and display Overstock Items
-        $('#overstock-example').DataTable({
-          "ajax": {
-            "url": "fetchInventoryReports.php?report=overstock",
-            "dataSrc": ""
-          },
-          "columns": [
-            { "data": "ItemID" },
-            { "data": "BrandName" },
-            { "data": "GenericName" },
-            { "data": "InStock" },
-            { "data": "ReorderLevel" },
-            { "data": "ExcessStock" }
-          ],
-          "paging": false, // Disable pagination
-          "searching": false // Disable search
-        });
-
-        // Fetch and display Out of Stock Items
-        $('#out-of-stock-example').DataTable({
-          "ajax": {
-            "url": "fetchInventoryReports.php?report=out-of-stock",
-            "dataSrc": ""
-          },
-          "columns": [
-            { "data": "ItemID" },
-            { "data": "BrandName" },
-            { "data": "GenericName" }
-          ],
-          "paging": false, // Disable pagination
-          "searching": false // Disable search
-        });
-
-        // Fetch and display Near Expiry Items
-        $('#near-expiry-example').DataTable({
-          "ajax": {
-            "url": "fetchInventoryReports.php?report=near-expiry",
-            "dataSrc": ""
-          },
-          "columns": [
-            { "data": "ItemID" },
-            { "data": "BrandName" },
-            { "data": "GenericName" },
-            { "data": "ExpiryDate" },
-            { "data": "LotNumber" }
-          ],
-          "paging": false, // Disable pagination
-          "searching": false // Disable search
-        });
-      });
-    </script>
 
   </main><!-- End #main -->
 

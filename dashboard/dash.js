@@ -328,63 +328,126 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.getElementById("export_PDF").addEventListener("click", function() {
-    // Create a temporary container to hold all the tables
+    // Get current filter selections
+    const firstFilter = document.getElementById('firstFilter').value;
+    const secondFilter = document.getElementById('secondFilter').value;
+
+    // Create a temporary container to hold all tables when 'All' is selected
     const container = document.createElement('div');
     
-    // Grab all the tables inside the container
-    const tables = document.querySelectorAll('.datatable_report table');
-    
-    // Define custom titles for each section
-    const titles = [
-        "Today's Sales",  // Title for the first table (Today's Sales)
-        "This Month's Sales",  // Title for the second table (This Month's Sales)
-        "This Year's Sales"  // Title for the third table (This Year's Sales)
-    ];
+    // Add a header with company information
+    const headerTitle = document.createElement('h3');
+    headerTitle.style.textAlign = 'center';
+    headerTitle.style.marginBottom = '20px';
+    headerTitle.textContent = 'Mother & Child Pharmacy and Medical Supplies';
+    container.appendChild(headerTitle);
 
-    // Add a title for each table
-    tables.forEach(function(table, index) {
-        // Create a title for each table (using the defined titles array)
-        const title = document.createElement('h2');
-        title.textContent = titles[index];  // Use the title from the array
-        title.style.textAlign = 'center';  // Center align the title
-        title.style.marginBottom = '10px';  // Space below the title
-        container.appendChild(title);
+    // Determine which tables to export
+    let tablesToExport = [];
+    let exportTitles = [];
+
+    if (firstFilter === 'all') {
+        // If 'All' is selected, export all tables
+        tablesToExport = [
+            { table: document.getElementById('today-example'), title: "Today's Sales" },
+            { table: document.getElementById('week-example'), title: "This Week's Sales" },
+            { table: document.getElementById('month-example'), title: "This Month's Sales" },
+            { table: document.getElementById('year-example'), title: "This Year's Sales" }
+        ];
+    } else {
+        // For specific filter, export only that table
+        tablesToExport = [{
+            table: document.querySelector(`#${firstFilter}-example`),
+            title: {
+                today: "Today's Sales",
+                week: "This Week's Sales",
+                month: "This Month's Sales",
+                year: "This Year's Sales"
+            }[firstFilter]
+        }];
+    }
+
+    // Process each table
+    tablesToExport.forEach(({table, title}) => {
+        // Create a title for the table
+        const tableTitle = document.createElement('h4');
+        tableTitle.textContent = secondFilter !== '--:--' 
+            ? `Sales Report | ${title} - ${secondFilter}`
+            : `Sales Report | ${title}`;
+        tableTitle.style.textAlign = 'center';
+        tableTitle.style.marginBottom = '10px';
+        container.appendChild(tableTitle);
         
-        // Clone the table to avoid affecting the DOM and append it
+        // Clone the table
         const clone = table.cloneNode(true);
         
-        // Apply table styling to shrink it slightly
-        clone.style.width = '90%';  // Reduce the width to 90% of the container
-        clone.style.margin = '0 auto';  // Center the table horizontally
-        clone.style.fontSize = '0.9em';  // Reduce the font size slightly
-        clone.style.borderCollapse = 'collapse';  // Collapse borders for a more compact look
+        // Apply styling to the cloned table
+        clone.style.width = '90%';
+        clone.style.margin = '0 auto';
+        clone.style.fontSize = '0.9em';
+        clone.style.borderCollapse = 'collapse';
         
-        // Apply padding to cells to reduce spacing
+        // Style table cells
         const cells = clone.querySelectorAll('td, th');
         cells.forEach(cell => {
-            cell.style.padding = '8px';  // Reduce padding for a smaller table
+            cell.style.padding = '8px';
+            cell.style.border = '1px solid #ddd';
         });
 
-        container.appendChild(clone);
-        
-        // Add a separator after each table, except the last one
-        if (index < tables.length - 1) {
-            const separator = document.createElement('hr');
-            separator.style.border = '1px solid #ccc';  // Style the separator
-            separator.style.margin = '20px 0';  // Space above and below the separator
-            container.appendChild(separator);
+        // Add a page break (except for the last table)
+        if (tablesToExport.indexOf({table, title}) < tablesToExport.length - 1) {
+            const pageBreak = document.createElement('div');
+            pageBreak.style.pageBreakAfter = 'always';
+            container.appendChild(clone);
+            container.appendChild(pageBreak);
+        } else {
+            container.appendChild(clone);
         }
     });
 
-    // Get today's date in the format YYYY-MM-DD
+    // Get today's date in the format MM/DD/YYYY
     const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0]; // Formats date as YYYY-MM-DD
+    const formattedDate = today.toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric'
+    });
 
-    // Use html2pdf to generate the PDF from the temporary container
-    html2pdf()
-        .from(container)
-        .save(`Sales_Report_${formattedDate}.pdf`);  // File name with today's date
+    // Use html2pdf to generate the PDF with configuration for footer
+    html2pdf().set({
+        margin: [10, 10, 40, 10], // Increased bottom margin to accommodate footer
+        html2canvas: {
+            scale: 2 // Improves quality of rendering
+        },
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
+        },
+        pagebreak: { mode: 'css' },
+        filename: `Sales_Report_${firstFilter}_${secondFilter}_${today.toISOString().split('T')[0]}.pdf`
+    }).from(container).toPdf().get('pdf').then(function (pdf) {
+        // Get total number of pages
+        const totalPages = pdf.internal.getNumberOfPages();
+        
+        // Add footer to each page
+        for (let i = 1; i <= totalPages; i++) {
+            pdf.setPage(i);
+            pdf.setFontSize(12); // Increased font size
+            pdf.setTextColor(100);
+            
+            // Get page dimensions
+            const pageWidth = pdf.internal.pageSize.width;
+            const pageHeight = pdf.internal.pageSize.height;
 
+            // Add centered footer text with more spacing
+            pdf.text(`Date Generated: ${formattedDate}    |    Page ${i} of ${totalPages}`, 
+                pageWidth / 2, 
+                pageHeight - 10, 
+                { align: 'center' }
+            );
+        }
+    }).save();
 });
 
 document.getElementById("export_PDF_inv").addEventListener("click", function() {

@@ -153,3 +153,11 @@
 .deliveries-card-body::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+.d-flex.gap-2 {
+  gap: 0.5rem; /* Adjust the spacing between the dropdowns */
+}
+
+.w-25 {
+  min-width: 140px;
+}
