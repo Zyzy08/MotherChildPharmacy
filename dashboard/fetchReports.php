@@ -21,6 +21,11 @@ try {
             $compareCondition = "DATE(SaleDate) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)";
             $groupBy = "HOUR(SaleDate)";
             break;
+        case 'week':
+            $dateCondition = "YEARWEEK(SaleDate, 1) = YEARWEEK(CURDATE(), 1)";
+            $compareCondition = "YEARWEEK(SaleDate, 1) = YEARWEEK(DATE_SUB(CURDATE(), INTERVAL 1 WEEK), 1)";
+            $groupBy = "DATE(SaleDate)";
+            break;
         case 'month':
             $dateCondition = "YEAR(SaleDate) = YEAR(CURDATE()) AND MONTH(SaleDate) = MONTH(CURDATE())";
             $compareCondition = "YEAR(SaleDate) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AND MONTH(SaleDate) = MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))";

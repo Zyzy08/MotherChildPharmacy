@@ -31,6 +31,18 @@ switch ($period) {
                           AND Status IN ('Sales', 'Return/Exchange')";
         break;
 
+    case 'week':
+        $currentQuery = "SELECT COUNT(DISTINCT InvoiceID) as total 
+                        FROM sales 
+                        WHERE YEARWEEK(SaleDate, 1) = YEARWEEK(CURDATE(), 1) 
+                        AND Status IN ('Sales', 'Return/Exchange')";
+
+        $previousQuery = "SELECT COUNT(DISTINCT InvoiceID) as total 
+                        FROM sales 
+                        WHERE YEARWEEK(SaleDate, 1) = YEARWEEK(DATE_SUB(CURDATE(), INTERVAL 1 WEEK), 1) 
+                        AND Status IN ('Sales', 'Return/Exchange')";
+        break;
+
     case 'month':
         $currentQuery = "SELECT COUNT(DISTINCT InvoiceID) as total 
                          FROM sales 

@@ -28,56 +28,62 @@ function formatUnitOfMeasure($unit) {
 
 // Get the period from the request
 $period = isset($_GET['period']) ? $_GET['period'] : 'today';
+$day = isset($_GET['day']) ? $_GET['day'] : null;
+$month = isset($_GET['month']) ? $_GET['month'] : null;
+$year = isset($_GET['year']) ? $_GET['year'] : null;
 
-// Define the SQL query based on the period
+// Base SQL query
+$baseSql = "SELECT 
+    s.InvoiceID,
+    s.SaleDate,
+    s.Status AS TransactionType,
+    JSON_UNQUOTE(s.SalesDetails) AS SalesDetails,
+    s.NetAmount
+FROM 
+    sales s
+WHERE 
+    s.Status IN ('Sales', 'Return/Exchange', 'ReturnedForExchange')";
+
+// Modify base query based on period and additional filters
 switch ($period) {
     case 'today':
-        $sql = "SELECT 
-            s.InvoiceID,
-            s.SaleDate,
-            s.Status AS TransactionType,
-            JSON_UNQUOTE(s.SalesDetails) AS SalesDetails,
-            s.NetAmount
-        FROM 
-            sales s
-        WHERE 
-            DATE(s.SaleDate) = CURDATE() AND s.Status IN ('Sales', 'Return/Exchange', 'ReturnedForExchange')
-        ORDER BY 
-            s.SaleDate DESC";
+        $sql = $baseSql . " AND DATE(s.SaleDate) = CURDATE()";
         break;
+    
+    case 'week':
+        $sql = $baseSql . " AND YEAR(s.SaleDate) = YEAR(CURDATE()) AND WEEK(s.SaleDate, 1) = WEEK(CURDATE(), 1)";
+        if ($day) {
+            $sql .= " AND DAYNAME(s.SaleDate) = '$day'";
+        }
+        break;
+    
     case 'month':
-        $sql = "SELECT 
-            s.InvoiceID,
-            s.SaleDate,
-            s.Status AS TransactionType,
-            JSON_UNQUOTE(s.SalesDetails) AS SalesDetails,
-            s.NetAmount
-        FROM 
-            sales s
-        WHERE 
-            YEAR(s.SaleDate) = YEAR(CURDATE()) AND MONTH(s.SaleDate) = MONTH(CURDATE()) AND s.Status IN ('Sales', 'Return/Exchange', 'ReturnedForExchange')
-        ORDER BY 
-            s.SaleDate DESC";
+        $sql = $baseSql . " AND YEAR(s.SaleDate) = YEAR(CURDATE())";
+        if ($month) {
+            $monthNum = date('m', strtotime($month));
+            $sql .= " AND MONTH(s.SaleDate) = '$monthNum'";
+        } else {
+            $sql .= " AND MONTH(s.SaleDate) = MONTH(CURDATE())";
+        }
         break;
+    
     case 'year':
-        $sql = "SELECT 
-            s.InvoiceID,
-            s.SaleDate,
-            s.Status AS TransactionType,
-            JSON_UNQUOTE(s.SalesDetails) AS SalesDetails,
-            s.NetAmount
-        FROM 
-            sales s
-        WHERE 
-            YEAR(s.SaleDate) = YEAR(CURDATE()) AND s.Status IN ('Sales', 'Return/Exchange', 'ReturnedForExchange')
-        ORDER BY 
-            s.SaleDate DESC";
+        $sql = $baseSql;
+        if ($year) {
+            $sql .= " AND YEAR(s.SaleDate) = '$year'";
+        } else {
+            $sql .= " AND YEAR(s.SaleDate) = YEAR(CURDATE())";
+        }
         break;
+    
     default:
         die(json_encode(array(
             "error" => "Invalid period specified"
         )));
 }
+
+// Add ordering
+$sql .= " ORDER BY s.SaleDate DESC";
 
 $result = $conn->query($sql);
 

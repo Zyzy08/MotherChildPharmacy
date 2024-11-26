@@ -22,6 +22,10 @@ switch ($period) {
         $currentQuery = "SELECT SUM(NetAmount) as total FROM sales WHERE DATE(SaleDate) = CURDATE() AND Status IN ('Sales', 'Return/Exchange', 'ReturnedForExchange')";
         $previousQuery = "SELECT SUM(NetAmount) as total FROM sales WHERE DATE(SaleDate) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND Status IN ('Sales', 'Return/Exchange', 'ReturnedForExchange')";
         break;
+    case 'week':
+        $currentQuery = "SELECT SUM(NetAmount) as total FROM sales WHERE YEARWEEK(SaleDate, 1) = YEARWEEK(CURDATE(), 1) AND Status IN ('Sales', 'Return/Exchange', 'ReturnedForExchange')";            
+        $previousQuery = "SELECT SUM(NetAmount) as total FROM sales WHERE YEARWEEK(SaleDate, 1) = YEARWEEK(DATE_SUB(CURDATE(), INTERVAL 1 WEEK), 1) AND Status IN ('Sales', 'Return/Exchange', 'ReturnedForExchange')";
+        break;
     case 'month':
         $currentQuery = "SELECT SUM(NetAmount) as total FROM sales WHERE YEAR(SaleDate) = YEAR(CURDATE()) AND MONTH(SaleDate) = MONTH(CURDATE()) AND Status IN ('Sales', 'Return/Exchange', 'ReturnedForExchange')";
         $previousQuery = "SELECT SUM(NetAmount) as total FROM sales WHERE YEAR(SaleDate) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AND MONTH(SaleDate) = MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AND Status IN ('Sales', 'Return/Exchange', 'ReturnedForExchange')";

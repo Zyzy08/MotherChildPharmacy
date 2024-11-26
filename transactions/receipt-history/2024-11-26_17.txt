@@ -1,0 +1,29 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+229 Paracetamol Biog... P2164.05
+      229 @ P9.45  
+--------------------------------
+Total Items:               229
+Amount Due:          P2,164.05
+Payment:             P2,200.00
+Change:                 P35.95
+--------------------------------
+Vatable Sales:       P1,932.19
+VAT-Exempt Sales:        P0.00
+VAT Amount(12%):       P231.86
+--------------------------------
+Order No.:                 #17
+Date:      2024-11-26 10:08:43
+Status:                  Sales
+Staff:           Lance Tiangco
+                                
+  Thank you for your purchase!
+
+                                
+
+                                
