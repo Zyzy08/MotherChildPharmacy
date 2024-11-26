@@ -1,4 +1,6 @@
 <?php
+header('Content-Type: application/json');
+
 // Database configuration
 $servername = "localhost";
 $username = "root";
@@ -8,97 +10,136 @@ $dbname = "motherchildpharmacy";
 // Function to log actions
 function logAction($conn, $userId, $action, $description, $status)
 {
-    $ipAddress = $_SERVER['REMOTE_ADDR'];
+    $ipAddress = $_SERVER['REMOTE_ADDR']; // Get the IP address of the user
     $logSql = "INSERT INTO audittrail (AccountID, action, description, ip_address, status) VALUES (?, ?, ?, ?, ?)";
+    
+    // Prepare the SQL statement
     $logStmt = $conn->prepare($logSql);
+    
+    // Bind parameters to the statement
     $logStmt->bind_param("ssssi", $userId, $action, $description, $ipAddress, $status);
+    
+    // Execute the statement
     $logStmt->execute();
+    
+    // Close the statement
     $logStmt->close();
 }
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+try {
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+    // Check connection
+    if ($conn->connect_error) {
+        throw new Exception("Connection failed: " . $conn->connect_error);
+    }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve POST parameters
+    // Get and decode JSON data
     $data = json_decode(file_get_contents("php://input"), true);
-    $itemID = isset($data['itemID']) ? (int) $data['itemID'] : 0; // Get the ItemID
-    $lotNumber = isset($data['lotNumber']) ? trim($data['lotNumber']) : ''; // Get the selected Lot Number
-    $quantity = isset($data['Quantity']) ? (int) $data['Quantity'] : 0; // Quantity input from user
-    $reason = isset($data['reason']) ? trim($data['reason']) : '';
-    $timestamp = isset($data['timestamp']) ? trim($data['timestamp']) : '';
-    $action = isset($data['action']) ? trim($data['action']) : 'add'; // Add or subtract action
-
-    // Validate parameters
-    if ($itemID <= 0) {
-        echo json_encode(['message' => "Invalid ItemID."]);
-        exit;
-    }
-    if ($quantity <= 0) {
-        echo json_encode(['message' => "Invalid quantity."]);
-        exit;
-    }
-    if (empty($reason)) {
-        echo json_encode(['message' => "Reason is required."]);
-        exit;
-    }
-    if (empty($timestamp)) {
-        echo json_encode(['message' => "Timestamp is required."]);
-        exit;
-    }
-    if (empty($lotNumber)) {
-        echo json_encode(['message' => "Lot number is required."]);
-        exit;
+    
+    // Only validate that required fields are present
+    if (!isset($data['itemID']) || !isset($data['lotNumber']) || !isset($data['quantity'])) {
+        throw new Exception("Missing required data");
     }
 
-    // Get the current user's AccountID from the session or other source
-    session_start();
-    $sessionAccountID = $_SESSION['AccountID'] ?? null;
-
-    // Log the issue in `goodsissue` including `ItemID`
-    $insertSql = "INSERT INTO goodsissue (ItemID, Quantity, Reason, Timestamp) VALUES (?, ?, ?, ?)";
-    $insertStmt = $conn->prepare($insertSql);
-    $insertStmt->bind_param('iiss', $itemID, $quantity, $reason, $timestamp); // Bind ItemID
-
-    if ($insertStmt->execute()) {
-        // Update QuantityRemaining in delivery_items based on action
-        $updateSql = "UPDATE delivery_items SET QuantityRemaining = QuantityRemaining " . ($action === 'add' ? '+' : '-') . " ? WHERE LotNumber = ?";
-        $updateStmt = $conn->prepare($updateSql);
-        $updateStmt->bind_param('is', $quantity, $lotNumber); // Bind quantity and lot number
-
-        if ($updateStmt->execute()) {
-            // Update InStock in inventory table
-            $updateInventorySql = "UPDATE inventory SET InStock = InStock " . ($action === 'add' ? '+' : '-') . " ? WHERE ItemID = ?";
-            $updateInventoryStmt = $conn->prepare($updateInventorySql);
-            $updateInventoryStmt->bind_param('ii', $quantity, $itemID); // Bind quantity and ItemID
-            $updatedetails = "(ItemID: " . $itemID . ", Quantity: " . $quantity . ")";
-
-            if ($updateInventoryStmt->execute()) {
-                //Log if Success
-                $description = "User manually adjusted the stock of a product. $updatedetails.";
-                logAction($conn, $sessionAccountID, 'Goods Issue', $description, 1);
-                echo json_encode(['message' => "Data logged and quantities updated successfully."]);
-            } else {
-                //Log if Fail
-                $description = "User failed to manually adjusted the stock of a product. $updatedetails.";
-                logAction($conn, $sessionAccountID, 'Goods Issue', $description, 0);
-                echo json_encode(['message' => "Error updating inventory InStock: " . $conn->error]);
-            }
-            $updateInventoryStmt->close();
-        } else {
-            echo json_encode(['message' => "Error updating quantity in delivery_items: " . $conn->error]);
-        }
-        $updateStmt->close();
+    $itemID = (int)$data['itemID'];
+    $lotNumber = $data['lotNumber'];
+    $quantity = (int)$data['quantity'];
+    
+    // Get current quantity to compare
+    $checkSql = "SELECT QuantityRemaining FROM delivery_items WHERE LotNumber = ? AND ItemID = ?";
+    $checkStmt = $conn->prepare($checkSql);
+    $checkStmt->bind_param("si", $lotNumber, $itemID);
+    $checkStmt->execute();
+    $result = $checkStmt->get_result();
+    $currentQty = $result->fetch_assoc()['QuantityRemaining'];
+    
+    // Calculate the adjustment amount
+    $adjustment = $quantity - $currentQty;
+    if ($adjustment > 0) {
+        $reason = "Positive adjustment (+{$adjustment}) for lot: {$lotNumber}";
+    } else if ($adjustment < 0) {
+        $reason = "Negative adjustment ({$adjustment}) for lot: {$lotNumber}";
     } else {
-        echo json_encode(['message' => "Error logging issue: " . $conn->error]);
+        $reason = "No adjustment (0) for lot: {$lotNumber}";
     }
-    $insertStmt->close();
+    
+    $timestamp = date('Y-m-d H:i:s');
+
+    // Get the current user's AccountID from the session (assuming the user is logged in)
+    session_start();
+    $userId = $_SESSION['AccountID'] ?? null;
+    
+    // Start transaction
+    $conn->begin_transaction();
+
+    try {
+        // Update delivery_items
+        $updateSql = "UPDATE delivery_items 
+                     SET QuantityRemaining = ? 
+                     WHERE LotNumber = ? AND ItemID = ?";
+        $updateStmt = $conn->prepare($updateSql);
+        $updateStmt->bind_param("isi", $quantity, $lotNumber, $itemID);
+        
+        if (!$updateStmt->execute()) {
+            throw new Exception("Failed to update quantity: " . $conn->error);
+        }
+
+        // Insert into goodsissue
+        $insertSql = "INSERT INTO goodsissue (ItemID, Quantity, Reason, Timestamp) 
+                     VALUES (?, ?, ?, ?)";
+        $insertStmt = $conn->prepare($insertSql);
+        $insertStmt->bind_param("iiss", $itemID, $quantity, $reason, $timestamp);
+        
+        if (!$insertStmt->execute()) {
+            throw new Exception("Failed to log goods issue: " . $conn->error);
+        }
+
+        // Update inventory
+        $updateInventorySql = "UPDATE inventory 
+                             SET InStock = ? 
+                             WHERE ItemID = ?";
+        $updateInventoryStmt = $conn->prepare($updateInventorySql);
+        $updateInventoryStmt->bind_param("ii", $quantity, $itemID);
+        
+        if (!$updateInventoryStmt->execute()) {
+            throw new Exception("Failed to update inventory: " . $conn->error);
+        }
+
+        // Log the action in the audit trail
+        $action = 'Stock Adjustment';
+        $description = "Stock adjustment for ItemID: {$itemID}, LotNumber: {$lotNumber}, New Quantity: {$quantity}, Adjustment: {$adjustment}";
+        $status = 1; // Success
+        logAction($conn, $userId, $action, $description, $status);
+
+        // Commit transaction
+        $conn->commit();
+
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Stock updated successfully'
+        ]);
+
+    } catch (Exception $e) {
+        $conn->rollback();
+        
+        // Log the failed action in the audit trail
+        $action = 'Stock Adjustment';
+        $description = "Failed stock adjustment for ItemID: {$itemID}, LotNumber: {$lotNumber}, Attempted Quantity: {$quantity}";
+        $status = 0; // Failure
+        logAction($conn, $userId, $action, $description, $status);
+
+        throw $e;
+    }
+
+} catch (Exception $e) {
+    error_log("Error in insertGoodIssue.php: " . $e->getMessage());
+    echo json_encode([
+        'status' => 'error',
+        'message' => $e->getMessage()
+    ]);
 }
 
-$conn->close(); // Close the database connection
+$conn->close();
 ?>

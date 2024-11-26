@@ -970,9 +970,6 @@ function closeModal() {
     modal.style.display = 'none'; // Hide modal
 }
 
-
-
-
 ////////////////////////////////////////
 // GOODS ISSUE PART///
 
@@ -991,6 +988,9 @@ function resetFormFields() {
     // Disable the lot number input field
     document.getElementById('selectLot').disabled = true; // Lock the lot number input field
 }
+document.getElementById("GoodsIssueBtn").addEventListener("click", function () {
+    document.getElementById("overlayEdit1").style.display = "flex";
+});
 
 // Event listener for the close button
 document.getElementById('GIcloseBtn').addEventListener('click', function () {
@@ -1001,12 +1001,12 @@ document.getElementById('GIcloseBtn').addEventListener('click', function () {
 
 
 // Show the overlay when the Goods Issue button is clicked
-document.getElementById("GoodsIssueBtn").addEventListener("click", function () {
-    isAddMode = true;
-    document.getElementById('ToggleAdd').style.backgroundColor = 'green';
-    document.getElementById('ToggleAdd').style.boxShadow = '0 0 10px green';
-    document.getElementById("overlayEdit1").style.display = "flex";
-});
+//document.getElementById("GoodsIssueBtn").addEventListener("click", function () {
+//    isAddMode = true;
+//    document.getElementById('ToggleAdd').style.backgroundColor = 'green';
+//    document.getElementById('ToggleAdd').style.boxShadow = '0 0 10px green';
+//    document.getElementById("overlayEdit1").style.display = "flex";
+//});
 
 // Close the overlay when the close button is clicked
 document.getElementById("GIcloseBtn").addEventListener("click", function () {
@@ -1048,6 +1048,8 @@ function filterOptions() {
     document.getElementById('selectLot').disabled = true; // Enable the selectLot input
     dropdown.innerHTML = ''; // Clear previous options
     document.getElementById('selectLot').style.cursor = "not-allowed";
+    document.getElementById('Quantity').disabled = true;
+    document.getElementById('Quantity').style.cursor = "not-allowed";
 
 
     // Clear ordered amount field if the input is empty
@@ -1164,12 +1166,14 @@ function selectProduct(option) {
 
 // LOT Search part
 
-
-
 function filterLotOptions() {
     const input = document.getElementById('selectLot');
     const filter = input.value.toLowerCase();
     const dropdown = document.getElementById('lotSelect');
+    document.getElementById('Quantity').disabled = false;
+    document.getElementById('Quantity').style.cursor = "default";
+
+    
 
     // Ensure dropdown exists and clear its content
     if (dropdown) {
@@ -1236,6 +1240,10 @@ function filterLotOptions() {
 
     xhr.send();
 }
+/* For the quantity field */
+document.getElementById('Quantity').disabled = true;
+document.getElementById('Quantity').style.cursor = "not-allowed";
+
 
 function fetchAllLots() {
     const dropdown = document.getElementById('lotSelect');
@@ -1328,6 +1336,7 @@ function fetchProductData(itemID) {
         xhr.send();
     }
 }
+
 document.addEventListener('click', closeDropdownsOnClickOutside);
 
 function closeDropdownsOnClickOutside(event) {
@@ -1364,28 +1373,29 @@ function resetQuantityRemainingField() {
 }
 //Inserting Goods Issue
 
-let isAddMode = true; // Default mode is Add
+//let isAddMode = true; // Default mode is Add
 let currentSelectedItemID; // Declare a variable to hold the selected ItemID
 let currentLotNumber; // Store the selected LotNumber
 
 // Event listener for the Add button
-document.getElementById('ToggleAdd').addEventListener('click', function () {
-    isAddMode = true;
-    this.style.backgroundColor = 'green';
-    this.style.boxShadow = '0 0 10px green';
-    document.getElementById('ToggleSub').style.backgroundColor = '';
-    document.getElementById('ToggleSub').style.boxShadow = '';
-});
+
+//document.getElementById('ToggleAdd').addEventListener('click', function () {
+//    isAddMode = true;
+//   this.style.backgroundColor = 'green';
+//    this.style.boxShadow = '0 0 10px green';
+//    document.getElementById('ToggleSub').style.backgroundColor = '';
+//    document.getElementById('ToggleSub').style.boxShadow = '';
+//});
 
 
 // Event listener for the Subtract button
-document.getElementById('ToggleSub').addEventListener('click', function () {
-    isAddMode = false;
-    this.style.backgroundColor = 'red';
-    this.style.boxShadow = '0 0 10px red';
-    document.getElementById('ToggleAdd').style.backgroundColor = '';
-    document.getElementById('ToggleAdd').style.boxShadow = '';
-});
+//document.getElementById('ToggleSub').addEventListener('click', function () {
+//    isAddMode = false;
+//    this.style.backgroundColor = 'red';
+//    this.style.boxShadow = '0 0 10px red';
+//    document.getElementById('ToggleAdd').style.backgroundColor = '';
+//    document.getElementById('ToggleAdd').style.boxShadow = '';
+//}); 
 
 
 // Get references to the input fields
@@ -1395,69 +1405,80 @@ const quantityInput = document.getElementById('Quantity');
 document.getElementById('ConfirmAction').addEventListener('click', function () {
     const quantityInput = document.getElementById('Quantity');
     const quantity = parseInt(quantityInput.value, 10);
-    const reason = document.getElementById('Reason').value;
 
-    // Validate if fields are empty
-    if (!quantityInput.value.trim() || !reason.trim()) {
-        showNotification('Please fill in all required fields.'); // Show notification for empty fields
-        console.error("One or more required fields are empty."); // Log error
+    // Only validate that a product and lot are selected
+    if (!currentSelectedItemID) {
+        showNotification('Please select a product first.');
         return;
     }
 
-    // Validate quantity input
-    if (isNaN(quantity) || quantity <= 0) {
-        showNotification('Please enter a valid quantity.'); // Show error message using notification
-        console.error("Invalid quantity entered."); // Log error
+    if (!currentLotNumber) {
+        showNotification('Please select a lot number first.');
         return;
     }
 
-    // Determine action based on isAddMode
-    const action = isAddMode ? 'add' : 'subtract';
+    if (isNaN(quantity)) {
+        showNotification('Please enter a valid number.');
+        return;
+    }
 
-    // Prepare the data to send to the server
-    const data = {
-        itemID: currentSelectedItemID, // Ensure this is set before confirming
-        lotNumber: currentLotNumber,     // Ensure this is set before confirming
-        Quantity: quantity,
-        reason: reason,                   // Use the actual reason input
-        timestamp: new Date().toISOString(), // Use current timestamp
-        action: action
-    };
-
-    // Send the data to the PHP script using fetch
+    // Send to server
     fetch('insertGoodIssue.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
-    })
-        .then(response => response.json())
-        .then(result => {
-            console.log(result.message);
-
-            // Display the response message in the modal
-            modalVerifyTextAD.textContent = result.message; // Display the response message
-            modalFooterAD.style.display = 'none';
-            modalCloseAD.style.display = 'none';
-            document.getElementById('modalVerifyTitle-AD').textContent = 'Success';
-
-            // Show the success modal
-            const successModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
-            successModal.show();
-
-            // Redirect after a short delay
-            setTimeout(() => {
-                window.location.href = 'inventory.php'; // Redirect to inventory.php
-            }, 1000);
+        body: JSON.stringify({
+            itemID: currentSelectedItemID,
+            lotNumber: currentLotNumber,
+            quantity: quantity
         })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Error: ' + error.message); // Show error message using notification
-        });
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.status === 'error') {
+            throw new Error(result.message);
+        }
+        
+        // Success handling
+        modalVerifyTextAD.textContent = 'Stock updated successfully';
+        modalFooterAD.style.display = 'none';
+        modalCloseAD.style.display = 'none';
+        document.getElementById('modalVerifyTitle-AD').textContent = 'Success';
+
+        const successModal = new bootstrap.Modal(document.getElementById('disablebackdrop'));
+        successModal.show();
+
+        setTimeout(() => {
+            window.location.href = 'inventory.php';
+        }, 1000);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification(error.message);
+    });
 });
 
 
+// Add this to control the Quantity input
+document.getElementById('Quantity').addEventListener('input', function(e) {
+    // Remove any non-digit characters
+    this.value = this.value.replace(/[^0-9]/g, '');
+    
+    // Remove leading zeros
+    if (this.value.length > 1 && this.value[0] === '0') {
+        this.value = parseInt(this.value).toString();
+    }
+});
+
+// Prevent paste of invalid characters
+document.getElementById('Quantity').addEventListener('paste', function(e) {
+    e.preventDefault();
+    const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+    if (/^\d+$/.test(pastedText)) {
+        this.value = parseInt(pastedText).toString();
+    }
+});
 
 
 // Function to show notification messages
