@@ -1,0 +1,27 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+4   Paracetamol Biogesic  P37.80
+--------------------------------
+Total Items:                 4
+Subtotal:               P37.80
+Tax 12%:                 P4.05
+Refund Amount:          P18.11
+Amount Due:             P19.69
+Payment:                P20.00
+Change:                  P0.31
+--------------------------------
+Order No.:                 #12
+Date:      2024-11-16 23:33:03
+Status:        Return/Exchange
+Staff:           Sayra Jackson
+                                
+  Thank you for your purchase!
+
+                                
+
+                                
