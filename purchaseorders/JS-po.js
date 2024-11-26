@@ -178,6 +178,7 @@ function fetchDetails(identifier) {
                             <th scope="row">${index + 1}</th>
                             <td>${item.description}</td>
                             <td>${item.quantity}</td>
+                            <td>${item.pending}</td>
                         `;
                         tableBody.appendChild(row);
                     });

@@ -345,12 +345,14 @@
                                 <th scope="col">#</th>
                                 <th scope="col">Item Description</th>
                                 <th scope="col">Qty. Ordered</th>
+                                <th scope="col">Qty. Pending</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <th scope="row">1</th>
                                 <td>FLUIMICIL 100MG/5ML SYR 100ML</td>
+                                <td>10</td>
                                 <td>10</td>
                             </tr>
                         </tbody>
