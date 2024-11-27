@@ -1404,7 +1404,7 @@ const quantityInput = document.getElementById('Quantity');
 // Add event listener to the Confirm button
 document.getElementById('ConfirmAction').addEventListener('click', function () {
     const quantityInput = document.getElementById('Quantity');
-    const quantity = parseInt(quantityInput.value, 10);
+    const quantity = quantityInput.value; // Get the raw value to retain the sign
 
     // Only validate that a product and lot are selected
     if (!currentSelectedItemID) {
@@ -1417,10 +1417,18 @@ document.getElementById('ConfirmAction').addEventListener('click', function () {
         return;
     }
 
-    if (isNaN(quantity)) {
-        showNotification('Please enter a valid number.');
-        return;
-    }
+    
+    // Determine action based on quantity sign
+    const action = quantity.startsWith('+') ? 'add' : 'subtract';
+
+    // Log the payload to ensure all fields are included
+    const payload = {
+        itemID: currentSelectedItemID,
+        lotNumber: currentLotNumber,
+        quantity: quantity, // Send the raw value with the sign
+        action: action // Include the action
+    };
+    console.log("Payload being sent:", payload); // Debugging line
 
     // Send to server
     fetch('insertGoodIssue.php', {
@@ -1428,11 +1436,7 @@ document.getElementById('ConfirmAction').addEventListener('click', function () {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            itemID: currentSelectedItemID,
-            lotNumber: currentLotNumber,
-            quantity: quantity
-        })
+        body: JSON.stringify(payload)
     })
     .then(response => response.json())
     .then(result => {
@@ -1459,27 +1463,37 @@ document.getElementById('ConfirmAction').addEventListener('click', function () {
     });
 });
 
+// Function to validate and clean up the input
+function validateQuantityInput(input) {
+    let value = input.value;
 
-// Add this to control the Quantity input
-document.getElementById('Quantity').addEventListener('input', function(e) {
-    // Remove any non-digit characters
-    this.value = this.value.replace(/[^0-9]/g, '');
-    
-    // Remove leading zeros
-    if (this.value.length > 1 && this.value[0] === '0') {
-        this.value = parseInt(this.value).toString();
+    // Allow only numbers and "+" or "-" signs
+    value = value.replace(/[^0-9+-]/g, '');  // Remove any invalid character except numbers and signs
+
+    // If the first character is "+" or "-", keep it and clean the rest
+    if (/^[+-]/.test(value)) {
+        value = value.charAt(0) + value.slice(1).replace(/[^0-9]/g, '');  // Keep the sign and ensure numbers after it
+    } else {
+        // If no sign is provided and there is input, default to "+"
+        if (value.length > 0) {
+            value = '+' + value;
+        }
+        value = value.replace(/[^0-9]/g, '');  // Just numbers if no sign
     }
-});
 
-// Prevent paste of invalid characters
+    input.value = value;  // Update the input field with cleaned value
+}
+
+// Prevent paste of invalid characters (only numbers and signs)
 document.getElementById('Quantity').addEventListener('paste', function(e) {
     e.preventDefault();
     const pastedText = (e.clipboardData || window.clipboardData).getData('text');
-    if (/^\d+$/.test(pastedText)) {
-        this.value = parseInt(pastedText).toString();
+
+    // Only allow valid input (number with optional sign)
+    if (/^[+-]?\d+$/.test(pastedText)) {
+        this.value = pastedText;
     }
 });
-
 
 // Function to show notification messages
 function showNotification(message) {
