@@ -644,7 +644,7 @@
           <div class="modal-body">
             <div class="container datatable_report">
               <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 align-items-center">
                   <select id="firstFilter" class="form-select w-25">
                     <option value="all">All</option>
                     <option value="today">Today</option>
@@ -655,6 +655,30 @@
                   <select id="secondFilter" class="form-select w-25">
                     <option value="--:--">--:--</option>
                   </select>
+                  <button id="salesbyitem" type="button" class="btn btn-primary">Sales By Item</button>
+                </div>
+              </div>
+
+              <div class="card" id="salesByItem-card">
+                <h2>Sales by Item</h2>
+                <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
+                  <table id="salesByItem-example" class="display" style="width:100%">
+                    <thead>
+                      <tr class="highlight-row">
+                        <th>Item Name</th>
+                        <th>Quantity Sold</th>
+                        <th>Price Per Unit</th>
+                        <th>Subtotal</th>
+                        <th>Discount Given</th>
+                        <th>Net Sales</th>
+                        <th>VAT Exempt Sales</th>
+                        <th>Vatable Sales</th>
+                      </tr>
+                    </thead>
+                    <tbody id="salesByItem-tableBody">
+                      <!-- Data rows will be inserted here by JavaScript -->
+                    </tbody>
+                  </table>
                 </div>
               </div>
 
@@ -665,11 +689,14 @@
                     <thead>
                       <tr class="highlight-row">
                         <th>Invoice ID</th>
-                        <th>Sale Date</th>
-                        <th>Transaction Type</th>
-                        <th>Items</th>
-                        <th>Quantities</th>
-                        <th>Total Price</th>
+                        <th>Date</th>
+                        <th>Total Items</th>
+                        <th>Subtotal</th>
+                        <th>Tax</th>
+                        <th>Discount</th>
+                        <th>Net Amount</th>
+                        <th>Payment Method</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody id="today-tableBody">
@@ -686,11 +713,14 @@
                     <thead>
                       <tr class="highlight-row">
                         <th>Invoice ID</th>
-                        <th>Sale Date</th>
-                        <th>Transaction Type</th>
-                        <th>Items</th>
-                        <th>Quantities</th>
-                        <th>Total Price</th>
+                        <th>Date</th>
+                        <th>Total Items</th>
+                        <th>Subtotal</th>
+                        <th>Tax</th>
+                        <th>Discount</th>
+                        <th>Net Amount</th>
+                        <th>Payment Method</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody id="week-tableBody">
@@ -707,11 +737,14 @@
                     <thead>
                       <tr class="highlight-row">
                         <th>Invoice ID</th>
-                        <th>Sale Date</th>
-                        <th>Transaction Type</th>
-                        <th>Items</th>
-                        <th>Quantities</th>
-                        <th>Total Price</th>
+                        <th>Date</th>
+                        <th>Total Items</th>
+                        <th>Subtotal</th>
+                        <th>Tax</th>
+                        <th>Discount</th>
+                        <th>Net Amount</th>
+                        <th>Payment Method</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody id="month-tableBody">
@@ -728,11 +761,14 @@
                     <thead>
                       <tr class="highlight-row">
                         <th>Invoice ID</th>
-                        <th>Sale Date</th>
-                        <th>Transaction Type</th>
-                        <th>Items</th>
-                        <th>Quantities</th>
-                        <th>Total Price</th>
+                        <th>Date</th>
+                        <th>Total Items</th>
+                        <th>Subtotal</th>
+                        <th>Tax</th>
+                        <th>Discount</th>
+                        <th>Net Amount</th>
+                        <th>Payment Method</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody id="year-tableBody">
@@ -748,6 +784,56 @@
             <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
             <script>
               $(document).ready(function () {
+                // Handle "Sales By Item" button click
+                $('#salesbyitem').on('click', function () {
+                  const salesByItemTable = $('#salesByItem-example');
+
+                  // Destroy existing DataTable if it exists
+                  if ($.fn.DataTable.isDataTable(salesByItemTable)) {
+                    salesByItemTable.DataTable().clear().destroy();
+                  }
+
+                  // Initialize DataTable for Sales By Item
+                  salesByItemTable.DataTable({
+                    ajax: {
+                      url: 'fetchSalesByItem.php',
+                      dataSrc: ''
+                    },
+                    columns: [
+                      { data: 'ItemName' },
+                      { data: 'QuantitySold' },
+                      { 
+                        data: 'PricePerUnit',
+                        render: data => `₱${parseFloat(data).toFixed(2)}`
+                      },
+                      { 
+                        data: 'Subtotal',
+                        render: data => `₱${parseFloat(data).toFixed(2)}`
+                      },
+                      { 
+                        data: 'DiscountGiven',
+                        render: data => `₱${parseFloat(data).toFixed(2)}`
+                      },
+                      { 
+                        data: 'NetSales',
+                        render: data => `₱${parseFloat(data).toFixed(2)}`
+                      },
+                      { 
+                        data: 'VATExemptSales',
+                        render: data => `₱${parseFloat(data).toFixed(2)}`
+                      },
+                      { 
+                        data: 'VatableSales',
+                        render: data => `₱${parseFloat(data).toFixed(2)}`
+                      }
+                    ],
+                    paging: false,
+                    searching: false,
+                    ordering: false
+                  });
+                });
+
+                echo (salesByItemTable)
                 const filterTables = {
                   today: '#today-example',
                   week: '#week-example',
@@ -850,53 +936,62 @@
                     $(selectedTable).DataTable().clear().destroy();
                   }
 
-                  // Initialize DataTable for the selected table
-                  const dataTable = $(selectedTable).DataTable({
-                    "ajax": {
-                      "url": tableConfig[period],
-                      "dataSrc": "",
-                      "complete": function(xhr) {
-                        // Calculate total after data is loaded
-                        const data = xhr.responseJSON;
-                        const total = data.reduce((sum, row) => sum + row.NetAmount, 0);
-                        
-                        // Remove existing total row if it exists
-                        $(`#${totalRowId}`).remove();
-                        
-                        // Append total row
-                        $(selectedTableBody).append(`
-                          <tr id="${totalRowId}" style="font-weight: bold; background-color: #f2f2f2;">
-                            <td colspan="4">Total Sales</td>
-                            <td></td>
-                            <td>₱${total.toFixed(2)}</td>
-                          </tr>
-                        `);
-                      }
-                    },
-                    "columns": [
-                      { "data": "InvoiceID" },
-                      { "data": "SaleDate" },
-                      { "data": "TransactionType" },
-                      { "data": "Items" },
-                      { "data": "Quantities" },
-                      { "data": "NetAmount" }
-                    ],
-                    "columnDefs": [
-                      {
-                        "targets": [3, 4],
-                        "className": "text-wrap"
-                      },
-                      {
-                        "targets": 5,
-                        "render": function (data) {
-                          return "₱" + data.toFixed(2);
+                  // Common configuration for sales and invoice tables
+                  if (['today', 'week', 'month', 'year'].includes(period)) {
+                    const dataTable = $(selectedTable).DataTable({
+                      "ajax": {
+                        "url": tableConfig[period],
+                        "dataSrc": "",
+                        "complete": function(xhr) {
+                          // Calculate total after data is loaded
+                          const data = xhr.responseJSON;
+                          const totalNet = data.reduce((sum, row) => sum + row.NetAmount, 0);
+                          const totalItems = data.reduce((sum, row) => sum + row.TotalItems, 0);
+                          const totalSubtotal = data.reduce((sum, row) => sum + row.Subtotal, 0);
+                          const totalTax = data.reduce((sum, row) => sum + row.Tax, 0);
+                          const totalDiscount = data.reduce((sum, row) => sum + row.Discount, 0);
+                          
+                          // Remove existing total row if it exists
+                          $(`#${totalRowId}`).remove();
+                          
+                          // Append total row
+                          $(selectedTableBody).append(`
+                            <tr id="${totalRowId}" style="font-weight: bold; background-color: #f2f2f2;">
+                              <td colspan="2">Total</td>
+                              <td>${totalItems}</td>
+                              <td>₱${totalSubtotal.toFixed(2)}</td>
+                              <td>₱${totalTax.toFixed(2)}</td>
+                              <td>₱${totalDiscount.toFixed(2)}</td>
+                              <td>₱${totalNet.toFixed(2)}</td>
+                              <td colspan="2"></td>
+                            </tr>
+                          `);
                         }
-                      }
-                    ],
-                    "paging": false,
-                    "searching": false,
-                    "ordering": false
-                  });
+                      },
+                      "columns": [
+                        { "data": "InvoiceID" },
+                        { "data": "SaleDate" },
+                        { "data": "TotalItems" },
+                        { "data": "Subtotal" },
+                        { "data": "Tax" },
+                        { "data": "Discount" },
+                        { "data": "NetAmount" },
+                        { "data": "PaymentMethod" },
+                        { "data": "Status" }
+                      ],
+                      "columnDefs": [
+                        {
+                          "targets": [3, 4, 5, 6],
+                          "render": function (data) {
+                            return "₱" + data.toFixed(2);
+                          }
+                        }
+                      ],
+                      "paging": false,
+                      "searching": false,
+                      "ordering": false
+                    });
+                  }
                 }
               });
             </script>

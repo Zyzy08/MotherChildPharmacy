@@ -38,7 +38,11 @@ $baseSql = "SELECT
     s.SaleDate,
     s.Status AS TransactionType,
     JSON_UNQUOTE(s.SalesDetails) AS SalesDetails,
-    s.NetAmount
+    s.Subtotal,
+    s.Tax,
+    s.Discount,
+    s.NetAmount,
+    s.PaymentMethod
 FROM 
     sales s
 WHERE 
@@ -127,16 +131,24 @@ while ($row = $result->fetch_assoc()) {
         }
     }
 
+    // Calculate total items
+    $totalItems = array_sum($quantities);
+
     // Join items and quantities with line breaks for HTML display
     $salesData[] = array(
         'InvoiceID' => $row['InvoiceID'],
         'SaleDate' => $row['SaleDate'],
-        'TransactionType' => $row['TransactionType'],
-        'Items' => implode('<br /><br />', $items),
-        'Quantities' => implode('<br /><br /><br />', $quantities),
-        'NetAmount' => floatval($row['NetAmount'])
+        'TotalItems' => $totalItems,
+        'Subtotal' => floatval($row['Subtotal']),
+        'Tax' => floatval($row['Tax']),
+        'Discount' => floatval($row['Discount']),
+        'NetAmount' => floatval($row['NetAmount']),
+        'PaymentMethod' => $row['PaymentMethod'],
+        'Status' => $row['TransactionType']
     );
 }
+
+//working
 
 // Return data as JSON
 header('Content-Type: application/json');
