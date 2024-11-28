@@ -415,7 +415,7 @@ document.getElementById("export_PDF").addEventListener("click", function() {
 
     // Use html2pdf to generate the PDF with configuration for footer
     html2pdf().set({
-        margin: [10, 10, 40, 10], // Increased bottom margin to accommodate footer
+        margin: [10, 10, 10, 10],
         html2canvas: {
             scale: 2 // Improves quality of rendering
         },
@@ -441,7 +441,7 @@ document.getElementById("export_PDF").addEventListener("click", function() {
             const pageHeight = pdf.internal.pageSize.height;
 
             // Add centered footer text with more spacing
-            pdf.text(`Date Generated: ${formattedDate}    |    Page ${i} of ${totalPages}`, 
+            pdf.text(`     Date Generated: ${formattedDate}                                                                                                      Page ${i} of ${totalPages}`,
                 pageWidth / 2, 
                 pageHeight - 10, 
                 { align: 'center' }
