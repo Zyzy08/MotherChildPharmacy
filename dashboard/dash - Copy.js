@@ -463,6 +463,7 @@ document.getElementById("export_PDF").addEventListener("click", function () {
     }).save();
 });
 
+
 document.getElementById("export_PDF_inv").addEventListener("click", function () {
     // Create a temporary container to hold all the tables
     const container = document.createElement('div');
@@ -472,6 +473,7 @@ document.getElementById("export_PDF_inv").addEventListener("click", function () 
     headerContainer.style.display = 'flex';
     headerContainer.style.alignItems = 'center';
     headerContainer.style.justifyContent = 'center';
+    headerContainer.style.marginBottom = '20px';
 
     // Add the logo image
     const logo = document.createElement('img');
@@ -485,32 +487,14 @@ document.getElementById("export_PDF_inv").addEventListener("click", function () 
     headerTitle.textContent = 'Mother & Child Pharmacy and Medical Supplies';
     headerContainer.appendChild(headerTitle);
 
-    // Create a subTitle container
-    const subheaderContainer = document.createElement('div');
-    subheaderContainer.style.display = 'flex';
-    subheaderContainer.style.alignItems = 'center';
-    subheaderContainer.style.justifyContent = 'center';
-    subheaderContainer.style.marginBottom = '20px';
-
-    const subTitle = document.createElement('h4');
-    subTitle.textContent = 'Inventory Report';
-    subheaderContainer.appendChild(subTitle);
-
-    const separator = document.createElement('hr');
-    separator.style.border = '1px solid #ccc';  // Style the separator
-    separator.style.margin = '20px 0';  // Space above and below the separator
-
     // Append the header to the container
     container.appendChild(headerContainer);
-    container.appendChild(subheaderContainer);
-    container.appendChild(separator);
 
     // Grab all the tables inside the container
     const tables = document.querySelectorAll('.datatable_report_inv table');
 
     // Define custom titles for each section
     const titles = [
-        "Summary",
         "In Stock Items",
         "Low Stock Items",
         "Overstock Items",
@@ -520,18 +504,12 @@ document.getElementById("export_PDF_inv").addEventListener("click", function () 
 
     // Add a title for each table
     tables.forEach(function (table, index) {
-        // Create a wrapper for the table and its title
-        const tableWrapper = document.createElement('div');
-        tableWrapper.style.pageBreakInside = 'avoid';  // Prevent page break inside the wrapper
-
         // Create a title for each table (using the defined titles array)
-        const title = document.createElement('p');
+        const title = document.createElement('h2');
         title.textContent = titles[index];  // Use the title from the array
         title.style.textAlign = 'center';  // Center align the title
         title.style.marginBottom = '10px';  // Space below the title
-        title.style.fontWeight = 'bold';  // Make the text bold
-        title.style.textDecoration = 'underline';  // Underline the text
-        tableWrapper.appendChild(title);
+        container.appendChild(title);
 
         // Clone the table to avoid affecting the DOM and append it
         const clone = table.cloneNode(true);
@@ -541,6 +519,7 @@ document.getElementById("export_PDF_inv").addEventListener("click", function () 
         clone.style.margin = '0 auto';  // Center the table horizontally
         clone.style.fontSize = '0.9em';  // Reduce the font size slightly
         clone.style.borderCollapse = 'collapse';  // Collapse borders for a more compact look
+        clone.style.pageBreakInside = 'avoid'; // Prevent the table from splitting
 
         // Apply padding to cells to reduce spacing
         const cells = clone.querySelectorAll('td, th');
@@ -548,26 +527,26 @@ document.getElementById("export_PDF_inv").addEventListener("click", function () 
             cell.style.padding = '8px';  // Reduce padding for a smaller table
         });
 
-        // Append the cloned table to the wrapper
-        tableWrapper.appendChild(clone);
-
-        // Add the wrapper (with title and table) to the main container
-        container.appendChild(tableWrapper);
+        container.appendChild(clone);
 
         // Add a separator after each table, except the last one
         if (index < tables.length - 1) {
-            const whiteseparator = document.createElement('hr');
-            whiteseparator.style.border = '0px solid #ccc';  // Style the separator
-            whiteseparator.style.margin = '20px 0';  // Space above and below the separator
-            container.appendChild(whiteseparator);
+            const separator = document.createElement('hr');
+            separator.style.border = '1px solid #ccc';  // Style the separator
+            separator.style.margin = '20px 0';  // Space above and below the separator
+            container.appendChild(separator);
         }
     });
 
-    // Get today's date in the format YYYY-MM-DD
+    // Get today's date in the format MM/DD/YYYY
     const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0]; // Formats date as YYYY-MM-DD
+    const formattedDate = today.toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric'
+    });
 
-    // Use html2pdf to generate the PDF from the temporary container
+    // Use html2pdf to generate the PDF with configuration for footer
     html2pdf().set({
         margin: [10, 10, 40, 10], // Increased bottom margin to accommodate footer
         html2canvas: {

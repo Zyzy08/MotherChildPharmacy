@@ -35,7 +35,7 @@ $year = isset($_GET['year']) ? $_GET['year'] : null;
 // Base SQL query
 $baseSql = "SELECT 
     s.InvoiceID,
-    s.SaleDate,
+    DATE_FORMAT(s.SaleDate, '%y-%m-%d %H:%i:%s') AS SaleDate,
     s.Status AS TransactionType,
     JSON_UNQUOTE(s.SalesDetails) AS SalesDetails,
     s.Subtotal,
