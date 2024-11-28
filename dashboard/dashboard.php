@@ -1323,7 +1323,7 @@
 
   <!-- Template Main JS File -->
   <script src="../main.js"></script>
-  <script src="dash copy.js"></script>
+  <script src="dash.js"></script>
 
 </body>
 
