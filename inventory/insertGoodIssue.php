@@ -98,10 +98,10 @@ try {
 
         // Update inventory
         $updateInventorySql = "UPDATE inventory 
-                             SET InStock = ? 
+                             SET InStock = InStock + ? 
                              WHERE ItemID = ?";
         $updateInventoryStmt = $conn->prepare($updateInventorySql);
-        $updateInventoryStmt->bind_param("ii", $quantity, $itemID);
+        $updateInventoryStmt->bind_param("ii", $adjustment, $itemID);
         
         if (!$updateInventoryStmt->execute()) {
             throw new Exception("Failed to update inventory: " . $conn->error);

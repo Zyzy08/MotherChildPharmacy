@@ -63,24 +63,19 @@ if (isset($_GET['itemID'])) {
 } elseif (isset($_GET['lotQuery']) && isset($_GET['ItemID'])) {
     // Fetch lots based on ItemID and lot search query
     $lotQuery = $_GET['lotQuery'];
-    $itemID = intval($_GET['ItemID']);
-    
+    $itemID = intval($_GET['ItemID']); // Get ItemID from request
     $sql = "SELECT LotNumber, QuantityRemaining 
             FROM delivery_items 
-            WHERE ItemID = ? 
-            AND LotNumber LIKE ? 
-            AND QuantityRemaining > 0 
-            AND isExpired = '0' 
-            ORDER BY ExpiryDate ASC";
+            WHERE LotNumber LIKE ? AND ItemID = ? LIMIT 10";
 
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
-        error_log("SQL Error: " . $conn->error);
+        error_log("SQL Error: " . $conn->error); // Log SQL error
         echo json_encode(['error' => 'Database error occurred.']);
         exit;
     }
     $searchTerm = "%" . $lotQuery . "%";
-    $stmt->bind_param("is", $itemID, $searchTerm);
+    $stmt->bind_param("si", $searchTerm, $itemID); // Bind LotNumber and ItemID parameters
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -91,7 +86,7 @@ if (isset($_GET['itemID'])) {
     echo json_encode($lots);
 } elseif (isset($_GET['lotNumber'])) {
     $lotNumber = $_GET['lotNumber'];
-    $sql = "SELECT QuantityRemaining FROM delivery_items WHERE LotNo = ?";
+    $sql = "SELECT QuantityRemaining FROM delivery_items WHERE LotNumber = ?";
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         error_log("SQL Error: " . $conn->error); // Log SQL error
