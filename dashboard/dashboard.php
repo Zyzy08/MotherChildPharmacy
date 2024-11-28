@@ -634,6 +634,10 @@
       }
     </style>
     
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
     <!-- Reports Table Modal -->
     <div class="modal fade" id="ExtralargeModal" tabindex="-1">
       <div class="modal-dialog modal-xl">
@@ -655,11 +659,11 @@
                   <select id="secondFilter" class="form-select w-25">
                     <option value="--:--">--:--</option>
                   </select>
-                  <button id="salesbyitem" type="button" class="btn btn-primary">Sales By Item</button>
+                  <!-- <button id="salesbyitem" type="button" class="btn btn-primary">Sales By Item</button> -->
                 </div>
               </div>
 
-              <div class="card" id="salesByItem-card">
+              <!-- <div class="card" id="salesByItem-card">
                 <h2>Sales by Item</h2>
                 <div class="card-body profile-card transactionsTableSize flex-column align-items-center">
                   <table id="salesByItem-example" class="display" style="width:100%">
@@ -676,11 +680,11 @@
                       </tr>
                     </thead>
                     <tbody id="salesByItem-tableBody">
-                      <!-- Data rows will be inserted here by JavaScript -->
+                      < Data rows will be inserted here by JavaScript >
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </div> -->
 
               <div class="card" id="today-card">
                 <h2>Today's Sales</h2>
@@ -695,7 +699,6 @@
                         <th>Tax</th>
                         <th>Discount</th>
                         <th>Net Amount</th>
-                        <th>Payment Method</th>
                         <th>Status</th>
                       </tr>
                     </thead>
@@ -719,7 +722,6 @@
                         <th>Tax</th>
                         <th>Discount</th>
                         <th>Net Amount</th>
-                        <th>Payment Method</th>
                         <th>Status</th>
                       </tr>
                     </thead>
@@ -743,7 +745,6 @@
                         <th>Tax</th>
                         <th>Discount</th>
                         <th>Net Amount</th>
-                        <th>Payment Method</th>
                         <th>Status</th>
                       </tr>
                     </thead>
@@ -767,7 +768,6 @@
                         <th>Tax</th>
                         <th>Discount</th>
                         <th>Net Amount</th>
-                        <th>Payment Method</th>
                         <th>Status</th>
                       </tr>
                     </thead>
@@ -777,22 +777,19 @@
                   </table>
                 </div>
               </div>
-
             </div>
 
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
             <script>
               $(document).ready(function () {
-                // Handle "Sales By Item" button click
-                $('#salesbyitem').on('click', function () {
+                
+                /*$('#salesbyitem').on('click', function () {
                   const salesByItemTable = $('#salesByItem-example');
 
                   // Destroy existing DataTable if it exists
                   if ($.fn.DataTable.isDataTable(salesByItemTable)) {
                     salesByItemTable.DataTable().clear().destroy();
                   }
-
+                  
                   // Initialize DataTable for Sales By Item
                   salesByItemTable.DataTable({
                     ajax: {
@@ -831,9 +828,8 @@
                     searching: false,
                     ordering: false
                   });
-                });
-
-                echo (salesByItemTable)
+                });*/
+                
                 const filterTables = {
                   today: '#today-example',
                   week: '#week-example',
@@ -963,7 +959,7 @@
                               <td>₱${totalTax.toFixed(2)}</td>
                               <td>₱${totalDiscount.toFixed(2)}</td>
                               <td>₱${totalNet.toFixed(2)}</td>
-                              <td colspan="2"></td>
+                              <td></td>
                             </tr>
                           `);
                         }
@@ -976,7 +972,6 @@
                         { "data": "Tax" },
                         { "data": "Discount" },
                         { "data": "NetAmount" },
-                        { "data": "PaymentMethod" },
                         { "data": "Status" }
                       ],
                       "columnDefs": [
@@ -1014,17 +1009,6 @@
           </div>
           <div class="modal-body">
             <div class="container datatable_report_inv">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="d-flex gap-2">
-                  <select id="firstFilter" class="form-select w-25">
-                    <option value="today">Today</option>
-                    <option value="week">Week</option>
-                    <option value="month">Month</option>
-                    <option value="year">Year</option>
-                  </select>
-                </div>
-              </div>
-              
               <!-- In Stock Items Report -->
               <div class="card">
                 <h2>In Stock Items</h2>
@@ -1036,6 +1020,9 @@
                         <th>Brand Name</th>
                         <th>Generic Name</th>
                         <th>In Stock</th>
+                        <th>Unit Price</th>
+                        <th>Total Inventory Value</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody id="in-stock-tableBody">
@@ -1057,6 +1044,8 @@
                         <th>Generic Name</th>
                         <th>In Stock</th>
                         <th>Reorder Level</th>
+                        <th>Total Inventory Value</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody id="low-stock-tableBody">
@@ -1079,6 +1068,8 @@
                         <th>In Stock</th>
                         <th>Reorder Level</th>
                         <th>Excess Stock</th>
+                        <th>Total Inventory Value</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody id="overstock-tableBody">
@@ -1098,6 +1089,7 @@
                         <th>Item ID</th>
                         <th>Brand Name</th>
                         <th>Generic Name</th>
+                        <th>Last Known Price</th>
                       </tr>
                     </thead>
                     <tbody id="out-of-stock-tableBody">
@@ -1119,6 +1111,8 @@
                         <th>Generic Name</th>
                         <th>Expiry Date</th>
                         <th>Lot Number</th>
+                        <th>Price Per Unit</th>
+                        <th>Days to Expiry</th>
                       </tr>
                     </thead>
                     <tbody id="near-expiry-tableBody">
@@ -1131,18 +1125,37 @@
 
             <script>
               $(document).ready(function() {
-
                 // Fetch and display In Stock Items
                 $('#in-stock-example').DataTable({
                   "ajax": {
-                    "url": "fetchInventoryReports.php?report=in-stock", // Fetch In Stock Items from the PHP file
+                    "url": "fetchInventoryReports.php?report=in-stock", 
                     "dataSrc": ""
                   },
                   "columns": [
                     { "data": "ItemID" },
                     { "data": "BrandName" },
                     { "data": "GenericName" },
-                    { "data": "InStock" }  // InStock column
+                    { "data": "InStock" },
+                    { 
+                      "data": "PricePerUnit",
+                      "render": function(data) {
+                        return data > 0 ? '₱' + parseFloat(data).toFixed(2) : 'N/A';
+                      }
+                    },
+                    { 
+                      "data": "TotalInventoryValue",
+                      "render": function(data) {
+                        return data > 0 ? '₱' + parseFloat(data).toFixed(2) : 'N/A';
+                      }
+                    },
+                    { 
+                      "data": "InventoryStatus",
+                      "render": function(data) {
+                        if (data === 'Critical') return '<span class="badge bg-danger">' + data + '</span>';
+                        if (data === 'Low') return '<span class="badge bg-warning">' + data + '</span>';
+                        return '<span class="badge bg-success">' + data + '</span>';
+                      }
+                    }
                   ],
                   "paging": false,
                   "searching": false
@@ -1159,10 +1172,24 @@
                     { "data": "BrandName" },
                     { "data": "GenericName" },
                     { "data": "InStock" },
-                    { "data": "ReorderLevel" }
+                    { "data": "ReorderLevel" },
+                    { 
+                      "data": "TotalInventoryValue",
+                      "render": function(data) {
+                        return data > 0 ? '₱' + parseFloat(data).toFixed(2) : 'N/A';
+                      }
+                    },
+                    { 
+                      "data": "InventoryStatus",
+                      "render": function(data) {
+                        if (data === 'Critical') return '<span class="badge bg-danger">' + data + '</span>';
+                        if (data === 'Low') return '<span class="badge bg-warning">' + data + '</span>';
+                        return '<span class="badge bg-success">' + data + '</span>';
+                      }
+                    }
                   ],
-                  "paging": false, // Disable pagination
-                  "searching": false // Disable search
+                  "paging": false,
+                  "searching": false
                 });
 
                 // Fetch and display Overstock Items
@@ -1177,10 +1204,24 @@
                     { "data": "GenericName" },
                     { "data": "InStock" },
                     { "data": "ReorderLevel" },
-                    { "data": "ExcessStock" }
+                    { "data": "ExcessStock" },
+                    { 
+                      "data": "TotalInventoryValue",
+                      "render": function(data) {
+                        return data > 0 ? '₱' + parseFloat(data).toFixed(2) : 'N/A';
+                      }
+                    },
+                    { 
+                      "data": "InventoryStatus",
+                      "render": function(data) {
+                        if (data === 'Overstocked') return '<span class="badge bg-danger">' + data + '</span>';
+                        if (data === 'Above Normal') return '<span class="badge bg-warning">' + data + '</span>';
+                        return '<span class="badge bg-success">' + data + '</span>';
+                      }
+                    }
                   ],
-                  "paging": false, // Disable pagination
-                  "searching": false // Disable search
+                  "paging": false,
+                  "searching": false
                 });
 
                 // Fetch and display Out of Stock Items
@@ -1192,10 +1233,16 @@
                   "columns": [
                     { "data": "ItemID" },
                     { "data": "BrandName" },
-                    { "data": "GenericName" }
+                    { "data": "GenericName" },
+                    { 
+                      "data": "LastKnownPrice",
+                      "render": function(data) {
+                        return data > 0 ? '₱' + parseFloat(data).toFixed(2) : 'N/A';
+                      }
+                    }
                   ],
-                  "paging": false, // Disable pagination
-                  "searching": false // Disable search
+                  "paging": false,
+                  "searching": false
                 });
 
                 // Fetch and display Near Expiry Items
@@ -1209,10 +1256,22 @@
                     { "data": "BrandName" },
                     { "data": "GenericName" },
                     { "data": "ExpiryDate" },
-                    { "data": "LotNumber" }
+                    { "data": "LotNumber" },
+                    { 
+                      "data": "PricePerUnit",
+                      "render": function(data) {
+                        return data > 0 ? '₱' + parseFloat(data).toFixed(2) : 'N/A';
+                      }
+                    },
+                    { 
+                      "data": "DaysToExpiry",
+                      "render": function(data) {
+                        return data + ' days';
+                      }
+                    }
                   ],
-                  "paging": false, // Disable pagination
-                  "searching": false // Disable search
+                  "paging": false,
+                  "searching": false
                 });
               });
             </script>
@@ -1264,7 +1323,7 @@
 
   <!-- Template Main JS File -->
   <script src="../main.js"></script>
-  <script src="dash.js"></script>
+  <script src="dash copy.js"></script>
 
 </body>
 
