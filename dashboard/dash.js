@@ -228,6 +228,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     hour: '2-digit',
                     minute: '2-digit'
                 });
+                //alert(sale.SaleDate);
+                //alert(saleTime);
                 // Split sale.Items by commas (assuming items are comma-separated), truncate each item, and join them back
                 const truncatedItems = sale.Items.split("<br /><br />").map(item =>
                     item.length > 25 ? item.substring(0, 25) + "..." : item
@@ -237,7 +239,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const row = `
                     <tr>
                         <th scope="row">#${sale.InvoiceID}</th>
-                        <td>${saleTime}</td>
+                        <td>${sale.SaleDate}</td>
                         <td>${truncatedItems}</td>
                         <td>${sale.Quantities}</td>
                         <td>₱${sale.NetAmount.toFixed(2)}</td>
