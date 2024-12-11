@@ -1,0 +1,29 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+4   Glosartan 80 Telmis... P0.36
+      4 @ P0.09  
+--------------------------------
+Total Items:                 4
+Amount Due:              P0.36
+Payment:                 P1.00
+Change:                  P0.64
+--------------------------------
+Vatable Sales:           P0.32
+VAT-Exempt Sales:        P0.00
+VAT Amount(12%):         P0.04
+--------------------------------
+Order No.:                 #13
+Date:      2024-12-11 21:04:14
+Status:                  Sales
+Staff:      razh pogi manicdao
+                                
+  Thank you for your purchase!
+
+                                
+
+                                

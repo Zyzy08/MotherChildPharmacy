@@ -1,0 +1,31 @@
+         Mother & Child
+ Pharmacy and Medical Supplies
+ Gen. Luna Street, Babo Sacan,
+        Porac, Pampanga
+--------------------------------
+
+Qty Item                   Price
+5   Biogesic Paracetamol  P47.25
+      5 @ P9.45  
+1   Neozep Forte Phenyl... P7.35
+      1 @ P7.35  
+--------------------------------
+Total Items:                 6
+Amount Due:             P54.60
+Payment:                P55.60
+Change:                  P1.00
+--------------------------------
+Vatable Sales:          P48.75
+VAT-Exempt Sales:        P0.00
+VAT Amount(12%):         P5.85
+--------------------------------
+Order No.:                 #11
+Date:      2024-12-11 20:56:07
+Status:                  Sales
+Staff:           Sayra Jackson
+                                
+  Thank you for your purchase!
+
+                                
+
+                                
